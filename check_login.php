@@ -1,6 +1,6 @@
 <?php
 session_start();
-$conn = new mysqli('localhost', 'root', '', 'polmolokpublicmarket');
+$conn = new mysqli('localhost', 'root', '', 'PolomolokPublicMarket');
 if ($conn->connect_error) {
     die("Connection failed: ". $conn->connect_error);
 }
@@ -9,7 +9,7 @@ $username = $_POST['username'];
 $password = $_POST['password'];
 
 if ($username && $password) {
-    $query = "SELECT * FROM users_table WHERE username='$username' AND password='$password'";
+    $query = "SELECT * FROM users_account WHERE username='$username' AND password='$password'";
     $result = $conn->query($query);
 
     if ($result->num_rows == 1) {
