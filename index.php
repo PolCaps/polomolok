@@ -57,6 +57,10 @@ session_start();
           <li><a href="#about">About</a></li>
           <li class="dropdown"><a href="#services"><span>Maps</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
+              <li><a href="#">Building A</a></li>
+              <li><a href="#">Building B</a></li>
+              <li><a href="#">Building C</a></li>
+              <li><a href="#">Building D</a></li>
               <li><a href="BuildingE.html">Building E</a></li>
               <li><a href="#">Building F</a></li>
               <li><a href="#">Building G</a></li>
@@ -197,7 +201,12 @@ session_start();
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>About Us<br></h2>
-        <p>Polomolok Public MarketPolomolok Public MarketPolomolok Public Market</p>
+        <p>
+          This public market is very easy to access by public transportation. 
+          Where you can find affordable goods, fruits and different root crops. 
+          This building is currently improved with the local government.  Located at French Street  Polomolok, South Cotabato. 
+          There are a lot of thing to do in Polomolok South Cotabato, all you need to do is to enjoy the town for their rich culture and attraction as well.
+        </p>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -391,7 +400,67 @@ session_start();
 
         <div class="row gy-4">
 
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+        <div class="col-lg-2 col-md-5" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item item-cyan position-relative">
+              <div class="icon">
+                <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174"></path>
+                </svg>
+                <i class="bi bi-activity"></i>
+              </div>
+              <a href="ABuildingA.html" class="stretched-link"></a>
+                <h3>Building A</h3>
+              </a>
+              <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis tempore et consequatur.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-5" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item item-cyan position-relative">
+              <div class="icon">
+                <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174"></path>
+                </svg>
+                <i class="bi bi-activity"></i>
+              </div>
+              <a href="ABuildingB.html" class="stretched-link"></a>
+                <h3>Building B</h3>
+              </a>
+              <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis tempore et consequatur.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-5" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item item-cyan position-relative">
+              <div class="icon">
+                <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174"></path>
+                </svg>
+                <i class="bi bi-activity"></i>
+              </div>
+              <a href="ABuildingC.html" class="stretched-link"></a>
+                <h3>Building C</h3>
+              </a>
+              <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis tempore et consequatur.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-5" data-aos="fade-up" data-aos-delay="100">
+            <div class="service-item item-cyan position-relative">
+              <div class="icon">
+                <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174"></path>
+                </svg>
+                <i class="bi bi-activity"></i>
+              </div>
+              <a href="ABuildingD.html" class="stretched-link"></a>
+                <h3>Building D</h3>
+              </a>
+              <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis tempore et consequatur.</p>
+            </div>
+          </div>
+
+          <div class="col-lg-2 col-md-5" data-aos="fade-up" data-aos-delay="100">
             <div class="service-item item-cyan position-relative">
               <div class="icon">
                 <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
@@ -406,7 +475,9 @@ session_start();
             </div>
           </div><!-- End Service Item -->
 
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+          <br>
+
+          <div class="col-lg-2 col-md-5" data-aos="fade-up" data-aos-delay="200">
             <div class="service-item item-orange position-relative">
               <div class="icon">
                 <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
@@ -421,7 +492,7 @@ session_start();
             </div>
           </div><!-- End Service Item -->
 
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+          <div class="col-lg-2 col-md-5" data-aos="fade-up" data-aos-delay="300">
             <div class="service-item item-teal position-relative">
               <div class="icon">
                 <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
@@ -436,7 +507,7 @@ session_start();
             </div>
           </div><!-- End Service Item -->
 
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="400">
+          <div class="col-lg-2 col-md-5" data-aos="fade-up" data-aos-delay="400">
             <div class="service-item item-red position-relative">
               <div class="icon">
                 <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
@@ -452,7 +523,7 @@ session_start();
             </div>
           </div><!-- End Service Item -->
 
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="500">
+          <div class="col-lg-2 col-md-5" data-aos="fade-up" data-aos-delay="500">
             <div class="service-item item-indigo position-relative">
               <div class="icon">
                 <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
@@ -468,7 +539,7 @@ session_start();
             </div>
           </div><!-- End Service Item -->
 
-          <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="600">
+          <div class="col-lg-2 col-md-5" data-aos="fade-up" data-aos-delay="600">
             <div class="service-item item-pink position-relative">
               <div class="icon">
                 <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
