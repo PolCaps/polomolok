@@ -24,6 +24,9 @@ if ($username && $password) {
             case 'Vendor':
                 header("Location: Vendor.html");
                 exit();
+            case 'Staff':
+                header("Location: Staff.html");
+                exit();
             default:
                 // If user role is not recognized, redirect to a generic page or display an error message
                 $_SESSION['error'] = "Unauthorized access";
