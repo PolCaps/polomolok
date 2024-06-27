@@ -1,14 +1,15 @@
 <?php
     // Include database configuration
-    //include('database_config.php');
-
-    // Connect to the database
-    session_start();
-    $conn = new mysqli('localhost','root', 'PolomolokPublicMarket');
-    if ($conn->connect_error) {
-        die("Connection failed: ". $conn->connect_error);
-    }
+    include('database_config.php');
+    header('Content-Type: application/json');
     
+    // Connect to the database
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo json_encode(['success' => false, 'error' => 'Invalid request method.']);
+        exit;
+    }
+    // echo json_encode(['postData' => $_POST]);
+    // Retrieve form data
     $usertype = $_POST['usertype'];
     $username = $_POST['username'];
     $password = $_POST['password'];
@@ -23,10 +24,31 @@
     $startDate = $_POST['started_date'];
     $endDate = $_POST['end_date']; 
     $monthlyPayment = $_POST['monthly_payment'];
-    $leaseAgreement = $_POST['lease_agreement'];
-    $businessPermit = $_POST['business_permit'];
+    $leaseAgreement = $_POST['lease_agreements'];
+    $businessPermit = $_POST['business_permits'];
     $supportingDocu = $_POST['supporting_docu'];
 
+    // $requiredFields = [
+    //     'usertype', 'username', 'password', 'first_name', 'middle_name', 
+    //     'last_name', 'age', 'contact_number', 'address', 'store_number', 
+    //     'building_type', 'started_date', 'end_date', 'monthly_payment', 
+    //     'lease_agreements', 'business_permits', 'supporting_docu'
+    // ];
+
+    if (empty($usertype) || empty($username) || empty($password) || 
+    empty($firstName) || empty($middleName) || empty($lastName) || empty($age) || 
+    empty($contactNumber) || empty($address) || empty($storeNumber) || empty($buildingType) || 
+    empty($startDate) || empty($endDate) || empty($monthlyPayment) || empty($leaseAgreement) || 
+    empty($businessPermit) || empty($supportingDocu)) {
+        echo json_encode(['success' => false, 'error' => 'Unable to connect.']);
+        exit;
+    }
+    $conn = new mysqli($db_host,$db_user, $db_password , $db_name);
+
+    if ($conn->connect_error) {
+        ECHO json_encode(['success' => false, 'error' => 'Connection Failed']);  
+        exit; 
+    }
     $sql = "INSERT INTO users_account (
         user_type, 
         username, 
@@ -42,54 +64,30 @@
         started_date, 
         end_date, 
         monthly_payment, 
-        lease_agreement, 
-        business_permit, 
+        lease_agreements, 
+        business_permits, 
         supporting_docu
-    ) VALUES ($usertype, $username, $password, $firstName, $middleName, $lastName, $age, $contactNumber, $address, $storeNumber, $buildingType, $startDate, $endDate, $monthlyPayment, $leaseAgreement, $businessPermit, $supportingDocu)";
-    
+    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    // $conn->query($sql);
     // Prepare the statement
     $stmt = $conn->prepare($sql);
-    
     if (!$stmt) {
-        die("Failed to prepare statement: " . $conn->error);
+        echo json_encode(['success' => false, 'error' => 'Failed to prepare statement: ' . $conn->error]);
+        exit;
     }
-
-
     // Bind values to the prepared statement (important for security)
-    $stmt->bind_param("
-        user_type, 
-        username, 
-        password, 
-        first_name, 
-        middle_name, 
-        last_name, 
-        age, 
-        contact_number, 
-        address, 
-        store_number, 
-        building_type, 
-        started_date, 
-        end_date, 
-        monthly_payment, 
-        lease_agreement, 
-        business_permit, 
-        supporting_docu"
-    , 
+    $stmt->bind_param('ssssssiisisssisss', 
     $usertype, $username, $password, $firstName, $middleName, $lastName, 
     $age, $contactNumber, $address, $storeNumber, $buildingType, $startDate, $endDate, 
     $monthlyPayment, $leaseAgreement, $businessPermit, $supportingDocu);
-
-
+    
     // Execute the prepared statement
-    if (!$stmt->execute()) {
-        die("Failed to execute statement: " . $stmt->error);
+    if ($stmt->execute()) {
+        echo json_encode(['success' => true]);
+    } else {
+        echo json_encode(['success' => false, 'error' => 'Failed to create user.'. $stmt->error]);
     }
-
-
-  // Close the statement (after execution)
+    // Close the statement (after execution)
     $stmt->close();
-
-
-  $conn->close();
-
+    $conn->close(); 
 ?>
