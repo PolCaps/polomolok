@@ -1,9 +1,13 @@
 <?php
-session_start();
-$conn = new mysqli('localhost', 'root', '', 'PolomolokPublicMarket');
+include('database_config.php');
+
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+                      
 if ($conn->connect_error) {
-    die("Connection failed: ". $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
+
+session_start();
 
 $username = $_POST['username'];
 $password = $_POST['password'];
