@@ -183,9 +183,15 @@
         <div class="d-grid gap-2 d-md-block py-3 px-3">
           <p class="text-title">Actions</p>
           <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Add New Vendor</button>
-          <button class="btn btn-warning mx-1" type="button">Add New Vendor</button>
+            Add New Vendor
+          </button>
+
+          <button class="btn btn-warning mx-1" type="button">
+            Add New Vendor
+          </button>
         </div>
+
+
         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
           <div class="modal-dialog modal-lg">
             <div class="modal-content">
@@ -267,6 +273,12 @@
                     </div>
                     <div class="row">
                       <div class="col-md-6">
+
+                        <div class="form-group">
+                          <label for="lease_agreements">Lease Agreements:</label>
+                          <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
+                        </div>
+
                         <div class="form-group">
                           <label for="business_permits">Business Permits:</label>
                           <input type="file" id="business_permits" name="business_permits" class="form-control">
@@ -285,15 +297,12 @@
                           <label for="building_type">Building Type:</label>
                           <select id="building_type" name="building_type" class="form-control">
                             <option value="">Select Building Type</option>
-                            <option value="residential">Residential</option>
-                            <option value="commercial">Commercial</option>
+                            <option value="Ground Floor">Ground Floor</option>
+                            <option value="Second Floor">Second Floor</option>
                           </select>
                           <div class="invalid-feedback">Please select a building type.</div>
                         </div>
-                        <div class="form-group">
-                          <label for="lease_agreements">Lease Agreements:</label>
-                          <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
-                        </div>
+                        
                         <div class="form-group">
                           <label for="started_date">Started Date:</label>
                           <input type="date" id="started_date" name="started_date" class="form-control">
@@ -348,11 +357,6 @@
                       alert('Error creating user: ' + data.error);
                   }
               })
-             // .catch(error => {
-                  // Handle errors during AJAX request
-               //   console.error('Error:', error);
-                 // alert('An error occurred. Please try again later.');
-             // });
           });
       </script>
       </div>

@@ -468,7 +468,7 @@ session_start();
                 </svg>
                 <i class="bi bi-activity"></i>
               </div>
-              <a href="BuildingE.html" class="stretched-link">
+              <a href="ABuildingE.html" class="stretched-link">
                 <h3>Building E</h3>
               </a>
               <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis tempore et consequatur.</p>
@@ -485,7 +485,7 @@ session_start();
                 </svg>
                 <i class="bi bi-broadcast"></i>
               </div>
-              <a href="service-details.html" class="stretched-link">
+              <a href="ABuildingF.html" class="stretched-link">
                 <h3>Building F</h3>
               </a>
               <p>Ut autem aut autem non a. Sint sint sit facilis nam iusto sint. Libero corrupti neque eum hic non ut nesciunt dolorem.</p>
@@ -500,7 +500,7 @@ session_start();
                 </svg>
                 <i class="bi bi-easel"></i>
               </div>
-              <a href="service-details.html" class="stretched-link">
+              <a href="ABuildingG.html" class="stretched-link">
                 <h3>Building G</h3>
               </a>
               <p>Ut excepturi voluptatem nisi sed. Quidem fuga consequatur. Minus ea aut. Vel qui id voluptas adipisci eos earum corrupti.</p>
@@ -515,7 +515,7 @@ session_start();
                 </svg>
                 <i class="bi bi-bounding-box-circles"></i>
               </div>
-              <a href="service-details.html" class="stretched-link">
+              <a href="ABuildingH.html" class="stretched-link">
                 <h3>Building H</h3>
               </a>
               <p>Non et temporibus minus omnis sed dolor esse consequatur. Cupiditate sed error ea fuga sit provident adipisci neque.</p>
@@ -531,7 +531,7 @@ session_start();
                 </svg>
                 <i class="bi bi-calendar4-week icon"></i>
               </div>
-              <a href="service-details.html" class="stretched-link">
+              <a href="ABuildingI.html" class="stretched-link">
                 <h3>Building I</h3>
               </a>
               <p>Cumque et suscipit saepe. Est maiores autem enim facilis ut aut ipsam corporis aut. Sed animi at autem alias eius labore.</p>
@@ -547,7 +547,7 @@ session_start();
                 </svg>
                 <i class="bi bi-chat-square-text"></i>
               </div>
-              <a href="service-details.html" class="stretched-link">
+              <a href="ABuildingJ.html" class="stretched-link">
                 <h3>Building J</h3>
               </a>
               <p>Hic molestias ea quibusdam eos. Fugiat enim doloremque aut neque non et debitis iure. Corrupti recusandae ducimus enim.</p>
