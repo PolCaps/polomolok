@@ -57,16 +57,16 @@ session_start();
           <li><a href="#about">About</a></li>
           <li class="dropdown"><a href="#services"><span>Maps</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
-              <li><a href="#">Building A</a></li>
-              <li><a href="#">Building B</a></li>
-              <li><a href="#">Building C</a></li>
-              <li><a href="#">Building D</a></li>
+              <li><a href="ABuildingA.html">Building A</a></li>
+              <li><a href="ABuildingB.html">Building B</a></li>
+              <li><a href="ABuildingC.html">Building C</a></li>
+              <li><a href="ABuildingD.html">Building D</a></li>
               <li><a href="BuildingE.html">Building E</a></li>
-              <li><a href="#">Building F</a></li>
-              <li><a href="#">Building G</a></li>
-              <li><a href="#">Building H</a></li>
-              <li><a href="#">Building I</a></li>
-              <li><a href="#">Building J</a></li>
+              <li><a href="ABuildingF.html">Building F</a></li>
+              <li><a href="ABuildingG.html">Building G</a></li>
+              <li><a href="ABuildingH.html">Building H</a></li>
+              <li><a href="ABuildingI.html">Building I</a></li>
+              <li><a href="ABuildingJ.html">Building J</a></li>
             </ul>
           </li>
           <li><a href="#contact">Contact</a></li>
