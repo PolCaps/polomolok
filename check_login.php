@@ -1,13 +1,9 @@
 <?php
-include('database_config.php');
-
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-                      
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
 session_start();
+$conn = new mysqli('localhost', 'root', '', 'polomolokpublicmarket');
+if ($conn->connect_error) {
+    die("Connection failed: ". $conn->connect_error);
+}
 
 $username = $_POST['username'];
 $password = $_POST['password'];
@@ -27,9 +23,6 @@ if ($username && $password) {
                 exit();
             case 'Vendor':
                 header("Location: Vendor.html");
-                exit();
-            case 'Staff':
-                header("Location: Staff.html");
                 exit();
             default:
                 // If user role is not recognized, redirect to a generic page or display an error message
