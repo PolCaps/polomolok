@@ -236,31 +236,49 @@ session_start()
     </section><!-- /About Section -->
 
           <?php
-      // Database connection settings
-      $servername = "localhost";
-      $username = "root";
-      $password = "";
-      $dbname = "polomolokpublicmarket";
+      
+      include'database_config.php';
 
       // Create connection
-      $conn = new mysqli($servername, $username, $password, $dbname);
-
+      $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
       // Check connection
       if ($conn->connect_error) {
           die("Connection failed: ". $conn->connect_error);
       }
 
       // Query to retrieve data from stats table
-      $sql = "SELECT buildings, overall_stalls, vendors, workers FROM stats WHERE id=1";
+      $sql = "
+      SELECT 
+      (SELECT COUNT(*) FROM buildings) AS building_id,
+      (SELECT COUNT(*) FROM stalls) AS stall_id,
+      (SELECT COUNT(*) FROM vendor) AS vendor_name,
+      (SELECT COUNT(*) FROM users) AS username;
+      ";
       $result = $conn->query($sql);
 
-      // Check if query was successful
-      if ($result->num_rows > 0) {
+      // Initialize counts
+      $buildingsCount = $stallsCount = $vendorsCount = $userCount = 0;
+
+      // Check if query execution was successful
+    if ($result === false) {
+      // Output the error message
+        echo "Error executing query: " . $conn->error;
+      } else {
+        // Check if query returned rows
+        if ($result->num_rows > 0) {
           // Fetch the row from the result set
           $row = $result->fetch_assoc();
+        
+
+          // Access the counts
+          $buildingsCount = $row['building_id'];
+          $stallsCount = $row['stall_id'];
+          $vendorsCount = $row['vendor_name'];
+          $userCount = $row['username'];
       } else {
           echo "No data found";
       }
+    }
 
       // Close connection
       $conn->close();
@@ -275,28 +293,28 @@ session_start()
       
         <div class="col-lg-3 col-md-6">
           <div class="stats-item text-center w-100 h-100">
-            <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['buildings'];?>" data-purecounter-duration="1" class="purecounter"></span>
+            <span data-purecounter-start="0" data-purecounter-end="<?php echo $buildingsCount; ?>" data-purecounter-duration="1" class="purecounter"></span>
             <p>Buildings</p>
           </div>
         </div><!-- End Stats Item -->
 
         <div class="col-lg-3 col-md-6">
           <div class="stats-item text-center w-100 h-100">
-            <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['overall_stalls'];?>" data-purecounter-duration="1" class="purecounter"></span>
+            <span data-purecounter-start="0" data-purecounter-end="<?php echo $stallsCount; ?>" data-purecounter-duration="1" class="purecounter"></span>
             <p>Overall Stalls</p>
           </div>
         </div><!-- End Stats Item -->
 
         <div class="col-lg-3 col-md-6">
           <div class="stats-item text-center w-100 h-100">
-            <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['vendors'];?>" data-purecounter-duration="1" class="purecounter"></span>
+            <span data-purecounter-start="0" data-purecounter-end="<?php echo $vendorsCount; ?>" data-purecounter-duration="1" class="purecounter"></span>
             <p>Vendors</p>
           </div>
         </div><!-- End Stats Item -->
 
         <div class="col-lg-3 col-md-6">
           <div class="stats-item text-center w-100 h-100">
-            <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['workers'];?>" data-purecounter-duration="1" class="purecounter"></span>
+            <span data-purecounter-start="0" data-purecounter-end="<?php echo $userCount; ?>" data-purecounter-duration="1" class="purecounter"></span>
             <p>Workers</p>
           </div>
         </div><!-- End Stats Item -->

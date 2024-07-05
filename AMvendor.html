@@ -206,16 +206,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div class="modal-body">
-                <form id="createUserForm" action="create_user.php" method="post">
+                <form id="createUserForm" action="create_user.php" method="POST" enctype="multipart/form-data">
                   <div class="container-fluid">
                     <div class="row">
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label for="usertype">User Type:</label>
-                          <select id="usertype" class="form-control" name="usertype" required>
-                            <option value="Admin">Admin</option>
-                            <option value="Staff">Staff</option>
-                            <option value="Vendor">Vendor</option>
+                          <label for="user_type">User Type:</label>
+                          <select id="user_type" class="form-control" name="user_type" required>
+                            <option value="VENDOR">VENDOR</option>
+                            <option value="STAFF">STAFF</option>
+                            <option value="ADMIN">ADMIN</option>
                           </select>
                           <div class="invalid-feedback">Please select a user type.</div>
                         </div>
@@ -230,15 +230,18 @@
                           <div class="input-group">
                           <input type="password" id="password" class="form-control" name="password" required>
                           <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true" id="togglePasswordform"></i>
-                          <script>
-                            const togglePassword = document.querySelector('#togglePasswordform');
+                         <script>
+                          const togglePassword = document.querySelector('#togglePasswordform');
                             const password = document.querySelector('#password');
                             togglePassword.addEventListener('click', () => {
                               const type = password.getAttribute('type') === 'password'? 'text' : 'password';
                               password.setAttribute('type', type);
                               togglePassword.classList.toggle('bi bi-eye-fill');
                             });
-                          </script>
+
+                         
+                         </script>
+
                         </div>
                         </div>
                         <div class="form-group">
@@ -272,9 +275,34 @@
 
                         </div>
                         <div class="form-group">
-                          <label for="store_number">Store Number:</label>
-                          <input type="text" id="store_number" name="store_number" class="form-control">
+                          <label for="store_number">Stall Number:</label>
+                          <input type="text" id="stall_number" name="stall_number" class="form-control">
                         </div>
+
+                        <div class="form-group">
+                          <label for="store_number">Stall Code:</label>
+                          <input type="text" id="stall_code" name="stall_code" class="form-control">
+                        </div>
+
+                        <div class="col-md-6">
+                          <div class="form-group">
+                            <label for="building_code">Buildings:</label>
+                            <select id="building_code" name="building_code" class="form-control">
+                              <option value="">Select Buildings</option>
+                              <option value="Building A">Building A</option>
+                              <option value="Building B">Building B</option>
+                              <option value="Building C">Building C</option>
+                              <option value="Building D">Building D</option>
+                              <option value="Building E">Building E</option>
+                              <option value="Building F">Building F</option>
+                              <option value="Building G">Building G</option>
+                              <option value="Building H">Building H</option>
+                              <option value="Building I">Building I</option>
+                              <option value="Building J">Building J</option>
+                            </select>
+                            <div class="invalid-feedback">Please select a buildings.</div>
+                          </div>
+                          
                       </div>
                     </div>
                     <div class="row">
@@ -289,26 +317,33 @@
                           <label for="business_permits">Business Permits:</label>
                           <input type="file" id="business_permits" name="business_permits" class="form-control">
                         </div>
+
                         <div class="form-group">
-                          <label for="supporting_docu">Supporting Documents:</label>
-                          <input type="file" id="supporting_docu" name="supporting_docu" class="form-control">
+                          <label for="business_licencses">Business Licenses:</label>
+                          <input type="file" id="business_licenses" name="business_licenses" class="form-control">
                         </div>
+                     
+                        <div class="form-group">
+                          <label for="receipts">Payment Receipts:</label>
+                          <input type="file" id="receipts" name="receipts" class="form-control">
+                        </div>
+
                         <div class="form-group">
                           <label for="monthly_payment">Monthly Payment:</label>
-                          <input type="number" id="monthly_payment" name="monthly_payment" class="form-control">
+                          <input type="number" id="monthly_payments" name="monthly_payments" class="form-control">
                         </div>
                       </div>
                       <div class="col-md-6">
                         <div class="form-group">
-                          <label for="building_type">Building Type:</label>
-                          <select id="building_type" name="building_type" class="form-control">
-                            <option value="">Select Building Type</option>
+                          <label for="building_floor">Building Floor:</label>
+                          <select id="building_floor" name="building_floor" class="form-control">
+                            <option value="">Select Building Floor:</option>
                             <option value="Ground Floor">Ground Floor</option>
                             <option value="Second Floor">Second Floor</option>
                           </select>
                           <div class="invalid-feedback">Please select a building type.</div>
                         </div>
-                        
+
                         <div class="form-group">
                           <label for="started_date">Started Date:</label>
                           <input type="date" id="started_date" name="started_date" class="form-control">
@@ -320,7 +355,7 @@
                       </div>
                     </div>
                     <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
-                      <button type="submit" id="submit" class="btn btn-info lg">Create Account</button>
+                      <button type="submit" name="submit" id="submit" class="btn btn-info lg">Create User</button>
                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                   </div>
@@ -329,7 +364,129 @@
             </div>
           </div>
         </div>
+        <script>
+
+          
+           // Event listeners for each file input
+           document.getElementById('lease_agreements').addEventListener('change', function(event) {
+            handleFileInputChange(event, 'lease_agreements');
+          });
+          
+          document.getElementById('business_permits').addEventListener('change', function(event) {
+            handleFileInputChange(event, 'business_permits');
+          });
+          
+          document.getElementById('business_licenses').addEventListener('change', function(event) {
+            handleFileInputChange(event, 'business_licenses');
+          });
+          
+          document.getElementById('receipts').addEventListener('change', function(event) {
+            handleFileInputChange(event, 'receipts');
+          });
+          
+          <!-- // Function to handle file input change
+          function handleFileInputChange(event, key) {
+            const file = event.target.files[0];
+          
+            if (file) {
+              const reader = new FileReader();
+              reader.readAsArrayBuffer(file);
+          
+              reader.onload = function(e) {
+                const binaryData = e.target.result;
+                sendBinaryDataToServer(binaryData, key);
+              };
+            }
+          } -->
+
+
+          function handleFileInputChange(event, inputId) {
+            const input = event.target;
+            const files = input.files;
+            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+            const fileErrors = [];
         
+            for (let i = 0; i < files.length; i++) {
+              const file = files[i];
+              if (!allowedTypes.includes(file.type)) {
+                fileErrors.push(`File ${file.name} is not allowed. Only JPEG, PNG, and PDF files are allowed.`);
+              }
+            }
+        
+            if (fileErrors.length > 0) {
+              alert(fileErrors.join('\n'));
+              input.value = ''; // Clear the input
+            }
+          }
+          
+          // Function to send binary data to server for each file
+          function sendBinaryDataToServer(binaryData, key) {
+            const formData = new FormData();
+            formData.append(key, new Blob([binaryData]));
+          
+            fetch('create_user.php', {
+              method: 'POST',
+              body: formData,
+            })
+            .then(response => response.text())
+            .then(data => {
+              console.log('Server response:', data);
+            })
+            .catch(error => {
+              console.error('Error sending data:', error);
+            });
+          }
+
+
+          const createUserForm = document.getElementById('createUserForm');
+          createUserForm.addEventListener('submit', function(e) {
+              e.preventDefault(); // Prevent default form submission
+      
+              // Prepare form data
+              const formData = new FormData(this);
+      
+              // Send AJAX request to create_user.php
+              fetch('create_user.php', {
+                  method: 'POST',
+                  body: formData
+              })
+
+
+          
+
+              .then(response => {
+                  // Check if the response is in the correct format (JSON)
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  response.json(); // Parse JSON response
+              })
+              .then(data => {
+                  // Log the received data for debugging
+                  console.log('Response data:', data);
+      
+                  // Handle successful response from create_user.php
+                  if (data.success) {
+                      // Display success message (e.g., using alert or updating modal content)
+                      alert('User created successfully!');
+                      // Optionally, clear the form or redirect to a different page
+                      document.getElementById('createUserForm').reset(); // Clear the form
+                  } else {
+                      // Display error message (e.g., using alert or updating modal content)
+                      alert('Error creating user: ' + data.error);
+                  }
+              })
+
+
+              .catch(error => {
+                  // Handle any network or parsing errors
+                  console.error('Error:', error);
+                  alert('Error creating user. Please try again later.');
+              });
+          });
+          
+         
+          </script>
       </div>
       
       <div class="row my-4">
@@ -370,22 +527,22 @@
                     <script>
                       // Function to fetch data from PHP script
                       function fetchData() {
-                          var xhr = new XMLHttpRequest();
-                          xhr.open('GET', 'get_data.php', true);
-                          xhr.onload = function () {
-                              if (xhr.status >= 200 && xhr.status < 300) {
-                                  var data = JSON.parse(xhr.responseText);
-                                  displayData(data);
-                              } else {
-                                  console.error('Request failed with status ' + xhr.status);
-                              }
-                          };
-                          xhr.onerror = function () {
-                              console.error('Network error occurred');
-                          };
-                          xhr.send();
-                      }
-                  
+                        var xhr = new XMLHttpRequest();
+                        xhr.open('GET', 'get_data.php', true);
+                        xhr.onload = function () {
+                            if (xhr.status >= 200 && xhr.status < 300) {
+                                var data = JSON.parse(xhr.responseText);
+                                displayData(data);
+                            } else {
+                                console.error('Request failed with status ' + xhr.status);
+                            }
+                        };
+                        xhr.onerror = function () {
+                            console.error('Network error occurred');
+                        };
+                        xhr.send();
+                    }
+                    
                       // Function to display data in the HTML table
                       function displayData(data) {
                           var tbody = document.getElementById('dataTableBody');
@@ -396,17 +553,17 @@
                               html += '  <td>';
                               html += '    <div class="d-flex px-3 py-1">';
                               html += '      <div class="d-flex flex-column justify-content-center">';
-                              html += '        <h6 class="mb-0 text-sm">' + row.first_name + ' ' + row.middle_name + ' ' + row.last_name + '</h6>';
+                              html += '        <h6 class="mb-0 text-sm">' + row.vendor_name + '</h6>';
                               html += '      </div>';
                               html += '    </div>';
                               html += '  </td>';
                               html += '  <td>';
                               html += '    <div class="avatar-group mt-1">';
-                              html += '      <h6 class="mb-1 text-sm">' + row.building_type + '</h6>';
+                              html += '      <h6 class="mb-1 text-sm">' + row.building_code + '</h6>';
                               html += '    </div>';
                               html += '  </td>';
                               html += '  <td class="align-middle text-center text-sm">';
-                              html += '    <span class="text-xs font-weight-bold">' + row.store_number + '</span>';
+                              html += '    <span class="text-xs font-weight-bold">' + row.stall_number + '</span>';
                               html += '  </td>';
                               html += '  <td class="align-middle text-center text-sm">';
                               html += '    <span class="text-xs font-weight-bold">' + row.monthly_payment + '</span>';
@@ -417,6 +574,9 @@
                           // Insert the generated HTML into the table body
                           tbody.innerHTML = html;
                       }
+
+                       // Fetch data when the page loads
+                         // window.onload = fetchData;
                   
                       // Call fetchData function when the page loads
                       document.addEventListener('DOMContentLoaded', function () {
