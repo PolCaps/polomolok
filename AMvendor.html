@@ -384,26 +384,34 @@
             handleFileInputChange(event, 'receipts');
           });
           
-          <!-- // Function to handle file input change
-          function handleFileInputChange(event, key) {
-            const file = event.target.files[0];
+          // Function to handle file input change
+         // function handleFileInputChange(event, key) {
+           // const file = event.target.files[0];
           
-            if (file) {
-              const reader = new FileReader();
-              reader.readAsArrayBuffer(file);
+           // if (file) {
+             // const reader = new FileReader();
+             // reader.readAsArrayBuffer(file);
           
-              reader.onload = function(e) {
-                const binaryData = e.target.result;
-                sendBinaryDataToServer(binaryData, key);
-              };
-            }
-          } -->
+         //     reader.onload = function(e) {
+           //     const binaryData = e.target.result;
+             //   sendBinaryDataToServer(binaryData, key);
+           //   };
+          //  }
+         // }
 
 
           function handleFileInputChange(event, inputId) {
             const input = event.target;
             const files = input.files;
-            const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+            const allowedTypes = [
+            'image/jpeg',
+            'image/png',
+            'image/gif', // Add more image types
+            '*/*',
+            'application/pdf',
+            'application/msword', // Add document types
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // docx
+          ];
             const fileErrors = [];
         
             for (let i = 0; i < files.length; i++) {
@@ -523,25 +531,31 @@
                     </tr>
                   </thead>
                   <tbody id="dataTableBody">
+                   
                     
                     <script>
+                      
                       // Function to fetch data from PHP script
                       function fetchData() {
                         var xhr = new XMLHttpRequest();
                         xhr.open('GET', 'get_data.php', true);
                         xhr.onload = function () {
-                            if (xhr.status >= 200 && xhr.status < 300) {
-                                var data = JSON.parse(xhr.responseText);
-                                displayData(data);
-                            } else {
-                                console.error('Request failed with status ' + xhr.status);
+                          if (xhr.status >= 200 && xhr.status < 300) {
+                            try {
+                              var data = JSON.parse(xhr.responseText);
+                              displayData(data);
+                          } catch (error) {
+                              console.error('Error parsing JSON:', error);
                             }
+                          } else {
+                              console.error('Request failed with status ' + xhr.status);
+                          }
                         };
                         xhr.onerror = function () {
                             console.error('Network error occurred');
                         };
                         xhr.send();
-                    }
+                      }
                     
                       // Function to display data in the HTML table
                       function displayData(data) {
@@ -566,7 +580,7 @@
                               html += '    <span class="text-xs font-weight-bold">' + row.stall_number + '</span>';
                               html += '  </td>';
                               html += '  <td class="align-middle text-center text-sm">';
-                              html += '    <span class="text-xs font-weight-bold">' + row.monthly_payment + '</span>';
+                              html += '    <span class="text-xs font-weight-bold">' + row.monthly_payments + '</span>';
                               html += '  </td>';
                               html += '</tr>';
                           });
@@ -576,12 +590,12 @@
                       }
 
                        // Fetch data when the page loads
-                         // window.onload = fetchData;
+                        // window.onload = fetchData;
                   
                       // Call fetchData function when the page loads
                       document.addEventListener('DOMContentLoaded', function () {
-                          fetchData();
-                      });
+                        fetchData();
+                       });
                   </script>
                 </tbody>
                 </table>

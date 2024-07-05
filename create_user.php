@@ -70,9 +70,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
             // $fileContent = file_get_contents($_FILES[$fileKey]['tmp_name']); // Read file content as binary
             // return $fileContent;
+
+            $username = $_POST['username'];
+            $today = date('Y-m-d');
             
             // Generate unique filename to avoid overwriting existing files
-            $targetDir = "datas/";
+            $targetDir = "datas/". $username. "/" . $today. "/";
+            // Create directories if they don't exist (using mkdir with recursion)
+            if (!is_dir($targetDir)) {
+                if (!mkdir($targetDir, 0755, true)) {
+                $fileErrors[] = "Error creating directory: $targetDir";
+                return null;
+                }
+            }
             $targetFile = $targetDir . basename($_FILES[$fileKey]["name"]);
             
             if (move_uploaded_file($_FILES[$fileKey]["tmp_name"], $targetFile)) {

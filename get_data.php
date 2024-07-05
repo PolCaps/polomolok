@@ -10,22 +10,49 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// SQL query to fetch data
-$sql = "SELECT first_name, middle_name, last_name, building_type, store_number, monthly_payment FROM users_account WHERE user_type = 'Vendor'";
+// SQL query to fetch data using INNER JOIN
+$sql = "
+SELECT 
+    v.vendor_name, 
+    b.building_code, 
+    s.stall_number, 
+    pm.monthly_payments
+FROM 
+    vendor v
+INNER JOIN 
+    buildings b ON v.building_id = b.building_id
+INNER JOIN 
+    stalls s ON v.stall_id = s.stall_id
+INNER JOIN 
+    payments pm ON v.payment_id = pm.payment_id
+INNER JOIN 
+    users u ON v.user_id = u.user_id
+WHERE 
+    u.user_type = 'VENDOR';
+";
+
 $result = $conn->query($sql);
 
-// Check if there are results
-if ($result->num_rows > 0) {
-    // Fetch associative array
-    $data = array();
-    while ($row = $result->fetch_assoc()) {
-        $data[] = $row;
+   // Check if there are results
+    if ($result === false) {
+        // Handle SQL query execution error
+        echo json_encode(['success' => false, 'error' => 'Error executing query: ' . $conn->error]);
+    } else {
+        // Check if query returned rows
+        if ($result->num_rows > 0) {
+            // Fetch and display the rows from the result set
+            $data = [];
+            while ($row = $result->fetch_assoc()) {
+                $data[] = $row;
+            }
+            // Output data as JSON
+            echo json_encode(['success' => true, 'data' => $data]);
+        } else {
+            // No rows found
+            echo json_encode(['success' => false, 'error' => 'No data found']);
+        }
     }
-    // Output data as JSON
-    echo json_encode($data);
-} else {
-    echo json_encode(array('message' => 'No data found'));
-}
+
 
 // Close connection
 $conn->close();
