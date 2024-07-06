@@ -15,7 +15,7 @@ $sql = "
 SELECT 
     v.vendor_name, 
     b.building_code, 
-    s.stall_number, 
+    s.stall_number,  
     pm.monthly_payments
 FROM 
     vendor v
