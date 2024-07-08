@@ -22,6 +22,34 @@
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+
+  <script>
+    "use strict";
+    
+    !function() {
+      var t = window.driftt = window.drift = window.driftt || [];
+      if (!t.init) {
+        if (t.invoked) return void (window.console && console.error && console.error("Drift snippet included twice."));
+        t.invoked = !0, t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
+        t.factory = function(e) {
+          return function() {
+            var n = Array.prototype.slice.call(arguments);
+            return n.unshift(e), t.push(n), t;
+          };
+        }, t.methods.forEach(function(e) {
+          t[e] = t.factory(e);
+        }), t.load = function(t) {
+          var e = 3e5, n = Math.ceil(new Date() / e) * e, o = document.createElement("script");
+          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + n + "/" + t + ".js";
+          var i = document.getElementsByTagName("script")[0];
+          i.parentNode.insertBefore(o, i);
+        };
+      }
+    }();
+    drift.SNIPPET_VERSION = '0.3.1';
+    drift.load('93ian234iumi');
+    </script>
+
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -203,44 +231,66 @@
               </div>
             </div>
           </div>
-    </div>
+      </div>
         
         </div>
       </main>
-  <div class="fixed-plugin">
-    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-      <i class="fa fa-wechat py-2"> </i>
-    </a>
-    <div class="card shadow-lg ">
-      <div class="card-header pb-0 pt-3 ">
-        <div class="float-start">
-          <h5 class="mt-3 mb-0">Prince Jay</h5>
-          <p>Vendor</p>
-        </div>
-        <div class="float-end mt-4">
-          <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
-            <i class="fa fa-close"></i>
-          </button>
-        </div>
-        <!-- End Toggle Button -->
+          <div class="fixed-plugin">
+        <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+          <i class="fa fa-cog py-2"> </i>
+        </a>
+        <div class="card shadow-lg ">
+          <div class="card-header pb-0 pt-3 ">
+            <div class="float-start">
+              <h5 class="mt-3 mb-0">Prince Jay</h5>
+              <p>Vendor</p>
+            </div>
+            <div class="float-end mt-4">
+              <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
+                <i class="fa fa-close"></i>
+              </button>
+            </div>
+            <!-- End Toggle Button -->
+          </div>
+          <hr class="horizontal dark my-1">
+          <div class="card-body pt-sm-3 pt-0">
+            <a class="btn bg-gradient-info w-85 text-white mx-4" href="#">Edit Profile</a>
+            <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
+            <hr class="horizontal dark my-1">
+            <div class="text-small">Fixed Navbar</div>
+          <div class="form-check form-switch ps-0">
+            <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+          </div>
+          <br>
+          <hr class="horizontal dark my-1">
+          <br>
+          <div class="text-small text-center text-info">Messages</div>
+          <br><br>
+          <div class="text-small text-center">No Message Yet!</div>
+          </div>
       </div>
-      <hr class="horizontal dark my-1">
-      <div class="card-body pt-sm-3 pt-0">
-        <a class="btn bg-gradient-info w-85 text-white mx-4" href="#">Edit Profile</a>
-        <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
+
+      <div class="fixed-plugin">
+        <a class="fixed-plugin-button text-dark position-fixed px-3 py-2 mx-6"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+          <i class="fa fa-wechat py-2"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"> </i>
+        </a>
+      </div>
+
+      <div class="offcanvas offcanvas-end max-width-300" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title text-info" id="offcanvasRightLabel">Reminders/Messages</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
         <hr class="horizontal dark my-1">
-        <div class="text-small">Fixed Navbar</div>
-      <div class="form-check form-switch ps-0">
-        <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+        
+        <br>
+        <div class="text-small text-center text-info">Messages</div>
+        <br><br>
+        <div class="text-small text-center">No Message Yet!</div>
+        </div>
+        
       </div>
-      <br>
-      <hr class="horizontal dark my-1">
-      <br>
-      <div class="text-small text-center text-info">Messages</div>
-      <br><br>
-      <div class="text-small text-center">No Message Yet!</div>
-      </div>
-  </div>
   <!--   Core JS Files   -->
   <script src="assets2/js/core/popper.min.js"></script>
   <script src="assets2/js/core/bootstrap.min.js"></script>
