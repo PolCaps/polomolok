@@ -81,7 +81,7 @@ session_start()
   <!--Login MOdal-->
   <div class="modal fade" id="loginModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
+        <div class="modal-content"> 
             <div class="modal-header">
                 <h5 class="modal-title" id="staticBackdropLabel">Login Account</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -233,99 +233,61 @@ session_start()
 
       </div>
 
-    </section><!-- /About Section -->
+      </section><!-- /About Section -->
 
           <?php
-      
-      include'database_config.php';
+          // Database connection settings
+          include('database_config.php');
 
-      // Create connection
-      $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-      // Check connection
-      if ($conn->connect_error) {
-          die("Connection failed: ". $conn->connect_error);
-      }
-
-      // Query to retrieve data from stats table
-      $sql = "
-      SELECT 
-      (SELECT COUNT(*) FROM buildings) AS building_id,
-      (SELECT COUNT(*) FROM stalls) AS stall_id,
-      (SELECT COUNT(*) FROM vendor) AS vendor_name,
-      (SELECT COUNT(*) FROM users) AS username;
-      ";
-      $result = $conn->query($sql);
-
-      // Initialize counts
-      $buildingsCount = $stallsCount = $vendorsCount = $userCount = 0;
-
-      // Check if query execution was successful
-    if ($result === false) {
-      // Output the error message
-        echo "Error executing query: " . $conn->error;
-      } else {
-        // Check if query returned rows
-        if ($result->num_rows > 0) {
+          // Query to retrieve data from stats table
+          $sql = "SELECT buildings, overall_stalls, vendors, workers FROM stats WHERE id=1";
+          $result = $conn->query($sql);
+                  
+          // Check if query was successful
+          if ($result->num_rows > 0) {
           // Fetch the row from the result set
           $row = $result->fetch_assoc();
-        
-
-          // Access the counts
-          $buildingsCount = $row['building_id'];
-          $stallsCount = $row['stall_id'];
-          $vendorsCount = $row['vendor_name'];
-          $userCount = $row['username'];
-      } else {
+          } else {
           echo "No data found";
-      }
-    }
+          }
+          // Close connection
+          $conn->close();
+          ?>
 
-      // Close connection
-      $conn->close();
-      ?>
-    <!-- Stats Section -->
-    <section id="stats" class="stats section">
+          <!-- Stats Section -->
+          <section id="stats" class="stats section">
 
-    <div class="container" data-aos="fade-up" data-aos-delay="100">
+          <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-      <div class="row gy-4">
-
-      
-        <div class="col-lg-3 col-md-6">
+          <div class="row gy-4">
+          <div class="col-lg-3 col-md-6">
           <div class="stats-item text-center w-100 h-100">
-            <span data-purecounter-start="0" data-purecounter-end="<?php echo $buildingsCount; ?>" data-purecounter-duration="1" class="purecounter"></span>
+            <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['buildings'];?>" data-purecounter-duration="1" class="purecounter"></span>
             <p>Buildings</p>
           </div>
-        </div><!-- End Stats Item -->
-
-        <div class="col-lg-3 col-md-6">
+          </div><!-- End Stats Item -->
+          <div class="col-lg-3 col-md-6">
           <div class="stats-item text-center w-100 h-100">
-            <span data-purecounter-start="0" data-purecounter-end="<?php echo $stallsCount; ?>" data-purecounter-duration="1" class="purecounter"></span>
+            <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['overall_stalls'];?>" data-purecounter-duration="1" class="purecounter"></span>
             <p>Overall Stalls</p>
           </div>
-        </div><!-- End Stats Item -->
-
-        <div class="col-lg-3 col-md-6">
+          </div><!-- End Stats Item -->
+          <div class="col-lg-3 col-md-6">
           <div class="stats-item text-center w-100 h-100">
-            <span data-purecounter-start="0" data-purecounter-end="<?php echo $vendorsCount; ?>" data-purecounter-duration="1" class="purecounter"></span>
+            <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['vendors'];?>" data-purecounter-duration="1" class="purecounter"></span>
             <p>Vendors</p>
           </div>
-        </div><!-- End Stats Item -->
+          </div><!-- End Stats Item -->
 
-        <div class="col-lg-3 col-md-6">
+          <div class="col-lg-3 col-md-6">
           <div class="stats-item text-center w-100 h-100">
-            <span data-purecounter-start="0" data-purecounter-end="<?php echo $userCount; ?>" data-purecounter-duration="1" class="purecounter"></span>
+            <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['workers'];?>" data-purecounter-duration="1" class="purecounter"></span>
             <p>Workers</p>
           </div>
-        </div><!-- End Stats Item -->
-      
-
+          </div><!-- End Stats Item -->
+        </div>
       </div>
-
-    </div>
-  </section>
-    
-
+    </section>
     
     <!-- Testimonials Section -->
     <section id="testimonials" class="testimonials section">

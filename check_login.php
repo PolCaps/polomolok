@@ -2,7 +2,6 @@
 include('database_config.php');
 session_start();
 
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 if ($conn->connect_error) {
     die("Connection failed: ". $conn->connect_error);
 }
@@ -22,6 +21,9 @@ if ($username && $password) {
         switch ($user['user_type']) {
             case 'ADMIN':
                 header("Location: Admin.html");
+                exit();
+            case 'STAFF':
+                header("Location: Staff.html");
                 exit();
             case 'VENDOR':
                 header("Location: Vendor.html");
