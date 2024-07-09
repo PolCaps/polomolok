@@ -251,7 +251,7 @@
                         </div>
                         <div class="form-group">
                           <label for="middle_name">Middle Name:</label>
-                          <input type="text" id="middle_name" class="form-control" name="middle_name" required>
+                          <input type="text" id="middle_name" class="form-control" name="middle_name">
 
                         </div>
                         <div class="form-group">
@@ -280,14 +280,14 @@
                         </div>
 
                         <div class="form-group">
-                          <label for="store_number">Stall Code:</label>
+                          <label for="stall_number">Stall Code:</label>
                           <input type="text" id="stall_code" name="stall_code" class="form-control">
                         </div>
 
                         <div class="col-md-6">
                           <div class="form-group">
-                            <label for="building_code">Buildings:</label>
-                            <select id="building_code" name="building_code" class="form-control">
+                            <label for="building_type">Buildings:</label>
+                            <select id="building_type" name="building_type" class="form-control">
                               <option value="">Select Buildings</option>
                               <option value="Building A">Building A</option>
                               <option value="Building B">Building B</option>
@@ -329,8 +329,8 @@
                         </div>
 
                         <div class="form-group">
-                          <label for="monthly_payment">Monthly Payment:</label>
-                          <input type="number" id="monthly_payments" name="monthly_payments" class="form-control">
+                          <label for="monthly_rentals">Monthly Rentals:</label>
+                          <input type="number" id="monthly_rentals" name="monthly_rentals" class="form-control">
                         </div>
                       </div>
                       <div class="col-md-6">
@@ -399,7 +399,6 @@
           //  }
          // }
 
-
           function handleFileInputChange(event, inputId) {
             const input = event.target;
             const files = input.files;
@@ -410,8 +409,7 @@
             '*/*',
             'application/pdf',
             'application/msword', // Add document types
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // docx
-          ];
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
             const fileErrors = [];
         
             for (let i = 0; i < files.length; i++) {
@@ -432,17 +430,17 @@
             const formData = new FormData();
             formData.append(key, new Blob([binaryData]));
           
-            fetch('create_user.php', {
-              method: 'POST',
-              body: formData,
-            })
-            .then(response => response.text())
-            .then(data => {
-              console.log('Server response:', data);
-            })
-            .catch(error => {
-              console.error('Error sending data:', error);
-            });
+           // fetch('create_user.php', {
+           //   method: 'POST',
+         //     body: formData,
+      //      })
+      //      .then(response => response.text())
+      //      .then(data => {
+       //       console.log('Server response:', data);
+        //    })
+        //    .catch(error => {
+        //      console.error('Error sending data:', error);
+   //         });
           }
 
 
@@ -459,9 +457,6 @@
                   body: formData
               })
 
-
-          
-
               .then(response => {
                   // Check if the response is in the correct format (JSON)
                   if (!response.ok) {
@@ -469,6 +464,8 @@
                   }
                   response.json(); // Parse JSON response
               })
+
+
               .then(data => {
                   // Log the received data for debugging
                   console.log('Response data:', data);
@@ -484,18 +481,15 @@
                       alert('Error creating user: ' + data.error);
                   }
               })
-
-
               .catch(error => {
                   // Handle any network or parsing errors
                   console.error('Error:', error);
                   alert('Error creating user. Please try again later.');
               });
           });
-          
-         
           </script>
       </div>
+      
       <div class="row my-4">
         <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
           <div class="card">

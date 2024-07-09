@@ -12,23 +12,11 @@ if ($conn->connect_error) {
 
 // SQL query to fetch data using INNER JOIN
 $sql = "
-SELECT 
-    v.vendor_name, 
-    b.building_code, 
-    s.stall_number,  
-    pm.monthly_payments
-FROM 
-    vendor v
-INNER JOIN 
-    buildings b ON v.building_id = b.building_id
-INNER JOIN 
-    stalls s ON v.stall_id = s.stall_id
-INNER JOIN 
-    payments pm ON v.payment_id = pm.payment_id
-INNER JOIN 
-    users u ON v.user_id = u.user_id
-WHERE 
-    u.user_type = 'VENDOR';
+SELECT u.user_id, pp.first_name, pp.middle_name, pp.last_name, b.building_code, s.stall_number, s.monthly_rentals
+FROM users u
+JOIN personal_profile pp ON u.user_id = pp.user_id
+JOIN stalls s ON pp.user_id = s.user_id
+JOIN buildings b ON s.building_id = b.building_id
 ";
 
 $result = $conn->query($sql);

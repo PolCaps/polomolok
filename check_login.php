@@ -2,8 +2,12 @@
 include('database_config.php');
 session_start();
 
+// Create connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check connection
 if ($conn->connect_error) {
-    die("Connection failed: ". $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 $username = $_POST['username'];
@@ -23,10 +27,10 @@ if ($username && $password) {
                 header("Location: Admin.html");
                 exit();
             case 'STAFF':
-                header("Location: Staff.html");
+                header("Location: Staff.php");
                 exit();
             case 'VENDOR':
-                header("Location: Vendor.html");
+                header("Location: Vendor.php");
                 exit();
             default:
                 // If user role is not recognized, redirect to a generic page or display an error message

@@ -1,5 +1,5 @@
 <?php
-include('database_config.php');
+include ('database_config.php');
 
 
 error_reporting(E_ALL);
@@ -108,7 +108,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         // Prepare and execute user insert based on user_type
         $sqlA = "INSERT INTO users (username, password, user_type) VALUES (?, ?, ?)";
         $stmtA = $conn->prepare($sqlA);
-        if (!$stmtA = $conn->prepare($sqlA)) {
+        if (!$stmtA) {
             throw new Exception("Prepare statement failed for users: " . $conn->error);
         }
         $stmtA->bind_param('sss', $username, $password, $user_type);
@@ -116,111 +116,76 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         if ($stmtA->affected_rows !== 1) {
             throw new Exception("Error inserting account data.");
         }
+        $insertedUserId = $conn->insert_id;
+       
 
-        if ($stmtA->execute()) {
-            $insertedUserId = mysqli_insert_id($conn); // try ra kung effective
-            } else {
-                throw new Exception("Error inserting for users id.");
-            }
-            $conn->commit();
-        
         // Prepare and execute personal_profile insert
 
-        $insertedIdvendor = null;
         // Retrieve the inserted user ID for foreign key reference (if needed)
         switch ($user_type) {
             case "VENDOR":
-              $sqlB = "INSERT INTO vendors (vendor_name, user_id) VALUES (?,?)";
-              $stmtB = $conn->prepare($sqlB);
-              if (!$stmtB = $conn->prepare($sqlB)) {
-                throw new Exception("Prepare statement failed for vendor: " . $conn->error);
-            }
-              $stmtB->bind_param('si', $full_name, $insertedUserId);
-              $stmtB->execute();
-              if ($stmtB->execute()) {
-                $insertedIdvendor= $conn->insert_id; // try ra kung effective
-                } else {
-                    throw new Exception("Error inserting for users id.");
-                }
-              
-              if ($stmtB->affected_rows !== 1) {
-                throw new Exception("Error inserting " . strtolower($user_type) . " data."); //
-              }
+              $sqlB = "INSERT INTO vendors (vendor_name) VALUES (?)";
               break;
             case "ADMIN":
-              $sqlB = "INSERT INTO admin (admin_name, user_id) VALUES (?,?)";
-              $stmtB = $conn->prepare($sqlB);
-              if (!$stmtB = $conn->prepare($sqlB)) {
-                throw new Exception("Prepare statement failed for admin: " . $conn->error);
-            }
-              $stmtB->bind_param('si', $full_name, $insertedUserId);
-              $stmtB->execute();
-              if ($stmtB->affected_rows !== 1) {
-                throw new Exception("Error inserting " . strtolower($user_type) . " data."); //
-              }
+              $sqlB = "INSERT INTO admin (admin_name) VALUES (?)";
               break;
             case "STAFF":
-              $sqlB = "INSERT INTO staffs (staffs_name, user_id) VALUES (?,?)";
-              $stmtB = $conn->prepare($sqlB);
-              if (!$stmtB = $conn->prepare($sqlB)) {
-                throw new Exception("Prepare statement failed for staff: " . $conn->error);
-            }
-              $stmtB->bind_param('si', $full_name, $insertedUserId);
-              $stmtB->execute();
-              if ($stmtB->affected_rows !== 1) {
-                throw new Exception("Error inserting " . strtolower($user_type) . " data."); //
-              }
+              $sqlB = "INSERT INTO staff (staff_name) VALUES (?)";
               break;
             default:
               throw new Exception("Invalid user type");
           }
           
+          $stmtB = $conn->prepare($sqlB);
           if (!$stmtB) {
             throw new Exception("Prepare statement failed: " . $conn->error);
           }
           
-          $conn->commit();
+          $stmtB->bind_param('s', $full_name);
+          $stmtB->execute();
           
+          if ($stmtB->affected_rows !== 1) {
+            throw new Exception("Error inserting " . strtolower($user_type) . " data.");
+          }
+          
+// Retrieve the inserted user ID for foreign key reference (if needed)
         
 
         $sqlC = "INSERT INTO personal_profile (personal_id, first_name, middle_name, last_name, age, contact_number, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmtC = $conn->prepare($sqlC);
-        $stmtC->bind_param('isssiis', $insertedUserId, $first_name, $middle_name, $last_name, $age, $contactNumber, $address);
+        $stmtC->bind_param('issssss', $insertedUserId, $first_name, $middle_name, $last_name, $age, $contactNumber, $address);
         $stmtC->execute();
 
         if ($stmtC->affected_rows !== 1) {
             throw new Exception("Error inserting personal profile.");
         }
-        $conn->commit();
-       
 
+       
+        // Insert into buildings (assuming stall_number is a foreign key)
        
         $sql1 = "INSERT INTO buildings (building_floor, building_type, user_id, vendor_id) VALUES (?, ?, ?, ?)";
         $stmt1 = $conn->prepare($sql1);
-        $stmt1->bind_param('ssii', $buildingFloor, $buildingtype, $insertedUserId, $insertedIdvendor);
+        $stmt1->bind_param('ssii', $buildingtype, $buildingFloor, $insertedUserId, $insertedIdvendor);
         $stmt1->execute();
 
         // Check if stall insertion was successful
         if ($stmt1->execute()) {
-            $insertedbuildingtype = mysqli_insert_id($conn);  // try ra kung effective
+            $insertedbuildingtype = mysqli_insert_id($conn);  // Get the inserted stall ID
             } else {
                 throw new Exception("Error inserting stalls data.");
             }
-            $conn->commit();
+
        
          $sql2 = "INSERT INTO stalls (stall_code, monthly_rentals, stall_number, user_id, building_id) VALUES (?, ?, ?, ?, ?)";
          $stmt2 = $conn->prepare($sql2);
          $stmt2->bind_param('sssii', $stallCode, $Rentals, $stallNumber, $insertedUserId, $insertedbuildingtype);
-         if ($stmt2->affected_rows !== 1) {
-            throw new Exception("Error inserting stall.");
-        }
             $stmt2->execute();
-            $conn->commit();
-        
+         
+
            // Prepare and execute documents insert
            $sqlD = "INSERT INTO documents (receipts, lease_agreements, business_permits, business_licenses) VALUES (?, ?, ?, ?)";
            $stmtD = $conn->prepare($sqlD);
-           $stmtD->bind_param('bbbb', $receiptsDest, $leaseAgreementsDest, $businessPermitsDest, $businessLicensesDest);
+           $stmtD->bind_param('bbbb', $receiptsDest, $leaseAgreementstDest, $businessPermitsDest, $businessLicensesDest);
             // Assuming successful preparation...
             $stmtD->send_long_data(0, $receiptsDest);
             $stmtD->send_long_data(1, $leaseAgreementsDest);
@@ -233,23 +198,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
            if ($stmtD->affected_rows !== 1) {
                throw new Exception("Error inserting documents.");
            }
+   
+  
 
-           $conn->commit();
-         // $SOA = null;
         // Prepare and execute payments insert
-        $sqlE = "INSERT INTO monthly_payments ( receipts, started_date, end_date, document_id, user_id) VALUES ( ?, ?, ?, ?, ?)";
+        $sqlE = "INSERT INTO monthly_payments (started_date, end_date) VALUES ( ?, ?)";
         $stmtE = $conn->prepare($sqlE);
-        if (!$stmtE = $conn->prepare($sqlE)) {
-            throw new Exception("Prepare statement failed for payments: " . $conn->error);
-        }
-        $stmtE->bind_param('bssii', $receiptsDest, $startDate, $endDate, $insertedDocumentId, $insertedUserId);
-        $stmtE->send_long_data(2, $receiptsDest);
+        $stmtE->bind_param('ss',  $startDate, $endDate);
+        
        // $stmtE->send_long_data(1, $receiptsDest); // Send the binary data for receipts
         $stmtE->execute();
+
         if ($stmtE->affected_rows !== 1) {
             throw new Exception("Error inserting payment.");
         }
-        $conn->commit();
 
         // Close prepared statements
         if (isset($stmtA)) $stmtA->close();
@@ -258,7 +220,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         if (isset($stmt1)) $stmt1->close();
         if (isset($stmt2)) $stmt2->close();
         if (isset($stmtD)) $stmtD->close();
-        if (isset($stmtE)) $stmtE->close();
      
 
         // Commit transaction if all inserts succeed

@@ -269,9 +269,16 @@ session_start()
           <?php
           // Database connection settings
           include('database_config.php');
+          // Create connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
           // Query to retrieve data from stats table
-          $sql = "SELECT buildings, overall_stalls, vendors, workers FROM stats WHERE id=1";
+          $sql = "SELECT buildings, overall_stalls, vendors, workers FROM stats WHERE statsID = 1";
           $result = $conn->query($sql);
                   
           // Check if query was successful
