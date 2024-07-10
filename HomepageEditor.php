@@ -42,7 +42,7 @@ session_start();
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link " href="Admin.html">
+          <a class="nav-link " href="Admin.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-shop" viewBox="0 0 16 16">
                 <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
@@ -232,38 +232,31 @@ session_start();
     </div>
   </main>
   <div class="fixed-plugin">
-    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-      <i class="fa fa-wechat py-2"> </i>
-    </a>
-    <div class="card shadow-lg ">
-      <div class="card-header pb-0 pt-3 ">
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" href="#">
+      <i class="fas fa-cog"></i> </a>
+    <div class="card shadow-lg">
+      <div class="card-header pb-0 pt-3">
         <div class="float-start">
           <h5 class="mt-3 mb-0">Admin Meedo</h5>
           <p>Admin</p>
         </div>
         <div class="float-end mt-4">
           <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
-            <i class="fa fa-close"></i>
+            <i class="fas fa-times"></i>
           </button>
         </div>
-        <!-- End Toggle Button -->
-      </div>
+        </div>
       <hr class="horizontal dark my-1">
       <div class="card-body pt-sm-3 pt-0">
-        <a class="btn bg-gradient-info w-85 text-white mx-4" href="#">Edit Profile</a>
+        <a class="btn bg-gradient-info w-85 text-white mx-4" href="Admin.php">Edit Profile</a>
         <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
         <hr class="horizontal dark my-1">
         <div class="text-small">Fixed Navbar</div>
-      <div class="form-check form-switch ps-0">
-        <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+        <div class="form-check form-switch ps-0"> 
+          <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+        </div>
       </div>
-      <br>
-      <hr class="horizontal dark my-1">
-      <br>
-      <div class="text-small text-center text-info">Messages</div>
-      <br><br>
-      <div class="text-small text-center">No Message Yet!</div>
-      </div>
+    </div>
   </div>
   <!--   Core JS Files   -->
   <script src="assets2/js/core/popper.min.js"></script>

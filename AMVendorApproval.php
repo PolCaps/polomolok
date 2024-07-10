@@ -7,7 +7,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Vendor Payment Reminder
+    Administrator Dashboard
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -19,6 +19,9 @@
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
+  <!-- Nepcha Analytics (nepcha.com) -->
+  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -36,7 +39,7 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link " href="Staff.php">
+          <a class="nav-link " href="Admin.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-shop" viewBox="0 0 16 16">
                 <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
@@ -72,35 +75,43 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="SMReciept.html">
+          <a class="nav-link " href="AMvendor.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                 <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
               </svg>
             </div>
-            <span class="nav-link-text ms-1">Reciept</span>
+            <span class="nav-link-text ms-1">Vendors</span>
+          </a> 
+        </li>
+        <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Vendor and Stall Approval</h6>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active " href="#">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <img src="image/icons/icons8-approve-48.png" alt="approveicon" width="18px" height="18px">
+            </div>
+            <span class="nav-link-text ms-1">Vendor Approval</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="#">
+          <a class="nav-link  " href="AMRelocationRequest.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
-                <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
-                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-              </svg>
+              <img src="image/icons/icons8-kiosk-on-wheels-48.png" alt="relocationimg" width="18px" height="18px">
             </div>
-            <span class="nav-link-text ms-1">Payment Reminder</span>
+            <span class="nav-link-text ms-1">Relocation Request</span>
           </a>
         </li>
+        <li class="nav-item mt-3">
+          <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Page Customization</h6>
+        </li>
         <li class="nav-item">
-          <a class="nav-link  " href="SMVendorDocuments.html">
+          <a class="nav-link  " href="HomepageEditor.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-medical" viewBox="0 0 16 16">
-                <path d="M7.5 5.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L6 7l-.549.317a.5.5 0 1 0 .5.866l.549-.317V8.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L8 7l.549-.317a.5.5 0 1 0-.5-.866l-.549.317zm-2 4.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"/>
-                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
-              </svg>
+            <img src="image/icons/icons8-browser-settings-48.png" alt="approveicon" width="18px" height="18px">
             </div>
-            <span class="nav-link-text ms-1">Vendor's Document</span>
+            <span class="nav-link-text ms-1">Homepage</span>
           </a>
         </li>
       </ul>
@@ -110,7 +121,7 @@
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center">Prince Jay</h5>
+          <h5 class="text-center">Admin Meedo</h5>
           <hr class="horizontal dark mt-0">
         </div>
       </div>
@@ -122,10 +133,10 @@
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Staff</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Admin</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modules</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Payment Reminder</h6>
+          <h6 class="font-weight-bolder mb-0">Vendor Approval/Applicants</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -138,7 +149,7 @@
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Vendor</span>
+                <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -154,23 +165,88 @@
         </div>
       </div>
     </nav>
+    
     <!-- End Navbar -->
     <div class="container-fluid py-4">
-      
+      <!-- Add Vendor Applicant button -->
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVendorApplicantModal">Add Vendor Applicant</button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="addVendorApplicantModal" tabindex="-1" aria-labelledby="addVendorApplicantModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="addVendorApplicantModalLabel">Add Vendor Applicant</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="firstName" class="form-label">First Name:</label>
+                      <input type="text" class="form-control" id="firstName" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="middleName" class="form-label">Middle Name:</label>
+                      <input type="text" class="form-control" id="middleName">
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="lastName" class="form-label">Last Name:</label>
+                  <input type="text" class="form-control" id="lastName" required>
+                </div>
+                <div class="mb-3">
+                  <label for="address" class="form-label">Address:</label>
+                  <input type="text" class="form-control" id="address" required>
+                </div>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="age" class="form-label">Age:</label>
+                      <input type="number" class="form-control" id="age" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="mb-3">
+                      <label for="date" class="form-label">Date:</label>
+                      <input type="date" class="form-control" id="date" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label for="email" class="form-label">Email Address:</label>
+                  <input type="email" class="form-control" id="email" required>
+                </div>
+                <div class="mb-3">
+                  <label for="contactNo" class="form-label">Contact No:</label>
+                  <input type="tel" class="form-control" id="contactNo" required>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="addVendorApplicantBtn">Add Vendor Applicant</button>
+            </div>
+          </div>
+        </div>
+      </div>
       <div class="row my-4">
-        <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
+        <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
           <div class="card">
             <div class="card-header pb-0">
               <div class="row">
                 <div class="col-lg-6 col-7">
-                  <h6>Vendors</h6>
+                  <h6>Vendors Approval</h6>
                   <p class="text-sm mb-0">
-                    <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
-                    <span class="font-weight-bold ms-1">30 Vendors that are overdued</span> this month
+                    <i class="fa fa-user-circle text-warning" aria-hidden="true"></i>
+                    <span class="font-weight-bold ms-1">Stall Applicants</span> 
                   </p>
                 </div>
-                
-                <div class="col-lg-6 col-5 my-auto text-end">
+               <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="dropdown float-lg-end pe-4 mx-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-week" viewBox="0 0 16 16" id="filterDate" data-bs-toggle="dropdown" aria-expanded="false">
                       <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
@@ -217,12 +293,12 @@
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Building</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due Date</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Send Message</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Applicant Name</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Date</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Address</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Email Address</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Contact No.</th>
+                      
                     </tr>
                   </thead>
                   <tbody>
@@ -230,28 +306,29 @@
                       <td>
                         <div class="d-flex px-3 py-1">
                           <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Reyan Jay Samontanes</h6>
+                            <h6 class="text-sm text-center">Reyan Jay Samontanes</h6>
                           </div>
                         </div>
                       </td>
                       <td>
                         <div class="avatar-group mt-1">
-                          <h6 class="mb-1 text-sm">Building E</h6>
+                          <h6 class="text-xs text-center">05-21-24</h6>
                         </div>
                       </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> 47 </span>
+                      <td>
+                        <div class="avatar-group mt-1">
+                          <h6 class="text-xs text-center">Labangal</h6>
+                        </div>
                       </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold">P25,250</span>
+                      <td>
+                        <div class="avatar-group mt-1">
+                          <h6 class="text-xs text-center">examplerani@email.com</h6>
+                        </div>
                       </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold">2023-02-15</span>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#sendMessageModal">
-                          Send Message
-                        </button>
+                      <td>
+                        <div class="avatar-group mt-1">
+                          <h6 class="text-xs text-center">0992347932</h6>
+                        </div>
                       </td>
                     </tr>
                   </tbody>
@@ -290,73 +367,40 @@
         </div>
       </div>
     </div>
-
-    <!--
-    
-    JavaScript to handle the send message functionality
-      <script>
-        $(document).ready(function() {
-          $('#sendMessageBtn').on('click', function() {
-            var vendorName = $('#vendor-name').val();
-            var message = $('#message').val();
-            
-            // Make an AJAX request to send the message to the vendor
-            $.ajax({
-              type: 'POST',
-              url: 'end_message.php', // Replace with your PHP script to send the message
-              data: { vendor_name: vendorName, message: message },
-              success: function(response) {
-                if (response == 'uccess') {
-                  $('#sendMessageModal').modal('hide');
-                  alert('Message sent successfully!');
-                } else {
-                  alert('Error sending message. Please try again.');
-                }
-              }
-            });
-          });
-        });
-      </script>
-          -->
-
-
-
+  
+        </div>
+      </div>
+      
     </div>
   </main>
   <div class="fixed-plugin">
-    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-      <i class="fa fa-wechat py-2"> </i>
-    </a>
-    <div class="card shadow-lg ">
-      <div class="card-header pb-0 pt-3 ">
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" href="#">
+      <i class="fas fa-cog"></i> </a>
+    <div class="card shadow-lg">
+      <div class="card-header pb-0 pt-3">
         <div class="float-start">
-          <h5 class="mt-3 mb-0">Prince Jay</h5>
-          <p>Vendor</p>
+          <h5 class="mt-3 mb-0">Admin Meedo</h5>
+          <p>Admin</p>
         </div>
         <div class="float-end mt-4">
           <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
-            <i class="fa fa-close"></i>
+            <i class="fas fa-times"></i>
           </button>
         </div>
-        <!-- End Toggle Button -->
-      </div>
+        </div>
       <hr class="horizontal dark my-1">
       <div class="card-body pt-sm-3 pt-0">
-        <a class="btn bg-gradient-info w-85 text-white mx-4" href="#">Edit Profile</a>
+        <a class="btn bg-gradient-info w-85 text-white mx-4" href="Admin.php">Edit Profile</a>
         <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
         <hr class="horizontal dark my-1">
         <div class="text-small">Fixed Navbar</div>
-      <div class="form-check form-switch ps-0">
-        <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+        <div class="form-check form-switch ps-0"> 
+          <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+        </div>
       </div>
-      <br>
-      <hr class="horizontal dark my-1">
-      <br>
-      <div class="text-small text-center text-info">Messages</div>
-      <br><br>
-      <div class="text-small text-center">No Message Yet!</div>
-      </div>
+    </div>
   </div>
+  
   <!--   Core JS Files   -->
   <script src="assets2/js/core/popper.min.js"></script>
   <script src="assets2/js/core/bootstrap.min.js"></script>
@@ -376,10 +420,8 @@
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 

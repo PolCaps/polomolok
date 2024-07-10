@@ -278,7 +278,7 @@ if ($conn->connect_error) {
 }
 
           // Query to retrieve data from stats table
-          $sql = "SELECT buildings, overall_stalls, vendors, workers FROM stats WHERE statsID = 1";
+          $sql = "SELECT buildings, overall_stalls, vendors, workers FROM stats WHERE ID = 1";
           $result = $conn->query($sql);
                   
           // Check if query was successful

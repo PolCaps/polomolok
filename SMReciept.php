@@ -7,7 +7,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Vendor Documents
+    Vendor Payment Reminder
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -72,7 +72,7 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="SMReciept.html">
+          <a class="nav-link active " href="SMReciept.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                 <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
@@ -82,7 +82,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="SMPaymentRem.html">
+          <a class="nav-link" href="SMPaymentRem.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
                 <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
@@ -93,7 +93,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active " href="SMVendorDocuments.html">
+          <a class="nav-link  " href="SMVendorDocuments.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-medical" viewBox="0 0 16 16">
                 <path d="M7.5 5.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L6 7l-.549.317a.5.5 0 1 0 .5.866l.549-.317V8.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L8 7l.549-.317a.5.5 0 1 0-.5-.866l-.549.317zm-2 4.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"/>
@@ -125,7 +125,7 @@
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Staff</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Payment Reminder</h6>
+          <h6 class="font-weight-bolder mb-0">Vendor's Document</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -154,11 +154,53 @@
         </div>
       </div>
     </nav>
+    <!-- Issue Reciept Modal ni sya-->
+      <div class="modal fade" id="issueRecieptModal" tabindex="-1" aria-labelledby="issueRecieptModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="issueRecieptModalLabel">Issue Receipt to Vendor</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <label for="vendorSelect" class="form-label">Select Vendor</label>
+                  <select id="vendorSelect" class="form-select">
+                    <!-- populate this select with a list of vendors -->
+                    <option value="">Select a vendor</option>
+                    <option value="1">Vendor 1</option>
+                    <option value="2">Vendor 2</option>
+                    <!-- ... -->
+                  </select>
+                </div>
+                <div class="mb-3">
+                  <label for="receiptFile" class="form-label">Attach Receipt File or Photo</label>
+                  <input type="file" id="receiptFile" class="form-control">
+                </div>
+                <div class="mb-3">
+                  <label for="receiptNotes" class="form-label">Notes (optional)</label>
+                  <textarea id="receiptNotes" class="form-control"></textarea>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" id="issueReceiptBtn">Issue Receipt</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
     <!-- End Navbar -->
     <div class="container-fluid py-4">
 
-      <div class="row my-4">
-        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
+      <div class="d-grid gap-2 d-md-block py-3 px-3">
+          <p class="text-title">Actions</p>
+          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#issueRecieptModal">
+            Issue Reciept
+          </button>
+        </div>
           <div class="card">
             <div class="card-header pb-0">
               <div class="row">
@@ -184,38 +226,166 @@
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Vendor Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Lease Agreement</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Business License</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Business Permits</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Other Supporting Documents</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Reciept History</th>
                     </tr>
                   </thead>
                   <tbody id="dataTableBody">
-                    <tr>
-                      <td class="align-middle text-center text-sm">Vendor 1</td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 1.pdf</a></td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 2.docx</a></td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 3.xlsx</a></td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 4.txt</a></td>
-                    </tr>
-                    <tr>
-                      <td class="align-middle text-center text-sm">Vendor 2</td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 5.pptx</a></td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 6.csv</a></td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 7.pdf</a></td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 8.docx</a></td>
-                    </tr>
-                    <!-- repeat for each row -->
-                  </tbody>
+                    
+                    <script>
+                      // Function to fetch data from PHP script
+                      function fetchData() {
+                          var xhr = new XMLHttpRequest();
+                          xhr.open('GET', 'get_data.php', true);
+                          xhr.onload = function () {
+                              if (xhr.status >= 200 && xhr.status < 300) {
+                                  var data = JSON.parse(xhr.responseText);
+                                  displayData(data);
+                              } else {
+                                  console.error('Request failed with status ' + xhr.status);
+                              }
+                          };
+                          xhr.onerror = function () {
+                              console.error('Network error occurred');
+                          };
+                          xhr.send();
+                      }
+                  
+                      // Function to display data in the HTML table
+                      function displayData(data) {
+                          var tbody = document.getElementById('dataTableBody');
+                          var html = '';
+                  
+                          data.forEach(function (row) {
+                              html += '<tr>';
+                              html += '  <td>';
+                              html += '    <div class="d-flex px-3 py-1">';
+                              html += '      <div class="d-flex flex-column justify-content-center">';
+                              html += '        <h6 class="mb-0 text-sm">' + row.first_name + ' ' + row.middle_name + ' ' + row.last_name + '</h6>';
+                              html += '      </div>';
+                              html += '    </div>';
+                              html += '  </td>';
+                              html += '  <td>';
+                              html += '    <div class="avatar-group mt-1">';
+                              html += '      <h6 class="mb-1 text-sm">' + row.building_type + '</h6>';
+                              html += '    </div>';
+                              html += '  </td>';
+                              html += '  <td class="align-middle text-center text-sm">';
+                              html += '    <span class="text-xs font-weight-bold">' + row.store_number + '</span>';
+                              html += '  </td>';
+                              html += '  <td class="align-middle text-center text-sm">';
+                              html += '    <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#openHistoryModal">Show Reciepts</button>';
+                              html += '  </td>';
+                              html += '</tr>';
+                          });
+                  
+                          // Insert the generated HTML into the table body
+                          tbody.innerHTML = html;
+                      }
+                  
+                      // Call fetchData function when the page loads
+                      document.addEventListener('DOMContentLoaded', function () {
+                          fetchData();
+                      });
+                  </script>
+                  
+                </tbody>
                 </table>
               </div>
             </div>
           </div>
         </div>
       </div>
-    
-    
+      
+      I POPULATE PA NATO NI IF HUMAN NA NAG DATABASES and NAA KOY JAVASCRIPT SA CODE ANI PANGITAA RA SA BABA MISMO ANING MESSAGE BASIG MAGAMIT
+<!-- Modal for receipt history -->
+<div class="modal fade" id="openHistoryModal" tabindex="-1" aria-labelledby="openHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="openHistoryModalLabel">Receipt History</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Table to display receipt history -->
+        <table class="table align-items-center mb-0">
+          <thead>
+            <tr>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt ID</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">File</th>
+            </tr>
+          </thead>
+          <tbody id="receiptHistoryBody">
+
+            <!-- Data will be populated here using JavaScript -->
+         
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+      
+  <!-- 
+// Function to fetch receipt history data
+function fetchReceiptHistory(receiptId) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'get_receipt_history.php?receipt_id=' + receiptId, true);
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      var data = JSON.parse(xhr.responseText);
+      displayReceiptHistory(data);
+    } else {
+      console.error('Request failed with status ' + xhr.status);
+    }
+  };
+  xhr.onerror = function() {
+    console.error('Network error occurred');
+  };
+  xhr.send();
+}
+
+// Function to display receipt history data in the modal
+function displayReceiptHistory(data) {
+  var tbody = document.getElementById('receiptHistoryBody');
+  var html = '';
+  
+  data.forEach(function(row) {
+    html += '<tr>';
+    html += '  <td>' + row.date + '</td>';
+    html += '  <td>' + row.receipt_id + '</td>';
+    html += '  <td>';
+    if (row.file_url) {
+      html += '    <a href="' + row.file_url + '" target="_blank">View File</a>';
+    } else {
+      html += '    No File Available';
+    }
+    html += '  </td>';
+    html += '</tr>';
+  });
+  
+  tbody.innerHTML = html;
+}
+
+// Add event listener to the button to open the modal
+document.addEventListener('DOMContentLoaded', function() {
+  var buttons = document.querySelectorAll('[data-bs-target="#openHistoryModal"]');
+  buttons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      var receiptId = button.dataset.receiptId;
+      fetchReceiptHistory(receiptId);
+    });
+  });
+});
+
+--> 
+
     </div>
   </main>
   <div class="fixed-plugin">
@@ -258,7 +428,6 @@
   <script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/chartjs.min.js"></script>
-  
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {

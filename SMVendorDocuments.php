@@ -7,7 +7,7 @@
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Staff Dashboard
+    Vendor Documents
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -19,9 +19,6 @@
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
-  <!-- Nepcha Analytics (nepcha.com) -->
-  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
-  <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -39,8 +36,8 @@
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" href="#">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-primary text-center me-2 d-flex align-items-center justify-content-center">
+          <a class="nav-link " href="Staff.php">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-shop" viewBox="0 0 16 16">
                 <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
               </svg>
@@ -75,7 +72,7 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="SMReciept.php">
+          <a class="nav-link" href="SMReciept.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                 <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
@@ -85,7 +82,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link  " href="SMPaymentRem.php">
+          <a class="nav-link" href="SMPaymentRem.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
                 <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
@@ -96,12 +93,12 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link  " href="SMVendorDocuments.php">
+          <a class="nav-link active " href="SMVendorDocuments.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-medical" viewBox="0 0 16 16">
-            <path d="M7.5 5.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L6 7l-.549.317a.5.5 0 1 0 .5.866l.549-.317V8.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L8 7l.549-.317a.5.5 0 1 0-.5-.866l-.549.317zm-2 4.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"/>
-            <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
-          </svg>
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-medical" viewBox="0 0 16 16">
+                <path d="M7.5 5.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L6 7l-.549.317a.5.5 0 1 0 .5.866l.549-.317V8.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L8 7l.549-.317a.5.5 0 1 0-.5-.866l-.549.317zm-2 4.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"/>
+                <path d="M14 14V4.5L9.5 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2M9.5 3A1.5 1.5 0 0 0 11 4.5h2V14a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1h5.5z"/>
+              </svg>
             </div>
             <span class="nav-link-text ms-1">Vendor's Document</span>
           </a>
@@ -126,9 +123,9 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Staff</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modules</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Dashboard</h6>
+          <h6 class="font-weight-bolder mb-0">Payment Reminder</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -159,72 +156,67 @@
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
-    <div class="row mt-4">
-          <div class="col-lg-5 mb-lg-4 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title text-lg text-info mb-3 text-start mx-2">Staff Profile</h5>
-                <div class="row">
-                  <div class="col-md-4">
-                    <img src="image/profile.jpg" class="img-fluid rounded-circle" alt="Admin Profile Picture">
-                  </div>
-                  <div class="col-md-8 my-3">
-                    <h6 class="card-subtitle mb-2 text-muted">Name: StaffHehe</h6>
-                    <p class="card-text">Username: ToBeChanged</p>
-                    <p class="card-text">Role: Staff</p>
-                  </div>
+
+      <div class="row my-4">
+        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
+          <div class="card">
+            <div class="card-header pb-0">
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <h6>Vendors</h6>
+                  <p class="text-sm mb-0">
+                    <i class="fa fa-user-circle text-warning" aria-hidden="true"></i>
+                    <span class="font-weight-bold ms-1">List of Vendors</span> 
+                  </p>
                 </div>
-                <hr class="horizontal dark my-3">
-                <div class="d-flex my-4 mx-5">
-                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Change Password
-                  </button>
-                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Change Profile Picture
-                  </button>
-                </div>
-                <div class="accordion" id="profile-accordion">
-                  <div class="accordion-item">
-                    <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#profile-accordion">
-                      <div class="accordion-body">
-                        <form>
-                          <div class="mb-3">
-                            <label for="current-password" class="form-label">Current Password</label>
-                            <input type="password" class="form-control" id="current-password" placeholder="Enter current password">
-                          </div>
-                          <div class="mb-3">
-                            <label for="new-password" class="form-label">New Password</label>
-                            <input type="password" class="form-control" id="new-password" placeholder="Enter new password">
-                          </div>
-                          <button type="submit" class="btn btn-primary">Update Password</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="accordion-item">
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#profile-accordion">
-                      <div class="accordion-body">
-                        <form>
-                          <div class="mb-3">
-                            <label for="profile-picture" class="form-label">Profile Picture</label>
-                            <input type="file" class="form-control" id="profile-picture" accept="image/*">
-                          </div>
-                          <button type="submit" class="btn btn-primary">Update Profile Picture</button>
-                        </form>
-                      </div>
+                <div class="col-lg-6 col-5 my-auto text-end">
+                  <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                    <div class="input-group">
+                      <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                      <input type="text" class="form-control px-1" placeholder="Search for...">
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Vendor Name</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Lease Agreement</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Business License</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Business Permits</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Other Supporting Documents</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dataTableBody">
+                    <tr>
+                      <td class="align-middle text-center text-sm">Vendor 1</td>
+                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 1.pdf</a></td>
+                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 2.docx</a></td>
+                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 3.xlsx</a></td>
+                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 4.txt</a></td>
+                    </tr>
+                    <tr>
+                      <td class="align-middle text-center text-sm">Vendor 2</td>
+                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 5.pptx</a></td>
+                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 6.csv</a></td>
+                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 7.pdf</a></td>
+                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 8.docx</a></td>
+                    </tr>
+                    <!-- repeat for each row -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
-    
-        </div>
       </div>
-      
+    
+    
     </div>
-        
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
@@ -252,19 +244,21 @@
       <div class="form-check form-switch ps-0">
         <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
       </div>
-    </div>
+      <br>
+      <hr class="horizontal dark my-1">
+      <br>
+      <div class="text-small text-center text-info">Messages</div>
+      <br><br>
+      <div class="text-small text-center">No Message Yet!</div>
+      </div>
   </div>
-  </div>
-
-
-
-      
   <!--   Core JS Files   -->
   <script src="assets2/js/core/popper.min.js"></script>
   <script src="assets2/js/core/bootstrap.min.js"></script>
   <script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/chartjs.min.js"></script>
+  
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
