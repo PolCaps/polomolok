@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $conn->begin_transaction();
 
         // This will help to ensure that all fields are received correctly.
-         echo json_encode(['postData' => $_POST]);
+       // (eh open pag naa nasad error) echo json_encode(['postData' => $_POST]);
 
         $user_type = $_POST['user_type'];
         $username = $_POST['username'];
@@ -52,11 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $allowedTypes = [
             'image/jpeg',
             'image/png',
-            'image/gif', // Add more image types
-            '*/*',
+            'image/gif', 
             'application/pdf',
-            'application/msword', // Add document types
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // docx
           ];
 
         function validate_and_handle_file($fileKey, $allowedTypes, &$fileErrors) {
@@ -70,12 +67,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
             // $fileContent = file_get_contents($_FILES[$fileKey]['tmp_name']); // Read file content as binary
             // return $fileContent;
+            $first_name = $_POST['first_name'];
+            $middle_name = $_POST['middle_name'];
+            $last_name = $_POST['last_name'];
+            $full_name = trim($first_name . " " . $middle_name . " " . $last_name);
 
-            $username = $_POST['username'];
             $today = date('Y-m-d');
             
             // Generate unique filename to avoid overwriting existing files
-            $targetDir = "datas/". $username. "/" . $today. "/";
+            $targetDir = "datas/". $full_name. "/" . $today. "/";
             // Create directories if they don't exist (using mkdir with recursion)
             if (!is_dir($targetDir)) {
                 if (!mkdir($targetDir, 0755, true)) {
@@ -122,7 +122,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             } else {
                 throw new Exception("Error inserting for users id.");
             }
-            $conn->commit();
+  
         
         // Prepare and execute personal_profile insert
 
@@ -178,10 +178,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
           if (!$stmtB) {
             throw new Exception("Prepare statement failed: " . $conn->error);
           }
-          
-          $conn->commit();
-          
-        
 
         $sqlC = "INSERT INTO personal_profile (personal_id, first_name, middle_name, last_name, age, contact_number, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmtC = $conn->prepare($sqlC);
@@ -191,36 +187,41 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         if ($stmtC->affected_rows !== 1) {
             throw new Exception("Error inserting personal profile.");
         }
-        $conn->commit();
-       
-
        
         $sql1 = "INSERT INTO buildings (building_floor, building_type, user_id, vendor_id) VALUES (?, ?, ?, ?)";
         $stmt1 = $conn->prepare($sql1);
         $stmt1->bind_param('ssii', $buildingFloor, $buildingtype, $insertedUserId, $insertedIdvendor);
         $stmt1->execute();
+        if ($stmt1->affected_rows !== 1) {
+          throw new Exception("Error inserting buildings.");
+      }
 
         // Check if stall insertion was successful
         if ($stmt1->execute()) {
-            $insertedbuildingtype = mysqli_insert_id($conn);  // try ra kung effective
+            $insertedbuildingID = mysqli_insert_id($conn);  // try ra kung effective
             } else {
                 throw new Exception("Error inserting stalls data.");
             }
-            $conn->commit();
+
+     
        
          $sql2 = "INSERT INTO stalls (stall_code, monthly_rentals, stall_number, user_id, building_id) VALUES (?, ?, ?, ?, ?)";
          $stmt2 = $conn->prepare($sql2);
-         $stmt2->bind_param('sssii', $stallCode, $Rentals, $stallNumber, $insertedUserId, $insertedbuildingtype);
-         if ($stmt2->affected_rows !== 1) {
-            throw new Exception("Error inserting stall.");
+         if (!$stmt2 = $conn->prepare($sql2)) {
+          throw new Exception("Prepare statement failed for stalls: " . $conn->error);
         }
-            $stmt2->execute();
-            $conn->commit();
+         $stmt2->bind_param('sssii', $stallCode, $Rentals, $stallNumber, $insertedUserId, $insertedbuildingID);
+         $stmt2->execute();
+     //    if ($stmt2->affected_rows !== 1) {
+        //    throw new Exception("Error inserting stalls. THE FUCK NGA ERROR HAHAAH");
+       //   }
+           
+        
         
            // Prepare and execute documents insert
-           $sqlD = "INSERT INTO documents (receipts, lease_agreements, business_permits, business_licenses) VALUES (?, ?, ?, ?)";
+           $sqlD = "INSERT INTO documents (receipts, lease_agreements, business_permits, business_licenses, user_id) VALUES (?, ?, ?, ?, ?)";
            $stmtD = $conn->prepare($sqlD);
-           $stmtD->bind_param('bbbb', $receiptsDest, $leaseAgreementsDest, $businessPermitsDest, $businessLicensesDest);
+           $stmtD->bind_param('bbbbi', $receiptsDest, $leaseAgreementsDest, $businessPermitsDest, $businessLicensesDest, $insertedUserId);
             // Assuming successful preparation...
             $stmtD->send_long_data(0, $receiptsDest);
             $stmtD->send_long_data(1, $leaseAgreementsDest);
@@ -234,44 +235,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
                throw new Exception("Error inserting documents.");
            }
 
-           $conn->commit();
+      
          // $SOA = null;
         // Prepare and execute payments insert
-        $sqlE = "INSERT INTO monthly_payments ( receipts, started_date, end_date, document_id, user_id) VALUES ( ?, ?, ?, ?, ?)";
+        $sqlE = "INSERT INTO payments (receipts, started_date, end_date, document_id, user_id) VALUES ( ?, ?, ?, ?, ?)";
         $stmtE = $conn->prepare($sqlE);
         if (!$stmtE = $conn->prepare($sqlE)) {
             throw new Exception("Prepare statement failed for payments: " . $conn->error);
         }
         $stmtE->bind_param('bssii', $receiptsDest, $startDate, $endDate, $insertedDocumentId, $insertedUserId);
-        $stmtE->send_long_data(2, $receiptsDest);
+        $stmtE->send_long_data(0, $receiptsDest);
        // $stmtE->send_long_data(1, $receiptsDest); // Send the binary data for receipts
         $stmtE->execute();
         if ($stmtE->affected_rows !== 1) {
             throw new Exception("Error inserting payment.");
         }
-        $conn->commit();
-
-        // Close prepared statements
-        if (isset($stmtA)) $stmtA->close();
-        if (isset($stmtB)) $stmtB->close();
-        if (isset($stmtC)) $stmtC->close();
-        if (isset($stmt1)) $stmt1->close();
-        if (isset($stmt2)) $stmt2->close();
-        if (isset($stmtD)) $stmtD->close();
-        if (isset($stmtE)) $stmtE->close();
-     
 
         // Commit transaction if all inserts succeed
         $conn->commit();
         echo json_encode(['success' => true, 'message' => 'New user created successfully!']);
-
+       
+ 
     } catch (Exception $e) {
         // Rollback transaction on any error
-        $conn->rollback();
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+        $conn->rollback();
     } finally {
         
         // Close connection
+
+           // Close prepared statements
+           if (isset($stmtA)) $stmtA->close();
+           if (isset($stmtB)) $stmtB->close();
+           if (isset($stmtC)) $stmtC->close();
+           if (isset($stmt1)) $stmt1->close();
+           if (isset($stmt2)) $stmt2->close();
+           if (isset($stmtD)) $stmtD->close();
+           if (isset($stmtE)) $stmtE->close();
         $conn->close();
     }
    

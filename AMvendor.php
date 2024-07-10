@@ -238,10 +238,7 @@
                               password.setAttribute('type', type);
                               togglePassword.classList.toggle('bi bi-eye-fill');
                             });
-
-                         
                          </script>
-
                         </div>
                         </div>
                         <div class="form-group">
@@ -365,25 +362,25 @@
           </div>
         </div>
        <script> // Event listeners for each file input 
-       document.getElementById('lease\_agreements').addEventListener('change', function(event) 
-       { handleFileInputChange(event, 'lease\_agreements'); }); 
-       document.getElementById('business\_permits').addEventListener('change', function(event) 
-       { handleFileInputChange(event, 'business\_permits'); }); 
-       document.getElementById('business\_licenses').addEventListener('change', function(event) 
-       { handleFileInputChange(event, 'business\_licenses'); }); 
+       document.getElementById('lease_agreements').addEventListener('change', function(event) 
+       { handleFileInputChange(event, 'lease_agreements'); }); 
+       document.getElementById('business_permits').addEventListener('change', function(event) 
+       { handleFileInputChange(event, 'business_permits'); }); 
+       document.getElementById('business_licenses').addEventListener('change', function(event) 
+       { handleFileInputChange(event, 'business_licenses'); }); 
        document.getElementById('receipts').addEventListener('change', function(event) 
        { handleFileInputChange(event, 'receipts'); }); 
        // Function to handle file input change 
        function handleFileInputChange(event, key) { 
        const file = event.target.files[0]; 
-       ```javascript 
-       if (file) { const reader = new FileReader(); r
-       eader.readAsArrayBuffer(file);
+       if (file) { const reader = new FileReader(); 
+        reader.readAsArrayBuffer(file);
        reader.onload = function(e) 
        { 
        const binaryData = e.target.result; 
        sendBinaryDataToServer(binaryData, key); }; 
-       } ``` } 
+       }
+    } 
        function handleFileInputChange(event, inputId) { 
        const input = event.target; 
        const files = input.files; 
@@ -392,18 +389,15 @@
        'image/png', 
        'image/gif', // Add more image types 
        '*/*', 
-       'application/pdf', 
-       'application/msword', // Add document types 
-       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+       'application/pdf'
        ]; 
        const fileErrors = []; 
-       ```javascript 
        for (let i = 0; i < files.length; i++) { 
        const file = files[i]; 
        if (!allowedTypes.includes(file.type)) { 
        fileErrors.push(`File ${file.name} is not allowed. Only JPEG, PNG, and PDF files are allowed.`); 
        } 
-        } 
+      } 
          if (fileErrors.length > 0) 
          { 
           alert(fileErrors.join('\n')); 
@@ -414,28 +408,29 @@
           reader.onload = function(e) { 
           const binaryData = e.target.result; 
           sendBinaryDataToServer(binaryData, inputId); }; 
-          } ``` 
-           } // Function to send binary data to server for each file 
+          } 
+        } 
+          // Function to send binary data to server for each file 
            function sendBinaryDataToServer(binaryData, key) { 
             const formData = new FormData(); 
             formData.append(key, new Blob([binaryData])); 
-          } 
+           }
+           
           const createUserForm = document.getElementById('createUserForm'); 
-          createUserForm.addEventListener('submit', function(e) )
-          { e.preventDefault(); // Prevent default form submission 
+          createUserForm.addEventListener('submit', function(e) )  { 
+            e.preventDefault(); // Prevent default form submission 
             // Prepare form data 
             const formData = new FormData(this); 
             // Send AJAX request to create\_user.php 
-            fetch('create\_user.php', { 
-              method: 'POST', 
-              body: formData 
-            }) 
-            .then(response => { 
+            fetch('create_user.php', { method: 'POST', body: formData }).then(response => { 
               // Check if the response is in the correct 
               format (JSON) if (!response.ok) { 
-                throw new Error('Network response was not ok'); } 
+                throw new Error('Network response was not ok'); 
+              } 
                 return response.json(); // Parse JSON response 
-                }) .then(data => { 
+                }
+              ) 
+              .then(data => { 
                   // Log the received data for debugging 
                   console.log('Response data:', data); 
                   // Handle successful response from create\_user.php 
@@ -452,11 +447,12 @@
                      .catch(error => { 
                       // Handle any network or parsing errors 
                       console.error('Error:', error); 
-                      alert('Error creating user. Please try again later.'); }); 
-                    } 
-                    </script>
-      </div>
-
+                      alert('Error creating user. Please try again later.'); 
+                    }
+                  );
+          }
+          </script>
+          </div>
 
       <div class="row my-4">
         <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
@@ -481,7 +477,6 @@
               </div>
             </div>
 
-           
             <div class="card-body px-0 pb-2">
               <div class="table-responsive">
               <table class="table align-items-center mb-0"> 
@@ -495,101 +490,72 @@
                 </thead> 
                 <tbody id="dataTableBody">
                 <?php
-// Include database configuration
-include('database_config.php');
-
-// Create connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// SQL query to fetch data using INNER JOIN
-$sql = "
-SELECT * v.vendor_name AS NAME, b.building_type AS TYPE, s.stall_number AS STALLS, s.monthly_rentals AS RENTALS
-FROM vendors v
-LEFT JOIN buildings b ON v.user_id = b.user_id
-INNER JOIN personal_profile pp ON v.user_id = pp.personal_id
-JOIN stalls s ON pp.personal_id = v.user_id
-
-";
-
-
-$result = $conn->query($sql);
-
-                
-                ?>
-    <?php
-    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-    if ($conn->connect_error) {
-        die("Connection failed: " . $conn->connect_error);
-    }
-
-    $sql = " SELECT u.user_id , v.vendor_name  AS vendor_name, b.building_type AS buildingCode, s.stall_number AS stallNum, s.monthly_rentals AS rentals
-FROM users u
-JOIN vendors v ON u.user_id = v.user_id
-JOIN stalls s ON u.user_id = s.user_id
-JOIN buildings b ON s.building_id = b.building_id
-    ";
-    $result = $conn->query($sql);
-
-        // Check if there are results
-if ($result === false) {
-  echo "Error executing query: " . $conn->error;
-} else {
-  // Check if query returned rows
-  if ($result->num_rows > 0) {
-    echo "<tbody>";
-    while ($row = $result->fetch_assoc()) {
-      echo "<tr>
-              <td>
-                  <div class='d-flex px-3 py-1'>
+                include('database_config.php');
+                $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+                if ($conn->connect_error) {
+                  die("Connection failed: " . $conn->connect_error);
+                }
+                $sql = " SELECT u.user_id , v.vendor_name  AS vendor_name, b.building_type AS buildingCode, s.stall_code AS stallNum, s.monthly_rentals AS rentals
+                FROM users u
+                JOIN vendors v ON u.user_id = v.user_id
+                JOIN stalls s ON u.user_id = s.user_id
+                JOIN buildings b ON s.building_id = b.building_id
+                ";
+                $result = $conn->query($sql);
+                // Check if there are results
+                if ($result === false) {
+                  echo "Error executing query: " . $conn->error;
+                } else {
+                  // Check if query returned rows
+                  if ($result->num_rows > 0) {
+                    echo "<tbody>";
+                    while ($row = $result->fetch_assoc()) {
+                      echo "
+                      <tr>
+                      <td>
+                      <div class='d-flex px-3 py-1'>
                       <div class='d-flex flex-column justify-content-center'>
                           <h6 class='mb-0 text-sm'>" . $row['vendor_name'] . "</h6>
                       </div>
                   </div>
-              </td>
-              <td>
+                  </td>
+                  <td>
                   <div class='avatar-group mt-1'>
                       <h6 class='mb-1 text-sm'>" . $row['buildingCode'] . "</h6>
                   </div>
-              </td>
-              <td class='align-middle text-center text-sm'>
+                  </td>
+                  <td class='align-middle text-center text-sm'>
                   <span class='text-xs font-weight-bold'>" . $row['stallNum'] . "</span>
-              </td>
-              <td class='align-middle text-center text-sm'>
+                  </td>
+                  <td class='align-middle text-center text-sm'>
                   <span class='text-xs font-weight-bold'>" . $row['rentals'] . "</span>
-              </td>
-          </tr>";
-    }
-    echo "</tbody>";
-  } else {
-    echo "No data found";
-  }
-}
-
-// Close connection
-$conn->close();
-    ?>
-  </tbody>
-</table>
-              </div>
+                  </td>
+                  </tr>";
+                }
+                echo "
+                </tbody>
+                ";
+              } else {
+                echo "No data found";
+              }
+            }
+            // Close connection
+            $conn->close();
+            ?>
+            </tbody>
+            </table>
             </div>
           </div>
         </div>
+      </div>
         <div class="col-lg-4 col-md-6">
           <div class="card h-100">
             <div class="card-header pb-0">
               <h6>Card Sample</h6>
-              
             </div>
-            
           </div>
         </div>
       </div>
-      
     </div>
   </main>
   <div class="fixed-plugin">
