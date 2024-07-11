@@ -3,11 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
-<<<<<<< HEAD
--- Generation Time: Jul 09, 2024 at 03:13 AM
-=======
 -- Generation Time: Jul 11, 2024 at 01:59 PM
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -35,31 +31,6 @@ CREATE TABLE `admin` (
   `admin_id` int(11) NOT NULL,
   `admin_name` varchar(255) DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
-<<<<<<< HEAD
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Table structure for table `buildings`
---
-
-CREATE TABLE `buildings` (
-  `building_id` int(11) NOT NULL,
-  `building_floor` varchar(255) NOT NULL,
-  `building_type` varchar(255) NOT NULL,
-  `user_id` int(11) DEFAULT NULL,
-  `vendor_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `buildings`
---
-
-INSERT INTO `buildings` (`building_id`, `building_floor`, `building_type`, `user_id`, `vendor_id`) VALUES
-(37, 'Building J', 'Ground Floor', 137, NULL),
-(38, 'Building J', 'Ground Floor', 137, NULL);
-=======
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -69,16 +40,10 @@ INSERT INTO `buildings` (`building_id`, `building_floor`, `building_type`, `user
 INSERT INTO `admin` (`admin_id`, `admin_name`, `user_id`) VALUES
 (1, 'MADDIE PADELECI', 1),
 (2, 'JAN SAMONTANES', 237);
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
 -- --------------------------------------------------------
 
 --
-<<<<<<< HEAD
--- Table structure for table `documents`
---
-
-=======
 -- Table structure for table `buildings`
 --
 
@@ -119,7 +84,6 @@ INSERT INTO `buildings` (`building_id`, `building_floor`, `building_type`, `user
 -- Table structure for table `documents`
 --
 
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 CREATE TABLE `documents` (
   `document_id` int(11) NOT NULL,
   `receipts` longblob DEFAULT NULL,
@@ -134,9 +98,6 @@ CREATE TABLE `documents` (
 --
 
 INSERT INTO `documents` (`document_id`, `receipts`, `lease_agreements`, `business_permits`, `business_licenses`, `user_id`) VALUES
-<<<<<<< HEAD
-(18, 0x64617461732f6d6565646f2f323032342d30372d30382f327031306e657433302e706e67, 0x64617461732f6d6565646f2f323032342d30372d30382f327031306e657433302e706e67, 0x64617461732f6d6565646f2f323032342d30372d30382f3320496e7374616c6c6d656e74732e706e67, 0x64617461732f6d6565646f2f323032342d30372d30382f3320496e7374616c6c6d656e74732e706e67, NULL);
-=======
 (50, 0x64617461732f4d61726b4d6565646f2f323032342d30372d31302f73616d6f6e74616e65735450496e666f2e706466, 0x64617461732f4d61726b4d6565646f2f323032342d30372d31302f73616d6f6e74616e65735450496e666f2e706466, 0x64617461732f4d61726b4d6565646f2f323032342d30372d31302f4442414e53574552312e706e67, 0x64617461732f4d61726b4d6565646f2f323032342d30372d31302f4442414e53574552332e706e67, NULL),
 (51, 0x64617461732f4d45494c50414e413233332f323032342d30372d31302f73616d6f6e74616e65735450496e666f2e706466, 0x64617461732f4d45494c50414e413233332f323032342d30372d31302f4442415345322e706e67, 0x64617461732f4d45494c50414e413233332f323032342d30372d31302f4442414e53574552312e706e67, 0x64617461732f4d45494c50414e413233332f323032342d30372d31302f4442414e53574552332e706e67, NULL),
 (52, 0x64617461732f5052494e434553415952452f323032342d30372d31302f73616d6f6e74616e65735450496e666f2e706466, 0x64617461732f5052494e434553415952452f323032342d30372d31302f4442414e53574552322e706e67, 0x64617461732f5052494e434553415952452f323032342d30372d31302f4442415345312e706e67, 0x64617461732f5052494e434553415952452f323032342d30372d31302f4442414e53574552332e706e67, NULL),
@@ -146,22 +107,14 @@ INSERT INTO `documents` (`document_id`, `receipts`, `lease_agreements`, `busines
 (56, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74436f6465312e706e67, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74616e657346312e706e67, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74436f6465332e706e67, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74436f6465322e706e67, 224),
 (57, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74436f6465312e706e67, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74616e657346312e706e67, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74436f6465332e706e67, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74436f6465322e706e67, 234),
 (58, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74436f6465312e706e67, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74616e657346312e706e67, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74436f6465332e706e67, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74436f6465322e706e67, 236);
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
 -- --------------------------------------------------------
 
 --
-<<<<<<< HEAD
--- Table structure for table `monthly_payments`
---
-
-CREATE TABLE `monthly_payments` (
-=======
 -- Table structure for table `payments`
 --
 
 CREATE TABLE `payments` (
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
   `payment_id` int(11) NOT NULL,
   `SOA` longblob DEFAULT NULL,
   `receipts` longblob DEFAULT NULL,
@@ -172,13 +125,6 @@ CREATE TABLE `payments` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
-<<<<<<< HEAD
--- Dumping data for table `monthly_payments`
---
-
-INSERT INTO `monthly_payments` (`payment_id`, `SOA`, `receipts`, `started_date`, `end_date`, `document_id`, `user_id`) VALUES
-(6, NULL, NULL, '2024-07-25', '2024-08-22', NULL, NULL);
-=======
 -- Dumping data for table `payments`
 --
 
@@ -192,7 +138,6 @@ INSERT INTO `payments` (`payment_id`, `SOA`, `receipts`, `started_date`, `end_da
 (7, NULL, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74436f6465312e706e67, '2024-07-10', '2024-08-14', 56, 224),
 (8, NULL, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74436f6465312e706e67, '2024-07-10', '2024-08-14', 57, 234),
 (9, NULL, 0x64617461732f524559205341432053414d4f2f323032342d30372d31302f73616d6f6e74436f6465312e706e67, '2024-07-10', '2024-08-14', 58, 236);
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
 -- --------------------------------------------------------
 
@@ -215,9 +160,6 @@ CREATE TABLE `personal_profile` (
 --
 
 INSERT INTO `personal_profile` (`personal_id`, `first_name`, `middle_name`, `last_name`, `age`, `contact_number`, `address`) VALUES
-<<<<<<< HEAD
-(137, 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 22, 9510462062, '9504\r\nWEST DRIVE');
-=======
 (210, 'MARK', 'MARCO', 'MARCOPOLO', 20, 9510462062, 'Polotana Subdivision, West Drive.'),
 (212, 'MEIL', '', 'PANAGUITON', 21, 9129875432, 'GENSAN'),
 (214, 'PRINCE JAY', 'MOHAMMAD OMAR', 'ABDULJABHAR SAYRE', 22, 99523416524, 'Prk,DARUSSALAM, BAWING, SARANGGANI PROVINCE'),
@@ -227,7 +169,6 @@ INSERT INTO `personal_profile` (`personal_id`, `first_name`, `middle_name`, `las
 (224, 'REY', 'SAC', 'SAMO', 43, 9510462062, 'Polotana Subdivision, West Drive.'),
 (234, 'REY', 'SAC', 'SAMO', 43, 9510462062, 'Polotana Subdivision, West Drive.'),
 (236, 'REY', 'SAC', 'SAMO', 43, 9510462062, 'Polotana Subdivision, West Drive.');
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
 -- --------------------------------------------------------
 
@@ -241,8 +182,6 @@ CREATE TABLE `staffs` (
   `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
-<<<<<<< HEAD
-=======
 --
 -- Dumping data for table `staffs`
 --
@@ -251,7 +190,6 @@ INSERT INTO `staffs` (`staffs_id`, `staffs_name`, `user_id`) VALUES
 (1, 'MEEDO STAFFS', 238),
 (2, 'MEEDO STAFFS', 238);
 
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 -- --------------------------------------------------------
 
 --
@@ -271,9 +209,6 @@ CREATE TABLE `stalls` (
 --
 
 INSERT INTO `stalls` (`stall_code`, `monthly_rentals`, `stall_number`, `user_id`, `building_id`) VALUES
-<<<<<<< HEAD
-('BJ12', '12312', '12', 137, 38);
-=======
 ('BJ02', '1233', '02', 216, 116),
 ('BJ07', '1200', '07', 214, 114),
 ('BJ09', '1200', '09', 212, 112),
@@ -302,7 +237,6 @@ CREATE TABLE `stats` (
 
 INSERT INTO `stats` (`statsID`, `buildings`, `overall_stalls`, `vendors`, `workers`) VALUES
 (1, 13, 121, 23, 23);
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
 -- --------------------------------------------------------
 
@@ -322,10 +256,6 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`) VALUES
-<<<<<<< HEAD
-(101, 'meedo', 'meedo123', 'ADMIN'),
-(137, 'meedo', 'meedo123', 'VENDOR');
-=======
 (1, 'mads', 'mads123', 'ADMIN'),
 (210, 'MarkMeedo', 'mark123', 'VENDOR'),
 (211, 'MEILPANA233', 'meil123', 'VENDOR'),
@@ -346,7 +276,6 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`) VALUES
 (236, 'reysamo', 'rey123', 'VENDOR'),
 (237, 'janjan', 'janjan123', 'ADMIN'),
 (238, 'staffsMEEDO', 'staff123', 'STAFF');
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
 -- --------------------------------------------------------
 
@@ -365,9 +294,6 @@ CREATE TABLE `vendors` (
 --
 
 INSERT INTO `vendors` (`vendor_id`, `vendor_name`, `user_id`) VALUES
-<<<<<<< HEAD
-(0, 'REYAN JAN BARRANCO SAMONTANES', NULL);
-=======
 (38, 'MARK MARCO MARCOPOLO', 210),
 (39, 'MEIL  PANAGUITON', 212),
 (40, 'MEIL  PANAGUITON', 212),
@@ -385,7 +311,6 @@ INSERT INTO `vendors` (`vendor_id`, `vendor_name`, `user_id`) VALUES
 (62, 'REY SAC SAMO', 234),
 (63, 'REY SAC SAMO', 236),
 (64, 'REY SAC SAMO', 236);
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
 --
 -- Indexes for dumped tables
@@ -414,20 +339,12 @@ ALTER TABLE `documents`
   ADD KEY `user_id` (`user_id`);
 
 --
-<<<<<<< HEAD
--- Indexes for table `monthly_payments`
---
-ALTER TABLE `monthly_payments`
-  ADD PRIMARY KEY (`payment_id`),
-  ADD KEY `fk_document_id` (`document_id`);
-=======
 -- Indexes for table `payments`
 --
 ALTER TABLE `payments`
   ADD PRIMARY KEY (`payment_id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `document_id` (`document_id`);
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
 --
 -- Indexes for table `personal_profile`
@@ -451,15 +368,12 @@ ALTER TABLE `stalls`
   ADD KEY `building_id` (`building_id`);
 
 --
-<<<<<<< HEAD
-=======
 -- Indexes for table `stats`
 --
 ALTER TABLE `stats`
   ADD PRIMARY KEY (`statsID`);
 
 --
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
@@ -477,24 +391,6 @@ ALTER TABLE `vendors`
 --
 
 --
-<<<<<<< HEAD
--- AUTO_INCREMENT for table `buildings`
---
-ALTER TABLE `buildings`
-  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
-
---
--- AUTO_INCREMENT for table `documents`
---
-ALTER TABLE `documents`
-  MODIFY `document_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
-
---
--- AUTO_INCREMENT for table `monthly_payments`
---
-ALTER TABLE `monthly_payments`
-  MODIFY `payment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
-=======
 -- AUTO_INCREMENT for table `admin`
 --
 ALTER TABLE `admin`
@@ -529,15 +425,11 @@ ALTER TABLE `staffs`
 --
 ALTER TABLE `stats`
   MODIFY `statsID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-<<<<<<< HEAD
-  MODIFY `user_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
-=======
   MODIFY `user_id` int(100) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=239;
 
 --
@@ -545,7 +437,6 @@ ALTER TABLE `users`
 --
 ALTER TABLE `vendors`
   MODIFY `vendor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
 --
 -- Constraints for dumped tables
@@ -571,20 +462,11 @@ ALTER TABLE `documents`
   ADD CONSTRAINT `documents_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
 
 --
-<<<<<<< HEAD
--- Constraints for table `monthly_payments`
---
-ALTER TABLE `monthly_payments`
-  ADD CONSTRAINT `fk_document_id` FOREIGN KEY (`document_id`) REFERENCES `documents` (`document_id`),
-  ADD CONSTRAINT `monthly_payments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `monthly_payments_ibfk_2` FOREIGN KEY (`document_id`) REFERENCES `users` (`user_id`);
-=======
 -- Constraints for table `payments`
 --
 ALTER TABLE `payments`
   ADD CONSTRAINT `payments_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
   ADD CONSTRAINT `payments_ibfk_2` FOREIGN KEY (`document_id`) REFERENCES `documents` (`document_id`);
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
 --
 -- Constraints for table `personal_profile`

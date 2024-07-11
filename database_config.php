@@ -4,10 +4,6 @@ $db_host = 'localhost';
 $db_user = 'root';
 $db_password = '';
 $db_name = 'polomolokpublicmarket';
-<<<<<<< HEAD
-=======
-
->>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
 
 

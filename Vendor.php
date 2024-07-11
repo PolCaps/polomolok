@@ -1,3 +1,51 @@
+<?php
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit();
+}
+$username = $_SESSION['username'];
+// Database connection settings
+include('database_config.php');
+// Create connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check connection
+if ($conn->connect_error) {
+die("Connection failed: " . $conn->connect_error);
+}
+// Prepare the query
+$stmt = $conn->prepare("SELECT u.user_id, v.vendor_name, u.username, u.user_type 
+                        FROM users u
+                        JOIN vendor v ON u.user_id = s.user_id 
+                        WHERE username = ?");
+
+// Bind the parameter
+$stmt->bind_param("s", $username);
+
+// Execute the query
+$stmt->execute();
+
+// Get the result
+$result = $stmt->get_result();
+
+
+ // Initialize the $row variable
+  $row = array();
+        
+// Check if query was successful
+if ($result->num_rows > 0) {
+// Fetch the row from the result set
+$row = $result->fetch_assoc();
+      } else {
+echo "No data found";
+}
+// Close the statement and connection
+$stmt->close();
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 

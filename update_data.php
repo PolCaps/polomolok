@@ -13,7 +13,7 @@ $vendors = $_POST['vendors'];
 $workers = $_POST['workers'];
 
 // Update the data in the database
-$sql = "UPDATE stats SET buildings = '$buildings', overall_stalls = '$stalls', vendors = '$vendors', workers = '$workers' WHERE id = 1";
+$sql = "UPDATE stats SET buildings = '$buildings', overall_stalls = '$stalls', vendors = '$vendors', workers = '$workers' WHERE statsID = 1";
 if ($conn->query($sql) === TRUE) {
     $_SESSION['message'] = 'Record updated successfully!';
     $_SESSION['message_type'] = 'success';
