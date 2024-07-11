@@ -422,15 +422,7 @@
             // Prepare form data 
             const formData = new FormData(this); 
             // Send AJAX request to create\_user.php 
-<<<<<<< HEAD
             fetch('create_user.php', { method: 'POST', body: formData }).then(response => { 
-=======
-            fetch('create_user.php', { 
-              method: 'POST', 
-              body: formData 
-            }) 
-            .then(response => { 
->>>>>>> 263732f0b8ee0f4b3be66df32d7b8d73b65126e5
               // Check if the response is in the correct 
               format (JSON) if (!response.ok) { 
                 throw new Error('Network response was not ok'); 
