@@ -1,3 +1,51 @@
+<?php
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit();
+}
+$username = $_SESSION['username'];
+// Database connection settings
+include('database_config.php');
+// Create connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check connection
+if ($conn->connect_error) {
+die("Connection failed: " . $conn->connect_error);
+}
+// Prepare the query
+$stmt = $conn->prepare("SELECT u.user_id, s.staffs_name, u.username, u.user_type 
+                        FROM users u
+                        JOIN staffs s ON u.user_id = s.user_id 
+                        WHERE username = ?");
+
+// Bind the parameter
+$stmt->bind_param("s", $username);
+
+// Execute the query
+$stmt->execute();
+
+// Get the result
+$result = $stmt->get_result();
+
+
+ // Initialize the $row variable
+  $row = array();
+        
+// Check if query was successful
+if ($result->num_rows > 0) {
+// Fetch the row from the result set
+$row = $result->fetch_assoc();
+      } else {
+echo "No data found";
+}
+// Close the statement and connection
+$stmt->close();
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -169,9 +217,9 @@
                     <img src="image/profile.jpg" class="img-fluid rounded-circle" alt="Admin Profile Picture">
                   </div>
                   <div class="col-md-8 my-3">
-                    <h6 class="card-subtitle mb-2 text-muted">Name: StaffHehe</h6>
-                    <p class="card-text">Username: ToBeChanged</p>
-                    <p class="card-text">Role: Staff</p>
+                    <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo $row['staffs_name'];?></h6>
+                    <p class="card-text">Username: <?php echo $row['username'];?></p>
+                    <p class="card-text">Role: <?php echo $row['user_type'];?></p>
                   </div>
                 </div>
                 <hr class="horizontal dark my-3">
