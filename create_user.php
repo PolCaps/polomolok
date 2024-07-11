@@ -1,5 +1,5 @@
 <?php
-include ('database_config.php');
+include('database_config.php');
 
 
 error_reporting(E_ALL);
@@ -21,7 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $conn->begin_transaction();
 
         // This will help to ensure that all fields are received correctly.
+<<<<<<< HEAD
          echo json_encode(['postData' => $_POST]);
+=======
+       // (eh open pag naa nasad error) echo json_encode(['postData' => $_POST]);
+>>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
         $user_type = $_POST['user_type'];
         $username = $_POST['username'];
@@ -52,11 +56,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $allowedTypes = [
             'image/jpeg',
             'image/png',
-            'image/gif', // Add more image types
-            '*/*',
+            'image/gif', 
             'application/pdf',
-            'application/msword', // Add document types
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // docx
           ];
 
         function validate_and_handle_file($fileKey, $allowedTypes, &$fileErrors) {
@@ -70,12 +71,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
             // $fileContent = file_get_contents($_FILES[$fileKey]['tmp_name']); // Read file content as binary
             // return $fileContent;
+            $first_name = $_POST['first_name'];
+            $middle_name = $_POST['middle_name'];
+            $last_name = $_POST['last_name'];
+            $full_name = trim($first_name . " " . $middle_name . " " . $last_name);
 
-            $username = $_POST['username'];
             $today = date('Y-m-d');
             
             // Generate unique filename to avoid overwriting existing files
-            $targetDir = "datas/". $username. "/" . $today. "/";
+            $targetDir = "datas/". $full_name. "/" . $today. "/";
             // Create directories if they don't exist (using mkdir with recursion)
             if (!is_dir($targetDir)) {
                 if (!mkdir($targetDir, 0755, true)) {
@@ -108,7 +112,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         // Prepare and execute user insert based on user_type
         $sqlA = "INSERT INTO users (username, password, user_type) VALUES (?, ?, ?)";
         $stmtA = $conn->prepare($sqlA);
+<<<<<<< HEAD
         if (!$stmtA) {
+=======
+        if (!$stmtA = $conn->prepare($sqlA)) {
+>>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
             throw new Exception("Prepare statement failed for users: " . $conn->error);
         }
         $stmtA->bind_param('sss', $username, $password, $user_type);
@@ -119,8 +127,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $insertedUserId = $conn->insert_id;
        
 
+        if ($stmtA->execute()) {
+            $insertedUserId = mysqli_insert_id($conn); // try ra kung effective
+            } else {
+                throw new Exception("Error inserting for users id.");
+            }
+  
+        
         // Prepare and execute personal_profile insert
 
+<<<<<<< HEAD
         // Retrieve the inserted user ID for foreign key reference (if needed)
         switch ($user_type) {
             case "VENDOR":
@@ -131,11 +147,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
               break;
             case "STAFF":
               $sqlB = "INSERT INTO staff (staff_name) VALUES (?)";
+=======
+        $insertedIdvendor = null;
+        // Retrieve the inserted user ID for foreign key reference (if needed)
+        switch ($user_type) {
+            case "VENDOR":
+              $sqlB = "INSERT INTO vendors (vendor_name, user_id) VALUES (?,?)";
+              $stmtB = $conn->prepare($sqlB);
+              if (!$stmtB = $conn->prepare($sqlB)) {
+                throw new Exception("Prepare statement failed for vendor: " . $conn->error);
+            }
+              $stmtB->bind_param('si', $full_name, $insertedUserId);
+              $stmtB->execute();
+              if ($stmtB->execute()) {
+                $insertedIdvendor= $conn->insert_id; // try ra kung effective
+                } else {
+                    throw new Exception("Error inserting for users id.");
+                }
+              
+              if ($stmtB->affected_rows !== 1) {
+                throw new Exception("Error inserting " . strtolower($user_type) . " data."); //
+              }
+              break;
+            case "ADMIN":
+              $sqlB = "INSERT INTO admin (admin_name, user_id) VALUES (?,?)";
+              $stmtB = $conn->prepare($sqlB);
+              if (!$stmtB = $conn->prepare($sqlB)) {
+                throw new Exception("Prepare statement failed for admin: " . $conn->error);
+            }
+              $stmtB->bind_param('si', $full_name, $insertedUserId);
+              $stmtB->execute();
+              if ($stmtB->affected_rows !== 1) {
+                throw new Exception("Error inserting " . strtolower($user_type) . " data."); //
+              }
+              break;
+            case "STAFF":
+              $sqlB = "INSERT INTO staffs (staffs_name, user_id) VALUES (?,?)";
+              $stmtB = $conn->prepare($sqlB);
+              if (!$stmtB = $conn->prepare($sqlB)) {
+                throw new Exception("Prepare statement failed for staff: " . $conn->error);
+            }
+              $stmtB->bind_param('si', $full_name, $insertedUserId);
+              $stmtB->execute();
+              if ($stmtB->affected_rows !== 1) {
+                throw new Exception("Error inserting " . strtolower($user_type) . " data."); //
+              }
+>>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
               break;
             default:
               throw new Exception("Invalid user type");
           }
           
+<<<<<<< HEAD
           $stmtB = $conn->prepare($sqlB);
           if (!$stmtB) {
             throw new Exception("Prepare statement failed: " . $conn->error);
@@ -154,11 +217,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $sqlC = "INSERT INTO personal_profile (personal_id, first_name, middle_name, last_name, age, contact_number, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
         $stmtC = $conn->prepare($sqlC);
         $stmtC->bind_param('issssss', $insertedUserId, $first_name, $middle_name, $last_name, $age, $contactNumber, $address);
+=======
+          if (!$stmtB) {
+            throw new Exception("Prepare statement failed: " . $conn->error);
+          }
+
+        $sqlC = "INSERT INTO personal_profile (personal_id, first_name, middle_name, last_name, age, contact_number, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmtC = $conn->prepare($sqlC);
+        $stmtC->bind_param('isssiis', $insertedUserId, $first_name, $middle_name, $last_name, $age, $contactNumber, $address);
+>>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
         $stmtC->execute();
 
         if ($stmtC->affected_rows !== 1) {
             throw new Exception("Error inserting personal profile.");
         }
+<<<<<<< HEAD
 
        
         // Insert into buildings (assuming stall_number is a foreign key)
@@ -171,10 +244,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         // Check if stall insertion was successful
         if ($stmt1->execute()) {
             $insertedbuildingtype = mysqli_insert_id($conn);  // Get the inserted stall ID
+=======
+       
+        $sql1 = "INSERT INTO buildings (building_floor, building_type, user_id, vendor_id) VALUES (?, ?, ?, ?)";
+        $stmt1 = $conn->prepare($sql1);
+        $stmt1->bind_param('ssii', $buildingFloor, $buildingtype, $insertedUserId, $insertedIdvendor);
+        $stmt1->execute();
+        if ($stmt1->affected_rows !== 1) {
+          throw new Exception("Error inserting buildings.");
+      }
+
+        // Check if stall insertion was successful
+        if ($stmt1->execute()) {
+            $insertedbuildingID = mysqli_insert_id($conn);  // try ra kung effective
+>>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
             } else {
                 throw new Exception("Error inserting stalls data.");
             }
 
+<<<<<<< HEAD
        
          $sql2 = "INSERT INTO stalls (stall_code, monthly_rentals, stall_number, user_id, building_id) VALUES (?, ?, ?, ?, ?)";
          $stmt2 = $conn->prepare($sql2);
@@ -186,6 +274,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
            $sqlD = "INSERT INTO documents (receipts, lease_agreements, business_permits, business_licenses) VALUES (?, ?, ?, ?)";
            $stmtD = $conn->prepare($sqlD);
            $stmtD->bind_param('bbbb', $receiptsDest, $leaseAgreementstDest, $businessPermitsDest, $businessLicensesDest);
+=======
+     
+       
+         $sql2 = "INSERT INTO stalls (stall_code, monthly_rentals, stall_number, user_id, building_id) VALUES (?, ?, ?, ?, ?)";
+         $stmt2 = $conn->prepare($sql2);
+         if (!$stmt2 = $conn->prepare($sql2)) {
+          throw new Exception("Prepare statement failed for stalls: " . $conn->error);
+        }
+         $stmt2->bind_param('sssii', $stallCode, $Rentals, $stallNumber, $insertedUserId, $insertedbuildingID);
+         $stmt2->execute();
+     //    if ($stmt2->affected_rows !== 1) {
+        //    throw new Exception("Error inserting stalls. THE FUCK NGA ERROR HAHAAH");
+       //   }
+           
+        
+        
+           // Prepare and execute documents insert
+           $sqlD = "INSERT INTO documents (receipts, lease_agreements, business_permits, business_licenses, user_id) VALUES (?, ?, ?, ?, ?)";
+           $stmtD = $conn->prepare($sqlD);
+           $stmtD->bind_param('bbbbi', $receiptsDest, $leaseAgreementsDest, $businessPermitsDest, $businessLicensesDest, $insertedUserId);
+>>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
             // Assuming successful preparation...
             $stmtD->send_long_data(0, $receiptsDest);
             $stmtD->send_long_data(1, $leaseAgreementsDest);
@@ -198,6 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
            if ($stmtD->affected_rows !== 1) {
                throw new Exception("Error inserting documents.");
            }
+<<<<<<< HEAD
    
   
 
@@ -221,18 +331,52 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         if (isset($stmt2)) $stmt2->close();
         if (isset($stmtD)) $stmtD->close();
      
+=======
+
+      
+         // $SOA = null;
+        // Prepare and execute payments insert
+        $sqlE = "INSERT INTO payments (receipts, started_date, end_date, document_id, user_id) VALUES ( ?, ?, ?, ?, ?)";
+        $stmtE = $conn->prepare($sqlE);
+        if (!$stmtE = $conn->prepare($sqlE)) {
+            throw new Exception("Prepare statement failed for payments: " . $conn->error);
+        }
+        $stmtE->bind_param('bssii', $receiptsDest, $startDate, $endDate, $insertedDocumentId, $insertedUserId);
+        $stmtE->send_long_data(0, $receiptsDest);
+       // $stmtE->send_long_data(1, $receiptsDest); // Send the binary data for receipts
+        $stmtE->execute();
+        if ($stmtE->affected_rows !== 1) {
+            throw new Exception("Error inserting payment.");
+        }
+>>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
 
         // Commit transaction if all inserts succeed
         $conn->commit();
         echo json_encode(['success' => true, 'message' => 'New user created successfully!']);
-
+       
+ 
     } catch (Exception $e) {
         // Rollback transaction on any error
-        $conn->rollback();
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+<<<<<<< HEAD
     } finally {
         
         // Close connection
+=======
+        $conn->rollback();
+    } finally {
+        
+        // Close connection
+
+           // Close prepared statements
+           if (isset($stmtA)) $stmtA->close();
+           if (isset($stmtB)) $stmtB->close();
+           if (isset($stmtC)) $stmtC->close();
+           if (isset($stmt1)) $stmt1->close();
+           if (isset($stmt2)) $stmt2->close();
+           if (isset($stmtD)) $stmtD->close();
+           if (isset($stmtE)) $stmtE->close();
+>>>>>>> dc70d9c5bde7d9de9a17607a7d91c19b12325799
         $conn->close();
     }
    
