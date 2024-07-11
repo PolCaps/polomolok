@@ -24,7 +24,7 @@ if ($username && $password) {
         // Redirect based on user role
         switch ($user['user_type']) {
             case 'ADMIN':
-                header("Location: Admin.html");
+                header("Location: Admin.php");
                 exit();
             case 'STAFF':
                 header("Location: Staff.php");

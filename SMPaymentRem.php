@@ -72,7 +72,7 @@
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link active " href="SMReciept.html">
+          <a class="nav-link " href="SMReciept.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
                 <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
@@ -82,7 +82,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="SMPaymentRem.html">
+          <a class="nav-link active" href="#">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
                 <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
@@ -93,7 +93,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link  " href="SMVendorDocuments.html">
+          <a class="nav-link  " href="SMVendorDocuments.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-medical" viewBox="0 0 16 16">
                 <path d="M7.5 5.5a.5.5 0 0 0-1 0v.634l-.549-.317a.5.5 0 1 0-.5.866L6 7l-.549.317a.5.5 0 1 0 .5.866l.549-.317V8.5a.5.5 0 1 0 1 0v-.634l.549.317a.5.5 0 1 0 .5-.866L8 7l.549-.317a.5.5 0 1 0-.5-.866l-.549.317zm-2 4.5a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1zm0 2a.5.5 0 0 0 0 1h5a.5.5 0 0 0 0-1z"/>
@@ -125,7 +125,7 @@
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Staff</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Vendor's Document</h6>
+          <h6 class="font-weight-bolder mb-0">Payment Reminder</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -138,7 +138,7 @@
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Staff</span>
+                <span class="d-sm-inline d-none">Vendor</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -154,69 +154,60 @@
         </div>
       </div>
     </nav>
-    <!-- Issue Reciept Modal ni sya-->
-      <div class="modal fade" id="issueRecieptModal" tabindex="-1" aria-labelledby="issueRecieptModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="issueRecieptModalLabel">Issue Receipt to Vendor</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="mb-3">
-                  <label for="vendorSelect" class="form-label">Select Vendor</label>
-                  <select id="vendorSelect" class="form-select">
-                    <!-- populate this select with a list of vendors -->
-                    <option value="">Select a vendor</option>
-                    <option value="1">Vendor 1</option>
-                    <option value="2">Vendor 2</option>
-                    <!-- ... -->
-                  </select>
-                </div>
-                <div class="mb-3">
-                  <label for="receiptFile" class="form-label">Attach Receipt File or Photo</label>
-                  <input type="file" id="receiptFile" class="form-control">
-                </div>
-                <div class="mb-3">
-                  <label for="receiptNotes" class="form-label">Notes (optional)</label>
-                  <textarea id="receiptNotes" class="form-control"></textarea>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="issueReceiptBtn">Issue Receipt</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
     <!-- End Navbar -->
     <div class="container-fluid py-4">
-
-      <div class="d-grid gap-2 d-md-block py-3 px-3">
-          <p class="text-title">Actions</p>
-          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#issueRecieptModal">
-            Issue Reciept
-          </button>
-        </div>
+      
+      <div class="row my-4">
+        <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
           <div class="card">
             <div class="card-header pb-0">
               <div class="row">
                 <div class="col-lg-6 col-7">
                   <h6>Vendors</h6>
                   <p class="text-sm mb-0">
-                    <i class="fa fa-user-circle text-warning" aria-hidden="true"></i>
-                    <span class="font-weight-bold ms-1">List of Vendors</span> 
+                    <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
+                    <span class="font-weight-bold ms-1">30 Vendors that are overdued</span> this month
                   </p>
                 </div>
+                
                 <div class="col-lg-6 col-5 my-auto text-end">
-                  <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                    <div class="input-group">
-                      <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                      <input type="text" class="form-control px-1" placeholder="Search for...">
+                  <div class="dropdown float-lg-end pe-4 mx-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-week" viewBox="0 0 16 16" id="filterDate" data-bs-toggle="dropdown" aria-expanded="false">
+                      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
+                      <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+                    </svg>
+                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="filterDate">
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Today</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;">This Week</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;">This Month</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#customDateModal">Custom Date</a></li>
+                    </ul>
+                    
+                    <div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="customDateModalLabel">Select Custom Date</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <input type="text" id="customDatePicker" class="form-control">
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                          </div>
+                        </div>
+                      </div>
                     </div>
+
+                    <script>
+                      document.addEventListener('DOMContentLoaded', function() {
+                        flatpickr('#customDatePicker', {
+                          dateFormat: 'Y-m-d',
+                          minDate: 'today'
+                        });
+                      });
+                    </script>
                   </div>
                 </div>
               </div>
@@ -227,164 +218,108 @@
                   <thead>
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Building</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Reciept History</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due Date</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Send Message</th>
                     </tr>
                   </thead>
-                  <tbody id="dataTableBody">
-                    
-                    <script>
-                      // Function to fetch data from PHP script
-                      function fetchData() {
-                          var xhr = new XMLHttpRequest();
-                          xhr.open('GET', 'get_data.php', true);
-                          xhr.onload = function () {
-                              if (xhr.status >= 200 && xhr.status < 300) {
-                                  var data = JSON.parse(xhr.responseText);
-                                  displayData(data);
-                              } else {
-                                  console.error('Request failed with status ' + xhr.status);
-                              }
-                          };
-                          xhr.onerror = function () {
-                              console.error('Network error occurred');
-                          };
-                          xhr.send();
-                      }
-                  
-                      // Function to display data in the HTML table
-                      function displayData(data) {
-                          var tbody = document.getElementById('dataTableBody');
-                          var html = '';
-                  
-                          data.forEach(function (row) {
-                              html += '<tr>';
-                              html += '  <td>';
-                              html += '    <div class="d-flex px-3 py-1">';
-                              html += '      <div class="d-flex flex-column justify-content-center">';
-                              html += '        <h6 class="mb-0 text-sm">' + row.first_name + ' ' + row.middle_name + ' ' + row.last_name + '</h6>';
-                              html += '      </div>';
-                              html += '    </div>';
-                              html += '  </td>';
-                              html += '  <td>';
-                              html += '    <div class="avatar-group mt-1">';
-                              html += '      <h6 class="mb-1 text-sm">' + row.building_type + '</h6>';
-                              html += '    </div>';
-                              html += '  </td>';
-                              html += '  <td class="align-middle text-center text-sm">';
-                              html += '    <span class="text-xs font-weight-bold">' + row.store_number + '</span>';
-                              html += '  </td>';
-                              html += '  <td class="align-middle text-center text-sm">';
-                              html += '    <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#openHistoryModal">Show Reciepts</button>';
-                              html += '  </td>';
-                              html += '</tr>';
-                          });
-                  
-                          // Insert the generated HTML into the table body
-                          tbody.innerHTML = html;
-                      }
-                  
-                      // Call fetchData function when the page loads
-                      document.addEventListener('DOMContentLoaded', function () {
-                          fetchData();
-                      });
-                  </script>
-                  
-                </tbody>
+                  <tbody>
+                    <tr>
+                      <td>
+                        <div class="d-flex px-3 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">Reyan Jay Samontanes</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="avatar-group mt-1">
+                          <h6 class="mb-1 text-sm">Building E</h6>
+                        </div>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-xs font-weight-bold"> 47 </span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-xs font-weight-bold">P25,250</span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <span class="text-xs font-weight-bold">2023-02-15</span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                        <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#sendMessageModal">
+                          Send Message
+                        </button>
+                      </td>
+                    </tr>
+                  </tbody>
                 </table>
               </div>
             </div>
+        </div>
+      </div>
+        </div>
+        
+      </div>
+      <!-- send message Modal -->
+    <div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="sendMessageModalLabel">Send Message to Vendor</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label for="vendor-name" class="col-form-label">Vendor Name:</label>
+                <input type="text" class="form-control" id="vendor-name" readonly value="<?php echo $vendor_name;?>">
+              </div>
+              <div class="mb-3">
+                <label for="message" class="col-form-label">Message:</label>
+                <textarea class="form-control" id="message" required></textarea>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id="sendMessageBtn">Send Message</button>
           </div>
         </div>
       </div>
-      
-      I POPULATE PA NATO NI IF HUMAN NA NAG DATABASES and NAA KOY JAVASCRIPT SA CODE ANI PANGITAA RA SA BABA MISMO ANING MESSAGE BASIG MAGAMIT
-<!-- Modal for receipt history -->
-<div class="modal fade" id="openHistoryModal" tabindex="-1" aria-labelledby="openHistoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="openHistoryModalLabel">Receipt History</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Table to display receipt history -->
-        <table class="table align-items-center mb-0">
-          <thead>
-            <tr>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt ID</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">File</th>
-            </tr>
-          </thead>
-          <tbody id="receiptHistoryBody">
-
-            <!-- Data will be populated here using JavaScript -->
-         
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
     </div>
-  </div>
-</div>
-      
-  <!-- 
-// Function to fetch receipt history data
-function fetchReceiptHistory(receiptId) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'get_receipt_history.php?receipt_id=' + receiptId, true);
-  xhr.onload = function() {
-    if (xhr.status >= 200 && xhr.status < 300) {
-      var data = JSON.parse(xhr.responseText);
-      displayReceiptHistory(data);
-    } else {
-      console.error('Request failed with status ' + xhr.status);
-    }
-  };
-  xhr.onerror = function() {
-    console.error('Network error occurred');
-  };
-  xhr.send();
-}
 
-// Function to display receipt history data in the modal
-function displayReceiptHistory(data) {
-  var tbody = document.getElementById('receiptHistoryBody');
-  var html = '';
-  
-  data.forEach(function(row) {
-    html += '<tr>';
-    html += '  <td>' + row.date + '</td>';
-    html += '  <td>' + row.receipt_id + '</td>';
-    html += '  <td>';
-    if (row.file_url) {
-      html += '    <a href="' + row.file_url + '" target="_blank">View File</a>';
-    } else {
-      html += '    No File Available';
-    }
-    html += '  </td>';
-    html += '</tr>';
-  });
-  
-  tbody.innerHTML = html;
-}
+    <!--
+    
+    JavaScript to handle the send message functionality
+      <script>
+        $(document).ready(function() {
+          $('#sendMessageBtn').on('click', function() {
+            var vendorName = $('#vendor-name').val();
+            var message = $('#message').val();
+            
+            // Make an AJAX request to send the message to the vendor
+            $.ajax({
+              type: 'POST',
+              url: 'end_message.php', // Replace with your PHP script to send the message
+              data: { vendor_name: vendorName, message: message },
+              success: function(response) {
+                if (response == 'uccess') {
+                  $('#sendMessageModal').modal('hide');
+                  alert('Message sent successfully!');
+                } else {
+                  alert('Error sending message. Please try again.');
+                }
+              }
+            });
+          });
+        });
+      </script>
+          -->
 
-// Add event listener to the button to open the modal
-document.addEventListener('DOMContentLoaded', function() {
-  var buttons = document.querySelectorAll('[data-bs-target="#openHistoryModal"]');
-  buttons.forEach(function(button) {
-    button.addEventListener('click', function() {
-      var receiptId = button.dataset.receiptId;
-      fetchReceiptHistory(receiptId);
-    });
-  });
-});
 
---> 
 
     </div>
   </main>
@@ -441,6 +376,11 @@ document.addEventListener('DOMContentLoaded', function() {
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 
 </html>
