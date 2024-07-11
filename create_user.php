@@ -2,8 +2,9 @@
 include ('database_config.php');
 
 
-
-header('Content-Type: application/json');
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+header('Content-Type: application/json'); // Add closing quote
 
 // Connect to the database
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
@@ -20,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $conn->begin_transaction();
 
         // This will help to ensure that all fields are received correctly.
-        // echo json_encode(['postData' => $_POST]);
+         echo json_encode(['postData' => $_POST]);
 
         $user_type = $_POST['user_type'];
         $username = $_POST['username'];
@@ -33,12 +34,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $address = $_POST['address'];
         $stallNumber = $_POST['stall_number'];
         $stallCode = $_POST['stall_code'];
-        $buildingCode = $_POST['building_code'];
+        $buildingtype = $_POST['building_type'];
         $buildingFloor = $_POST['building_floor'];
-        $monthlyPayment = $_POST['monthly_payments'];
+        $Rentals = $_POST['monthly_rentals'];
         $startDate = $_POST['started_date'];
         $endDate = $_POST['end_date'];
-
 
         $leaseAgreements = $_FILES['lease_agreements'];
         $businessPermits = $_FILES['business_permits'];
@@ -104,111 +104,123 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             throw new Exception(implode("\n", $fileErrors));
         }
 
-        // Insert into stalls
-        $sql1 = "INSERT INTO stalls (stall_number, stall_code) VALUES (?, ?)";
-        $stmt1 = $conn->prepare($sql1);
-        $stmt1->bind_param('is', $stallNumber, $stallCode);
-
-        // Check if stall insertion was successful
-        if ($stmt1->execute()) {
-        $insertedStallId = $stmt1->insert_id;  // Get the inserted stall ID
-        } else {
-            throw new Exception("Error inserting stalls data.");
-        }
-
-        // Insert into buildings (assuming stall_number is a foreign key)
-        if (isset($insertedStallId)) { // Only insert if stall was inserted successfully
-        $sql2 = "INSERT INTO buildings (building_code, building_floor, stall_number) VALUES (?, ?, ?)";
-        $stmt2 = $conn->prepare($sql2);
-        $stmt2->bind_param('sss', $buildingCode, $buildingFloor, $insertedStallId);
-        $stmt2->execute();
-        } else {
-            throw new Exception("Error inserting building data.");
-        }
-
 
         // Prepare and execute user insert based on user_type
         $sqlA = "INSERT INTO users (username, password, user_type) VALUES (?, ?, ?)";
         $stmtA = $conn->prepare($sqlA);
+        if (!$stmtA) {
+            throw new Exception("Prepare statement failed for users: " . $conn->error);
+        }
         $stmtA->bind_param('sss', $username, $password, $user_type);
         $stmtA->execute();
-
         if ($stmtA->affected_rows !== 1) {
             throw new Exception("Error inserting account data.");
         }
+        $insertedUserId = $conn->insert_id;
+       
 
         // Prepare and execute personal_profile insert
-        $insertedUserId = mysqli_insert_id($conn);
+
         // Retrieve the inserted user ID for foreign key reference (if needed)
-        $insertedUserId = mysqli_insert_id($conn);
         switch ($user_type) {
             case "VENDOR":
-                $sql2 = "INSERT INTO vendor (vendor_name, user_id) VALUES (?, ?)";
-                $stmt2 = $conn->prepare($sql2);
-                $stmt2->bind_param('si', $full_name, $insertedUserId);  // Use the inserted user ID
-                $stmt2->execute();
-                break;
+              $sqlB = "INSERT INTO vendors (vendor_name) VALUES (?)";
+              break;
             case "ADMIN":
-                $sql2 = "INSERT INTO admin (admin_name, user_id) VALUES (?, ?)";
-                $stmt2 = $conn->prepare($sql2);
-                $stmt2->bind_param('si', $full_name, $insertedUserId);  // Use the inserted user ID
-                $stmt2->execute();
-                break;
+              $sqlB = "INSERT INTO admin (admin_name) VALUES (?)";
+              break;
             case "STAFF":
-                $sql2 = "INSERT INTO staff (staff_name, user_id) VALUES (?, ?)";
-                $stmt2 = $conn->prepare($sql2);
-                $stmt2->bind_param('si', $full_name, $insertedUserId);  // Use the inserted user ID
-                $stmt2->execute();
-                break;
+              $sqlB = "INSERT INTO staff (staff_name) VALUES (?)";
+              break;
             default:
-                echo "Invalid user type";
-                break;
-}
-
-        $sqlB = "INSERT INTO personal_profile (user_id, first_name, middle_name, last_name, age, contact_number, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
-
-        $stmtB = $conn->prepare($sqlB);
-        $stmtB->bind_param('issssss', $insertedUserId, $first_name, $middle_name, $last_name, $age, $contactNumber, $address);
-        $stmtB->execute();
-
-        if ($stmtB->affected_rows !== 1) {
-            throw new Exception("Error inserting personal profile.");
-        }
-
-        // Prepare and execute payments insert
-        $sqlC = "INSERT INTO payments (monthly_payments, receipts, started_date, end_date) VALUES (?, ?, ?, ?)";
-        $stmtC = $conn->prepare($sqlC);
-        $stmtC->bind_param('sbss', $monthlyPayment, $receiptsDest, $startDate, $endDate);
+              throw new Exception("Invalid user type");
+          }
+          
+          $stmtB = $conn->prepare($sqlB);
+          if (!$stmtB) {
+            throw new Exception("Prepare statement failed: " . $conn->error);
+          }
+          
+          $stmtB->bind_param('s', $full_name);
+          $stmtB->execute();
+          
+          if ($stmtB->affected_rows !== 1) {
+            throw new Exception("Error inserting " . strtolower($user_type) . " data.");
+          }
+          
+// Retrieve the inserted user ID for foreign key reference (if needed)
         
-        $stmtC->send_long_data(2, $receiptsDest); // Send the binary data for receipts
+
+        $sqlC = "INSERT INTO personal_profile (personal_id, first_name, middle_name, last_name, age, contact_number, address) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        $stmtC = $conn->prepare($sqlC);
+        $stmtC->bind_param('issssss', $insertedUserId, $first_name, $middle_name, $last_name, $age, $contactNumber, $address);
         $stmtC->execute();
 
         if ($stmtC->affected_rows !== 1) {
+            throw new Exception("Error inserting personal profile.");
+        }
+
+       
+        // Insert into buildings (assuming stall_number is a foreign key)
+       
+        $sql1 = "INSERT INTO buildings (building_floor, building_type, user_id, vendor_id) VALUES (?, ?, ?, ?)";
+        $stmt1 = $conn->prepare($sql1);
+        $stmt1->bind_param('ssii', $buildingtype, $buildingFloor, $insertedUserId, $insertedIdvendor);
+        $stmt1->execute();
+
+        // Check if stall insertion was successful
+        if ($stmt1->execute()) {
+            $insertedbuildingtype = mysqli_insert_id($conn);  // Get the inserted stall ID
+            } else {
+                throw new Exception("Error inserting stalls data.");
+            }
+
+       
+         $sql2 = "INSERT INTO stalls (stall_code, monthly_rentals, stall_number, user_id, building_id) VALUES (?, ?, ?, ?, ?)";
+         $stmt2 = $conn->prepare($sql2);
+         $stmt2->bind_param('sssii', $stallCode, $Rentals, $stallNumber, $insertedUserId, $insertedbuildingtype);
+            $stmt2->execute();
+         
+
+           // Prepare and execute documents insert
+           $sqlD = "INSERT INTO documents (receipts, lease_agreements, business_permits, business_licenses) VALUES (?, ?, ?, ?)";
+           $stmtD = $conn->prepare($sqlD);
+           $stmtD->bind_param('bbbb', $receiptsDest, $leaseAgreementstDest, $businessPermitsDest, $businessLicensesDest);
+            // Assuming successful preparation...
+            $stmtD->send_long_data(0, $receiptsDest);
+            $stmtD->send_long_data(1, $leaseAgreementsDest);
+            $stmtD->send_long_data(2, $businessPermitsDest);
+            $stmtD->send_long_data(3, $businessLicensesDest);
+   
+           $stmtD->execute();        
+           $insertedDocumentId = $stmtD->insert_id;
+   
+           if ($stmtD->affected_rows !== 1) {
+               throw new Exception("Error inserting documents.");
+           }
+   
+  
+
+        // Prepare and execute payments insert
+        $sqlE = "INSERT INTO monthly_payments (started_date, end_date) VALUES ( ?, ?)";
+        $stmtE = $conn->prepare($sqlE);
+        $stmtE->bind_param('ss',  $startDate, $endDate);
+        
+       // $stmtE->send_long_data(1, $receiptsDest); // Send the binary data for receipts
+        $stmtE->execute();
+
+        if ($stmtE->affected_rows !== 1) {
             throw new Exception("Error inserting payment.");
         }
-        // Prepare and execute documents insert
-        $sqlD = "INSERT INTO documents (receipts, lease_agreements, business_permits, business_licenses) VALUES (?, ?, ?, ?)";
-        $stmtD = $conn->prepare($sqlD);
-        $stmtD->bind_param('bbbb', $receiptsDest, $leaseAgreementstDest, $businessPermitsDest, $businessLicensesDest);
-         // Assuming successful preparation...
-         $stmtD->send_long_data(0, $receiptsDest);
-         $stmtD->send_long_data(1, $leaseAgreementsDest);
-         $stmtD->send_long_data(2, $businessPermitsDest);
-         $stmtD->send_long_data(3, $businessLicensesDest);
 
-        $stmtD->execute();        
-        $insertedDocumentId = mysqli_insert_id($conn);
-
-        if ($stmtD->affected_rows !== 1) {
-            throw new Exception("Error inserting documents.");
-        }
-
-        if (isset($_POST['payment_id'])) { // Check if payment ID is provided
-            $sqlE = "INSERT INTO payments (payment_id, document_id) VALUES (?, ?)";
-            $stmtE = $conn->prepare($sqlE);
-            $stmtE->bind_param('ii', $_POST['payment_id'], $insertedDocumentId);
-            $stmtE->execute();
-          }
+        // Close prepared statements
+        if (isset($stmtA)) $stmtA->close();
+        if (isset($stmtB)) $stmtB->close();
+        if (isset($stmtC)) $stmtC->close();
+        if (isset($stmt1)) $stmt1->close();
+        if (isset($stmt2)) $stmt2->close();
+        if (isset($stmtD)) $stmtD->close();
+     
 
         // Commit transaction if all inserts succeed
         $conn->commit();
@@ -218,20 +230,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         // Rollback transaction on any error
         $conn->rollback();
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
+    } finally {
+        
+        // Close connection
+        $conn->close();
     }
-
-    // Close statements and connection
-    if (isset($stmt1)) $stmt1->close();
-    if (isset($stmt2)) $stmt2->close();
-    if (isset($stmtA)) $stmtA->close();
-    if (isset($stmtB)) $stmtB->close();
-    if (isset($stmtC)) $stmtC->close();
-    if (isset($stmtD)) $stmtD->close();
-    if (isset($stmtE)) $stmtE->close();
-    $conn->close();
-} else {
-    // echo json_encode(['success' => false, 'error' => 'Invalid request method or missing submit parameter.']);
-    echo json_encode(['success' => false, 'error' => 'Invalid request method or missing submit parameter.']);
-    // echo json_encode(['postData' => $_POST]);
+   
 }
 ?>
