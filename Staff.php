@@ -22,6 +22,10 @@ $stmt = $conn->prepare("SELECT u.user_id, s.staffs_name, u.username, u.user_type
                         JOIN staffs s ON u.user_id = s.user_id 
                         WHERE username = ?");
 
+if (!$stmt) {
+  die("Prepare failed: (". $conn->errno. ") ". $conn->error);
+}
+
 // Bind the parameter
 $stmt->bind_param("s", $username);
 
@@ -161,7 +165,7 @@ $conn->close();
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center">Prince Jay</h5>
+          <h5 class="text-center"><?php echo $row['staffs_name'];?></h5>
           <hr class="horizontal dark mt-0">
         </div>
       </div>
@@ -267,7 +271,6 @@ $conn->close();
             </div>
           </div>
         </div>
-    
         </div>
       </div>
       
@@ -281,8 +284,8 @@ $conn->close();
     <div class="card shadow-lg ">
       <div class="card-header pb-0 pt-3 ">
         <div class="float-start">
-          <h5 class="mt-3 mb-0">Prince Jay</h5>
-          <p>Vendor</p>
+          <h5 class="mt-3 mb-0"><?php echo $row['staffs_name'];?></h5>
+          <p>Staff</p>
         </div>
         <div class="float-end mt-4">
           <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">

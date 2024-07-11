@@ -19,8 +19,12 @@ die("Connection failed: " . $conn->connect_error);
 // Prepare the query
 $stmt = $conn->prepare("SELECT u.user_id, v.vendor_name, u.username, u.user_type 
                         FROM users u
-                        JOIN vendor v ON u.user_id = s.user_id 
+                        JOIN vendors v ON u.user_id = v.user_id 
                         WHERE username = ?");
+
+if (!$stmt) {
+  die("Prepare failed: (". $conn->errno. ") ". $conn->error);
+}
 
 // Bind the parameter
 $stmt->bind_param("s", $username);
@@ -204,7 +208,7 @@ $conn->close();
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center">Prince Jay</h5>
+          <h5 class="text-center"><?php echo $row['vendor_name'];?></h5>
           <hr class="horizontal dark mt-0">
         </div>
       </div>
@@ -340,6 +344,71 @@ $conn->close();
           </div>
         </div>
       </div>
+
+
+      <div class="row mt-4">
+          <div class="col-lg-5 mb-lg-4 mb-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title text-lg text-info mb-3 text-start mx-2">Vendor Profile</h5>
+                <div class="row">
+                  <div class="col-md-4">
+                    <img src="image/profile.jpg" class="img-fluid rounded-circle" alt="Admin Profile Picture">
+                  </div>
+                  <div class="col-md-8 my-3">
+                    <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo $row['vendor_name'];?></h6>
+                    <p class="card-text">Username: <?php echo $row['username'];?></p>
+                    <p class="card-text">Role: <?php echo $row['user_type'];?></p>
+                 
+                  </div>
+                </div>
+                <hr class="horizontal dark my-3">
+                <div class="d-flex my-4 mx-5">
+                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                    Change Password
+                  </button>
+                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                    Change Profile Picture
+                  </button>
+                </div>
+                <div class="accordion" id="profile-accordion">
+                  <div class="accordion-item">
+                    <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#profile-accordion">
+                      <div class="accordion-body">
+                        <form>
+                          <div class="mb-3">
+                            <label for="current-password" class="form-label">Current Password</label>
+                            <input type="password" class="form-control" id="current-password" placeholder="Enter current password">
+                          </div>
+                          <div class="mb-3">
+                            <label for="new-password" class="form-label">New Password</label>
+                            <input type="password" class="form-control" id="new-password" placeholder="Enter new password">
+                          </div>
+                          <button type="submit" class="btn btn-primary">Update Password</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="accordion-item">
+                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#profile-accordion">
+                      <div class="accordion-body">
+                        <form>
+                          <div class="mb-3">
+                            <label for="profile-picture" class="form-label">Profile Picture</label>
+                            <input type="file" class="form-control" id="profile-picture" accept="image/*">
+                          </div>
+                          <button type="submit" class="btn btn-primary">Update Profile Picture</button>
+                        </form>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
       <div class="row mt-4">
         <div class="col-lg-7 mb-lg-0 mb-4">
           <div class="card">
@@ -386,109 +455,10 @@ $conn->close();
           </div>
         </div>
       </div>
-      <div class="row mt-4">
-        <div class="col-lg-5 mb-lg-0 mb-4">
-          <div class="card z-index-2">
-            <div class="card-body p-3">
-              <h6 class="ms-2 mt-4 mb-0"> Active Users </h6>
-              <p class="text-sm ms-2"> (<span class="font-weight-bolder">+23%</span>) than last week </p>
-              
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-7">
-          <div class="card z-index-2">
-            <div class="card-header pb-0">
-              <h6>Sales overview</h6>
-              <p class="text-sm">
-                <i class="fa fa-arrow-up text-success"></i>
-                <span class="font-weight-bold">4% more</span> in 2021
-              </p>
-            </div>
-            <div class="card-body p-3">
-              <div class="chart">
-                <canvas id="chart-line" class="chart-canvas" height="300"></canvas>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="row my-4">
-        <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
-          <div class="card">
-            <div class="card-header pb-0">
-              <div class="row">
-                <div class="col-lg-6 col-7">
-                  <h6>Vendors</h6>
-                  <p class="text-sm mb-0">
-                    <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
-                    <span class="font-weight-bold ms-1">30 Vendors that are overdued</span> this month
-                  </p>
-                </div>
-                <div class="col-lg-6 col-5 my-auto text-end">
-                  <div class="dropdown float-lg-end pe-4">
-                    <a class="cursor-pointer" id="dropdownTable" data-bs-toggle="dropdown" aria-expanded="false">
-                      <i class="fa fa-ellipsis-v text-secondary"></i>
-                    </a>
-                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="dropdownTable">
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Action</a></li>
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Another action</a></li>
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Something else here</a></li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="card-body px-0 pb-2">
-              <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-3 py-1">
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Reyan Jay Samontanes</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-1">
-                          <h6 class="mb-1 text-sm">Building E</h6>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> 47 </span>
-                      </td>
-                      <td class="align-middle">
-                            <span class="text-xs font-weight-bold">P25,250</span>
-                          </div>
-                        </div>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="card h-100">
-            <div class="card-header pb-0">
-              <h6>Card Sample</h6>
-              
-            </div>
-            
-          </div>
-        </div>
-      </div>
+      
+
+
+
       
     </div>
   </main>
@@ -499,7 +469,7 @@ $conn->close();
     <div class="card shadow-lg ">
       <div class="card-header pb-0 pt-3 ">
         <div class="float-start">
-          <h5 class="mt-3 mb-0">Prince Jay</h5>
+          <h5 class="mt-3 mb-0"><?php echo $row['vendor_name'];?></h5>
           <p>Vendor</p>
         </div>
         <div class="float-end mt-4">
