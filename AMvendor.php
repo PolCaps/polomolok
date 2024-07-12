@@ -1,3 +1,56 @@
+<?php
+session_start();
+
+// Check if user is logged in
+if (!isset($_SESSION['username'])) {
+    header("Location: index.php");
+    exit();
+}
+$username = $_SESSION['username'];
+// Database connection settings
+include('database_config.php');
+// Create connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check connection
+if ($conn->connect_error) {
+die("Connection failed: " . $conn->connect_error);
+}
+// Prepare the query
+$stmt = $conn->prepare("SELECT u.user_id, a.admin_name, u.username, u.user_type 
+                        FROM users u
+                        JOIN admin a ON u.user_id = a.user_id 
+                        WHERE username = ?");
+
+if (!$stmt) {
+  die("Prepare failed: (". $conn->errno. ") ". $conn->error);
+}
+
+// Bind the parameter
+$stmt->bind_param("s", $username);
+
+// Execute the query
+$stmt->execute();
+
+// Get the result
+$result = $stmt->get_result();
+
+
+ // Initialize the $row variable
+  $row = array();
+        
+// Check if query was successful
+if ($result->num_rows > 0) {
+// Fetch the row from the result set
+$row = $result->fetch_assoc();
+      } else {
+echo "No data found";
+}
+// Close the statement and connection
+$stmt->close();
+$conn->close();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -49,7 +102,7 @@
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMaps" aria-expanded="false" aria-controls="collapseMaps">
+          <a class="nav-link collapsed" href="Admin.php" data-bs-toggle="collapse" data-bs-target="#collapseMaps" aria-expanded="false" aria-controls="collapseMaps">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-map-fill" viewBox="0 0 16 16">
                 <title>office</title>
@@ -121,7 +174,7 @@
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center">Admin Meedo</h5>
+          <h5 class="text-center"><?php echo $row['admin_name'];?></h5>
           <hr class="horizontal dark mt-0">
         </div>
       </div>
@@ -564,7 +617,51 @@
     <div class="card shadow-lg">
       <div class="card-header pb-0 pt-3">
         <div class="float-start">
-          <h5 class="mt-3 mb-0">Admin Meedo</h5>
+        <?php
+// Database connection settings
+include('database_config.php');
+// Create connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check connection
+if ($conn->connect_error) {
+die("Connection failed: " . $conn->connect_error);
+}
+// Prepare the query
+$stmt = $conn->prepare("SELECT u.user_id, a.admin_name, u.username, u.user_type 
+                        FROM users u
+                        JOIN admin a ON u.user_id = a.user_id 
+                        WHERE username = ?");
+
+if (!$stmt) {
+  die("Prepare failed: (". $conn->errno. ") ". $conn->error);
+}
+
+// Bind the parameter
+$stmt->bind_param("s", $username);
+
+// Execute the query
+$stmt->execute();
+
+// Get the result
+$result = $stmt->get_result();
+
+
+ // Initialize the $row variable
+  $row = array();
+        
+// Check if query was successful
+if ($result->num_rows > 0) {
+// Fetch the row from the result set
+$row = $result->fetch_assoc();
+      } else {
+echo "No data found";
+}
+// Close the statement and connection
+$stmt->close();
+$conn->close();
+?>
+          <h5 class="mt-3 mb-0"><?php echo $row['admin_name'];?></h5>
           <p>Admin</p>
         </div>
         <div class="float-end mt-4">
