@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 11, 2024 at 01:59 PM
+-- Generation Time: Jul 12, 2024 at 06:46 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -30,6 +30,7 @@ SET time_zone = "+00:00";
 CREATE TABLE `admin` (
   `admin_id` int(11) NOT NULL,
   `admin_name` varchar(255) DEFAULT NULL,
+  `profile_picture` longblob DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -37,9 +38,9 @@ CREATE TABLE `admin` (
 -- Dumping data for table `admin`
 --
 
-INSERT INTO `admin` (`admin_id`, `admin_name`, `user_id`) VALUES
-(1, 'MADDIE PADELECI', 1),
-(2, 'JAN SAMONTANES', 237);
+INSERT INTO `admin` (`admin_id`, `admin_name`, `profile_picture`, `user_id`) VALUES
+(1, 'MADDIE PADELECI', NULL, 1),
+(2, 'JAN SAMONTANES', NULL, 237);
 
 -- --------------------------------------------------------
 
@@ -179,6 +180,7 @@ INSERT INTO `personal_profile` (`personal_id`, `first_name`, `middle_name`, `las
 CREATE TABLE `staffs` (
   `staffs_id` int(11) NOT NULL,
   `staffs_name` varchar(255) DEFAULT NULL,
+  `profile_picture` longblob DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -186,9 +188,9 @@ CREATE TABLE `staffs` (
 -- Dumping data for table `staffs`
 --
 
-INSERT INTO `staffs` (`staffs_id`, `staffs_name`, `user_id`) VALUES
-(1, 'MEEDO STAFFS', 238),
-(2, 'MEEDO STAFFS', 238);
+INSERT INTO `staffs` (`staffs_id`, `staffs_name`, `profile_picture`, `user_id`) VALUES
+(1, 'MEEDO STAFFS', NULL, 238),
+(2, 'MEEDO STAFFS', NULL, 238);
 
 -- --------------------------------------------------------
 
@@ -258,21 +260,13 @@ CREATE TABLE `users` (
 INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`) VALUES
 (1, 'mads', 'mads123', 'ADMIN'),
 (210, 'MarkMeedo', 'mark123', 'VENDOR'),
-(211, 'MEILPANA233', 'meil123', 'VENDOR'),
 (212, 'MEILPANA233', 'meil123', 'VENDOR'),
-(213, 'PRINCESAYRE', 'PRINCE123', 'VENDOR'),
 (214, 'PRINCESAYRE', 'PRINCE123', 'VENDOR'),
-(215, 'BRIAR23', 'briar123', 'VENDOR'),
 (216, 'BRIAR23', 'briar123', 'VENDOR'),
-(219, 'rr21', 'rr123', 'VENDOR'),
 (220, 'rr21', 'rr123', 'VENDOR'),
-(221, 'TIBOY', 'tiboybaboy123', 'VENDOR'),
 (222, 'TIBOY', 'tiboybaboy123', 'VENDOR'),
-(223, 'reysamo', 'REY123', 'VENDOR'),
 (224, 'reysamo', 'REY123', 'VENDOR'),
-(233, 'reysamo', 'rey123', 'VENDOR'),
 (234, 'reysamo', 'rey123', 'VENDOR'),
-(235, 'reysamo', 'rey123', 'VENDOR'),
 (236, 'reysamo', 'rey123', 'VENDOR'),
 (237, 'janjan', 'janjan123', 'ADMIN'),
 (238, 'staffsMEEDO', 'staff123', 'STAFF');
@@ -286,6 +280,7 @@ INSERT INTO `users` (`user_id`, `username`, `password`, `user_type`) VALUES
 CREATE TABLE `vendors` (
   `vendor_id` int(11) NOT NULL,
   `vendor_name` varchar(255) DEFAULT NULL,
+  `profile_picture` longblob DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -293,24 +288,24 @@ CREATE TABLE `vendors` (
 -- Dumping data for table `vendors`
 --
 
-INSERT INTO `vendors` (`vendor_id`, `vendor_name`, `user_id`) VALUES
-(38, 'MARK MARCO MARCOPOLO', 210),
-(39, 'MEIL  PANAGUITON', 212),
-(40, 'MEIL  PANAGUITON', 212),
-(41, 'PRINCE JAY MOHAMMAD OMAR ABDULJABHAR SAYRE', 214),
-(42, 'PRINCE JAY MOHAMMAD OMAR ABDULJABHAR SAYRE', 214),
-(43, 'BRIAR  CHUA', 216),
-(44, 'BRIAR  CHUA', 216),
-(47, 'RR BARRANCO SAMONTANES', 220),
-(48, 'RR BARRANCO SAMONTANES', 220),
-(49, 'TIBOY  BABOY', 222),
-(50, 'TIBOY  BABOY', 222),
-(51, 'REY SAC SAMO', 224),
-(52, 'REY SAC SAMO', 224),
-(61, 'REY SAC SAMO', 234),
-(62, 'REY SAC SAMO', 234),
-(63, 'REY SAC SAMO', 236),
-(64, 'REY SAC SAMO', 236);
+INSERT INTO `vendors` (`vendor_id`, `vendor_name`, `profile_picture`, `user_id`) VALUES
+(38, 'MARK MARCO MARCOPOLO', NULL, 210),
+(39, 'MEIL  PANAGUITON', NULL, 212),
+(40, 'MEIL  PANAGUITON', NULL, 212),
+(41, 'PRINCE JAY MOHAMMAD OMAR ABDULJABHAR SAYRE', NULL, 214),
+(42, 'PRINCE JAY MOHAMMAD OMAR ABDULJABHAR SAYRE', NULL, 214),
+(43, 'BRIAR  CHUA', NULL, 216),
+(44, 'BRIAR  CHUA', NULL, 216),
+(47, 'RR BARRANCO SAMONTANES', NULL, 220),
+(48, 'RR BARRANCO SAMONTANES', NULL, 220),
+(49, 'TIBOY  BABOY', NULL, 222),
+(50, 'TIBOY  BABOY', NULL, 222),
+(51, 'REY SAC SAMO', NULL, 224),
+(52, 'REY SAC SAMO', NULL, 224),
+(61, 'REY SAC SAMO', NULL, 234),
+(62, 'REY SAC SAMO', NULL, 234),
+(63, 'REY SAC SAMO', NULL, 236),
+(64, 'REY SAC SAMO', NULL, 236);
 
 --
 -- Indexes for dumped tables
