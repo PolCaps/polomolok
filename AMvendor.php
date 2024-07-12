@@ -134,7 +134,7 @@ $conn->close();
                 <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
               </svg>
             </div>
-            <span class="nav-link-text ms-1">Vendors</span>
+            <span class="nav-link-text ms-1">Vendors/Users</span>
           </a>
         </li>
         <li class="nav-item mt-3">
@@ -247,173 +247,281 @@ $conn->close();
         <div class="d-grid gap-2 d-md-block py-3 px-3">
           <p class="text-title">Actions</p>
           <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
-            Add New Vendor
+            Add New Vendor/User
           </button>
         </div>
-
-        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-          <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalLabel">Create New User</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-              </div>
-              <div class="modal-body">
-                <form id="createUserForm" action="create_user.php" method="POST" enctype="multipart/form-data">
-                  <div class="container-fluid">
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="user_type">User Type:</label>
-                          <select id="user_type" class="form-control" name="user_type" required>
-                            <option value="VENDOR">VENDOR</option>
-                            <option value="STAFF">STAFF</option>
-                            <option value="ADMIN">ADMIN</option>
-                          </select>
-                          <div class="invalid-feedback">Please select a user type.</div>
-                        </div>
-                        <div class="form-group">
-                          <label for="username">Username:</label>
-                          <input type="username" id="username" class="form-control" name="username" required>
-                          <div class="invalid-feedback">Please enter a username.</div>
-                        </div>
-                        
-                        <div class="form-group">
-                          <label for="password">Password:</label>
-                          <div class="input-group">
-                          <input type="password" id="password" class="form-control" name="password" required>
-                          <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true" id="togglePasswordform"></i>
-                         <script>
-                          const togglePassword = document.querySelector('#togglePasswordform');
-                            const password = document.querySelector('#password');
-                            togglePassword.addEventListener('click', () => {
-                              const type = password.getAttribute('type') === 'password'? 'text' : 'password';
-                              password.setAttribute('type', type);
-                              togglePassword.classList.toggle('bi bi-eye-fill');
-                            });
-                         </script>
-                        </div>
-                        </div>
-                        <div class="form-group">
-                          <label for="first_name">First Name:</label>
-                          <input type="text" id="first_name" class="form-control" name="first_name" required>
-          
-                        </div>
-                        <div class="form-group">
-                          <label for="middle_name">Middle Name:</label>
-                          <input type="text" id="middle_name" class="form-control" name="middle_name">
-
-                        </div>
-                        <div class="form-group">
-                          <label for="last_name">Last Name:</label>
-                          <input type="text" id="last_name" class="form-control" name="last_name" required>
-          
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="age">Age:</label>
-                          <input type="number" id="age" class="form-control" name="age" >
-                        </div>
-                        <div class="form-group">
-                          <label for="contact_number">Contact Number:</label>
-                          <input type="tel" id="contact_number" name="contact_number" class="form-control">
-                        </div>
-                        <div class="form-group">
-                          <label for="address">Address:</label>
-                          <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
-
-                        </div>
-                        <div class="form-group">
-                          <label for="stall_number">Stall Number:</label>
-                          <input type="text" id="stall_number" name="stall_number" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                          <label for="stall_code">Stall Code:</label>
-                          <input type="text" id="stall_code" name="stall_code" class="form-control">
-                        </div>
-
-                        <div class="col-md-6">
-                          <div class="form-group">
-                            <label for="building_type">Buildings:</label>
-                            <select id="building_type" name="building_type" class="form-control">
-                              <option value="">Select Buildings</option>
-                              <option value="Building A">Building A</option>
-                              <option value="Building B">Building B</option>
-                              <option value="Building C">Building C</option>
-                              <option value="Building D">Building D</option>
-                              <option value="Building E">Building E</option>
-                              <option value="Building F">Building F</option>
-                              <option value="Building G">Building G</option>
-                              <option value="Building H">Building H</option>
-                              <option value="Building I">Building I</option>
-                              <option value="Building J">Building J</option>
-                            </select>
-                            <div class="invalid-feedback">Please select a buildings.</div>
+    </head>
+    <body>
+    <style>
+        .accordion-header {
+          flex: 1;
+          text-align: center;
+        }
+        .accordion-header button {
+          width: 100%;
+          text-align: center;
+        }
+        .accordion-item {
+          margin-bottom: 1rem;
+        }
+        .accordion-button:not(.collapsed) {
+          color: #0d6efd;
+          background-color: #e9ecef;
+        }
+        .accordion-button {
+          flex: 1;
+        }
+      </style>
+      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">Create New User</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form id="createUserForm" action="create_user.php" method="POST" enctype="multipart/form-data">
+                <div class="container-fluid">
+                  <div class="row mb-3">
+                    <!-- Accordion for Admin/Staff and Vendor -->
+                    <div class="col-md-12">
+                      <div class="accordion" id="accordionExample">
+                        <div class="accordion-item">
+                          <h2 class="accordion-header d-flex" id="headingAdminStaff">
+                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdminStaff" aria-expanded="true" aria-controls="collapseAdminStaff">
+                              Admin/Staff
+                            </button>
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVendor" aria-expanded="false" aria-controls="collapseVendor">
+                              Vendor
+                            </button>
+                          </h2>
+                          <div id="collapseAdminStaff" class="accordion-collapse collapse show" aria-labelledby="headingAdminStaff" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                              <div class="form-group mb-3">
+                                <label for="account_type">Account Type:</label>
+                                <select id="account_type" class="form-control" name="account_type" required>
+                                  <option value="Admin">Admin</option>
+                                  <option value="Staff">Staff</option>
+                                </select>
+                                <div class="invalid-feedback">Please select an account type.</div>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="username">Username:</label>
+                                <input type="text" id="username" class="form-control" name="username" required>
+                                <div class="invalid-feedback">Please enter a username.</div>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="password">Password:</label>
+                                <div class="input-group">
+                                  <input type="password" id="password" class="form-control" name="password" required>
+                                  <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true" id="togglePasswordform"></i>
+                                </div>
+                                <script>
+                                  const togglePassword = document.querySelector('#togglePasswordform');
+                                  const password = document.querySelector('#password');
+                                  togglePassword.addEventListener('click', () => {
+                                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                                    password.setAttribute('type', type);
+                                    togglePassword.classList.toggle('bi bi-eye-fill');
+                                  });
+                                </script>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="first_name">First Name:</label>
+                                <input type="text" id="first_name" class="form-control" name="first_name" required>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="middle_name">Middle Name:</label>
+                                <input type="text" id="middle_name" class="form-control" name="middle_name">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="last_name">Last Name:</label>
+                                <input type="text" id="last_name" class="form-control" name="last_name" required>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="age">Age:</label>
+                                <input type="number" id="age" class="form-control" name="age">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="contact_number">Contact Number:</label>
+                                <input type="tel" id="contact_number" name="contact_number" class="form-control">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="address">Address:</label>
+                                <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
+                              </div>
+                            </div>
                           </div>
-                          
+                        </div>
+                        <div class="accordion-item">
+                          <div id="collapseVendor" class="accordion-collapse collapse" aria-labelledby="headingVendor" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                              <div class="form-group mb-3">
+                                <label for="account_type">Account Type:</label>
+                                <select id="account_type" class="form-control" name="account_type" required>
+                                  <option value="Admin">Vendor</option>
+                                </select>
+                                <div class="invalid-feedback">Please select an account type.</div>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="username">Username:</label>
+                                <input type="text" id="username" class="form-control" name="username" required>
+                                <div class="invalid-feedback">Please enter a username.</div>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="password">Password:</label>
+                                <div class="input-group">
+                                  <input type="password" id="password" class="form-control" name="password" required>
+                                  <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true" id="togglePasswordform"></i>
+                                </div>
+                                <script>
+                                  const togglePassword = document.querySelector('#togglePasswordform');
+                                  const password = document.querySelector('#password');
+                                  togglePassword.addEventListener('click', () => {
+                                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+                                    password.setAttribute('type', type);
+                                    togglePassword.classList.toggle('bi bi-eye-fill');
+                                  });
+                                </script>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="first_name">First Name:</label>
+                                <input type="text" id="first_name" class="form-control" name="first_name" required>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="middle_name">Middle Name:</label>
+                                <input type="text" id="middle_name" class="form-control" name="middle_name">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="last_name">Last Name:</label>
+                                <input type="text" id="last_name" class="form-control" name="last_name" required>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="age">Age:</label>
+                                <input type="number" id="age" class="form-control" name="age">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="contact_number">Contact Number:</label>
+                                <input type="tel" id="contact_number" name="contact_number" class="form-control">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="address">Address:</label>
+                                <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="stall_number">Stall Number:</label>
+                                <input type="text" id="stall_number" name="stall_number" class="form-control">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="stall_code">Stall Code:</label>
+                                <input type="text" id="stall_code" name="stall_code" class="form-control">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="building_type">Buildings:</label>
+                                <select id="building_type" name="building_type" class="form-control">
+                                  <option value="">Select Buildings</option>
+                                  <option value="Building A">Building A</option>
+                                  <option value="Building B">Building B</option>
+                                  <option value="Building C">Building C</option>
+                                  <option value="Building D">Building D</option>
+                                  <option value="Building E">Building E</option>
+                                  <option value="Building F">Building F</option>
+                                  <option value="Building G">Building G</option>
+                                  <option value="Building H">Building H</option>
+                                  <option value="Building I">Building I</option>
+                                  <option value="Building J">Building J</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a building.</div>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="lease_agreements">Lease Agreements:</label>
+                                <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="business_permits">Business Permits:</label>
+                                <input type="file" id="business_permits" name="business_permits" class="form-control">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="business_licenses">Business Licenses:</label>
+                                <input type="file" id="business_licenses" name="business_licenses" class="form-control">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="receipts">Payment Receipts:</label>
+                                <input type="file" id="receipts" name="receipts" class="form-control">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="monthly_rentals">Monthly Rentals:</label>
+                                <input type="number" id="monthly_rentals" name="monthly_rentals" class="form-control">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="building_floor">Building Floor:</label>
+                                <select id="building_floor" name="building_floor" class="form-control">
+                                  <option value="">Select Building Floor</option>
+                                  <option value="Ground Floor">Ground Floor</option>
+                                  <option value="Second Floor">Second Floor</option>
+                                </select>
+                                <div class="invalid-feedback">Please select a building floor.</div>
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="started_date">Started Date:</label>
+                                <input type="date" id="started_date" name="started_date" class="form-control">
+                              </div>
+                              <div class="form-group mb-3">
+                                <label for="end_date">End Date:</label>
+                                <input type="date" id="end_date" name="end_date" class="form-control">
+                              </div>
+                            </div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                    <div class="row">
-                      <div class="col-md-6">
-
-                        <div class="form-group">
-                          <label for="lease_agreements">Lease Agreements:</label>
-                          <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                          <label for="business_permits">Business Permits:</label>
-                          <input type="file" id="business_permits" name="business_permits" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                          <label for="business_licencses">Business Licenses:</label>
-                          <input type="file" id="business_licenses" name="business_licenses" class="form-control">
-                        </div>
-                     
-                        <div class="form-group">
-                          <label for="receipts">Payment Receipts:</label>
-                          <input type="file" id="receipts" name="receipts" class="form-control">
-                        </div>
-
-                        <div class="form-group">
-                          <label for="monthly_rentals">Monthly Rentals:</label>
-                          <input type="number" id="monthly_rentals" name="monthly_rentals" class="form-control">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label for="building_floor">Building Floor:</label>
-                          <select id="building_floor" name="building_floor" class="form-control">
-                            <option value="">Select Building Floor:</option>
-                            <option value="Ground Floor">Ground Floor</option>
-                            <option value="Second Floor">Second Floor</option>
-                          </select>
-                          <div class="invalid-feedback">Please select a building type.</div>
-                        </div>
-
-                        <div class="form-group">
-                          <label for="started_date">Started Date:</label>
-                          <input type="date" id="started_date" name="started_date" class="form-control">
-                        </div>
-                        <div class="form-group">
-                          <label for="end_date">End Date:</label>
-                          <input type="date" id="end_date" name="end_date" class="form-control">
-                        </div>
-                      </div>
-                    </div>
-                    <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
-                      <button type="submit" name="submit" id="submit" class="btn btn-info lg">Create User</button>
-                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                   </div>
-                </form>
-              </div>
+                  <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
+                    <button type="submit" name="submit" id="submit" class="btn btn-info lg">Create User</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </form>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Optional JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
+      <script>
+        document.getElementById('account_type').addEventListener('change', function() {
+          var accountType = this.value;
+          var adminStaffAccordion = document.getElementById('collapseAdminStaff');
+          var vendorAccordion = document.getElementById('collapseVendor');
+
+          if (accountType === 'Admin' || accountType === 'Staff') {
+            adminStaffAccordion.classList.add('show');
+            vendorAccordion.classList.remove('show');
+          } else if (accountType === 'Vendor') {
+            adminStaffAccordion.classList.remove('show');
+            vendorAccordion.classList.add('show');
+          }
+        });
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const togglePassword = document.querySelector('#togglePasswordform');
+      const password = document.querySelector('#password');
+      if (togglePassword) {
+        togglePassword.addEventListener('click', () => {
+          const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+          password.setAttribute('type', type);
+          togglePassword.classList.toggle('fa-eye');
+          togglePassword.classList.toggle('fa-eye-slash');
+        });
+      }
+    });
+  </script>
+        
        <script> // Event listeners for each file input 
        document.getElementById('lease_agreements').addEventListener('change', function(event) 
        { handleFileInputChange(event, 'lease_agreements'); }); 
