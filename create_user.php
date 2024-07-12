@@ -56,12 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
             'application/pdf',
           ];
 
-        function validate_and_handle_file($fileKey, $allowedTypes, &$fileErrors) {
+          function validate_and_handle_file($fileKey, $allowedTypes, &$fileErrors) {
             if (!isset($_FILES[$fileKey]) || $_FILES[$fileKey]['error'] !== UPLOAD_ERR_OK) {
-                $fileErrors[] = "Error uploading $fileKey file.";
+                $fileErrors[] = "Error uploading $fileKey file: " . $_FILES[$fileKey]['error'];
                 return null;
             } elseif (!in_array($_FILES[$fileKey]['type'], $allowedTypes)) {
-                $fileErrors[] = "Invalid file type for $fileKey.";
+                $fileErrors[] = "Invalid file type for $fileKey: " . $_FILES[$fileKey]['type'];
                 return null;
             }
 
@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $leaseAgreementsDest = validate_and_handle_file('lease_agreements', $allowedTypes, $fileErrors);
         $businessPermitsDest = validate_and_handle_file('business_permits', $allowedTypes, $fileErrors);
         $businessLicensesDest = validate_and_handle_file('business_licenses', $allowedTypes, $fileErrors);
-
+        
         // Handle file upload errors
         if (!empty($fileErrors)) {
             throw new Exception(implode("\n", $fileErrors));
@@ -258,7 +258,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $conn->commit();
         echo json_encode(['success' => true, 'message' => 'New user created successfully!']);
        
- 
+      }
     } catch (Exception $e) {
         // Rollback transaction on any error
         echo json_encode(['success' => false, 'error' => $e->getMessage()]);
@@ -280,5 +280,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
 
   }
    
-}
 ?>
