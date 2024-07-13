@@ -9,37 +9,6 @@ session_start()
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>PolomolokPublicMarket</title>
-  <!-- Start of Async Drift Code -->
-  <script>
-    "use strict";
-
-    !function() {
-      var t = window.driftt = window.drift = window.driftt || [];
-      if (!t.init) {
-        if (t.invoked) return void (window.console && console.error && console.error("Drift snippet included twice."));
-        t.invoked = !0, t.methods = ["identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on"],
-          t.factory = function(e) {
-            return function() {
-              var n = Array.prototype.slice.call(arguments);
-              return n.unshift(e), t.push(n), t;
-            };
-          }, t.methods.forEach(function(e) {
-            t[e] = t.factory(e);
-          }), t.load = function(t) {
-            var e = 3e5,
-              n = Math.ceil(new Date() / e) * e,
-              o = document.createElement("script");
-            o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + n + "/" + t + ".js";
-            var i = document.getElementsByTagName("script")[0];
-            i.parentNode.insertBefore(o, i);
-          };
-      }
-    }();
-    drift.SNIPPET_VERSION = '0.3.1';
-    drift.load('93ian234iumi');
-  </script>
-<!-- End of Async Drift Code -->
-    <!-- End of Async Drift Code -->
   <meta content="" name="description">
   <meta content="" name="keywords">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
@@ -61,26 +30,56 @@ session_start()
 
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
-
-  <!-- =======================================================
-  * Template Name: OnePage
-  * Template URL: https://bootstrapmade.com/onepage-multipurpose-bootstrap-template/
-  * Updated: Jun 03 2024 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
 </head>
-
+  <style>
+      .display6 {
+        margin-top: 4px;
+        font-weight: 400;
+        font-size: 1.2rem; /* Default for small devices */
+      }
+      @media (min-width: 320px) { /* Small devices (landscape phones, 576px and up) */
+        .display6 {
+          margin-top: 4px;
+          font-weight: 300;
+          font-size: 1rem;
+        }
+      }
+      @media (min-width: 576px) { /* Small devices (landscape phones, 576px and up) */
+        .display6 {
+          margin-top: 4px;
+          font-weight: 300;
+          font-size: 1.5rem;
+        }
+      }
+      @media (min-width: 768px) { /* Medium devices (tablets, 768px and up) */
+        .display6 {
+          margin-top: 4px;
+          font-weight: 300;
+          font-size: 1.5rem;
+        }
+      }
+      @media (min-width: 992px) { /* Large devices (desktops, 992px and up) */
+        .display6 {
+          margin-top: 4px;
+          font-weight: 300;
+          font-size: 1.8rem;
+        }
+      }
+      @media (min-width: 1200px) { /* Extra large devices (large desktops, 1200px and up) */
+        .display6 {
+          margin-top: 4px;
+          font-weight: 300;
+          font-size: 2rem;
+        }
+      }
+    </style>
 <body class="index-page">
 
   <header id="header" class="header d-flex align-items-center sticky-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
-
       <a href="index.php" class="logo d-flex align-items-center me-auto">
-        <!-- Uncomment the line below if you also wish to use an image logo -->
-        <!-- <img src="assets/img/logo.png" alt=""> -->
         <img src="assets/imgbg/BGImage.png" alt="Cannot Display Background Image">
-        <h1 class="sitename">Polomolok Public Market</h1>
+        <h2 class="display6">Polomolok Public Market</h2>
       </a>
       <nav id="navmenu" class="navmenu">
         <ul>
@@ -92,7 +91,7 @@ session_start()
               <li><a href="ABuildingB.html">Building B</a></li>
               <li><a href="ABuildingC.html">Building C</a></li>
               <li><a href="ABuildingD.html">Building D</a></li>
-              <li><a href="BuildingE.html">Building E</a></li>
+              <li><a href="ABuildingE.html">Building E</a></li>
               <li><a href="ABuildingF.html">Building F</a></li>
               <li><a href="ABuildingG.html">Building G</a></li>
               <li><a href="ABuildingH.html">Building H</a></li>
@@ -267,28 +266,20 @@ session_start()
       </section><!-- /About Section -->
 
           <?php
-          // Database connection settings
           include('database_config.php');
-          // Create connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+          $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-          // Query to retrieve data from stats table
+          if ($conn->connect_error) {
+              die("Connection failed: " . $conn->connect_error);
+          }
           $sql = "SELECT buildings, overall_stalls, vendors, workers FROM stats WHERE statsID = 1";
           $result = $conn->query($sql);
                   
-          // Check if query was successful
           if ($result->num_rows > 0) {
-          // Fetch the row from the result set
           $row = $result->fetch_assoc();
           } else {
           echo "No data found";
           }
-          // Close connection
           $conn->close();
           ?>
 
@@ -624,7 +615,7 @@ if ($conn->connect_error) {
             <div class="text-center">
               <h3>Interested In Owning a stall?</h3>
               <p>Occupy the stalls with your own liking!</p>
-              <a class="cta-btn" href="#">Click Here</a>
+              <a class="cta-btn" href="#contact">Click Here</a>
             </div>
           </div>
         </div>

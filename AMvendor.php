@@ -639,7 +639,7 @@ $conn->close();
             </div>
 
             <div class="card-body px-0 pb-2">
-              <div class="table-responsive">
+              <div class="table-responsive max-height-400 overflow-auto">
               <table class="table align-items-center mb-0"> 
                 <thead> 
                   <tr> 
@@ -707,10 +707,12 @@ $conn->close();
             </table>
             </div>
           </div>
+          
         </div>
+        
       </div>
-        <div class="col-lg-4 col-md-6">
-          <div class="card h-100">
+      <div class="col-lg-4 col-md-6">
+          <div class="card h-50">
             <div class="card-header pb-0">
               <h6>Card Sample</h6>
             </div>

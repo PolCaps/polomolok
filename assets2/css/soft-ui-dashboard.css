@@ -2666,12 +2666,16 @@ progress {
 
 .table-responsive {
   overflow-x: auto;
+  overflow-y: hidden;
+  max-height: 200px;
   -webkit-overflow-scrolling: touch;
 }
 
 @media (max-width: 575.98px) {
   .table-responsive-sm {
     overflow-x: auto;
+    overflow-y: auto;
+    max-height: 200px;
     -webkit-overflow-scrolling: touch;
   }
 }
@@ -2679,6 +2683,8 @@ progress {
 @media (max-width: 767.98px) {
   .table-responsive-md {
     overflow-x: auto;
+    overflow-y: auto;
+    max-height: 300px;
     -webkit-overflow-scrolling: touch;
   }
 }
@@ -2686,6 +2692,8 @@ progress {
 @media (max-width: 991.98px) {
   .table-responsive-lg {
     overflow-x: auto;
+    overflow-y: hidden;
+    max-height: 500px;
     -webkit-overflow-scrolling: touch;
   }
 }
@@ -2693,6 +2701,8 @@ progress {
 @media (max-width: 1199.98px) {
   .table-responsive-xl {
     overflow-x: auto;
+    overflow-y: hidden;
+    max-height: 700px;
     -webkit-overflow-scrolling: touch;
   }
 }
@@ -2700,6 +2710,8 @@ progress {
 @media (max-width: 1399.98px) {
   .table-responsive-xxl {
     overflow-x: auto;
+    overflow-y: hidden;
+    max-height: 800px;
     -webkit-overflow-scrolling: touch;
   }
 }
