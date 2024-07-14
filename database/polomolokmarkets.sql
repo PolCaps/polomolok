@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 14, 2024 at 01:31 PM
+-- Generation Time: Jul 14, 2024 at 09:57 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- PHP Version: 8.0.30
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -30,11 +30,20 @@ SET time_zone = "+00:00";
 CREATE TABLE `documents` (
   `document_id` int(11) NOT NULL,
   `vendor_id` bigint(20) NOT NULL,
-  `lease_agreements` longblob DEFAULT NULL,
-  `business_permits` longblob DEFAULT NULL,
-  `business_license` longblob DEFAULT NULL,
-  `other_support` longblob DEFAULT NULL
+  `lease_agreements` longblob NOT NULL,
+  `business_permits` longblob NOT NULL,
+  `business_license` longblob NOT NULL,
+  `other_supporting` longblob NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `documents`
+--
+
+INSERT INTO `documents` (`document_id`, `vendor_id`, `lease_agreements`, `business_permits`, `business_license`, `other_supporting`) VALUES
+(1, 23, '', '', '', ''),
+(2, 24, '', '', '', ''),
+(3, 25, 0x64617461732f61796f6f6f2f323032342d30372d31342f3320496e7374616c6c6d656e74732e706e67, 0x64617461732f61796f6f6f2f323032342d30372d31342f3320496e7374616c6c6d656e74732e706e67, 0x64617461732f61796f6f6f2f323032342d30372d31342f327031306e657433302e706e67, '');
 
 -- --------------------------------------------------------
 
@@ -64,11 +73,20 @@ INSERT INTO `pagebuilder_table` (`stats_id`, `buildings`, `overall_stalls`, `ven
 --
 
 CREATE TABLE `receipts` (
-  `receipt_id` int(11) NOT NULL,
+  `receipts_id` int(11) NOT NULL,
   `vendor_id` bigint(20) NOT NULL,
-  `issued_date` int(11) NOT NULL,
-  `amount` int(11) NOT NULL
+  `receipts` longblob DEFAULT NULL,
+  `issued_date` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `receipts`
+--
+
+INSERT INTO `receipts` (`receipts_id`, `vendor_id`, `receipts`, `issued_date`) VALUES
+(1, 23, '', '2024-07-15'),
+(2, 24, '', '2024-07-15'),
+(3, 25, 0x64617461732f61796f6f6f2f323032342d30372d31342f327031306e657433302e706e67, '2024-07-15');
 
 -- --------------------------------------------------------
 
@@ -79,85 +97,27 @@ CREATE TABLE `receipts` (
 CREATE TABLE `stalls` (
   `stall_id` int(11) NOT NULL,
   `stall_no` bigint(20) NOT NULL,
-  `building_type` enum('Building A','Building B','Building C','Building D','Building E','Building F','Building G','Building H','Building I','Building J') NOT NULL,
-  `building_floor` enum('Ground Floor','Second Floor','Third Floor') NOT NULL,
+  `building_type` varchar(255) NOT NULL,
+  `building_floor` varchar(255) NOT NULL,
   `monthly_rental` bigint(20) DEFAULT NULL,
-  `total_stalls` int(11) NOT NULL,
   `vendor_id` bigint(20) DEFAULT NULL,
-  `stall_status` enum('Occupied','Vacant') NOT NULL
+  `stall_status` enum('Occupied','Vacant') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `stalls`
 --
 
-INSERT INTO `stalls` (`stall_id`, `stall_no`, `building_type`, `building_floor`, `monthly_rental`, `total_stalls`, `vendor_id`, `stall_status`) VALUES
-(1, 1, 'Building A', 'Ground Floor', NULL, 66, 1, 'Vacant'),
-(2, 2, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(3, 3, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(4, 4, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(5, 5, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(6, 6, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(7, 7, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(8, 8, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(9, 9, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(10, 10, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(11, 11, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(12, 12, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(13, 13, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(14, 14, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(15, 15, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(16, 16, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(17, 17, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(18, 18, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(19, 19, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(20, 20, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(21, 21, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(22, 22, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(23, 23, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(24, 24, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(25, 25, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(26, 26, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(27, 27, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(28, 28, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(29, 29, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(30, 30, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(31, 31, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(32, 32, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(33, 33, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(34, 34, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(35, 35, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(36, 36, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(37, 37, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(38, 38, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(39, 39, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(40, 40, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(41, 41, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(42, 42, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(43, 43, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(44, 44, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(45, 45, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(46, 46, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(47, 47, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(48, 48, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(49, 49, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(50, 50, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(51, 51, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(52, 52, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(53, 53, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(54, 54, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(55, 55, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(56, 56, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(57, 57, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(58, 58, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(59, 59, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(60, 60, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(61, 61, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(62, 62, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(63, 63, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(64, 64, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(65, 65, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant'),
-(66, 66, 'Building A', 'Ground Floor', NULL, 66, NULL, 'Vacant');
+INSERT INTO `stalls` (`stall_id`, `stall_no`, `building_type`, `building_floor`, `monthly_rental`, `vendor_id`, `stall_status`) VALUES
+(75, 9, 'Building A', 'Ground Floor', 897678, 17, 'Occupied'),
+(76, 21, 'Building A', 'Ground Floor', 3423, 18, 'Occupied'),
+(77, 22, 'Building A', 'Ground Floor', 32525, 19, 'Occupied'),
+(78, 24, 'Building A', 'Ground Floor', 324567, 20, 'Occupied'),
+(79, 25, 'Building A', 'Ground Floor', 23456, 21, 'Occupied'),
+(80, 30, 'Building A', 'Ground Floor', 345, 22, 'Occupied'),
+(81, 32, 'Building A', 'Ground Floor', 3455, 23, 'Occupied'),
+(82, 6, 'Building A', 'Ground Floor', 324567543, 24, 'Occupied'),
+(83, 21, 'Building A', 'Ground Floor', 98765, 25, 'Occupied');
 
 -- --------------------------------------------------------
 
@@ -199,7 +159,8 @@ INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `middle_name`, 
 (15, 'awdawd', '$2y$10$MjWzHaA4XeGEvClkt.utu.Z/aoTt.p/aeNpnK3VK/IZ', 'awdq', 'wdqwdq', 'wd', 42, 'adawdad', '23awdaw', 32523, 'STAFF'),
 (19, 'tetrtr', '$2y$10$sgyzpX04XmnHfYERS6sl/.NHngVyMZfCs2XUAOnnnAI', 'qwdqw', 'dqwd', 'qwdqwd', 123, 'asdawd', 'awdawd', NULL, 'ADMIN'),
 (23, 'bagoni', '$2y$10$vqWlNzrXcIxRv95CZ8hdk.AevKMvWqaaG9Hgjy7ob.Q', 'olnaedln', 'nekl', 'lwefnkwn', 31, 'lkeafwelfnl', 'lnfesfwef', NULL, 'ADMIN'),
-(26, 'popol', '$2y$10$Y0EHGAUOWKY7ctsXe..Ba.uzrc/zS67QFCllEcMs.Bw', 'ijkensf', 'jnsf', 'nsef ', 231, 'ikebnfsefbkse', 'qwd', NULL, 'ADMIN');
+(26, 'popol', '$2y$10$Y0EHGAUOWKY7ctsXe..Ba.uzrc/zS67QFCllEcMs.Bw', 'ijkensf', 'jnsf', 'nsef ', 231, 'ikebnfsefbkse', 'qwd', NULL, 'ADMIN'),
+(27, 'shete', 'hahaha', 'polokol', 'a', 'adsw', 21, 'awdawd', 'awdawd', NULL, 'STAFF');
 
 -- --------------------------------------------------------
 
@@ -218,17 +179,25 @@ CREATE TABLE `vendors` (
   `address` varchar(255) DEFAULT NULL,
   `email_add` varchar(255) DEFAULT NULL,
   `contact_no` bigint(20) DEFAULT NULL,
-  `stall_no` bigint(20) NOT NULL,
-  `started_date` date DEFAULT NULL,
-  `end_date` date DEFAULT NULL
+  `started_date` varchar(255) DEFAULT NULL,
+  `end_date` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `vendors`
 --
 
-INSERT INTO `vendors` (`vendor_id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `stall_no`, `started_date`, `end_date`) VALUES
-(1, 'Chua', 'Chua123', 'Briar', 'Rose', 'Chua', 21, 'Purok Dimaikta', 'BriarRosemarie@email.com', 9129312132, 1, '0000-00-00', '0000-00-00');
+INSERT INTO `vendors` (`vendor_id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `started_date`, `end_date`) VALUES
+(16, 'rj21', 'mine', 'mine', 'mine', '0', 17, 'Polotana Subdivision, West Drive.', 'ev34rfwed', 9510462062, '2024-07-15', '2024-08-29'),
+(17, 'janjan', 'janjan13', 'jan', 'jan', '0', 20, 'Polotana Subdivision, West Drive.', '7etyhjd65htyh', 95103620893, '2024-07-15', '2024-10-10'),
+(18, 'cry', 'cry123', 'cry', 'cry', '0', 45, 'Polotana Subdivision, West Drive.', '3242rqwfe24', 9510462062, '2024-07-18', '2024-09-19'),
+(19, 'ahay', 'kapoyna123', 'kapoy', 'H', '0', 20, 'Polotana Subdivision, West Drive.', '32rfwe34refwqq3', 1234234, '2024-07-15', '2024-07-15'),
+(20, 'atay', 'yawaaauy', 'mine', 'mine', 'mine', 121, 'Polotana Subdivision, West Drive.', '78ed76dcv', 9510462062, '2024-07-15', '2024-08-22'),
+(21, 'prince', 'p123', 'prince', 'omar', 'sayre', 21, 'Polotana Subdivision, West Drive.', '324tergfdbvf', 9510462062, '2024-07-15', '2024-11-15'),
+(22, 'tdtetrdrtr', '78rffytedt', 'zxxf', 'xcuyfhv', 'ytxgchydcg', 33, 'Polotana Subdivision, West Drive.', '76ytxch', 98765456, '2024-07-15', '2024-08-16'),
+(23, '0987rfghn', '0987thn', 'atay', 'ahay', 'hahha', 33, 'Polotana Subdivision, West Drive.', 'q2erefdcegr', 98765456, '2024-07-15', '2024-07-15'),
+(24, '984yr8ewfiuweo', '-079y32h4iwef', '32rfwe', '235r24fwecds', 'f324t35grewf', 53, 'Polotana Subdivision, West Drive.', '3234trf32ew', 98765456, '2024-07-15', '2024-08-16'),
+(25, 'ayooo', 'ayoyoyooy', 'ayaywa', 'hahahaha', 'hehehehe', 190, 'Polotana Subdivision, West Drive.', '2345675644rgegvth', 314785643, '2024-07-15', '2024-07-15');
 
 --
 -- Indexes for dumped tables
@@ -239,7 +208,7 @@ INSERT INTO `vendors` (`vendor_id`, `username`, `password`, `first_name`, `middl
 --
 ALTER TABLE `documents`
   ADD PRIMARY KEY (`document_id`),
-  ADD KEY `fk_vendors_id` (`vendor_id`);
+  ADD KEY `vendor_id` (`vendor_id`);
 
 --
 -- Indexes for table `pagebuilder_table`
@@ -251,16 +220,15 @@ ALTER TABLE `pagebuilder_table`
 -- Indexes for table `receipts`
 --
 ALTER TABLE `receipts`
-  ADD PRIMARY KEY (`receipt_id`),
-  ADD KEY `fk_vendor_id` (`vendor_id`);
+  ADD PRIMARY KEY (`receipts_id`),
+  ADD KEY `vendor_id` (`vendor_id`);
 
 --
 -- Indexes for table `stalls`
 --
 ALTER TABLE `stalls`
   ADD PRIMARY KEY (`stall_id`),
-  ADD UNIQUE KEY `stall_no` (`stall_no`,`building_type`,`building_floor`),
-  ADD KEY `idx_vendor_id` (`vendor_id`);
+  ADD KEY `vendor_id` (`vendor_id`);
 
 --
 -- Indexes for table `users`
@@ -273,12 +241,17 @@ ALTER TABLE `users`
 -- Indexes for table `vendors`
 --
 ALTER TABLE `vendors`
-  ADD PRIMARY KEY (`vendor_id`),
-  ADD KEY `fk_stall_no` (`stall_no`);
+  ADD PRIMARY KEY (`vendor_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `documents`
+--
+ALTER TABLE `documents`
+  MODIFY `document_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `pagebuilder_table`
@@ -287,50 +260,38 @@ ALTER TABLE `pagebuilder_table`
   MODIFY `stats_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT for table `receipts`
+--
+ALTER TABLE `receipts`
+  MODIFY `receipts_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
 -- AUTO_INCREMENT for table `stalls`
 --
 ALTER TABLE `stalls`
-  MODIFY `stall_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
+  MODIFY `stall_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=84;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 
 --
 -- Constraints for dumped tables
 --
 
 --
--- Constraints for table `documents`
---
-ALTER TABLE `documents`
-  ADD CONSTRAINT `fk_vendors_id` FOREIGN KEY (`vendor_id`) REFERENCES `vendors` (`vendor_id`);
-
---
--- Constraints for table `receipts`
---
-ALTER TABLE `receipts`
-  ADD CONSTRAINT `fk_vendor_id` FOREIGN KEY (`vendor_id`) REFERENCES `vendors` (`vendor_id`);
-
---
 -- Constraints for table `stalls`
 --
 ALTER TABLE `stalls`
   ADD CONSTRAINT `fk_vendor` FOREIGN KEY (`vendor_id`) REFERENCES `vendors` (`vendor_id`) ON DELETE SET NULL;
-
---
--- Constraints for table `vendors`
---
-ALTER TABLE `vendors`
-  ADD CONSTRAINT `fk_stall_no` FOREIGN KEY (`stall_no`) REFERENCES `stalls` (`stall_no`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
