@@ -280,7 +280,7 @@ $conn->close();
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <form id="createUserForm" action="create_user.php" method="POST" enctype="multipart/form-data">
+              <form id="createUserForm" action="create_vendor.php" method="POST" enctype="multipart/form-data">
                 <div class="container-fluid">
                   <div class="row mb-3">
                     <!-- Accordion for Admin/Staff and Vendor -->
@@ -590,7 +590,7 @@ $conn->close();
             // Prepare form data 
             const formData = new FormData(this); 
             // Send AJAX request to create\_user.php 
-            fetch('create_user.php', { method: 'POST', body: formData }).then(response => { 
+            fetch('create_vendor.php', { method: 'POST', body: formData }).then(response => { 
               // Check if the response is in the correct 
               format (JSON) if (!response.ok) { 
                 throw new Error('Network response was not ok'); 
