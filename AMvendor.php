@@ -296,208 +296,6 @@ $conn->close();
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-<<<<<<< HEAD
-              <form id="createUserForm" action="create_vendor.php" method="POST" enctype="multipart/form-data">
-                <div class="container-fluid">
-                  <div class="row mb-3">
-                    <!-- Accordion for Admin/Staff and Vendor -->
-                    <div class="col-md-12">
-                      <div class="accordion" id="accordionExample">
-                        <div class="accordion-item">
-                          <h2 class="accordion-header d-flex" id="headingAdminStaff">
-                            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdminStaff" aria-expanded="true" aria-controls="collapseAdminStaff">
-                              Admin/Staff
-                            </button>
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVendor" aria-expanded="false" aria-controls="collapseVendor">
-                              Vendor
-                            </button>
-                          </h2>
-                          <div id="collapseAdminStaff" class="accordion-collapse collapse show" aria-labelledby="headingAdminStaff" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                              <div class="form-group mb-3">
-                                <label for="account_type">Account Type:</label>
-                                <select id="account_type" class="form-control" name="account_type" required>
-                                  <option value="Admin">Admin</option>
-                                  <option value="Staff">Staff</option>
-                                </select>
-                                <div class="invalid-feedback">Please select an account type.</div>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="username">Username:</label>
-                                <input type="text" id="username" class="form-control" name="username" required>
-                                <div class="invalid-feedback">Please enter a username.</div>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="password">Password:</label>
-                                <div class="input-group">
-                                  <input type="password" id="password" class="form-control" name="password" required>
-                                  <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true" id="togglePasswordformuser"></i>
-                                </div>
-                                <script>
-                                  const togglePassword = document.querySelector('#togglePasswordformuser');
-                                  const password = document.querySelector('#password');
-                                  togglePassword.addEventListener('click', () => {
-                                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                                    password.setAttribute('type', type);
-                                    togglePassword.classList.toggle('bi bi-eye-fill');
-                                  });
-                                </script>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="first_name">First Name:</label>
-                                <input type="text" id="first_name" class="form-control" name="first_name" required>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="middle_name">Middle Name:</label>
-                                <input type="text" id="middle_name" class="form-control" name="middle_name">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="last_name">Last Name:</label>
-                                <input type="text" id="last_name" class="form-control" name="last_name" required>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="age">Age:</label>
-                                <input type="number" id="age" class="form-control" name="age">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="contact_number">Contact Number:</label>
-                                <input type="tel" id="contact_number" name="contact_number" class="form-control">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="address">Address:</label>
-                                <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
-                              </div>
-                              <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
-                                <button type="submituser" name="submituser" id="submituser" class="btn btn-info lg">Create User</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-
-
-                        <div class="accordion-item">
-                          <div id="collapseVendor" class="accordion-collapse collapse" aria-labelledby="headingVendor" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                              <div class="form-group mb-3">
-                                <label for="account_type">Account Type:</label>
-                                <select id="account_type" class="form-control" name="account_type" required>
-                                  <option value="Admin">Vendor</option>
-                                </select>
-                                <div class="invalid-feedback">Please select an account type.</div>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="username">Username:</label>
-                                <input type="text" id="username" class="form-control" name="username" required>
-                                <div class="invalid-feedback">Please enter a username.</div>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="password">Password:</label>
-                                <div class="input-group">
-                                  <input type="password" id="password" class="form-control" name="password" required>
-                                  <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true" id="togglePasswordformvendor"></i>
-                                </div>
-                                <script>
-                                  const togglePassword = document.querySelector('#togglePasswordformvendor');
-                                  const password = document.querySelector('#password');
-                                  togglePassword.addEventListener('click', () => {
-                                    const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-                                    password.setAttribute('type', type);
-                                    togglePassword.classList.toggle('bi bi-eye-fill');
-                                  });
-                                </script>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="first_name">First Name:</label>
-                                <input type="text" id="first_name" class="form-control" name="first_name" required>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="middle_name">Middle Name:</label>
-                                <input type="text" id="middle_name" class="form-control" name="middle_name">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="last_name">Last Name:</label>
-                                <input type="text" id="last_name" class="form-control" name="last_name" required>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="age">Age:</label>
-                                <input type="number" id="age" class="form-control" name="age">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="contact_number">Contact Number:</label>
-                                <input type="tel" id="contact_number" name="contact_number" class="form-control">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="address">Address:</label>
-                                <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="stall_number">Stall Number:</label>
-                                <input type="text" id="stall_number" name="stall_number" class="form-control">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="stall_code">Stall Code:</label>
-                                <input type="text" id="stall_code" name="stall_code" class="form-control">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="building_type">Buildings:</label>
-                                <select id="building_type" name="building_type" class="form-control">
-                                  <option value="">Select Buildings</option>
-                                  <option value="Building A">Building A</option>
-                                  <option value="Building B">Building B</option>
-                                  <option value="Building C">Building C</option>
-                                  <option value="Building D">Building D</option>
-                                  <option value="Building E">Building E</option>
-                                  <option value="Building F">Building F</option>
-                                  <option value="Building G">Building G</option>
-                                  <option value="Building H">Building H</option>
-                                  <option value="Building I">Building I</option>
-                                  <option value="Building J">Building J</option>
-                                </select>
-                                <div class="invalid-feedback">Please select a building.</div>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="lease_agreements">Lease Agreements:</label>
-                                <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="business_permits">Business Permits:</label>
-                                <input type="file" id="business_permits" name="business_permits" class="form-control">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="business_licenses">Business Licenses:</label>
-                                <input type="file" id="business_licenses" name="business_licenses" class="form-control">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="receipts">Payment Receipts:</label>
-                                <input type="file" id="receipts" name="receipts" class="form-control">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="monthly_rentals">Monthly Rentals:</label>
-                                <input type="number" id="monthly_rentals" name="monthly_rentals" class="form-control">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="building_floor">Building Floor:</label>
-                                <select id="building_floor" name="building_floor" class="form-control">
-                                  <option value="">Select Building Floor</option>
-                                  <option value="Ground Floor">Ground Floor</option>
-                                  <option value="Second Floor">Second Floor</option>
-                                </select>
-                                <div class="invalid-feedback">Please select a building floor.</div>
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="started_date">Started Date:</label>
-                                <input type="date" id="started_date" name="started_date" class="form-control">
-                              </div>
-                              <div class="form-group mb-3">
-                                <label for="end_date">End Date:</label>
-                                <input type="date" id="end_date" name="end_date" class="form-control">
-                              </div>
-                              <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
-                                <button type="submit" name="submit" id="submit" class="btn btn-info lg">Create Vendor</button>
-                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                              </div>
-=======
                 <div class="container-fluid">
                     <div class="row mb-3">
                         <div class="col-md-12">
@@ -707,61 +505,7 @@ $conn->close();
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                 </div>
                                             </form>
-                                        </div>
-                                    </div>
-                                </div>
->>>>>>> 5d7f97c8e60de552f47891736799b3375bfc3d85
-                            </div>
-                        </div>
-                    </div>
-<<<<<<< HEAD
-                  </div>
-                  
-=======
->>>>>>> 5d7f97c8e60de552f47891736799b3375bfc3d85
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-      <!-- Optional JavaScript -->
-      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-
-      <script>
-        document.getElementById('account_type').addEventListener('change', function() {
-          var accountType = this.value;
-          var adminStaffAccordion = document.getElementById('collapseAdminStaff');
-          var vendorAccordion = document.getElementById('collapseVendor');
-
-          if (accountType === 'Admin' || accountType === 'Staff') {
-            adminStaffAccordion.classList.add('show');
-            vendorAccordion.classList.remove('show');
-          } else if (accountType === 'Vendor') {
-            adminStaffAccordion.classList.remove('show');
-            vendorAccordion.classList.add('show');
-          }
-        });
-
-    // document.addEventListener('DOMContentLoaded', () => {
-    //   const togglePassword = document.querySelector('#togglePasswordform');
-    //   const password = document.querySelector('#password');
-    //   if (togglePassword) {
-    //     togglePassword.addEventListener('click', () => {
-    //       const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-    //       password.setAttribute('type', type);
-    //       togglePassword.classList.toggle('fa-eye');
-    //       togglePassword.classList.toggle('fa-eye-slash');
-    //     });
-    //   }
-    // });
-  </script>
-<<<<<<< HEAD
-        
-       <script> // Event listeners for each file input 
+                                            <script> // Event listeners for each file input 
        document.getElementById('lease_agreements').addEventListener('change', function(event) 
        { handleFileInputChange(event, 'lease_agreements'); }); 
        document.getElementById('business_permits').addEventListener('change', function(event) 
@@ -816,13 +560,13 @@ $conn->close();
             formData.append(key, new Blob([binaryData])); 
            }
            
-          const createUserForm = document.getElementById('createUserForm'); 
-          createUserForm.addEventListener('submit', function(e) )  { 
+          const createVendorForm = document.getElementById('createVendorForm'); 
+          createVendorForm.addEventListener('submit', function(e) )  { 
             e.preventDefault(); // Prevent default form submission 
             // Prepare form data 
             const formData = new FormData(this); 
             // Send AJAX request to create\_user.php 
-            fetch('create_vendor.php', { method: 'POST', body: formData }).then(response => { 
+            fetch('process_formVendor.php', { method: 'POST', body: formData }).then(response => { 
               // Check if the response is in the correct 
               format (JSON) if (!response.ok) { 
                 throw new Error('Network response was not ok'); 
@@ -838,7 +582,7 @@ $conn->close();
                     // Display success message (e.g., using alert or updating modal content) 
                     alert('User created successfully!'); 
                     // Optionally, clear the form or redirect to a different page 
-                    document.getElementById('createUserForm').reset(); 
+                    document.getElementById('createVendorForm').reset(); 
                     // Clear the form 
                     } else { 
                       // Display error message (e.g., using alert or updating modal content) 
@@ -852,8 +596,52 @@ $conn->close();
                   );
           }
           </script>
-=======
->>>>>>> 5d7f97c8e60de552f47891736799b3375bfc3d85
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+      <!-- Optional JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
+      <script>
+        document.getElementById('account_type').addEventListener('change', function() {
+          var accountType = this.value;
+          var adminStaffAccordion = document.getElementById('collapseAdminStaff');
+          var vendorAccordion = document.getElementById('collapseVendor');
+
+          if (accountType === 'Admin' || accountType === 'Staff') {
+            adminStaffAccordion.classList.add('show');
+            vendorAccordion.classList.remove('show');
+          } else if (accountType === 'Vendor') {
+            adminStaffAccordion.classList.remove('show');
+            vendorAccordion.classList.add('show');
+          }
+        });
+
+    // document.addEventListener('DOMContentLoaded', () => {
+    //   const togglePassword = document.querySelector('#togglePasswordform');
+    //   const password = document.querySelector('#password');
+    //   if (togglePassword) {
+    //     togglePassword.addEventListener('click', () => {
+    //       const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    //       password.setAttribute('type', type);
+    //       togglePassword.classList.toggle('fa-eye');
+    //       togglePassword.classList.toggle('fa-eye-slash');
+    //     });
+    //   }
+    // });
+  </script>
           </div>
 
       <div class="row my-4">
@@ -884,7 +672,8 @@ $conn->close();
               <table class="table align-items-center mb-0"> 
                 <thead> 
                   <tr> 
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th> 
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Usertype</th> 
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th> 
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th> 
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th> 
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th> 
