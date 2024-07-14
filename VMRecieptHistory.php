@@ -1,53 +1,55 @@
 <?php
 session_start();
 
-// Check if user is logged in
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
-    exit();
+// Check if the user is logged in and is a vendor
+if (!isset($_SESSION['vendor_id'])) {
+  header("Location: index.php");
+  exit();
 }
-$username = $_SESSION['username'];
-// Database connection settings
+
+// Get the vendor ID from the session
+$vendor_id = $_SESSION['vendor_id'];
+
+// Include database configuration
 include('database_config.php');
-// Create connection
+
+// Create a connection
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check connection
+// Check the connection
 if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
-// Prepare the query
-$stmt = $conn->prepare("SELECT u.user_id, v.vendor_name, u.username, u.user_type, b.building_type
-                        FROM users u
-                        JOIN vendors v ON u.user_id = v.user_id 
-                        JOIN buildings b ON u.user_id = b.user_id
-                        WHERE username = ?");
-if (!$stmt) {
-  die("Prepare failed: (". $conn->errno. ") ". $conn->error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Bind the parameter
-$stmt->bind_param("s", $username);
+// Fetch vendor information
+$sql = "SELECT * FROM vendors WHERE vendor_id = ?";
 
-// Execute the query
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $vendor_id);
 $stmt->execute();
-
-// Get the result
 $result = $stmt->get_result();
+$vendor = $result->fetch_assoc();
 
-
- // Initialize the $row variable
-  $row = array();
-        
-// Check if query was successful
-if ($result->num_rows > 0) {
-// Fetch the row from the result set
-$row = $result->fetch_assoc();
-      } else {
-echo "No data found";
+// Check if vendor data is retrieved
+if (!$vendor) {
+    die("No vendor found with ID " . htmlspecialchars($vendor_id));
 }
-// Close the statement and connection
-$stmt->close();
+
+// Fetch stalls associated with the vendor
+$sql_stalls = "SELECT * FROM stalls WHERE vendor_id = ?";
+$stmt_stalls = $conn->prepare($sql_stalls);
+if ($stmt_stalls === false) {
+    die("Prepare failed: " . $conn->error);
+}
+$stmt_stalls->bind_param("i", $vendor_id);
+$stmt_stalls->execute();
+$result_stalls = $stmt_stalls->get_result();
+$stalls = $result_stalls->fetch_all(MYSQLI_ASSOC);
+
+// Close the connection
 $conn->close();
 ?>
 
@@ -215,7 +217,8 @@ $conn->close();
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center"><?php echo $row['vendor_name'];?></h5>
+          <h5 class="text-center"><?php echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); ?></h5>
+      
           <hr class="horizontal dark mt-0">
         </div>
       </div>
@@ -267,8 +270,7 @@ $conn->close();
               <div class="card">
               <div class="card-header pb-0">
               <div class="row">
-                <h6 class="text-center"><span class="text-sm text-secondary">Vendor Name:</span> <?php echo $row ['vendor_name']; ?></h6>
-
+              <h6 class="text-center"><span class="text-sm text-secondary">Vendor Name:</span> <?php echo $vendor ['username']; ?></h6>
               </div>
             </div>
                 <div class="card-body px-0 pb-2">
@@ -288,8 +290,7 @@ $conn->close();
                           <td class="text-center">
                             <img src="image/polpol.jpg" alt="Image 1" width="50" height="50" class="expandable-image">
                           </td>
-                          <td class="align-middle text-center text-sm"><?php echo $row ['building_type']; ?></td>
-
+                          <td class="align-middle text-center text-sm"><?php echo $stalls ['building_type']; ?></td>
                           <td class="align-middle text-center text-sm">4</td>
                           <td class="align-middle text-center text-sm">04-21-24</td>
                         </tr>
@@ -298,7 +299,7 @@ $conn->close();
                           <td class="text-center">
                             <img src="image/profile.jpg" alt="Image 2" width="50" height="50" class="expandable-image">
                           </td>
-                          <td class="align-middle text-center text-sm"><?php echo $row ['building_type']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo $stalls ['building_type']; ?></td>
                           <td class="align-middle text-center text-sm">5</td>
                           <td class="align-middle text-center text-sm">04-22-24</td>
                         </tr>
@@ -335,8 +336,8 @@ $conn->close();
           <div class="card shadow-lg ">
             <div class="card-header pb-0 pt-3 ">
               <div class="float-start">
-                <h5 class="mt-3 mb-0"><?php echo $row['vendor_name'];?></h5>
-                <p>Vendor</p>
+              <h5 class="mt-3 mb-0"><?php echo htmlspecialchars($vendor['username']); ?></h5>
+              <p>Vendor</p>
               </div>
               <div class="float-end mt-4">
                 <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">

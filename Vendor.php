@@ -48,9 +48,8 @@ $stmt_stalls->execute();
 $result_stalls = $stmt_stalls->get_result();
 $stalls = $result_stalls->fetch_all(MYSQLI_ASSOC);
 
-// Close the connection
-$conn->close();
 ?>
+    
 <!DOCTYPE html>
 <html lang="en">
 
@@ -349,17 +348,112 @@ $conn->close();
                   <div class="accordion-item">
                     <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#profile-accordion">
                       <div class="accordion-body">
-                        <form>
-                          <div class="mb-3">
-                            <label for="current-password" class="form-label">Current Password</label>
-                            <input type="password" class="form-control" id="current-password" placeholder="Enter current password">
-                          </div>
-                          <div class="mb-3">
-                            <label for="new-password" class="form-label">New Password</label>
-                            <input type="password" class="form-control" id="new-password" placeholder="Enter new password">
-                          </div>
-                          <button type="submit" class="btn btn-primary">Update Password</button>
-                        </form>
+                      
+
+                      <form action="" method="POST">
+    <div class="mb-3">
+        <label for="current_password" class="form-label">Current Password:</label>
+        <input type="password" id="current_password" name="current_password" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="new_password" class="form-label">New Password:</label>
+        <input type="password" id="new_password" name="new_password" class="form-control" required>
+    </div>
+
+    <?php
+
+    // Check if the session is already started
+if (session_status() === PHP_SESSION_NONE) {
+  session_start();
+}
+
+// Include database configuration
+include('database_config.php');
+
+// Create a new MySQLi connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+  die("Database connection failed: " . $conn->connect_error);
+}
+
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Initialize feedback message
+$feedback_message = "";
+    // Check if the form is submitted
+if (isset($_POST['submit'])) {
+  // Check if vendor_id is set in session
+  if (!isset($_SESSION['vendor_id'])) {
+      echo "<script>alert('User not logged in.');</script>";
+      exit;
+  }
+
+  // Assuming vendor ID is stored in the session
+  $vendor_id = $_SESSION['vendor_id'];
+
+  // Get form inputs
+  $current_password = $_POST['current_password'];
+  $new_password = $_POST['new_password'];
+
+  // Validate inputs
+  if (empty($current_password) || empty($new_password)) {
+      echo "<script>alert('Please fill in both fields.');</script>";
+  } else {
+      // Start a transaction
+      $conn->begin_transaction();
+
+      try {
+          // Retrieve the current password from the database
+          $stmt = $conn->prepare("SELECT password FROM vendors WHERE vendor_id = ?");
+          $stmt->bind_param("i", $vendor_id);
+          $stmt->execute();
+          $result = $stmt->get_result();
+          $user = $result->fetch_assoc();
+
+          if ($user && $current_password === $user['password']) {
+              // Update the password in the database
+              $update_stmt = $conn->prepare("UPDATE vendors SET password = ? WHERE vendor_id = ?");
+              $update_stmt->bind_param("si", $new_password, $vendor_id);
+              $update_stmt->execute();
+
+              if ($update_stmt->affected_rows > 0) {
+                  // Commit the transaction if everything is successful
+                  $conn->commit();
+                  echo "<script>alert('Password changed successfully.');</script>";
+              } else {
+                  // Rollback the transaction if update fails
+                  $conn->rollback();
+                  echo "<script>alert('Failed to change the password.');</script>";
+              }
+              
+              $update_stmt->close();
+          } else {
+              // Rollback the transaction if the current password is incorrect
+              $conn->rollback();
+              echo "<script>alert('Current password is incorrect.');</script>";
+          }
+
+          $stmt->close();
+      } catch (Exception $e) {
+          // Rollback the transaction in case of an exception
+          $conn->rollback();
+          echo "<script>alert('An error occurred: " . htmlspecialchars($e->getMessage()) . "');</script>";
+      }
+  }
+
+  // Close the connection
+  $conn->close();
+    }
+    ?>
+    
+    <button type="submit" name="submit" class="btn btn-primary">Change Password</button>
+</form>
+
                       </div>
                     </div>
                   </div>
@@ -443,7 +537,7 @@ $conn->close();
     <div class="card shadow-lg ">
       <div class="card-header pb-0 pt-3 ">
         <div class="float-start">
-          <h5 class="mt-3 mb-0"><?php echo $row['vendor_name'];?></h5>
+          <h5 class="mt-3 mb-0"><?php echo htmlspecialchars($vendor['username']); ?></h5>
           <p>Vendor</p>
         </div>
         <div class="float-end mt-4">
@@ -499,176 +593,7 @@ $conn->close();
   <script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/chartjs.min.js"></script>
-  <script>
-    var ctx = document.getElementById("chart-bars").getContext("2d");
 
-    new Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [{
-          label: "Sales",
-          tension: 0.4,
-          borderWidth: 0,
-          borderRadius: 4,
-          borderSkipped: false,
-          backgroundColor: "#fff",
-          data: [450, 200, 100, 220, 500, 100, 400, 230, 500],
-          maxBarThickness: 6
-        }, ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-            },
-            ticks: {
-              suggestedMin: 0,
-              suggestedMax: 500,
-              beginAtZero: true,
-              padding: 15,
-              font: {
-                size: 14,
-                family: "Open Sans",
-                style: 'normal',
-                lineHeight: 2
-              },
-              color: "#fff"
-            },
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false
-            },
-            ticks: {
-              display: false
-            },
-          },
-        },
-      },
-    });
-
-
-    var ctx2 = document.getElementById("chart-line").getContext("2d");
-
-    var gradientStroke1 = ctx2.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke1.addColorStop(1, 'rgba(203,12,159,0.2)');
-    gradientStroke1.addColorStop(0.2, 'rgba(72,72,176,0.0)');
-    gradientStroke1.addColorStop(0, 'rgba(203,12,159,0)'); //purple colors
-
-    var gradientStroke2 = ctx2.createLinearGradient(0, 230, 0, 50);
-
-    gradientStroke2.addColorStop(1, 'rgba(20,23,39,0.2)');
-    gradientStroke2.addColorStop(0.2, 'rgba(72,72,176,0.0)');
-    gradientStroke2.addColorStop(0, 'rgba(20,23,39,0)'); //purple colors
-
-    new Chart(ctx2, {
-      type: "line",
-      data: {
-        labels: ["Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-        datasets: [{
-            label: "Mobile apps",
-            tension: 0.4,
-            borderWidth: 0,
-            pointRadius: 0,
-            borderColor: "#cb0c9f",
-            borderWidth: 3,
-            backgroundColor: gradientStroke1,
-            fill: true,
-            data: [50, 40, 300, 220, 500, 250, 400, 230, 500],
-            maxBarThickness: 6
-
-          },
-          {
-            label: "Websites",
-            tension: 0.4,
-            borderWidth: 0,
-            pointRadius: 0,
-            borderColor: "#3A416F",
-            borderWidth: 3,
-            backgroundColor: gradientStroke2,
-            fill: true,
-            data: [30, 90, 40, 140, 290, 290, 340, 230, 400],
-            maxBarThickness: 6
-          },
-        ],
-      },
-      options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        plugins: {
-          legend: {
-            display: false,
-          }
-        },
-        interaction: {
-          intersect: false,
-          mode: 'index',
-        },
-        scales: {
-          y: {
-            grid: {
-              drawBorder: false,
-              display: true,
-              drawOnChartArea: true,
-              drawTicks: false,
-              borderDash: [5, 5]
-            },
-            ticks: {
-              display: true,
-              padding: 10,
-              color: '#b2b9bf',
-              font: {
-                size: 11,
-                family: "Open Sans",
-                style: 'normal',
-                lineHeight: 2
-              },
-            }
-          },
-          x: {
-            grid: {
-              drawBorder: false,
-              display: false,
-              drawOnChartArea: false,
-              drawTicks: false,
-              borderDash: [5, 5]
-            },
-            ticks: {
-              display: true,
-              color: '#b2b9bf',
-              padding: 20,
-              font: {
-                size: 11,
-                family: "Open Sans",
-                style: 'normal',
-                lineHeight: 2
-              },
-            }
-          },
-        },
-      },
-    });
-  </script>
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
