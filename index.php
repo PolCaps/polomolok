@@ -16,6 +16,7 @@ session_start()
   <!-- Favicons -->
   <!-- <link href="assets/img/favicon.png" rel="icon"> -->
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -672,39 +673,79 @@ session_start()
           </div>
 
           <div class="col-lg-8">
-            <form action="forms/contact.php" method="post" class="php-email-form" data-aos="fade-up" data-aos-delay="200">
+            <form action="inquiry_data.php" method="post"  data-aos="fade-up" data-aos-delay="200">
               <div class="row gy-4">
 
                 <div class="col-md-6">
-                  <input type="text" name="name" class="form-control" placeholder="Your Name" required="">
+
+                  <div class="form-floating mb-3">
+                    <input type="text" name="name" class="form-control" id="name" placeholder="Your Name" required>
+                    <label for="name">Your Name</label>
+                  </div>
+
                 </div>
 
-                <div class="col-md-6 ">
-                  <input type="email" class="form-control" name="email" placeholder="Your Email" required="">
+                <div class="col-md-6">
+
+                  <div class="form-floating mb-3">
+                    <input type="email" name="email" class="form-control" id="email_add" placeholder="Email Address" required>
+                    <label for="name">Email Address</label>
+                  </div>
+
                 </div>
 
                 <div class="col-md-12">
-                  <input type="text" class="form-control" name="subject" placeholder="Subject" required="">
+
+                  <div class="form-floating mb-3">
+                    <input type="text" name="subject" class="form-control" id="subject" placeholder="Subject" required>
+                    <label for="subject">Subject</label>
+                  </div>
+                
                 </div>
 
                 <div class="col-md-12">
-                  <textarea class="form-control" name="message" rows="6" placeholder="Message" required=""></textarea>
+                
+                  <div class="form-floating mb-3">
+                    <textarea class="form-control" name="message" rows="6" placeholder="Message" id="message" required></textarea>
+                    <label for="message">Message</label>
+                  </div>
+                  
                 </div>
 
                 <div class="col-md-12 text-center">
-                  <div class="loading">Loading</div>
-                  <div class="error-message"></div>
-                  <div class="sent-message">Your message has been sent. Thank you!</div>
+                
+                <?php if (isset($_SESSION['alert_class']) && isset($_SESSION['alert_message'])): ?>
+            <div class="alert <?php echo $_SESSION['alert_class']; ?> alert-dismissible fade show" role="alert">
+                <?php echo $_SESSION['alert_message']; ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            <?php
+            unset($_SESSION['alert_class']);
+            unset($_SESSION['alert_message']);
+            ?>
+        <?php endif; ?>
+                
 
-                  <button type="submit">Send Message</button>
+                  <button type="submit" class="btn btn-warning">Send Message</button>
                 </div>
 
               </div>
             </form>
           </div><!-- End Contact Form -->
-
+    <!-- Include Bootstrap JS and Popper.js for toast functionality -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+    <script>
+        // Initialize toast on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            const toastEl = document.getElementById('liveToast');
+            if (toastEl) {
+                const toast = new bootstrap.Toast(toastEl);
+                toast.show();
+            }
+        });
+    </script>
         </div>
-
       </div>
 
     </section><!-- /Contact Section -->

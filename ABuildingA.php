@@ -10,13 +10,17 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT stall_no, vendor_name FROM stalltest";
+// SQL query to get stall information and vendor usernames
+$sql = "SELECT s.stall_no, s.stall_id, s.stall_status, v.username
+        FROM stalls s
+        JOIN vendors v ON s.stall_no = v.stall_no";
+
 $result = $conn->query($sql);
 
 $vendors = [];
 if ($result->num_rows > 0) {
-    while($row = $result->fetch_assoc()) {
-        $vendors[$row['stall_no']] = $row['vendor_name'];
+    while ($row = $result->fetch_assoc()) {
+        $vendors[$row['stall_id']] = $row['stall_status'] == 'occupied' ? $row['username'] : 'username';
     }
 }
 $conn->close();
@@ -62,8 +66,8 @@ $conn->close();
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" href="Admin.php">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-primary text-center me-2 d-flex align-items-center justify-content-center">
+          <a class="nav-link " href="Admin.php">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-shop" viewBox="0 0 16 16">
                 <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
               </svg>
@@ -84,7 +88,7 @@ $conn->close();
           </a>
           <div class="collapse" id="collapseMaps">
             <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="ABuildingA.html">Building A</a>
+              <a class="nav-link active" href="ABuildingA.php">Building A</a>
               <a class="nav-link" href="ABuildingB.html">Building B</a>
               <a class="nav-link" href="ABuildingC.html">Building C</a>
               <a class="nav-link" href="ABuildingD.html">Building D</a>
@@ -192,10 +196,10 @@ $conn->close();
     <div class="col-lg-14 px-5">
           <div class="card z-index-2">
             <div class="card-header pb-0">
-              <h6>Building J</h6>
+              <h6>Building A</h6>
               <p class="text-sm">
                 <i class="fa fa-building-o fa-lg text-warning"></i>
-                <span class="font-weight-bold">Building J</span>
+                <span class="font-weight-bold">Building A</span>
               </p>  
             </div>
             <svg version="1.1" viewBox="0 0 1122.7 1588" xmlns="http://www.w3.org/2000/svg">
@@ -2046,26 +2050,26 @@ $conn->close();
                 <path transform="matrix(.16 0 0 -.16 2.6667 1585.3)" d="m563 8736h8l-4 24z" style="fill:#0f0;stroke-linecap:round;stroke-miterlimit:10;stroke:#0f0"/>
                 <path transform="matrix(.16 0 0 -.16 2.6667 1585.3)" d="m563 1406h8l-4-25z" style="fill:#0f0;stroke-linecap:round;stroke-miterlimit:10;stroke:#0f0"/>
               </g>
-              <a href="" data-bs-toggle="tooltip" data-bs-placement="top"
-              data-bs-custom-class="custom-tooltip"
-              data-bs-title="<?php echo htmlspecialchars($vendors['1']); ?>">
-              <g>
-                <path d="m234.12 1330.3-1.4452 35.406 66.477-2.1677 0.72258-83.096z" style="opacity:0"/>
-              </g>
+                            <a href="" data-bs-toggle="tooltip" data-bs-placement="top"
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="<?php echo htmlspecialchars(isset($vendors[1]) ? $vendors[1] : 'username'); ?>">
+                <g>
+                  <path d="m234.12 1330.3-1.4452 35.406 66.477-2.1677 0.72258-83.096z" style="opacity:0"/>
+                </g>
               </a>
               <a href="" data-bs-toggle="tooltip" data-bs-placement="top"
-              data-bs-custom-class="custom-tooltip"
-              data-bs-title="<?php echo htmlspecialchars($vendors['2']); ?>">
-              <g>
-                <path d="m299.87 1297.7-1.4452 67.922 101.16-0.7225-0.72258-65.032z" style="opacity:0"/>
-              </g>
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="<?php echo htmlspecialchars(isset($vendors[2]) ? $vendors[2] : 'Vacant'); ?>">
+                <g>
+                  <path d="m299.87 1297.7-1.4452 67.922 101.16-0.7225-0.72258-65.032z" style="opacity:0"/>
+                </g>
               </a>
               <a href="" data-bs-toggle="tooltip" data-bs-placement="top"
-              data-bs-custom-class="custom-tooltip"
-              data-bs-title="<?php echo htmlspecialchars($vendors['3']); ?>">
-              <g>
-                <path d="m401.75 1297 0.72258 69.367 98.993-0.7226-1.4452-65.032z" style="opacity:0"/>
-              </g>
+                data-bs-custom-class="custom-tooltip"
+                data-bs-title="<?php echo htmlspecialchars(isset($vendors[3]) ? $vendors[3] : 'Vacant'); ?>">
+                <g>
+                  <path d="m401.75 1297 0.72258 69.367 98.993-0.7226-1.4452-65.032z" style="opacity:0"/>
+                </g>
               </a>
               <g>
                 <path d="m661.88 1279.7-0.72258 84.542 101.16 2.1677-2.1677-86.709z" style="opacity:0"/>
