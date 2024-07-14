@@ -1,53 +1,54 @@
 <?php
 session_start();
 
-// Check if user is logged in
-if (!isset($_SESSION['username'])) {
-    header("Location: index.php");
-    exit();
+// Check if the user is logged in and is a vendor
+if (!isset($_SESSION['vendor_id'])) {
+  header("Location: index.php");
+  exit();
 }
-$username = $_SESSION['username'];
-// Database connection settings
+
+// Get the vendor ID from the session
+$vendor_id = $_SESSION['vendor_id'];
+
+// Include database configuration
 include('database_config.php');
-// Create connection
+
+// Create a connection
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check connection
+// Check the connection
 if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
-// Prepare the query
-$stmt = $conn->prepare("SELECT u.user_id, v.vendor_name, u.username, u.user_type 
-                        FROM users u
-                        JOIN vendors v ON u.user_id = v.user_id 
-                        WHERE username = ?");
-
-if (!$stmt) {
-  die("Prepare failed: (". $conn->errno. ") ". $conn->error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Bind the parameter
-$stmt->bind_param("s", $username);
-
-// Execute the query
+// Fetch vendor information
+$sql = "SELECT * FROM vendors WHERE vendor_id = ?";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $vendor_id);
 $stmt->execute();
-
-// Get the result
 $result = $stmt->get_result();
+$vendor = $result->fetch_assoc();
 
-
- // Initialize the $row variable
-  $row = array();
-        
-// Check if query was successful
-if ($result->num_rows > 0) {
-// Fetch the row from the result set
-$row = $result->fetch_assoc();
-      } else {
-echo "No data found";
+// Check if vendor data is retrieved
+if (!$vendor) {
+    die("No vendor found with ID " . htmlspecialchars($vendor_id));
 }
-// Close the statement and connection
-$stmt->close();
+
+// Fetch stalls associated with the vendor
+$sql_stalls = "SELECT * FROM stalls WHERE vendor_id = ?";
+$stmt_stalls = $conn->prepare($sql_stalls);
+if ($stmt_stalls === false) {
+    die("Prepare failed: " . $conn->error);
+}
+$stmt_stalls->bind_param("i", $vendor_id);
+$stmt_stalls->execute();
+$result_stalls = $stmt_stalls->get_result();
+$stalls = $result_stalls->fetch_all(MYSQLI_ASSOC);
+
+// Close the connection
 $conn->close();
 ?>
 <!DOCTYPE html>
@@ -75,34 +76,6 @@ $conn->close();
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
 
-<!-- Start of Async Drift Code -->
-  <script>
-    "use strict";
-    
-    !function() {
-      var t = window.driftt = window.drift = window.driftt || [];
-      if (!t.init) {
-        if (t.invoked) return void (window.console && console.error && console.error("Drift snippet included twice."));
-        t.invoked = !0, t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
-        t.factory = function(e) {
-          return function() {
-            var n = Array.prototype.slice.call(arguments);
-            return n.unshift(e), t.push(n), t;
-          };
-        }, t.methods.forEach(function(e) {
-          t[e] = t.factory(e);
-        }), t.load = function(t) {
-          var e = 3e5, n = Math.ceil(new Date() / e) * e, o = document.createElement("script");
-          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + n + "/" + t + ".js";
-          var i = document.getElementsByTagName("script")[0];
-          i.parentNode.insertBefore(o, i);
-        };
-      }
-    }();
-    drift.SNIPPET_VERSION = '0.3.1';
-    drift.load('93ian234iumi');
-    </script>
-    <!-- End of Async Drift Code -->
 
 </head>
 
@@ -208,7 +181,7 @@ $conn->close();
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center"><?php echo $row['vendor_name'];?></h5>
+          <h5 class="text-center"><?php echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); ?></h5>
           <hr class="horizontal dark mt-0">
         </div>
       </div>
@@ -356,9 +329,10 @@ $conn->close();
                     <img src="image/profile.jpg" class="img-fluid rounded-circle" alt="Admin Profile Picture">
                   </div>
                   <div class="col-md-8 my-3">
-                    <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo $row['vendor_name'];?></h6>
-                    <p class="card-text">Username: <?php echo $row['username'];?></p>
-                    <p class="card-text">Role: <?php echo $row['user_type'];?></p>
+                    <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo htmlspecialchars($vendor['first_name']);?></h6>
+                    <p class="card-text">Username: <?php echo htmlspecialchars($vendor['username']); ?></p>
+                    <p class="card-text">Role: Vendor</p>
+                    <p class="card-text">Stall No.: <?php echo htmlspecialchars($vendor['stall_no']); ?></p>
                  
                   </div>
                 </div>

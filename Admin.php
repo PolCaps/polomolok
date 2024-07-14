@@ -1,53 +1,40 @@
 <?php
 session_start();
-
-// Check if user is logged in
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['id']) || $_SESSION['user_type'] != 'ADMIN') {
     header("Location: index.php");
     exit();
 }
-$username = $_SESSION['username'];
-// Database connection settings
+// Get the vendor ID from the session
+$user_id = $_SESSION['id'];
+
+// Include database configuration
 include('database_config.php');
-// Create connection
+
+// Create a connection
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check connection
+// Check the connection
 if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
-// Prepare the query
-$stmt = $conn->prepare("SELECT u.user_id, a.admin_name, u.username, u.user_type 
-                        FROM users u
-                        JOIN admin a ON u.user_id = a.user_id 
-                        WHERE username = ?");
-
-if (!$stmt) {
-  die("Prepare failed: (". $conn->errno. ") ". $conn->error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Bind the parameter
-$stmt->bind_param("s", $username);
-
-// Execute the query
+// Fetch vendor information
+$sql = "SELECT * FROM users WHERE id = ?";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
-
-// Get the result
 $result = $stmt->get_result();
+$user = $result->fetch_assoc();
 
-
- // Initialize the $row variable
-  $row = array();
-        
-// Check if query was successful
-if ($result->num_rows > 0) {
-// Fetch the row from the result set
-$row = $result->fetch_assoc();
-      } else {
-echo "No data found";
+// Check if vendor data is retrieved
+if (!$user) {
+    die("No User found with ID " . htmlspecialchars($user_id));
 }
-// Close the statement and connection
-$stmt->close();
+
+// Close the connection
 $conn->close();
 ?>
 
@@ -113,7 +100,7 @@ $conn->close();
           </a>
           <div class="collapse" id="collapseMaps">
             <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="ABuildingA.html">Building A</a>
+              <a class="nav-link" href="ABuildingA.php">Building A</a>
               <a class="nav-link" href="ABuildingB.html">Building B</a>
               <a class="nav-link" href="ABuildingC.html">Building C</a>
               <a class="nav-link" href="ABuildingD.html">Building D</a>
@@ -173,7 +160,7 @@ $conn->close();
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center"><?php echo $row['admin_name'];?></h5>
+          <h5 class="text-center"><?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?></h5>
           <hr class="horizontal dark mt-0">
         </div>
       </div>
@@ -320,9 +307,9 @@ $conn->close();
                     <img src="image/profile.jpg" class="img-fluid rounded-circle" alt="Admin Profile Picture">
                   </div>
                   <div class="col-md-8 my-3">
-                    <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo $row['admin_name'];?></h6>
-                    <p class="card-text">Username: <?php echo $row['username'];?></p>
-                    <p class="card-text">Role: <?php echo $row['user_type'];?></p>
+                  <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo htmlspecialchars($user['first_name']);?></h6>
+                    <p class="card-text">Username: <?php echo htmlspecialchars($user['username']); ?></p>
+                    <p class="card-text">Role: <?php echo htmlspecialchars($user['user_type']); ?></p>
                  
                   </div>
                 </div>
@@ -383,8 +370,8 @@ $conn->close();
     <div class="card shadow-lg">
       <div class="card-header pb-0 pt-3">
         <div class="float-start">
-          <h5 class="mt-3 mb-0"><?php echo $row['admin_name'];?></h5>
-          <p>Admin</p>
+        <h5 class="card-text">Username: <span class="card-text text-info"><?php echo htmlspecialchars($user['username']); ?></span></h5>
+        <p class="card-text">Role: <span class="card-text text-info"><?php echo htmlspecialchars($user['user_type']); ?></span></p>
         </div>
         <div class="float-end mt-4">
           <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
