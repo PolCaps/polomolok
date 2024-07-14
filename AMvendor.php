@@ -314,10 +314,10 @@ $conn->close();
                                 <label for="password">Password:</label>
                                 <div class="input-group">
                                   <input type="password" id="password" class="form-control" name="password" required>
-                                  <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true" id="togglePasswordform"></i>
+                                  <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true" id="togglePasswordformuser"></i>
                                 </div>
                                 <script>
-                                  const togglePassword = document.querySelector('#togglePasswordform');
+                                  const togglePassword = document.querySelector('#togglePasswordformuser');
                                   const password = document.querySelector('#password');
                                   togglePassword.addEventListener('click', () => {
                                     const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -350,9 +350,15 @@ $conn->close();
                                 <label for="address">Address:</label>
                                 <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
                               </div>
+                              <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
+                                <button type="submituser" name="submituser" id="submituser" class="btn btn-info lg">Create User</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              </div>
                             </div>
                           </div>
                         </div>
+
+
                         <div class="accordion-item">
                           <div id="collapseVendor" class="accordion-collapse collapse" aria-labelledby="headingVendor" data-bs-parent="#accordionExample">
                             <div class="accordion-body">
@@ -372,10 +378,10 @@ $conn->close();
                                 <label for="password">Password:</label>
                                 <div class="input-group">
                                   <input type="password" id="password" class="form-control" name="password" required>
-                                  <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true" id="togglePasswordform"></i>
+                                  <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true" id="togglePasswordformvendor"></i>
                                 </div>
                                 <script>
-                                  const togglePassword = document.querySelector('#togglePasswordform');
+                                  const togglePassword = document.querySelector('#togglePasswordformvendor');
                                   const password = document.querySelector('#password');
                                   togglePassword.addEventListener('click', () => {
                                     const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
@@ -470,16 +476,17 @@ $conn->close();
                                 <label for="end_date">End Date:</label>
                                 <input type="date" id="end_date" name="end_date" class="form-control">
                               </div>
+                              <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
+                                <button type="submit" name="submit" id="submit" class="btn btn-info lg">Create Vendor</button>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                              </div>
                             </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                  <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
-                    <button type="submit" name="submit" id="submit" class="btn btn-info lg">Create User</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                  </div>
+                  
                 </div>
               </form>
             </div>
@@ -508,18 +515,18 @@ $conn->close();
           }
         });
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const togglePassword = document.querySelector('#togglePasswordform');
-      const password = document.querySelector('#password');
-      if (togglePassword) {
-        togglePassword.addEventListener('click', () => {
-          const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-          password.setAttribute('type', type);
-          togglePassword.classList.toggle('fa-eye');
-          togglePassword.classList.toggle('fa-eye-slash');
-        });
-      }
-    });
+    // document.addEventListener('DOMContentLoaded', () => {
+    //   const togglePassword = document.querySelector('#togglePasswordform');
+    //   const password = document.querySelector('#password');
+    //   if (togglePassword) {
+    //     togglePassword.addEventListener('click', () => {
+    //       const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    //       password.setAttribute('type', type);
+    //       togglePassword.classList.toggle('fa-eye');
+    //       togglePassword.classList.toggle('fa-eye-slash');
+    //     });
+    //   }
+    // });
   </script>
         
        <script> // Event listeners for each file input 
