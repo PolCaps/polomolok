@@ -1,98 +1,156 @@
 <?php
+
 require_once 'database_config.php'; // Include your database connection file
 session_start(); // Start the session
 
-// Collect form data
-$username = $_POST['username'];
-$password = password_hash($_POST['password'], PASSWORD_DEFAULT); // Hashing password
-$first_name = $_POST['first_name'];
-$middle_name = $_POST['middle_name'];
-$last_name = $_POST['last_name'];
-$age = $_POST['age'];
-$contact_number = $_POST['contact_number'];
-$address = $_POST['address'];
-$email_add = $_POST['email_add'];
-$stall_no = $_POST['stall_no'];
-$building_type = $_POST['building_type'];
-$monthly_rentals = $_POST['monthly_rentals'];
-$building_floor = $_POST['building_floor'];
-$started_date = $_POST['started_date'];
-$end_date = $_POST['end_date'];
-$stall_status = "Occupied"; // Added default value for stall status
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-// Handle file uploads
-$upload_dir = 'uploads/'; // Directory to save uploaded files
-if (!is_dir($upload_dir)) {
-    mkdir($upload_dir, 0777, true);
+// Connect to the database
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
 }
 
-$lease_agreements_path = $upload_dir . basename($_FILES['lease_agreements']['name']);
-$business_permits_path = $upload_dir . basename($_FILES['business_permits']['name']);
-$business_licenses_path = $upload_dir . basename($_FILES['business_licenses']['name']);
-$receipts_path = $upload_dir . basename($_FILES['receipts']['name']);
-
-$upload_success = true;
-
-// Move uploaded files to the directory
-if (!move_uploaded_file($_FILES['lease_agreements']['tmp_name'], $lease_agreements_path)) {
-    $_SESSION['alert_class'] = 'alert-danger';
-    $_SESSION['alert_message'] = 'Failed to upload Lease Agreements.';
-    $upload_success = false;
-}
-if (!move_uploaded_file($_FILES['business_permits']['tmp_name'], $business_permits_path)) {
-    $_SESSION['alert_class'] = 'alert-danger';
-    $_SESSION['alert_message'] = 'Failed to upload Business Permits.';
-    $upload_success = false;
-}
-if (!move_uploaded_file($_FILES['business_licenses']['tmp_name'], $business_licenses_path)) {
-    $_SESSION['alert_class'] = 'alert-danger';
-    $_SESSION['alert_message'] = 'Failed to upload Business Licenses.';
-    $upload_success = false;
-}
-if (!move_uploaded_file($_FILES['receipts']['tmp_name'], $receipts_path)) {
-    $_SESSION['alert_class'] = 'alert-danger';
-    $_SESSION['alert_message'] = 'Failed to upload Payment Receipts.';
-    $upload_success = false;
-}
-
-// Proceed only if all uploads were successful
-if ($upload_success) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     try {
-        // Insert data into the vendors table
-        $sql_vendor = "INSERT INTO vendors (username, password, first_name, middle_name, last_name, age, contact_number, address, email_add, lease_agreements, business_permits, business_licenses, receipts, started_date, end_date)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        // Start transaction
+        $conn->begin_transaction();
+        // Collect form data
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        $first_name = $_POST['first_name'];
+        $middle_name = $_POST['middle_name'];
+        $last_name = $_POST['last_name'];
+        $age = $_POST['age'];
+        $contact_number = $_POST['contact_number'];
+        $address = $_POST['address'];
+        $email_add = $_POST['email_add'];
+        $stall_no = $_POST['stall_no'];
+        $building_type = $_POST['building_type'];
+        $monthly_rentals = $_POST['monthly_rentals'];
+        $building_floor = $_POST['building_floor'];
+        $started_date = $_POST['started_date'];
+        $end_date = $_POST['end_date'];
+        $stall_status = "Occupied"; // Added default value for stall status
 
-        $stmt_vendor = $pdo->prepare($sql_vendor);
-        $stmt_vendor->execute([$username, $password, $first_name, $middle_name, $last_name, $age, $contact_number, $address, $email_add, $lease_agreements_path, $business_permits_path, $business_licenses_path, $receipts_path, $started_date, $end_date]);
+        $leaseAgreements = $_FILES['lease_agreements'];
+        $businessPermits = $_FILES['business_permits'];
+        $businessLicenses = $_FILES['business_licenses'];
+        $receipts = $_FILES['receipts'];
 
-        // Get the last inserted vendor ID
-        $vendor_id = $pdo->lastInsertId();
 
-        // Insert data into the stalls table
-        $sql_stall = "INSERT INTO stalls (vendor_id, stall_no, building_type, building_floor, monthly_rentals, stall_status)
-                      VALUES (?, ?, ?, ?, ?, ?)";
+        // File upload validation
+        $fileErrors = [];
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', '*/*'];
 
-        $stmt_stall = $pdo->prepare($sql_stall);
-        $stmt_stall->execute([$vendor_id, $stall_no, $building_type, $building_floor, $monthly_rentals, $stall_status]);
+        function validate_and_handle_file($fileKey, $allowedTypes, &$fileErrors) {
+            if (!isset($_FILES[$fileKey]) || $_FILES[$fileKey]['error'] !== UPLOAD_ERR_OK) {
+                $fileErrors[] = "Error uploading $fileKey file.";
+                return null;
+            } elseif (!in_array($_FILES[$fileKey]['type'], $allowedTypes)) {
+                $fileErrors[] = "Invalid file type for $fileKey.";
+                return null;
+            }
 
-        // Success message
-        $_SESSION['alert_class'] = 'alert-success';
-        $_SESSION['alert_message'] = 'Vendor and Stall created successfully!';
-    } catch (PDOException $e) {
-        if ($e->getCode() == 23000) { // 23000 is the code for a duplicate entry
-            $_SESSION['alert_class'] = 'alert-danger';
-            $_SESSION['alert_message'] = 'Username already exists. Please choose a different username.';
-        } else {
-            $_SESSION['alert_class'] = 'alert-danger';
-            $_SESSION['alert_message'] = 'An error occurred: ' . $e->getMessage();
+            $username = $_POST['username'];
+            $today = date('Y-m-d');
+            $targetDir = "datas/" . $username . "/" . $today . "/";
+
+            if (!is_dir($targetDir)) {
+                if (!mkdir($targetDir, 0755, true)) {
+                    $fileErrors[] = "Error creating directory: $targetDir";
+                    return null;
+                }
+            }
+            $targetFile = $targetDir . basename($_FILES[$fileKey]["name"]);
+
+            if (move_uploaded_file($_FILES[$fileKey]["tmp_name"], $targetFile)) {
+                return $targetFile; // Return path to the uploaded file
+            } else {
+                $fileErrors[] = "Error moving $fileKey file to destination.";
+                return null;
+            }
         }
-    }
-} else {
+
+        $upload_success = true;
+
+        $receiptsDest = validate_and_handle_file('receipts', $allowedTypes, $fileErrors);
+        $leaseAgreementsDest = validate_and_handle_file('lease_agreements', $allowedTypes, $fileErrors);
+        $businessPermitsDest = validate_and_handle_file('business_permits', $allowedTypes, $fileErrors);
+        $businessLicensesDest = validate_and_handle_file('business_licenses', $allowedTypes, $fileErrors);
+
+        if (!empty($fileErrors)) {
+            $_SESSION['alert_class'] = 'alert-danger';
+            $_SESSION['alert_message'] = implode("\n", $fileErrors);
+            header('Location: AMvendor.php');
+            exit();
+        }
+            $conn->begin_transaction();
+
+            $sql_vendor = "INSERT INTO vendors (username, password, first_name, middle_name, last_name, age, address, email_add, contact_no, started_date, end_date)
+                            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $stmt_vendor = $conn->prepare($sql_vendor);
+            if (!$stmt_vendor) {
+                throw new Exception('Error preparing statement: ' . $conn->error);
+            }
+            $param_types_vendor = "sssssississ";
+            $stmt_vendor->bind_param($param_types_vendor, $username, $password, $first_name, $middle_name, $last_name, $age, $address, $email_add, $contact_number, $started_date, $end_date);
+            $stmt_vendor->execute();
+            $vendor_id = $conn->insert_id;
+
+            $sql_stall = "INSERT INTO stalls (stall_no, building_type, building_floor, monthly_rental, vendor_id, stall_status)
+                        VALUES (?, ?, ?, ?, ?, ?)";
+            $stmt_stall = $conn->prepare($sql_stall);
+            if (!$stmt_stall) {
+                throw new Exception('Error preparing statement: ' . $conn->error);
+            }
+            $param_types_stall = "issiis";
+            $stmt_stall->bind_param($param_types_stall, $stall_no, $building_type, $building_floor, $monthly_rentals, $vendor_id, $stall_status);
+            $stmt_stall->execute();
+
+            $sql_documents = "INSERT INTO documents (vendor_id, lease_agreements, business_permits, business_license)
+                            VALUES (?, ?, ?, ?)";
+            $stmt_documents = $conn->prepare($sql_documents);
+            if (!$stmt_documents) {
+                throw new Exception('Error preparing statement: ' . $conn->error);
+            }
+            $param_types_documents = "ibbb";
+            $stmt_documents->bind_param($param_types_documents, $vendor_id, $leaseAgreementsDest, $businessPermitsDest, $businessLicensesDest);
+            // Assuming successful preparation...
+            $stmt_documents->send_long_data(1, $leaseAgreementsDest);
+            $stmt_documents->send_long_data(2, $businessPermitsDest);
+            $stmt_documents->send_long_data(3, $businessLicensesDest);
+            $stmt_documents->execute();
+
+            $sql_receipts = "INSERT INTO receipts (vendor_id, receipts, issued_date)
+                            VALUES (?, ?, ?)";
+            $stmt_receipts = $conn->prepare($sql_receipts);
+            if (!$stmt_receipts) {
+                throw new Exception('Error preparing statement: ' . $conn->error);
+            }
+            $param_types_receipts = "ibs";
+            $stmt_receipts->bind_param($param_types_receipts, $vendor_id, $receiptsDest, $started_date);
+            $stmt_receipts->send_long_data(1, $receiptsDest);
+            $stmt_receipts->execute();
+
+            $conn->commit();
+
+            $_SESSION['alert_class'] = 'alert-success';
+            $_SESSION['alert_message'] = 'Vendor and Stall created successfully!';
+        }
+
+ catch (Exception $e) {
+    $conn->rollback();
     $_SESSION['alert_class'] = 'alert-danger';
-    $_SESSION['alert_message'] = 'File upload failed. Please try again.';
+    $_SESSION['alert_message'] = 'An error occurred: ' . $e->getMessage();
 }
 
-// Redirect back to the form page
 header('Location: AMvendor.php');
 exit();
+}
+
 ?>

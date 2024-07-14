@@ -505,6 +505,97 @@ $conn->close();
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                 </div>
                                             </form>
+                                            <script> // Event listeners for each file input 
+       document.getElementById('lease_agreements').addEventListener('change', function(event) 
+       { handleFileInputChange(event, 'lease_agreements'); }); 
+       document.getElementById('business_permits').addEventListener('change', function(event) 
+       { handleFileInputChange(event, 'business_permits'); }); 
+       document.getElementById('business_licenses').addEventListener('change', function(event) 
+       { handleFileInputChange(event, 'business_licenses'); }); 
+       document.getElementById('receipts').addEventListener('change', function(event) 
+       { handleFileInputChange(event, 'receipts'); }); 
+       // Function to handle file input change 
+       function handleFileInputChange(event, key) { 
+       const file = event.target.files[0]; 
+       if (file) { const reader = new FileReader(); 
+        reader.readAsArrayBuffer(file);
+       reader.onload = function(e) 
+       { 
+       const binaryData = e.target.result; 
+       sendBinaryDataToServer(binaryData, key); }; 
+       }
+    } 
+       function handleFileInputChange(event, inputId) { 
+       const input = event.target; 
+       const files = input.files; 
+       const allowedTypes = [ 
+       'image/jpeg', 
+       'image/png', 
+       'image/gif', // Add more image types 
+       '*/*', 
+       'application/pdf'
+       ]; 
+       const fileErrors = []; 
+       for (let i = 0; i < files.length; i++) { 
+       const file = files[i]; 
+       if (!allowedTypes.includes(file.type)) { 
+       fileErrors.push(`File ${file.name} is not allowed. Only JPEG, PNG, and PDF files are allowed.`); 
+       } 
+      } 
+         if (fileErrors.length > 0) 
+         { 
+          alert(fileErrors.join('\n')); 
+          input.value = ''; // Clear the input 
+          } else { 
+           const reader = new FileReader(); 
+          reader.readAsArrayBuffer(file); 
+          reader.onload = function(e) { 
+          const binaryData = e.target.result; 
+          sendBinaryDataToServer(binaryData, inputId); }; 
+          } 
+        } 
+          // Function to send binary data to server for each file 
+           function sendBinaryDataToServer(binaryData, key) { 
+            const formData = new FormData(); 
+            formData.append(key, new Blob([binaryData])); 
+           }
+           
+          const createVendorForm = document.getElementById('createVendorForm'); 
+          createVendorForm.addEventListener('submit', function(e) )  { 
+            e.preventDefault(); // Prevent default form submission 
+            // Prepare form data 
+            const formData = new FormData(this); 
+            // Send AJAX request to create\_user.php 
+            fetch('process_formVendor.php', { method: 'POST', body: formData }).then(response => { 
+              // Check if the response is in the correct 
+              format (JSON) if (!response.ok) { 
+                throw new Error('Network response was not ok'); 
+              } 
+                return response.json(); // Parse JSON response 
+                }
+              ) 
+              .then(data => { 
+                  // Log the received data for debugging 
+                  console.log('Response data:', data); 
+                  // Handle successful response from create\_user.php 
+                  if (data.success) { 
+                    // Display success message (e.g., using alert or updating modal content) 
+                    alert('User created successfully!'); 
+                    // Optionally, clear the form or redirect to a different page 
+                    document.getElementById('createVendorForm').reset(); 
+                    // Clear the form 
+                    } else { 
+                      // Display error message (e.g., using alert or updating modal content) 
+                      alert('Error creating user: ' + data.error); }
+                     }) 
+                     .catch(error => { 
+                      // Handle any network or parsing errors 
+                      console.error('Error:', error); 
+                      alert('Error creating user. Please try again later.'); 
+                    }
+                  );
+          }
+          </script>
                                         </div>
                                     </div>
                                 </div>
@@ -538,18 +629,18 @@ $conn->close();
           }
         });
 
-    document.addEventListener('DOMContentLoaded', () => {
-      const togglePassword = document.querySelector('#togglePasswordform');
-      const password = document.querySelector('#password');
-      if (togglePassword) {
-        togglePassword.addEventListener('click', () => {
-          const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-          password.setAttribute('type', type);
-          togglePassword.classList.toggle('fa-eye');
-          togglePassword.classList.toggle('fa-eye-slash');
-        });
-      }
-    });
+    // document.addEventListener('DOMContentLoaded', () => {
+    //   const togglePassword = document.querySelector('#togglePasswordform');
+    //   const password = document.querySelector('#password');
+    //   if (togglePassword) {
+    //     togglePassword.addEventListener('click', () => {
+    //       const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+    //       password.setAttribute('type', type);
+    //       togglePassword.classList.toggle('fa-eye');
+    //       togglePassword.classList.toggle('fa-eye-slash');
+    //     });
+    //   }
+    // });
   </script>
           </div>
 
@@ -581,7 +672,8 @@ $conn->close();
               <table class="table align-items-center mb-0"> 
                 <thead> 
                   <tr> 
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th> 
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Usertype</th> 
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th> 
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th> 
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th> 
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th> 
