@@ -40,17 +40,7 @@ if (!$vendor) {
     die("No vendor found with ID " . htmlspecialchars($vendor_id));
 }
 
-// // Fetch stalls associated with the vendor
-// $sql_stalls = "SELECT * FROM stalls WHERE vendor_id = ?";
-// $stmt_stalls = $conn->prepare($sql_stalls);
-// if ($stmt_stalls === false) {
-//     die("Prepare failed: " . $conn->error);
-// }
-// $stmt_stalls->bind_param("i", $vendor_id);
-// $stmt_stalls->execute();
-// $result_stalls = $stmt_stalls->get_result();
-// $stalls = $result_stalls->fetch_all(MYSQLI_ASSOC);
-// ?>
+?>
     
 <!DOCTYPE html>
 <html lang="en">
