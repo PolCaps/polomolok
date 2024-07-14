@@ -1,53 +1,40 @@
 <?php
 session_start();
-
-// Check if user is logged in
-if (!isset($_SESSION['username'])) {
+if (!isset($_SESSION['id']) || $_SESSION['user_type'] != 'ADMIN') {
     header("Location: index.php");
     exit();
 }
-$username = $_SESSION['username'];
-// Database connection settings
+// Get the vendor ID from the session
+$user_id = $_SESSION['id'];
+
+// Include database configuration
 include('database_config.php');
-// Create connection
+
+// Create a connection
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check connection
+// Check the connection
 if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
-// Prepare the query
-$stmt = $conn->prepare("SELECT u.user_id, a.admin_name, u.username, u.user_type 
-                        FROM users u
-                        JOIN admin a ON u.user_id = a.user_id 
-                        WHERE username = ?");
-
-if (!$stmt) {
-  die("Prepare failed: (". $conn->errno. ") ". $conn->error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Bind the parameter
-$stmt->bind_param("s", $username);
-
-// Execute the query
+// Fetch vendor information
+$sql = "SELECT * FROM users WHERE id = ?";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $user_id);
 $stmt->execute();
-
-// Get the result
 $result = $stmt->get_result();
+$user = $result->fetch_assoc();
 
-
- // Initialize the $row variable
-  $row = array();
-        
-// Check if query was successful
-if ($result->num_rows > 0) {
-// Fetch the row from the result set
-$row = $result->fetch_assoc();
-      } else {
-echo "No data found";
+// Check if vendor data is retrieved
+if (!$user) {
+    die("No User found with ID " . htmlspecialchars($user_id));
 }
-// Close the statement and connection
-$stmt->close();
+
+// Close the connection
 $conn->close();
 ?>
 
@@ -71,12 +58,40 @@ $conn->close();
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
+   <!-- Bootstrap 5.3 CSS -->
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.10.5/font/bootstrap-icons.min.css" rel="stylesheet">
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <style>
+        .alert {
+            position: fixed;
+            top: 1rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: auto; /* Auto width for better fit */
+            max-width: 500px; /* Maximum width to keep it from being too wide */
+            z-index: 1050;
+        }
+        .alert-icon {
+            font-size: 1.2em; /* Adjust the size of the icon */
+        }
+    </style>
 </head>
-
+<?php if (isset($_SESSION['alert_class']) && isset($_SESSION['alert_message'])): ?>
+        <div class="alert <?php echo $_SESSION['alert_class']; ?> alert-dismissible fade show" role="alert">
+            <?php echo $_SESSION['alert_message']; ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        <?php
+        unset($_SESSION['alert_class']);
+        unset($_SESSION['alert_message']);
+        ?>
+    <?php endif; ?>
 <body class="g-sidenav-show  bg-gray-100">
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main">
     <div class="sidenav-header">
@@ -174,12 +189,13 @@ $conn->close();
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center"><?php echo $row['admin_name'];?></h5>
+          <h5 class="text-center"><?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?></h5>
           <hr class="horizontal dark mt-0">
         </div>
       </div>
     </div>
   </aside>
+  
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
@@ -246,11 +262,11 @@ $conn->close();
       <div class="row mt-4">
         <div class="d-grid gap-2 d-md-block py-3 px-3">
           <p class="text-title">Actions</p>
-          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
+          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#showexampleModal">
             Add New Vendor/User
           </button>
         </div>
-    </head>
+        
     <body>
     <style>
         .accordion-header {
@@ -272,14 +288,15 @@ $conn->close();
           flex: 1;
         }
       </style>
-      <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
+      <div class="modal fade" id="showexampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">Create New User</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <h5 class="modal-title" id="exampleModalLabel">Create New User</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
+<<<<<<< HEAD
               <form id="createUserForm" action="create_vendor.php" method="POST" enctype="multipart/form-data">
                 <div class="container-fluid">
                   <div class="row mb-3">
@@ -480,19 +497,233 @@ $conn->close();
                                 <button type="submit" name="submit" id="submit" class="btn btn-info lg">Create Vendor</button>
                                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                               </div>
+=======
+                <div class="container-fluid">
+                    <div class="row mb-3">
+                        <div class="col-md-12">
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header d-flex" id="headingAdminStaff">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdminStaff" aria-expanded="true" aria-controls="collapseAdminStaff">
+                                            Admin/Staff
+                                        </button>
+                                    </h2>
+                                    
+                                    <div id="collapseAdminStaff" class="accordion-collapse collapse show" aria-labelledby="headingAdminStaff" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <form id="createAdminStaffForm" action="process_formAdSta.php" method="POST" enctype="multipart/form-data">
+                                                <div class="form-group mb-3">
+                                                    <label for="account_type">Account Type:</label>
+                                                    <select id="account_type" class="form-control" name="account_type" required>
+                                                        <option value="Admin">Admin</option>
+                                                        <option value="Staff">Staff</option>
+                                                    </select>
+                                                    <div class="invalid-feedback">Please select an account type.</div>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="username">Username:</label>
+                                                    <input type="text" id="username" class="form-control" name="username" required>
+                                                    <div class="invalid-feedback">Please enter a username.</div>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="password">Password:</label>
+                                                    <div class="input-group">
+                                                        <input type="password" id="password" class="form-control" name="password" required>
+                                                        <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true" id="togglePasswordformAdminStaff"></i>
+                                                    </div>
+                                                    <script>
+                                                        const togglePasswordAdminStaff = document.querySelector('#togglePasswordformAdminStaff');
+                                                        const passwordAdminStaff = document.querySelector('#password');
+                                                        togglePasswordAdminStaff.addEventListener('click', () => {
+                                                            const type = passwordAdminStaff.getAttribute('type') === 'password' ? 'text' : 'password';
+                                                            passwordAdminStaff.setAttribute('type', type);
+                                                            togglePasswordAdminStaff.classList.toggle('bi-eye-fill');
+                                                        });
+                                                    </script>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="first_name">First Name:</label>
+                                                    <input type="text" id="first_name" class="form-control" name="first_name" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="middle_name">Middle Name:</label>
+                                                    <input type="text" id="middle_name" class="form-control" name="middle_name">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="last_name">Last Name:</label>
+                                                    <input type="text" id="last_name" class="form-control" name="last_name" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="age">Age:</label>
+                                                    <input type="number" id="age" class="form-control" name="age">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="contact_no">Contact Number:</label>
+                                                    <input type="tel" id="contact_no" name="contact_number" class="form-control">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="address">Address:</label>
+                                                    <textarea id="address" name="address" class="form-control" style="height: 128px;"></textarea>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="email_add">Email Address:</label>
+                                                    <textarea id="email_add" name="email_add" class="form-control"></textarea>
+                                                </div>
+                                                <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
+                                                    <button type="submit" name="submit" id="submit" class="btn btn-info lg">Create User</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header d-flex" id="headingVendor">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVendor" aria-expanded="false" aria-controls="collapseVendor">
+                                            Vendor
+                                        </button>
+                                    </h2>
+                                    <div id="collapseVendor" class="accordion-collapse collapse" aria-labelledby="headingVendor" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <form id="createVendorForm" action="process_formVendor.php" method="POST" enctype="multipart/form-data">
+                                                <div class="form-group mb-3">
+                                                    <label for="account_type">Account Type:</label>
+                                                    <select id="account_type" class="form-control" name="account_type" required>
+                                                        <option value="Vendor">Vendor</option>
+                                                    </select>
+                                                    <div class="invalid-feedback">Please select an account type.</div>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="username">Username:</label>
+                                                    <input type="text" id="username" class="form-control" name="username" required>
+                                                    <div class="invalid-feedback">Please enter a username.</div>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="password">Password:</label>
+                                                    <div class="input-group">
+                                                        <input type="password" id="password" class="form-control" name="password" required>
+                                                        <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true" id="togglePasswordformVendor"></i>
+                                                    </div>
+                                                    <script>
+                                                        const togglePasswordVendor = document.querySelector('#togglePasswordformVendor');
+                                                        const passwordVendor = document.querySelector('#password');
+                                                        togglePasswordVendor.addEventListener('click', () => {
+                                                            const type = passwordVendor.getAttribute('type') === 'password' ? 'text' : 'password';
+                                                            passwordVendor.setAttribute('type', type);
+                                                            togglePasswordVendor.classList.toggle('bi-eye-fill');
+                                                        });
+                                                    </script>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="first_name">First Name:</label>
+                                                    <input type="text" id="first_name" class="form-control" name="first_name" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="middle_name">Middle Name:</label>
+                                                    <input type="text" id="middle_name" class="form-control" name="middle_name">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="last_name">Last Name:</label>
+                                                    <input type="text" id="last_name" class="form-control" name="last_name" required>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="age">Age:</label>
+                                                    <input type="number" id="age" class="form-control" name="age">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="contact_no">Contact Number:</label>
+                                                    <input type="tel" id="contact_no" name="contact_number" class="form-control">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="address">Address:</label>
+                                                    <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
+                                                </div>
+                                                
+                                                <div class="form-group mb-3">
+                                                    <label for="stall_no">Stall Number:</label>
+                                                    <input type="text" id="stall_no" name="stall_no" class="form-control">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="email_add">Email Address:</label>
+                                                    <textarea id="email_add" name="email_add" class="form-control"></textarea>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="building_type">Buildings:</label>
+                                                    <select id="building_type" name="building_type" class="form-control">
+                                                        <option value="">Select Buildings</option>
+                                                        <option value="Building A">Building A</option>
+                                                        <option value="Building B">Building B</option>
+                                                        <option value="Building C">Building C</option>
+                                                        <option value="Building D">Building D</option>
+                                                        <option value="Building E">Building E</option>
+                                                        <option value="Building F">Building F</option>
+                                                        <option value="Building G">Building G</option>
+                                                        <option value="Building H">Building H</option>
+                                                        <option value="Building I">Building I</option>
+                                                        <option value="Building J">Building J</option>
+                                                    </select>
+                                                    <div class="invalid-feedback">Please select a building type.</div>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="lease_agreements">Lease Agreements:</label>
+                                                    <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="business_permits">Business Permits:</label>
+                                                    <input type="file" id="business_permits" name="business_permits" class="form-control">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="business_licenses">Business Licenses:</label>
+                                                    <input type="file" id="business_licenses" name="business_licenses" class="form-control">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="receipts">Payment Receipts:</label>
+                                                    <input type="file" id="receipts" name="receipts" class="form-control">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="monthly_rentals">Monthly Rentals:</label>
+                                                    <input type="number" id="monthly_rentals" name="monthly_rentals" class="form-control">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="building_floor">Building Floor:</label>
+                                                    <select id="building_floor" name="building_floor" class="form-control">
+                                                        <option value="">Select Building Floor:</option>
+                                                        <option value="Ground Floor">Ground Floor</option>
+                                                        <option value="Second Floor">Second Floor</option>
+                                                    </select>
+                                                    <div class="invalid-feedback">Please select a building floor.</div>
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="started_date">Started Date:</label>
+                                                    <input type="date" id="started_date" name="started_date" class="form-control">
+                                                </div>
+                                                <div class="form-group mb-3">
+                                                    <label for="end_date">End Date:</label>
+                                                    <input type="date" id="end_date" name="end_date" class="form-control">
+                                                </div>
+                                                <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
+                                                    <button type="submit" name="submit" id="submit" class="btn btn-info lg">Create Vendor</button>
+                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+>>>>>>> 5d7f97c8e60de552f47891736799b3375bfc3d85
                             </div>
-                          </div>
                         </div>
-                      </div>
                     </div>
+<<<<<<< HEAD
                   </div>
                   
+=======
+>>>>>>> 5d7f97c8e60de552f47891736799b3375bfc3d85
                 </div>
-              </form>
             </div>
-          </div>
         </div>
-      </div>
+    </div>
+</div>
 
       <!-- Optional JavaScript -->
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
@@ -528,6 +759,7 @@ $conn->close();
     //   }
     // });
   </script>
+<<<<<<< HEAD
         
        <script> // Event listeners for each file input 
        document.getElementById('lease_agreements').addEventListener('change', function(event) 
@@ -620,6 +852,8 @@ $conn->close();
                   );
           }
           </script>
+=======
+>>>>>>> 5d7f97c8e60de552f47891736799b3375bfc3d85
           </div>
 
       <div class="row my-4">
@@ -657,59 +891,13 @@ $conn->close();
                   </tr> 
                 </thead> 
                 <tbody id="dataTableBody">
-                <?php
-                include('database_config.php');
-                $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-                if ($conn->connect_error) {
-                  die("Connection failed: " . $conn->connect_error);
-                }
-                $sql = " SELECT u.user_id , v.vendor_name  AS vendor_name, b.building_type AS buildingCode, s.stall_code AS stallNum, s.monthly_rentals AS rentals
-                FROM users u
-                JOIN vendors v ON u.user_id = v.user_id
-                JOIN stalls s ON u.user_id = s.user_id
-                JOIN buildings b ON s.building_id = b.building_id
-                ";
-                $result = $conn->query($sql);
-                // Check if there are results
-                if ($result === false) {
-                  echo "Error executing query: " . $conn->error;
-                } else {
-                  // Check if query returned rows
-                  if ($result->num_rows > 0) {
-                    echo "<tbody>";
-                    while ($row = $result->fetch_assoc()) {
-                      echo "
-                      <tr>
-                      <td>
-                      <div class='d-flex px-3 py-1'>
-                      <div class='d-flex flex-column justify-content-center'>
-                          <h6 class='mb-0 text-sm'>" . $row['vendor_name'] . "</h6>
-                      </div>
-                  </div>
-                  </td>
-                  <td>
-                  <div class='avatar-group mt-1'>
-                      <h6 class='mb-1 text-sm'>" . $row['buildingCode'] . "</h6>
-                  </div>
-                  </td>
-                  <td class='align-middle text-center text-sm'>
-                  <span class='text-xs font-weight-bold'>" . $row['stallNum'] . "</span>
-                  </td>
-                  <td class='align-middle text-center text-sm'>
-                  <span class='text-xs font-weight-bold'>" . $row['rentals'] . "</span>
-                  </td>
-                  </tr>";
-                }
-                echo "
-                </tbody>
-                ";
-              } else {
-                echo "No data found";
-              }
-            }
-            // Close connection
-            $conn->close();
-            ?>
+                
+              <td>
+                
+              
+
+              </td>
+
             </tbody>
             </table>
             </div>
@@ -734,52 +922,9 @@ $conn->close();
     <div class="card shadow-lg">
       <div class="card-header pb-0 pt-3">
         <div class="float-start">
-        <?php
-// Database connection settings
-include('database_config.php');
-// Create connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check connection
-if ($conn->connect_error) {
-die("Connection failed: " . $conn->connect_error);
-}
-// Prepare the query
-$stmt = $conn->prepare("SELECT u.user_id, a.admin_name, u.username, u.user_type 
-                        FROM users u
-                        JOIN admin a ON u.user_id = a.user_id 
-                        WHERE username = ?");
-
-if (!$stmt) {
-  die("Prepare failed: (". $conn->errno. ") ". $conn->error);
-}
-
-// Bind the parameter
-$stmt->bind_param("s", $username);
-
-// Execute the query
-$stmt->execute();
-
-// Get the result
-$result = $stmt->get_result();
-
-
- // Initialize the $row variable
-  $row = array();
         
-// Check if query was successful
-if ($result->num_rows > 0) {
-// Fetch the row from the result set
-$row = $result->fetch_assoc();
-      } else {
-echo "No data found";
-}
-// Close the statement and connection
-$stmt->close();
-$conn->close();
-?>
-          <h5 class="mt-3 mb-0"><?php echo $row['admin_name'];?></h5>
-          <p>Admin</p>
+        <h5 class="text-center">Username: <span class="text-info"><?php echo htmlspecialchars($user['first_name']) ?></span> </h5>
+          <p>Role: <span class="text-info"><?php echo htmlspecialchars($user['user_type']) ?></span> </p>
         </div>
         <div class="float-end mt-4">
           <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
@@ -800,6 +945,8 @@ $conn->close();
     </div>
   </div>
   </div>
+  
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl7/1L_dstPt3HV5HzF6Gvk/e9T9hXmJ58bldgTk+" crossorigin="anonymous">
   <!--   Core JS Files   -->
   <script src="assets2/js/core/popper.min.js"></script>
   <script src="assets2/js/core/bootstrap.min.js"></script>
@@ -815,10 +962,14 @@ $conn->close();
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
-</body>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+Knujsl7/1L_dstPt3HV5HzF6Gvk/e9T9hXmJ58bldgTk+" crossorigin="anonymous">
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-Dbc4rNzEfaO0/1A/f8Gk+9mE6k5vZlF8d4G9ktBf3mHk5sZj98m1F2FPH+E/XKlS" crossorigin="anonymous"></script>
 
-</html>
+ </body>
+ </html>

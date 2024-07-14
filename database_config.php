@@ -3,8 +3,12 @@
 $db_host = 'localhost';
 $db_user = 'root';
 $db_password = '';
+<<<<<<< HEAD
 $db_name = 'polomolokpublicmarket';
 
+=======
+$db_name = 'polomolokmarkets';
+>>>>>>> 5d7f97c8e60de552f47891736799b3375bfc3d85
 
 
 

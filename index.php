@@ -1,5 +1,6 @@
 <?php
 session_start()
+
 ?>
 
 <!DOCTYPE html>
@@ -132,7 +133,7 @@ session_start()
               }
               
               ?>
-                <form method="POST" action="check_login.php" id="login-form">
+                <form method="POST" action="check_login2.php" id="login-form">
                     <div class="form-floating mb-3">
                         <input class="form-control" id="username" name="username" type="text" required placeholder="VendorChua21.com" />
                         <label for="username">Username</label>
@@ -264,15 +265,15 @@ session_start()
       </div>
 
       </section><!-- /About Section -->
-
-          <?php
+          
+      <?php
           include('database_config.php');
           $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
           if ($conn->connect_error) {
               die("Connection failed: " . $conn->connect_error);
           }
-          $sql = "SELECT buildings, overall_stalls, vendors, workers FROM stats WHERE statsID = 1";
+          $sql = "SELECT buildings, overall_stalls, vendors, workers FROM pagebuilder_table WHERE stats_id = 1";
           $result = $conn->query($sql);
                   
           if ($result->num_rows > 0) {
@@ -281,7 +282,8 @@ session_start()
           echo "No data found";
           }
           $conn->close();
-          ?>
+      ?>
+  
 
           <!-- Stats Section -->
           <section id="stats" class="stats section">
