@@ -247,17 +247,24 @@ $conn->close();
                   <div class="accordion-item">
                     <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#profile-accordion">
                       <div class="accordion-body">
-                        <form>
-                          <div class="mb-3">
-                            <label for="current-password" class="form-label">Current Password</label>
-                            <input type="password" class="form-control" id="current-password" placeholder="Enter current password">
-                          </div>
-                          <div class="mb-3">
-                            <label for="new-password" class="form-label">New Password</label>
-                            <input type="password" class="form-control" id="new-password" placeholder="Enter new password">
-                          </div>
-                          <button type="submit" class="btn btn-primary">Update Password</button>
-                        </form>
+
+
+                      <form action="" method="POST">
+    <div class="mb-3">
+        <label for="current_password" class="form-label">Current Password:</label>
+        <input type="password" id="current_password" name="current_password" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="new_password" class="form-label">New Password:</label>
+        <input type="password" id="new_password" name="new_password" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Change Password</button>
+</form>
+
+  
+
+
+                      
                       </div>
                     </div>
                   </div>

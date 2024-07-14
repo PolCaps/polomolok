@@ -379,67 +379,67 @@ error_reporting(E_ALL);
 $feedback_message = "";
     // Check if the form is submitted
 if (isset($_POST['submit'])) {
-  // Check if vendor_id is set in session
-  if (!isset($_SESSION['vendor_id'])) {
-      echo "<script>alert('User not logged in.');</script>";
-      exit;
-  }
+    // Check if vendor_id is set in session
+    if (!isset($_SESSION['vendor_id'])) {
+        echo "<script>alert('User not logged in.');</script>";
+        exit;
+    }
 
-  // Assuming vendor ID is stored in the session
-  $vendor_id = $_SESSION['vendor_id'];
+    // Assuming vendor ID is stored in the session
+    $vendor_id = $_SESSION['vendor_id'];
 
-  // Get form inputs
-  $current_password = $_POST['current_password'];
-  $new_password = $_POST['new_password'];
+    // Get form inputs
+    $current_password = $_POST['current_password'];
+    $new_password = $_POST['new_password'];
 
-  // Validate inputs
-  if (empty($current_password) || empty($new_password)) {
-      echo "<script>alert('Please fill in both fields.');</script>";
-  } else {
-      // Start a transaction
-      $conn->begin_transaction();
+    // Validate inputs
+    if (empty($current_password) || empty($new_password)) {
+        echo "<script>alert('Please fill in both fields.');</script>";
+    } else {
+        // Start a transaction
+        $conn->begin_transaction();
 
-      try {
-          // Retrieve the current password from the database
-          $stmt = $conn->prepare("SELECT password FROM vendors WHERE vendor_id = ?");
-          $stmt->bind_param("i", $vendor_id);
-          $stmt->execute();
-          $result = $stmt->get_result();
-          $user = $result->fetch_assoc();
+        try {
+            // Retrieve the current password from the database
+            $stmt = $conn->prepare("SELECT password FROM vendors WHERE vendor_id = ?");
+            $stmt->bind_param("i", $vendor_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            $user = $result->fetch_assoc();
 
-          if ($user && $current_password === $user['password']) {
-              // Update the password in the database
-              $update_stmt = $conn->prepare("UPDATE vendors SET password = ? WHERE vendor_id = ?");
-              $update_stmt->bind_param("si", $new_password, $vendor_id);
-              $update_stmt->execute();
+            if ($user && $current_password === $user['password']) {
+                // Update the password in the database
+                $update_stmt = $conn->prepare("UPDATE vendors SET password = ? WHERE vendor_id = ?");
+                $update_stmt->bind_param("si", $new_password, $vendor_id);
+                $update_stmt->execute();
 
-              if ($update_stmt->affected_rows > 0) {
-                  // Commit the transaction if everything is successful
-                  $conn->commit();
-                  echo "<script>alert('Password changed successfully.');</script>";
-              } else {
-                  // Rollback the transaction if update fails
-                  $conn->rollback();
-                  echo "<script>alert('Failed to change the password.');</script>";
-              }
-              
-              $update_stmt->close();
-          } else {
-              // Rollback the transaction if the current password is incorrect
-              $conn->rollback();
-              echo "<script>alert('Current password is incorrect.');</script>";
-          }
+                if ($update_stmt->affected_rows > 0) {
+                    // Commit the transaction if everything is successful
+                    $conn->commit();
+                    echo "<script>alert('Password changed successfully.');</script>";
+                } else {
+                    // Rollback the transaction if update fails
+                    $conn->rollback();
+                    echo "<script>alert('Failed to change the password.');</script>";
+                }
+                
+                $update_stmt->close();
+            } else {
+                // Rollback the transaction if the current password is incorrect
+                $conn->rollback();
+                echo "<script>alert('Current password is incorrect.');</script>";
+            }
 
-          $stmt->close();
-      } catch (Exception $e) {
-          // Rollback the transaction in case of an exception
-          $conn->rollback();
-          echo "<script>alert('An error occurred: " . htmlspecialchars($e->getMessage()) . "');</script>";
-      }
-  }
+            $stmt->close();
+        } catch (Exception $e) {
+            // Rollback the transaction in case of an exception
+            $conn->rollback();
+            echo "<script>alert('An error occurred: " . htmlspecialchars($e->getMessage()) . "');</script>";
+        }
+    }
 
-  // Close the connection
-  $conn->close();
+    // Close the connection
+    $conn->close();
     }
     ?>
     
