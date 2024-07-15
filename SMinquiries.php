@@ -47,7 +47,7 @@ $conn->close();
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Vendor Payment Reminder
+    Inquiries
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -122,7 +122,7 @@ $conn->close();
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="#">
+          <a class="nav-link " href="#">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
                 <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
@@ -154,7 +154,7 @@ $conn->close();
           </a> 
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="SMinquiries.php">
+          <a class="nav-link active" href="SMinquiries.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
               <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
@@ -186,7 +186,7 @@ $conn->close();
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Staff</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Payment Reminder</h6>
+          <h6 class="font-weight-bolder mb-0">Inquiries</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -218,169 +218,150 @@ $conn->close();
     <!-- End Navbar -->
     <div class="container-fluid py-4">
       
-      <div class="row my-4">
-        <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
-          <div class="card">
-            <div class="card-header pb-0">
-              <div class="row">
-                <div class="col-lg-6 col-7">
-                  <h6>Vendors</h6>
-                  <p class="text-sm mb-0">
-                    <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
-                    <span class="font-weight-bold ms-1">30 Vendors that are overdued</span> this month
-                  </p>
-                </div>
-                
-                <div class="col-lg-6 col-5 my-auto text-end">
-                  <div class="dropdown float-lg-end pe-4 mx-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-week" viewBox="0 0 16 16" id="filterDate" data-bs-toggle="dropdown" aria-expanded="false">
-                      <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
-                      <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
-                    </svg>
-                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="filterDate">
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">Today</a></li>
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">This Week</a></li>
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;">This Month</a></li>
-                      <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#customDateModal">Custom Date</a></li>
-                    </ul>
-                    
-                    <div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel" aria-hidden="true">
-                      <div class="modal-dialog modal-dialog-centered">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="customDateModalLabel">Select Custom Date</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <input type="text" id="customDatePicker" class="form-control">
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
+    <?php
+include('database_config.php');
 
-                    <script>
-                      document.addEventListener('DOMContentLoaded', function() {
-                        flatpickr('#customDatePicker', {
-                          dateFormat: 'Y-m-d',
-                          minDate: 'today'
-                        });
-                      });
-                    </script>
-                  </div>
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$start_date = isset($_POST['start_date']) ? $_POST['start_date'] : '';
+$end_date = isset($_POST['end_date']) ? $_POST['end_date'] : '';
+
+$sql = "SELECT name, email_add, subject, message, sent_date FROM inquiry";
+
+if ($start_date && $end_date) {
+    $sql .= " WHERE sent_date BETWEEN '$start_date' AND '$end_date'";
+}
+
+$result = $conn->query($sql);
+?>
+
+<div class="row my-4">
+    <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
+        <div class="card">
+            <div class="card-header pb-0">
+                <div class="row">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="text-info">Inquiries</h6>
+                    </div>
+                    <div class="col-lg-6 col-5 my-auto text-end">
+                        <div class="dropdown float-lg-end pe-4 mx-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-week" viewBox="0 0 16 16" id="filterDate" data-bs-toggle="dropdown" aria-expanded="false">
+                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
+                                <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+                            </svg>
+                            <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="filterDate">
+                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('today')">Today</a></li>
+                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('week')">This Week</a></li>
+                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('month')">This Month</a></li>
+                                <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#customDateModal">Custom Date</a></li>
+                            </ul>
+                            <div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="customDateModalLabel">Select Custom Date</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="customDateForm" method="POST">
+                                                <input type="text" id="customStartDate" name="start_date" class="form-control mb-2" placeholder="Start Date">
+                                                <input type="text" id="customEndDate" name="end_date" class="form-control" placeholder="End Date">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary" onclick="submitCustomDateForm()">Apply</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    flatpickr('#customStartDate', {
+                                        dateFormat: 'Y-m-d'
+                                    });
+                                    flatpickr('#customEndDate', {
+                                        dateFormat: 'Y-m-d'
+                                    });
+                                });
+
+                                function filterByDate(period) {
+                                    const today = new Date();
+                                    let startDate, endDate;
+
+                                    switch(period) {
+                                        case 'today':
+                                            startDate = endDate = today.toISOString().split('T')[0];
+                                            break;
+                                        case 'week':
+                                            const firstDayOfWeek = today.getDate() - today.getDay();
+                                            startDate = new Date(today.setDate(firstDayOfWeek)).toISOString().split('T')[0];
+                                            endDate = new Date(today.setDate(firstDayOfWeek + 6)).toISOString().split('T')[0];
+                                            break;
+                                        case 'month':
+                                            startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+                                            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+                                            break;
+                                    }
+
+                                    document.getElementById('customStartDate').value = startDate;
+                                    document.getElementById('customEndDate').value = endDate;
+                                    document.getElementById('customDateForm').submit();
+                                }
+
+                                function submitCustomDateForm() {
+                                    document.getElementById('customDateForm').submit();
+                                }
+                            </script>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
             <div class="card-body px-0 pb-2">
-              <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Building</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due Date</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Send Message</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-3 py-1">
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Reyan Jay Samontanes</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-1">
-                          <h6 class="mb-1 text-sm">Building E</h6>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> 47 </span>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold">P25,250</span>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold">2023-02-15</span>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#sendMessageModal">
-                          Send Message
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
+                <div class="table-responsive">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email Address</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                while($row = $result->fetch_assoc()) {
+                                    echo "<tr>";
+                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["name"] . "</td>";
+                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["email_add"] . "</td>";
+                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["subject"] . "</td>";
+                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["message"] . "</td>";
+                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["sent_date"] . "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='5' class='text-center text-xs font-weight-bold mb-0'>No inquiries found</td></tr>";
+                            }
+                            $conn->close();
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
             </div>
         </div>
-      </div>
-        </div>
+    </div>
+</div>
         
       </div>
       <!-- send message Modal -->
-    <div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="sendMessageModalLabel">Send Message to Vendor</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-3">
-                <label for="vendor-name" class="col-form-label">Vendor Name:</label>
-                <input type="text" class="form-control" id="vendor-name" readonly value="<?php echo $vendor_name;?>">
-              </div>
-              <div class="mb-3">
-                <label for="message" class="col-form-label">Message:</label>
-                <textarea class="form-control" id="message" required></textarea>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="sendMessageBtn">Send Message</button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!--
-    
-    JavaScript to handle the send message functionality
-      <script>
-        $(document).ready(function() {
-          $('#sendMessageBtn').on('click', function() {
-            var vendorName = $('#vendor-name').val();
-            var message = $('#message').val();
-            
-            // Make an AJAX request to send the message to the vendor
-            $.ajax({
-              type: 'POST',
-              url: 'end_message.php', // Replace with your PHP script to send the message
-              data: { vendor_name: vendorName, message: message },
-              success: function(response) {
-                if (response == 'uccess') {
-                  $('#sendMessageModal').modal('hide');
-                  alert('Message sent successfully!');
-                } else {
-                  alert('Error sending message. Please try again.');
-                }
-              }
-            });
-          });
-        });
-      </script>
-          -->
-
-
 
     </div>
   </main>

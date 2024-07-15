@@ -145,6 +145,27 @@ $conn->close();
             <span class="nav-link-text ms-1">Vendor's Document</span>
           </a>
         </li>
+        <li class="nav-item">
+          <a class="nav-link " href="SMmessages.php">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-envelope-fill" viewBox="0 0 16 16">
+              <path d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z"/>
+            </svg>
+            </div>
+            <span class="nav-link-text ms-1">Messages</span>
+          </a> 
+        </li>
+        <li class="nav-item">
+          <a class="nav-link " href="SMinquiries.php">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
+              <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
+            </svg>
+            </div>
+            <span class="nav-link-text ms-1">Inquiries</span>
+          </a> 
+        </li>
+
       </ul>
     </div>
     <div class="sidenav-footer mx-3 mt-5">
@@ -226,17 +247,24 @@ $conn->close();
                   <div class="accordion-item">
                     <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#profile-accordion">
                       <div class="accordion-body">
-                        <form>
-                          <div class="mb-3">
-                            <label for="current-password" class="form-label">Current Password</label>
-                            <input type="password" class="form-control" id="current-password" placeholder="Enter current password">
-                          </div>
-                          <div class="mb-3">
-                            <label for="new-password" class="form-label">New Password</label>
-                            <input type="password" class="form-control" id="new-password" placeholder="Enter new password">
-                          </div>
-                          <button type="submit" class="btn btn-primary">Update Password</button>
-                        </form>
+
+
+                      <form action="" method="POST">
+    <div class="mb-3">
+        <label for="current_password" class="form-label">Current Password:</label>
+        <input type="password" id="current_password" name="current_password" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="new_password" class="form-label">New Password:</label>
+        <input type="password" id="new_password" name="new_password" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Change Password</button>
+</form>
+
+  
+
+
+                      
                       </div>
                     </div>
                   </div>

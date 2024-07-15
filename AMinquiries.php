@@ -135,7 +135,7 @@ $conn->close();
           </a> 
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="AMinquiries.php">
+          <a class="nav-link  active " href="AMinquiries.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
               <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
@@ -168,7 +168,7 @@ $conn->close();
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Page Customization</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="#">
+          <a class="nav-link" href="#">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <img src="image/icons/icons8-browser-settings-48.png" alt="approveicon" width="18px" height="18px">
             </div>
@@ -197,7 +197,7 @@ $conn->close();
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Admin</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modules</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Homepage Customization</h6>
+          <h6 class="font-weight-bolder mb-0">Inquiries</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -228,65 +228,147 @@ $conn->close();
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
-      <div class="row mt-4">
-        <div class="d-grid gap-2 d-md-block py-3 px-3">
-          
-          <div class="card mb-3" style="max-width: 400px;">
-            <div class="row g-0">
-              <div class="col-md-12">
-                <div class="card-body">
-                  <h5 class="card-title">Status</h5>
-                  
-                  <?php
-   
-                  if (isset($_SESSION['message'])) {
-                      $message = $_SESSION['message'];
-                      $message_type = $_SESSION['message_type'];
-                      unset($_SESSION['message']);
-                      unset($_SESSION['message_type']);
-                  }
+    <?php
+include('database_config.php');
 
-                  if (isset($message)) {
-                      ?>
-                      <div class="alert alert-<?php echo $message_type; ?> alert-dismissible fade show" role="alert">
-                          <?php echo $message; ?>
-                          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                              <span aria-hidden="true">&times;</span>
-                          </button>
-                      </div>
-                      <?php
-                  }
-                  ?>
-                
-                  <form id="admin-form" action="update_data.php" method="POST">
-                    <div class="form-group">
-                      <label for="buildings">Buildings:</label>
-                      <input type="number" class="form-control" id="buildings" name="buildings">
-                    </div>
-                    <div class="form-group">
-                      <label for="stalls">Overall Stalls:</label>
-                      <input type="number" class="form-control" id="stalls" name="stalls">
-                    </div>
-                    <div class="form-group">
-                      <label for="vendors">Vendors:</label>
-                      <input type="number" class="form-control" id="vendors" name="vendors">
-                    </div>
-                    <div class="form-group">
-                      <label for="workers">Workers:</label>
-                      <input type="number" class="form-control" id="workers" name="workers">
-                    </div>
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-                    <button type="submit" class="btn btn-primary">Update</button>
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
-                  </form>
+$start_date = isset($_POST['start_date']) ? $_POST['start_date'] : '';
+$end_date = isset($_POST['end_date']) ? $_POST['end_date'] : '';
 
+$sql = "SELECT name, email_add, subject, message, sent_date FROM inquiry";
+
+if ($start_date && $end_date) {
+    $sql .= " WHERE sent_date BETWEEN '$start_date' AND '$end_date'";
+}
+
+$result = $conn->query($sql);
+?>
+
+<div class="row my-4">
+    <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
+        <div class="card">
+            <div class="card-header pb-0">
+                <div class="row">
+                    <div class="col-lg-6 col-7">
+                        <h6 class="text-info">Inquiries</h6>
+                    </div>
+                    <div class="col-lg-6 col-5 my-auto text-end">
+                        <div class="dropdown float-lg-end pe-4 mx-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-week" viewBox="0 0 16 16" id="filterDate" data-bs-toggle="dropdown" aria-expanded="false">
+                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
+                                <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
+                            </svg>
+                            <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="filterDate">
+                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('today')">Today</a></li>
+                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('week')">This Week</a></li>
+                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('month')">This Month</a></li>
+                                <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#customDateModal">Custom Date</a></li>
+                            </ul>
+                            <div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="customDateModalLabel">Select Custom Date</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form id="customDateForm" method="POST">
+                                                <input type="text" id="customStartDate" name="start_date" class="form-control mb-2" placeholder="Start Date">
+                                                <input type="text" id="customEndDate" name="end_date" class="form-control" placeholder="End Date">
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                            <button type="button" class="btn btn-primary" onclick="submitCustomDateForm()">Apply</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    flatpickr('#customStartDate', {
+                                        dateFormat: 'Y-m-d'
+                                    });
+                                    flatpickr('#customEndDate', {
+                                        dateFormat: 'Y-m-d'
+                                    });
+                                });
+
+                                function filterByDate(period) {
+                                    const today = new Date();
+                                    let startDate, endDate;
+
+                                    switch(period) {
+                                        case 'today':
+                                            startDate = endDate = today.toISOString().split('T')[0];
+                                            break;
+                                        case 'week':
+                                            const firstDayOfWeek = today.getDate() - today.getDay();
+                                            startDate = new Date(today.setDate(firstDayOfWeek)).toISOString().split('T')[0];
+                                            endDate = new Date(today.setDate(firstDayOfWeek + 6)).toISOString().split('T')[0];
+                                            break;
+                                        case 'month':
+                                            startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+                                            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+                                            break;
+                                    }
+
+                                    document.getElementById('customStartDate').value = startDate;
+                                    document.getElementById('customEndDate').value = endDate;
+                                    document.getElementById('customDateForm').submit();
+                                }
+
+                                function submitCustomDateForm() {
+                                    document.getElementById('customDateForm').submit();
+                                }
+                            </script>
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
+            <div class="card-body px-0 pb-2">
+                <div class="table-responsive">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                            <tr>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email Address</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
+                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php
+                            if ($result->num_rows > 0) {
+                                while($row = $result->fetch_assoc()) {
+                                    echo "<tr>";
+                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["name"] . "</td>";
+                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["email_add"] . "</td>";
+                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["subject"] . "</td>";
+                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["message"] . "</td>";
+                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["sent_date"] . "</td>";
+                                    echo "</tr>";
+                                }
+                            } else {
+                                echo "<tr><td colspan='5' class='text-center text-xs font-weight-bold mb-0'>No inquiries found</td></tr>";
+                            }
+                            $conn->close();
+                            ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
         </div>
-      </div>
-      
+    </div>
+</div>
     </div>
   </main>
   <div class="fixed-plugin">
@@ -332,6 +414,8 @@ $conn->close();
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
   </script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
