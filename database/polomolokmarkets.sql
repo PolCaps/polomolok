@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 14, 2024 at 09:57 PM
+-- Generation Time: Jul 14, 2024 at 10:53 PM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -44,6 +44,43 @@ INSERT INTO `documents` (`document_id`, `vendor_id`, `lease_agreements`, `busine
 (1, 23, '', '', '', ''),
 (2, 24, '', '', '', ''),
 (3, 25, 0x64617461732f61796f6f6f2f323032342d30372d31342f3320496e7374616c6c6d656e74732e706e67, 0x64617461732f61796f6f6f2f323032342d30372d31342f3320496e7374616c6c6d656e74732e706e67, 0x64617461732f61796f6f6f2f323032342d30372d31342f327031306e657433302e706e67, '');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `inquiry`
+--
+
+CREATE TABLE `inquiry` (
+  `inquirdy_id` int(11) NOT NULL,
+  `name` varchar(250) NOT NULL,
+  `email_add` varchar(250) NOT NULL,
+  `subject` varchar(250) NOT NULL,
+  `message` text NOT NULL,
+  `sent_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `inquiry`
+--
+
+INSERT INTO `inquiry` (`inquirdy_id`, `name`, `email_add`, `subject`, `message`, `sent_date`) VALUES
+(1, 'awd', 'qwdqw@abdjkn.c', 'qwdqwd', 'hello po', '2024-07-14 20:52:48'),
+(2, 'qwdqwd', 'yusreadadulo123@gmail.com', 'awda', 'dqwd', '2024-07-14 20:53:24');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message`
+--
+
+CREATE TABLE `message` (
+  `message_id` int(11) NOT NULL,
+  `vendor_id` bigint(20) NOT NULL,
+  `id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `sent_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -211,6 +248,19 @@ ALTER TABLE `documents`
   ADD KEY `vendor_id` (`vendor_id`);
 
 --
+-- Indexes for table `inquiry`
+--
+ALTER TABLE `inquiry`
+  ADD PRIMARY KEY (`inquirdy_id`);
+
+--
+-- Indexes for table `message`
+--
+ALTER TABLE `message`
+  ADD PRIMARY KEY (`message_id`),
+  ADD KEY `vendor_id` (`vendor_id`,`id`);
+
+--
 -- Indexes for table `pagebuilder_table`
 --
 ALTER TABLE `pagebuilder_table`
@@ -252,6 +302,18 @@ ALTER TABLE `vendors`
 --
 ALTER TABLE `documents`
   MODIFY `document_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+
+--
+-- AUTO_INCREMENT for table `inquiry`
+--
+ALTER TABLE `inquiry`
+  MODIFY `inquirdy_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `message`
+--
+ALTER TABLE `message`
+  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `pagebuilder_table`
