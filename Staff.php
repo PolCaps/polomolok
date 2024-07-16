@@ -229,7 +229,7 @@ $conn->close();
                     <img src="image/profile.jpg" class="img-fluid rounded-circle" alt="Admin Profile Picture">
                   </div>
                   <div class="col-md-8 my-3">
-                  <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo htmlspecialchars($user['first_name']);?></h6>
+                  <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?></h6>
                     <p class="card-text">Username: <?php echo htmlspecialchars($user['username']); ?></p>
                     <p class="card-text">Role: <?php echo htmlspecialchars($user['user_type']); ?></p>
                   </div>
@@ -247,24 +247,107 @@ $conn->close();
                   <div class="accordion-item">
                     <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#profile-accordion">
                       <div class="accordion-body">
+                        <form action="" method="POST">
+                          <div class="mb-3">
+                            <label for="current_password" class="form-label">Current Password:</label>
+                            <input type="password" id="current_password" name="current_password" class="form-control">
+                          </div>
+                          <div class="mb-3">
+                            <label for="new_password" class="form-label">New Password:</label>
+                            <input type="password" id="new_password" name="new_password" class="form-control">
+                          </div>
+                          <?php
 
+// Check if the session is already started
+if (session_status() === PHP_SESSION_NONE) {
+session_start();
+}
 
-                      <form action="" method="POST">
-    <div class="mb-3">
-        <label for="current_password" class="form-label">Current Password:</label>
-        <input type="password" id="current_password" name="current_password" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="new_password" class="form-label">New Password:</label>
-        <input type="password" id="new_password" name="new_password" class="form-control" required>
-    </div>
-    <button type="submit" class="btn btn-primary">Change Password</button>
-</form>
+// Include database configuration
+include('database_config.php');
 
-  
+// Create a new MySQLi connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
+// Check the connection
+if ($conn->connect_error) {
+die("Database connection failed: " . $conn->connect_error);
+}
 
-                      
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Initialize feedback message
+$feedback_message = "";
+// Check if the form is submitted
+if (isset($_POST['submit'])) {
+// Check if vendor_id is set in session
+if (!isset($_SESSION['id'])) {
+    echo "<script>alert('User not logged in.');</script>";
+    exit;
+}
+
+// Assuming vendor ID is stored in the session
+$user_id = $_SESSION['id'];
+
+// Get form inputs
+$current_password = $_POST['current_password'];
+$new_password = $_POST['new_password'];
+
+// Validate inputs
+if (empty($current_password) || empty($new_password)) {
+    echo "<script>alert('Please fill in both fields.');</script>";
+} else {
+    // Start a transaction
+    $conn->begin_transaction();
+
+    try {
+        // Retrieve the current password from the database
+        $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
+        $stmt->bind_param("i", $user_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        $user = $result->fetch_assoc();
+
+        if ($user && $current_password === $user['password']) {
+            // Update the password in the database
+            $update_stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
+            $update_stmt->bind_param("si", $new_password, $user_id);
+            $update_stmt->execute();
+
+            if ($update_stmt->affected_rows > 0) {
+                // Commit the transaction if everything is successful
+                $conn->commit();
+                echo "<script>alert('Password changed successfully.');</script>";
+            } else {
+                // Rollback the transaction if update fails
+                $conn->rollback();
+                echo "<script>alert('Failed to change the password.');</script>";
+            }
+            
+            $update_stmt->close();
+        } else {
+            // Rollback the transaction if the current password is incorrect
+            $conn->rollback();
+            echo "<script>alert('Current password is incorrect.');</script>";
+        }
+
+        $stmt->close();
+    } catch (Exception $e) {
+        // Rollback the transaction in case of an exception
+        $conn->rollback();
+        echo "<script>alert('An error occurred: " . htmlspecialchars($e->getMessage()) . "');</script>";
+    }
+}
+
+// Close the connection
+// $conn->close();
+}
+?>
+                          <button type="submit" name = "submit"class="btn btn-primary">Change Password</button>
+                        </form>
                       </div>
                     </div>
                   </div>
@@ -288,8 +371,47 @@ $conn->close();
         </div>
         </div>
       </div>
-      
     </div>
+
+    <?php
+
+    // Check if the session is already started
+if (session_status() === PHP_SESSION_NONE) {
+session_start();
+}
+
+// Include database configuration
+include('database_config.php');
+
+// Create a new MySQLi connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+die("Database connection failed: " . $conn->connect_error);
+}
+
+
+// Assuming vendor ID is stored in the session
+$user_id = $_SESSION['id'];
+
+// Fetch vendor information
+$sql = "SELECT * FROM users WHERE id = ?";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+    die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+
+// Check if vendor data is retrieved
+if (!$user) {
+    die("No User found with ID " . htmlspecialchars($user_id));
+}
+
+?>
         
   </main>
   <div class="fixed-plugin">

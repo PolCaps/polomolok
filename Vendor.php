@@ -320,7 +320,7 @@ if (!$vendor) {
                     <img src="image/profile.jpg" class="img-fluid rounded-circle" alt="Admin Profile Picture">
                   </div>
                   <div class="col-md-8 my-3">
-                    <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo htmlspecialchars($vendor['first_name']);?></h6>
+                    <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); ?></h6>
                     <p class="card-text">Username: <?php echo htmlspecialchars($vendor['username']); ?></p>
                     <p class="card-text">Role: Vendor</p>
                     <p class="card-text">Stall No.: <?php echo htmlspecialchars($vendor['stall_no']); ?></p>
@@ -351,7 +351,6 @@ if (!$vendor) {
         <label for="new_password" class="form-label">New Password:</label>
         <input type="password" id="new_password" name="new_password" class="form-control" required>
     </div>
-
     <?php
 
     // Check if the session is already started
@@ -439,7 +438,7 @@ if (isset($_POST['submit'])) {
     }
 
     // Close the connection
-    $conn->close();
+   // $conn->close();
     }
     ?>
     
