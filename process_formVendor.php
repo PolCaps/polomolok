@@ -29,13 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $contact_number = $_POST['contact_number'];
         $address = $_POST['address'];
         $email_add = $_POST['email_add'];
-        $stall_no = $_POST['stall_no'];
-        $building_type = $_POST['building_type'];
-        $monthly_rentals = $_POST['monthly_rentals'];
-        $building_floor = $_POST['building_floor'];
         $started_date = $_POST['started_date'];
         $end_date = $_POST['end_date'];
-        $stall_status = "Occupied"; // Added default value for stall status
 
         $leaseAgreements = isset($_FILES['lease_agreements']) ? $_FILES['lease_agreements'] : null;
         $businessPermits = isset($_FILES['business_permits']) ? $_FILES['business_permits'] : null;
@@ -98,16 +93,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         $stmt_vendor->bind_param($param_types_vendor, $username, $password, $first_name, $middle_name, $last_name, $age, $address, $email_add, $contact_number, $started_date, $end_date);
         $stmt_vendor->execute();
         $vendor_id = $conn->insert_id;
-
-        $sql_stall = "INSERT INTO stalls (stall_no, building_type, building_floor, monthly_rental, vendor_id, stall_status)
-                    VALUES (?, ?, ?, ?, ?, ?)";
-        $stmt_stall = $conn->prepare($sql_stall);
-        if (!$stmt_stall) {
-            throw new Exception('Error preparing statement: ' . $conn->error);
-        }
-        $param_types_stall = "issiis";
-        $stmt_stall->bind_param($param_types_stall, $stall_no, $building_type, $building_floor, $monthly_rentals, $vendor_id, $stall_status);
-        $stmt_stall->execute();
 
         $sql_documents = "INSERT INTO documents (vendor_id, lease_agreements, business_permits, business_license)
                         VALUES (?, ?, ?, ?)";

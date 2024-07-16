@@ -76,6 +76,7 @@ $conn->close();
             width: auto; /* Auto width for better fit */
             max-width: 500px; /* Maximum width to keep it from being too wide */
             z-index: 1050;
+            color: white;
         }
         .alert-icon {
             font-size: 1.2em; /* Adjust the size of the icon */
@@ -455,31 +456,9 @@ $conn->close();
                                                     <label for="address">Address:</label>
                                                     <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
                                                 </div>
-                                                
-                                                <div class="form-group mb-3">
-                                                    <label for="stall_no">Stall Number:</label>
-                                                    <input type="text" id="stall_no" name="stall_no" class="form-control">
-                                                </div>
                                                 <div class="form-group mb-3">
                                                     <label for="email_add">Email Address:</label>
                                                     <textarea id="email_add" name="email_add" class="form-control"></textarea>
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="building_type">Buildings:</label>
-                                                    <select id="building_type" name="building_type" class="form-control">
-                                                        <option value="">Select Buildings</option>
-                                                        <option value="Building A">Building A</option>
-                                                        <option value="Building B">Building B</option>
-                                                        <option value="Building C">Building C</option>
-                                                        <option value="Building D">Building D</option>
-                                                        <option value="Building E">Building E</option>
-                                                        <option value="Building F">Building F</option>
-                                                        <option value="Building G">Building G</option>
-                                                        <option value="Building H">Building H</option>
-                                                        <option value="Building I">Building I</option>
-                                                        <option value="Building J">Building J</option>
-                                                    </select>
-                                                    <div class="invalid-feedback">Please select a building type.</div>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label for="lease_agreements">Lease Agreements:</label>
@@ -496,19 +475,6 @@ $conn->close();
                                                 <div class="form-group mb-3">
                                                     <label for="receipts">Payment Receipts:</label>
                                                     <input type="file" id="receipts" name="receipts" class="form-control">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="monthly_rentals">Monthly Rentals:</label>
-                                                    <input type="number" id="monthly_rentals" name="monthly_rentals" class="form-control">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="building_floor">Building Floor:</label>
-                                                    <select id="building_floor" name="building_floor" class="form-control">
-                                                        <option value="">Select Building Floor:</option>
-                                                        <option value="Ground Floor">Ground Floor</option>
-                                                        <option value="Second Floor">Second Floor</option>
-                                                    </select>
-                                                    <div class="invalid-feedback">Please select a building floor.</div>
                                                 </div>
                                                 <div class="form-group mb-3">
                                                     <label for="started_date">Started Date:</label>
