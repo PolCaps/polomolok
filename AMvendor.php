@@ -264,15 +264,15 @@ $conn->close();
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Vendors</p>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Vendors:</p>
                     <h5 class="font-weight-bolder mb-0">
                       8,231
                     </h5>
                   </div>
                 </div>
                 <div class="col-4 text-end">
-                  <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                    <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
+                    <i class="fa fa-user text-lg opacity-10" aria-hidden="true"></i>
                   </div>
                 </div>
               </div>
@@ -523,97 +523,6 @@ $conn->close();
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                                 </div>
                                             </form>
-                                            <script> // Event listeners for each file input 
-       document.getElementById('lease_agreements').addEventListener('change', function(event) 
-       { handleFileInputChange(event, 'lease_agreements'); }); 
-       document.getElementById('business_permits').addEventListener('change', function(event) 
-       { handleFileInputChange(event, 'business_permits'); }); 
-       document.getElementById('business_licenses').addEventListener('change', function(event) 
-       { handleFileInputChange(event, 'business_licenses'); }); 
-       document.getElementById('receipts').addEventListener('change', function(event) 
-       { handleFileInputChange(event, 'receipts'); }); 
-       // Function to handle file input change 
-       function handleFileInputChange(event, key) { 
-       const file = event.target.files[0]; 
-       if (file) { const reader = new FileReader(); 
-        reader.readAsArrayBuffer(file);
-       reader.onload = function(e) 
-       { 
-       const binaryData = e.target.result; 
-       sendBinaryDataToServer(binaryData, key); }; 
-       }
-    } 
-       function handleFileInputChange(event, inputId) { 
-       const input = event.target; 
-       const files = input.files; 
-       const allowedTypes = [ 
-       'image/jpeg', 
-       'image/png', 
-       'image/gif', // Add more image types 
-       '*/*', 
-       'application/pdf'
-       ]; 
-       const fileErrors = []; 
-       for (let i = 0; i < files.length; i++) { 
-       const file = files[i]; 
-       if (!allowedTypes.includes(file.type)) { 
-       fileErrors.push(`File ${file.name} is not allowed. Only JPEG, PNG, and PDF files are allowed.`); 
-       } 
-      } 
-         if (fileErrors.length > 0) 
-         { 
-          alert(fileErrors.join('\n')); 
-          input.value = ''; // Clear the input 
-          } else { 
-           const reader = new FileReader(); 
-          reader.readAsArrayBuffer(file); 
-          reader.onload = function(e) { 
-          const binaryData = e.target.result; 
-          sendBinaryDataToServer(binaryData, inputId); }; 
-          } 
-        } 
-          // Function to send binary data to server for each file 
-           function sendBinaryDataToServer(binaryData, key) { 
-            const formData = new FormData(); 
-            formData.append(key, new Blob([binaryData])); 
-           }
-           
-          const createVendorForm = document.getElementById('createVendorForm'); 
-          createVendorForm.addEventListener('submit', function(e) )  { 
-            e.preventDefault(); // Prevent default form submission 
-            // Prepare form data 
-            const formData = new FormData(this); 
-            // Send AJAX request to create\_user.php 
-            fetch('process_formVendor.php', { method: 'POST', body: formData }).then(response => { 
-              // Check if the response is in the correct 
-              format (JSON) if (!response.ok) { 
-                throw new Error('Network response was not ok'); 
-              } 
-                return response.json(); // Parse JSON response 
-                }
-              ) 
-              .then(data => { 
-                  // Log the received data for debugging 
-                  console.log('Response data:', data); 
-                  // Handle successful response from create\_user.php 
-                  if (data.success) { 
-                    // Display success message (e.g., using alert or updating modal content) 
-                    alert('User created successfully!'); 
-                    // Optionally, clear the form or redirect to a different page 
-                    document.getElementById('createVendorForm').reset(); 
-                    // Clear the form 
-                    } else { 
-                      // Display error message (e.g., using alert or updating modal content) 
-                      alert('Error creating user: ' + data.error); }
-                     }) 
-                     .catch(error => { 
-                      // Handle any network or parsing errors 
-                      console.error('Error:', error); 
-                      alert('Error creating user. Please try again later.'); 
-                    }
-                  );
-          }
-          </script>
                                         </div>
                                     </div>
                                 </div>
@@ -626,8 +535,6 @@ $conn->close();
     </div>
 </div>
 
-      <!-- Optional JavaScript -->
-      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
       <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
@@ -647,31 +554,19 @@ $conn->close();
           }
         });
 
-    // document.addEventListener('DOMContentLoaded', () => {
-    //   const togglePassword = document.querySelector('#togglePasswordform');
-    //   const password = document.querySelector('#password');
-    //   if (togglePassword) {
-    //     togglePassword.addEventListener('click', () => {
-    //       const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
-    //       password.setAttribute('type', type);
-    //       togglePassword.classList.toggle('fa-eye');
-    //       togglePassword.classList.toggle('fa-eye-slash');
-    //     });
-    //   }
-    // });
   </script>
           </div>
 
       <div class="row my-4">
-        <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
+        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
           <div class="card">
             <div class="card-header pb-0">
               <div class="row">
                 <div class="col-lg-6 col-7">
                   <h6>Vendors</h6>
                   <p class="text-sm mb-0">
-                    <i class="fa fa-user-circle text-warning" aria-hidden="true"></i>
-                    <span class="font-weight-bold ms-1">List of Vendors</span> 
+                    <i class="fa fa-exclamation-circle text-warning" aria-hidden="true"></i>
+                    <span class="font-weight-bold ms-1">Click User to see full details!</span> 
                   </p>
                 </div>
                 <div class="col-lg-6 col-5 my-auto text-end">
@@ -694,16 +589,15 @@ $conn->close();
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th> 
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th> 
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th> 
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th> 
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
                   </tr> 
                 </thead> 
                 <tbody id="dataTableBody">
                 
-              <td>
-                
+                <td>
               
 
-              </td>
+                </td>
 
             </tbody>
             </table>
@@ -713,14 +607,8 @@ $conn->close();
         </div>
         
       </div>
-      <div class="col-lg-4 col-md-6">
-          <div class="card h-50">
-            <div class="card-header pb-0">
-              <h6>Card Sample</h6>
-            </div>
-          </div>
-        </div>
       </div>
+      
     </div>
   </main>
   <div class="fixed-plugin">
