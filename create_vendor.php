@@ -222,7 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
         
         
            // Prepare and execute documents insert
-           $sqlD = "INSERT INTO documents (receipts, lease_agreements, business_permits, business_licenses, user_id) VALUES (?, ?, ?, ?, ?)";
+           $sqlD = "INSERT INTO documents (receipts, lease_agreements, business_permits, business_licenses, vendor_id) VALUES (?, ?, ?, ?, ?)";
            $stmtD = $conn->prepare($sqlD);
            $stmtD->bind_param('bbbbi', $receiptsDest, $leaseAgreementsDest, $businessPermitsDest, $businessLicensesDest, $insertedUserId);
             // Assuming successful preparation...

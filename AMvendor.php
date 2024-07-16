@@ -322,12 +322,14 @@ $conn->close();
                         <div class="col-md-12">
                             <div class="accordion" id="accordionExample">
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header d-flex" id="headingAdminStaff">
-                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAdminStaff" aria-expanded="true" aria-controls="collapseAdminStaff">
+                                    <h2 class="accordion-header d-flex" >
+                                        <button class="accordion-button" type="button" id="headingAdminStaff" data-bs-toggle="collapse" data-bs-target="#collapseAdminStaff" aria-expanded="true" aria-controls="collapseAdminStaff">
                                             Admin/Staff
                                         </button>
+                                        <button class="accordion-button collapsed" id="headingVendor" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVendor" aria-expanded="false" aria-controls="collapseVendor">
+                                            Vendor
+                                        </button>
                                     </h2>
-                                    
                                     <div id="collapseAdminStaff" class="accordion-collapse collapse show" aria-labelledby="headingAdminStaff" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             <form id="createAdminStaffForm" action="process_formAdSta.php" method="POST" enctype="multipart/form-data">
@@ -398,11 +400,6 @@ $conn->close();
                                 </div>
 
                                 <div class="accordion-item">
-                                    <h2 class="accordion-header d-flex" id="headingVendor">
-                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseVendor" aria-expanded="false" aria-controls="collapseVendor">
-                                            Vendor
-                                        </button>
-                                    </h2>
                                     <div id="collapseVendor" class="accordion-collapse collapse" aria-labelledby="headingVendor" data-bs-parent="#accordionExample">
                                         <div class="accordion-body">
                                             <form id="createVendorForm" action="process_formVendor.php" method="POST" enctype="multipart/form-data">
