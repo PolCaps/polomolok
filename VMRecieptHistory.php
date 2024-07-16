@@ -22,7 +22,10 @@ if ($conn->connect_error) {
 }
 
 // Fetch vendor information
-$sql = "SELECT * FROM vendors WHERE vendor_id = ?";
+$sql = "SELECT v.*, s.*  
+FROM vendors v 
+JOIN stalls s ON v.vendor_id = s.vendor_id
+WHERE v.vendor_id = ?";
 
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
@@ -31,26 +34,14 @@ if ($stmt === false) {
 $stmt->bind_param("i", $vendor_id);
 $stmt->execute();
 $result = $stmt->get_result();
-$vendor = $result->fetch_assoc();
+$row = $result->fetch_assoc();
 
 // Check if vendor data is retrieved
-if (!$vendor) {
+if (!$row) {
     die("No vendor found with ID " . htmlspecialchars($vendor_id));
 }
-
-// Fetch stalls associated with the vendor
-$sql_stalls = "SELECT * FROM stalls WHERE vendor_id = ?";
-$stmt_stalls = $conn->prepare($sql_stalls);
-if ($stmt_stalls === false) {
-    die("Prepare failed: " . $conn->error);
-}
-$stmt_stalls->bind_param("i", $vendor_id);
-$stmt_stalls->execute();
-$result_stalls = $stmt_stalls->get_result();
-$stalls = $result_stalls->fetch_all(MYSQLI_ASSOC);
-
 // Close the connection
-$conn->close();
+///$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -217,7 +208,7 @@ $conn->close();
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center"><?php echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); ?></h5>
+          <h5 class="text-center"><?php echo htmlspecialchars($row['first_name']) . ' ' . htmlspecialchars($row['middle_name']) . ' ' . htmlspecialchars($row['last_name']); ?></h5>
       
           <hr class="horizontal dark mt-0">
         </div>
@@ -270,9 +261,11 @@ $conn->close();
               <div class="card">
               <div class="card-header pb-0">
               <div class="row">
-              <h6 class="text-center"><span class="text-sm text-secondary">Vendor Name:</span> <?php echo $vendor ['username']; ?></h6>
+              <h6 class="text-center"><span class="text-sm text-secondary">Vendor Name:</span> <?php echo $row['username']; ?></h6>
               </div>
             </div>
+
+            
                 <div class="card-body px-0 pb-2">
                   <div class="table-responsive">
                     <table class="table align-items-center mb-0">
@@ -288,20 +281,23 @@ $conn->close();
                         <tr>
                           
                           <td class="text-center">
-                            <img src="image/polpol.jpg" alt="Image 1" width="50" height="50" class="expandable-image">
+                            <img src="datas/meedoss/2024-07-16/1.jpg" alt="Image 1" width="50" height="50" class="expandable-image">
                           </td>
-                          <td class="align-middle text-center text-sm"><?php echo $stalls ['building_type']; ?></td>
-                          <td class="align-middle text-center text-sm">4</td>
-                          <td class="align-middle text-center text-sm">04-21-24</td>
+                          <td class="align-middle text-center text-sm"><?php echo $row['building_type']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo $row['stall_no']; ?></td>
+
+                          <td class="align-middle text-center text-sm"><?php echo $row['started_date']; ?></td>
+
                         </tr>
                         <tr>
                          
                           <td class="text-center">
-                            <img src="image/profile.jpg" alt="Image 2" width="50" height="50" class="expandable-image">
+                            <img src="datas/meedoss/2024-07-16/1.jpg" alt="Image 2" width="50" height="50" class="expandable-image">
                           </td>
-                          <td class="align-middle text-center text-sm"><?php echo $stalls ['building_type']; ?></td>
-                          <td class="align-middle text-center text-sm">5</td>
-                          <td class="align-middle text-center text-sm">04-22-24</td>
+                          <td class="align-middle text-center text-sm"><?php echo $row['building_type']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo  $row['stall_no']; ?></td>
+
+                          <td class="align-middle text-center text-sm"><?php echo $row['started_date']; ?></td>
                         </tr>
                         <!-- Add more table rows here -->
                       </tbody>

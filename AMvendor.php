@@ -585,7 +585,6 @@ $conn->close();
               <table class="table align-items-center mb-0"> 
                 <thead> 
                   <tr> 
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Usertype</th> 
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th> 
                     <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th> 
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th> 
@@ -593,13 +592,47 @@ $conn->close();
                   </tr> 
                 </thead> 
                 <tbody id="dataTableBody">
-                
-                <td>
-              
+                <?php
+                include("database_config.php");
 
-                </td>
+                // Create connection
+                $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-            </tbody>
+                // Check connection
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
+
+                // SQL query to get stall information and vendor usernames
+                $sql = "SELECT s.stall_no AS stall_no, s.stall_id, s.stall_status AS stall_status, v.username AS username, s.building_type AS building, s.monthly_rental AS payment_due
+                        FROM stalls s
+                        JOIN vendors v ON s.vendor_id = v.vendor_id";
+
+                $result = $conn->query($sql);
+
+                if ($result === false) {
+                    die("Error executing query: " . $conn->error);
+                }
+
+                if ($result->num_rows > 0) {
+                    while ($row = $result->fetch_assoc()) {
+                        ?>
+                        <tr>
+                            <td class='text-xs font-weight-bold'><?php echo htmlspecialchars($row['username']); ?></td>
+                            <td class='text-xs font-weight-bold'><?php echo htmlspecialchars($row['building']); ?></td>
+                            <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($row['stall_no']); ?></td>
+                            <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($row['payment_due']); ?></td>
+                        </tr>
+                        <?php
+                    }
+                } else {
+                    ?>
+                    <tr><td colspan='5' class='text-center'>No results found.</td></tr>
+                    <?php
+                }
+                $conn->close();
+                ?>
+                </tbody>
             </table>
             </div>
           </div>

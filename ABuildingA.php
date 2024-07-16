@@ -41,29 +41,27 @@ try {
             }
 
             $vendors[$stall_no] = [
-                'status' => $status,
-                'username' => $username
+                'status' => $status, 'username' => $username
+                
             ];
         }
     } else {
         echo "No results found.";
     }
 
-    // Debugging output
-    // echo "<pre>";
-    // print_r($vendors);
-    // echo "</pre>";
+   //  Debugging output
+    //  echo "<pre>";
+    //  print_r($vendors);
+    //  echo "</pre>";
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pathId'])) {
         $pathId = $_POST['pathId'];
 
         if (array_key_exists($pathId, $vendors)) {
             $status_info = $vendors[$pathId];
-            echo json_encode($status_info);  
-        } elseif(array_key_exists($pathId,empty($vendors))){
-          echo json_encode(['error']);
+            echo json_encode($status_info);
         }else {
-            echo json_encode(['status' => 'Vacant', 'username' => 'NON']);
+            echo json_encode(['error' => 'stall not found', 'username' => 'NON']);
         }
 
         exit;
@@ -74,7 +72,7 @@ try {
 } finally {
     // Close the database connection
     if (isset($conn)) {
-     //   $conn->close();
+        $conn->close();
     }
 }
 ?>
@@ -2149,19 +2147,48 @@ try {
                 <path transform="matrix(.16 0 0 -.16 2.6667 1585.3)" d="m563 1406h8l-4-25z" style="fill:#0f0;stroke-linecap:round;stroke-miterlimit:10;stroke:#0f0"/>
               </g>
 
-               <?php foreach ($vendors as $stall_no => $status_info): ?>
                <?php
-             //  $status = $status_info['status'];
+               foreach ($vendors as $stall_no => $status_info): ?>
+               <?php
+                  // Create connection
+                    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-            //    if ($status == 'Occupied') {
-                 $display_status = 'Occupied';
-            // } elseif($status == 'Vacant'){
-            //   $display_status = 'Vacant';
-            // } elseif(empty($status)) {
-            //     $display_status = 'error';
-            // }
+                    // Check connection
+                    if ($conn->connect_error) {
+                        throw new Exception("Connection failed: " . $conn->connect_error);
+                    }
+
+                    // SQL query to get stall information and vendor usernames
+                    $sql = "SELECT stall_no , stall_status AS status FROM stalls";
+
+                    $result = $conn->query($sql);
+
+                    if ($result === false) {
+                        throw new Exception("Error executing query: " . $conn->error);
+                    }
+
+                    $display_status='';
+                      while ($row = $result->fetch_assoc()) {
+                          $stall_no = $row['stall_no'];
+                          $status = $row['status'];
+
+                          if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pathId'])) {
+                            $pathId = $_POST['pathId'];
+                          if(!empty($status) && $pathId == $stall_no){
+                            if ($status == 'Occupied') {
+                              $display_status = 'Occupied';
+                            } if($status == 'Vacant'){
+                              $display_status = 'Vacant';
+                            } else {
+                                $display_status = 'error';
+                            }
+                          }else{
+                            $display_status = 'no stall found';
+                          }
+                      }
+                    }
+            
               ?>
-              
             
               <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>" onclick="checkStall(this)">
                 <g>
@@ -2244,7 +2271,7 @@ try {
                 <path id="17" d="m927.79 981.26s-4.3355 98.993-1.4452 98.271 68.645 0 68.645 0l-1.4452-100.44z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display-status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="18" d="m929.96 884.43-2.8903 95.38 70.813-1.4452-0.72258-96.103z" style="opacity:0"/>
               </g>
@@ -2284,7 +2311,7 @@ try {
                 <path id="25" d="m859.87 1079.5v98.993l67.2 1.4452-0.72257-99.716z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($displaya_status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="26" d="m859.87 980.54 2.1677 98.993 65.032-1.4451 1.4452-99.716z" style="opacity:0"/>
               </g>
@@ -2329,7 +2356,7 @@ try {
                 <path id="34" d="m862.04 181.37-2.8903 101.88s64.309 2.1677 65.755-2.1677c1.4452-4.3355 6.5032-98.271 1.4452-98.271-5.058 0-64.309-1.4452-64.309-1.4452z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($Display_status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="35" d="m730.53 184.26 1.4452 98.993s36.851 2.8903 38.297 0c1.4452-2.8903 40.464-31.793 40.464-35.406s0.72258-65.755 0.72258-65.755z" style="opacity:0"/>
               </g>

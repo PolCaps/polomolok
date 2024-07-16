@@ -60,7 +60,7 @@ $conn->close();
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
 </head>
 
-<body class="g-sidenav-show  bg-gray-100">
+<body class="g-sidenav-show  bg-gray-100" onload="fetchData()">
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -293,56 +293,57 @@ $conn->close();
                   </thead>
                   <tbody id="dataTableBody">
                     
-                    <script>
-                      // Function to fetch data from PHP script
-                      function fetchData() {
-                          var xhr = new XMLHttpRequest();
-                          xhr.open('GET', 'get_data.php', true);
-                          xhr.onload = function () {
-                              if (xhr.status >= 200 && xhr.status < 300) {
-                                  var data = JSON.parse(xhr.responseText);
-                                  displayData(data);
-                              } else {
-                                  console.error('Request failed with status ' + xhr.status);
-                              }
-                          };
-                          xhr.onerror = function () {
-                              console.error('Network error occurred');
-                          };
-                          xhr.send();
-                      }
-                  
-                      // Function to display data in the HTML table
-                      function displayData(data) {
-                          var tbody = document.getElementById('dataTableBody');
-                          var html = '';
-                  
-                          data.forEach(function (row) {
-                              html += '<tr>';
-                              html += '  <td>';
-                              html += '    <div class="d-flex px-3 py-1">';
-                              html += '      <div class="d-flex flex-column justify-content-center">';
-                              html += '        <h6 class="mb-0 text-sm">' + row.first_name + ' ' + row.middle_name + ' ' + row.last_name + '</h6>';
-                              html += '      </div>';
-                              html += '    </div>';
-                              html += '  </td>';
-                              html += '  <td>';
-                              html += '    <div class="avatar-group mt-1">';
-                              html += '      <h6 class="mb-1 text-sm">' + row.building_type + '</h6>';
-                              html += '    </div>';
-                              html += '  </td>';
-                              html += '  <td class="align-middle text-center text-sm">';
-                              html += '    <span class="text-xs font-weight-bold">' + row.store_number + '</span>';
-                              html += '  </td>';
-                              html += '  <td class="align-middle text-center text-sm">';
-                              html += '    <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#openHistoryModal">Show Reciepts</button>';
-                              html += '  </td>';
-                              html += '</tr>';
-                          });
-                  
-                          // Insert the generated HTML into the table body
-                          tbody.innerHTML = html;
-                      }
+                  <script>
+  // Function to fetch data from PHP script
+  function fetchData() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', 'get_reciepts.php', true);
+      xhr.onload = function () {
+          if (xhr.status >= 200 && xhr.status < 300) {
+              var data = JSON.parse(xhr.responseText);
+              displayData(data);
+          } else {
+              console.error('Request failed with status ' + xhr.status);
+          }
+      };
+      xhr.onerror = function () {
+          console.error('Network error occurred');
+      };
+      xhr.send();
+  }
+
+  // Function to display data in the HTML table
+  function displayData(data) {
+      var tbody = document.getElementById('dataTableBody');
+      var html = '';
+
+      data.forEach(function (row) {
+          html += '<tr>';
+          html += '  <td>';
+          html += '    <div class="d-flex px-3 py-1">';
+          html += '      <div class="d-flex flex-column justify-content-center">';
+          html += '        <h6 class="mb-0 text-sm">' + row.Fname + ' ' + row.Mname + ' ' + row.Lname + '</h6>';
+          html += '      </div>';
+          html += '    </div>';
+          html += '  </td>';
+          html += '  <td>';
+          html += '    <div class="avatar-group mt-1">';
+          html += '      <h6 class="mb-1 text-sm">' + row.building + '</h6>';
+          html += '    </div>';
+          html += '  </td>';
+          html += '  <td class="align-middle text-center text-sm">';
+          html += '    <span class="text-xs font-weight-bold">' + row.stallnum + '</span>';
+          html += '  </td>';
+          html += '  <td class="align-middle text-center text-sm">';
+          html += '    <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#openHistoryModal">Show Receipts</button>';
+          html += '  </td>';
+          html += '</tr>';
+      });
+
+      // Insert the generated HTML into the table body
+      tbody.innerHTML = html;
+  }
+
                   
                       // Call fetchData function when the page loads
                       document.addEventListener('DOMContentLoaded', function () {
@@ -358,7 +359,7 @@ $conn->close();
         </div>
       </div>
       
-      I POPULATE PA NATO NI IF HUMAN NA NAG DATABASES and NAA KOY JAVASCRIPT SA CODE ANI PANGITAA RA SA BABA MISMO ANING MESSAGE BASIG MAGAMIT
+    
 <!-- Modal for receipt history -->
 <div class="modal fade" id="openHistoryModal" tabindex="-1" aria-labelledby="openHistoryModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
@@ -391,59 +392,60 @@ $conn->close();
   </div>
 </div>
       
-  <!-- 
-// Function to fetch receipt history data
-function fetchReceiptHistory(receiptId) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'get_receipt_history.php?receipt_id=' + receiptId, true);
-  xhr.onload = function() {
-    if (xhr.status >= 200 && xhr.status < 300) {
-      var data = JSON.parse(xhr.responseText);
-      displayReceiptHistory(data);
-    } else {
-      console.error('Request failed with status ' + xhr.status);
-    }
-  };
-  xhr.onerror = function() {
-    console.error('Network error occurred');
-  };
-  xhr.send();
-}
-
-// Function to display receipt history data in the modal
-function displayReceiptHistory(data) {
-  var tbody = document.getElementById('receiptHistoryBody');
-  var html = '';
   
-  data.forEach(function(row) {
-    html += '<tr>';
-    html += '  <td>' + row.date + '</td>';
-    html += '  <td>' + row.receipt_id + '</td>';
-    html += '  <td>';
-    if (row.file_url) {
-      html += '    <a href="' + row.file_url + '" target="_blank">View File</a>';
-    } else {
-      html += '    No File Available';
-    }
-    html += '  </td>';
-    html += '</tr>';
-  });
-  
-  tbody.innerHTML = html;
-}
+<script>
+  // Function to fetch receipt history data
+  function fetchReceiptHistory(receiptId) {
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', 'get_receipt_history.php?receipt_id=' + receiptId, true);
+    xhr.onload = function() {
+      if (xhr.status >= 200 && xhr.status < 300) {
+        var data = JSON.parse(xhr.responseText);
+        displayReceiptHistory(data);
+      } else {
+        console.error('Request failed with status ' + xhr.status);
+      }
+    };
+    xhr.onerror = function() {
+      console.error('Network error occurred');
+    };
+    xhr.send();
+  }
 
-// Add event listener to the button to open the modal
-document.addEventListener('DOMContentLoaded', function() {
-  var buttons = document.querySelectorAll('[data-bs-target="#openHistoryModal"]');
-  buttons.forEach(function(button) {
-    button.addEventListener('click', function() {
-      var receiptId = button.dataset.receiptId;
-      fetchReceiptHistory(receiptId);
+  // Function to display receipt history data in the modal
+  function displayReceiptHistory(data) {
+    var tbody = document.getElementById('receiptHistoryBody');
+    var html = '';
+    
+    data.forEach(function(row) {
+      html += '<tr>';
+      html += '  <td>' + row.date + '</td>';
+      html += '  <td>' + row.receipt_id + '</td>';
+      html += '  <td>';
+      if (row.file_url) {
+        html += '    <a href="' + row.file_url + '" target="_blank">View File</a>';
+      } else {
+        html += '    No File Available';
+      }
+      html += '  </td>';
+      html += '</tr>';
+    });
+    
+    tbody.innerHTML = html;
+  }
+
+  // Add event listener to the button to open the modal
+  document.addEventListener('DOMContentLoaded', function() {
+    var buttons = document.querySelectorAll('[data-bs-target="#openHistoryModal"]');
+    buttons.forEach(function(button) {
+      button.addEventListener('click', function() {
+        var receiptId = button.getAttribute('data-receipt-id');
+        fetchReceiptHistory(receiptId);
+      });
     });
   });
-});
+</script>
 
---> 
 
     </div>
   </main>
