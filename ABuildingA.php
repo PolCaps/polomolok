@@ -2,69 +2,83 @@
 session_start();
 include("database_config.php");
 
-// Create connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+try {
+    // Create connection
+    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+    // Check connection
+    if ($conn->connect_error) {
+        throw new Exception("Connection failed: " . $conn->connect_error);
+    }
 
-// SQL query to get stall information and vendor usernames
-$sql = "SELECT s.*, v.username AS username
-        FROM stalls s
-        JOIN vendors v ON s.vendor_id = v.vendor_id";
+    // SQL query to get stall information and vendor usernames
+    $sql = "SELECT s.stall_no AS stall_no, s.stall_status AS status, v.username AS username
+            FROM stalls s
+            LEFT JOIN vendors v ON s.vendor_id = v.vendor_id";
 
-$result = $conn->query($sql);
+    $result = $conn->query($sql);
 
-if ($result === false) {
-  die("Error executing query: " . $conn->error);
-}
+    if ($result === false) {
+        throw new Exception("Error executing query: " . $conn->error);
+    }
 
-$vendors = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $stall_no = $row['stall_no'];
-        $status = $row['stall_status'];
-        
-        if (!empty($stall_no)) {
-          $vendors[$stall_no] = [
-            'status' => $row['stall_status'],
-            'username' => $row['username']
-            ];
-        } else {
-          echo $vendors[$stall_no] = [
-                'status' => 'Vacant',
-                'username' => 'N/A'
+    $vendors = [];
+
+    if ($result->num_rows > 0) {
+        while ($row = $result->fetch_assoc()) {
+            $stall_no = $row['stall_no'];
+            $status = $row['status'];
+            $username = $row['username'];
+
+            if (!empty($row['status']) && $row['status'] == 'Occupied') {
+                $status = 'Occupied';
+                $username = $row['username'];
+            } elseif(!empty($row['status']) && $row['status'] == 'Vacant') {
+                $status = 'Vacant';
+                $username = 'NON';
+            }elseif(empty($row['stall_no'])){
+              $status = 'No Stalls Available';
+            }
+
+            $vendors[$stall_no] = [
+                'status' => $status,
+                'username' => $username
             ];
         }
+    } else {
+        echo "No results found.";
     }
-} else {
-  echo "No results found.";
+
+    // Debugging output
+    // echo "<pre>";
+    // print_r($vendors);
+    // echo "</pre>";
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pathId'])) {
+        $pathId = $_POST['pathId'];
+
+        if (array_key_exists($pathId, $vendors)) {
+            $status_info = $vendors[$pathId];
+            echo json_encode($status_info);  
+        } elseif(array_key_exists($pathId,empty($vendors))){
+          echo json_encode(['error']);
+        }else {
+            echo json_encode(['status' => 'Vacant', 'username' => 'NON']);
+        }
+
+        exit;
+    }
+
+} catch (Exception $e) {
+    echo "Error: " . $e->getMessage();
+} finally {
+    // Close the database connection
+    if (isset($conn)) {
+     //   $conn->close();
+    }
 }
-
-// Debugging output
-  // echo "<pre>";
-  // print_r($vendors);
-  // echo "</pre>";
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pathId'])) {
-  $pathId = $_POST['pathId'];
-
-  if (array_key_exists($pathId, $vendors)) {
-    $status_info = $vendors[$pathId];
-    echo json_encode($status_info);
-} else {
-    echo json_encode(['VACANT']);
-}
-
-  //$stmt->close();
-  //$conn->close();
-  exit;
-}
-
-
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -2135,344 +2149,357 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pathId'])) {
                 <path transform="matrix(.16 0 0 -.16 2.6667 1585.3)" d="m563 1406h8l-4-25z" style="fill:#0f0;stroke-linecap:round;stroke-miterlimit:10;stroke:#0f0"/>
               </g>
 
-              <?php// foreach ($vendors as $stall_no => $status_info): ?>
+               <?php foreach ($vendors as $stall_no => $status_info): ?>
+               <?php
+             //  $status = $status_info['status'];
+
+            //    if ($status == 'Occupied') {
+                 $display_status = 'Occupied';
+            // } elseif($status == 'Vacant'){
+            //   $display_status = 'Vacant';
+            // } elseif(empty($status)) {
+            //     $display_status = 'error';
+            // }
+              ?>
               
             
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>" onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>" onclick="checkStall(this)">
                 <g>
                   <path id="1" d="m234.12 1330.3-1.4452 35.406 66.477-2.1677 0.72258-83.096z" style="opacity:0"/>
                 </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>" onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>" onclick="checkStall(this)">
 
                 <g>
-                  <path id="2" d="m299.87 1297.7-1.4452 67.922 101.16-0.7225-0.72258-65.032z<?php echo $path; ?>" style="opacity:0"/>
+                  <path id="2" d="m299.87 1297.7-1.4452 67.922 101.16-0.7225-0.72258-65.032z" style="opacity:0"/>
                 </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
-                <path id="4" d="m661.88 1279.7-0.72258 84.542 101.16 2.1677-2.1677-86.709z<?php echo $path; ?>" style="opacity:0"/>
+                <path id="4" d="m661.88 1279.7-0.72258 84.542 101.16 2.1677-2.1677-86.709z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
-                <path id="5" d="m760.87 1300.6 2.1677 64.309 97.548 0.7225-2.8903-67.2z<?php echo $path; ?>" style="opacity:0"/>
+                <path id="5" d="m760.87 1300.6 2.1677 64.309 97.548 0.7225-2.8903-67.2z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="6" d="m859.87 1279v86.709l68.645 0.7226-2.1677-35.406z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="7" d="m760.87 1221.2v76.593l99.716 1.4452v-18.787l-62.142-60.696z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="8" d="m661.16 1277.5 96.825 0.7226 0.72258-58.529-97.548-0.7226z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="9" d="m402.48 1219-2.1677 78.038 97.548 0.7225 1.4452-75.871z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="10" d="m301.31 1279.7v18.787l97.548-0.7226v-79.484l-35.406 2.8903z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="11" d="m365.62 1183.6 62.864-65.032h22.4l0.72258 62.142z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="12" d="m450.89 1183.6v-65.755l64.309 0.7226 2.1677 65.755z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="13" d="m661.88 1119.3v64.309l49.858-1.4452-2.1677-63.587z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="14" d="m712.46 1119.3-0.72258 63.587 85.264 1.4452-61.419-65.755z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="15" d="m927.07 1179.2 0.72258 101.88 64.309 1.4451 1.4452-101.16z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="16" d="m927.07 1081 0.72258 99.716 66.477 0.7226v-103.33z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="17" d="m927.79 981.26s-4.3355 98.993-1.4452 98.271 68.645 0 68.645 0l-1.4452-100.44z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display-status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="18" d="m929.96 884.43-2.8903 95.38 70.813-1.4452-0.72258-96.103z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="19" d="m928.51 781.83 0.72258 95.38 64.309 2.1677 0.72258-98.993z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="20" d="m928.51 583.12c5.7806 80.206 0 98.993 0 98.993h65.032l-1.4452-101.16z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="21" d="m928.51 481.24v100.44l63.587-0.72258 0.72257-98.993z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="22" d="m926.34 382.24 2.1677 98.271s65.032 10.839 65.032 0.72257c0-10.116-2.8903-98.993-2.8903-98.993z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="23" d="m928.51 283.97-1.4452 96.103s71.535 5.058 71.535 0.72258c0-4.3355-1.4452-97.548-1.4452-97.548z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="24" d="m859.14 1177.8v47.69l67.922 54.916-1.4452-101.16z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="25" d="m859.87 1079.5v98.993l67.2 1.4452-0.72257-99.716z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($displaya_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="26" d="m859.87 980.54 2.1677 98.993 65.032-1.4451 1.4452-99.716z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="27" d="m859.87 880.82 0.72258 98.993 68.645-0.72258-1.4452-98.993z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="28" d="m859.87 783.27 0.72258 96.825h68.645l-2.1677-98.993z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="29" d="m860.59 580.23-0.72258 101.16 66.477-2.1677 3.6129-96.825z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="30" d="m859.14 480.51 0.72258 101.16 66.477-0.72258-0.72258-98.993z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="31" d="m859.87 381.52 1.4452 99.716 67.2 1.4452-1.4452-101.88z" style="opacity:0"/>
               </g>
+              </a>
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="32" d="m859.87 284.7v94.658l67.2 4.3355v-100.44z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="33" d="m927.79 184.26v99.716l67.922-2.1677-1.4452-98.993z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="34" d="m862.04 181.37-2.8903 101.88s64.309 2.1677 65.755-2.1677c1.4452-4.3355 6.5032-98.271 1.4452-98.271-5.058 0-64.309-1.4452-64.309-1.4452z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($Display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="35" d="m730.53 184.26 1.4452 98.993s36.851 2.8903 38.297 0c1.4452-2.8903 40.464-31.793 40.464-35.406s0.72258-65.755 0.72258-65.755z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="36" d="m651.76 182.81 0.72258 101.16s75.871 2.8903 75.871-1.4452c0-4.3355 2.1677-100.44 2.1677-100.44z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="37" d="m524.59 184.26v98.993h72.258l2.1677-101.88z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="38" d="m421.99 185.7v99.716l68.645-2.8903-0.72258-99.716z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="39" d="m349.73 183.53 1.4452 63.587 32.516 36.851s37.574 3.6129 37.574 0.72258-2.8903-102.61-2.8903-102.61z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="40" d="m231.22 180.64 1.4452 101.88 67.922 1.4452-0.72258-102.61z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="41" d="m166.92 182.81v102.61l62.864-2.1677 1.4452-101.16z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="42" d="m164.75 283.25c-5.058 70.09 0.72258 96.103 0.72258 96.103l65.755 2.8903-1.4452-97.548z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="43" d="m166.19 384.41v99.716l67.2-2.1677-0.72258-98.993z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="44" d="m166.19 485.57-0.72257 96.825 66.477-1.4452v-98.993z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="45" d="m166.19 583.12 0.72258 97.548s65.032 3.6129 66.477 0.72257c1.4452-2.8903-1.4452-96.103-1.4452-96.103z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="46" d="m166.19 782.55c5.058 46.245-1.4452 96.103-1.4452 96.103s67.2 5.7806 68.645 2.1677c1.4452-3.6129-2.8903-99.716-2.8903-99.716z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="47" d="m166.92 882.99 1.4452 95.38s64.309 2.1677 64.309-0.72258 0.72258-96.103 0.72258-96.103z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="48" d="m165.47 981.26v98.271l67.922-1.4451-0.72258-98.993z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="49" d="m167.64 1078.8-0.72258 100.44 67.922-1.4451-2.8903-95.38z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="50" d="m166.92 1182.1-2.1677 97.548s70.09 3.6129 70.09-1.4451v-99.716z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="51" d="m234.84 282.53-2.1677 98.993s69.367 10.839 69.367 0v-98.271z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="52" d="m234.84 383.69v98.993l64.309-2.8903 0.72258-98.271z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="53" d="m232.67 484.13 2.1677 96.825 63.587 0.72258v-100.44z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="54" d="m234.12 583.84-0.72258 97.548 67.2-0.72257 1.4452-98.993z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="55" d="m232.67 783.27 2.8903 98.993 64.309-2.8903-0.72258-97.548z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="56" d="m232.67 880.82 0.72258 101.16s69.367 2.1677 68.645-2.1677c-0.72258-4.3355-2.1677-99.716-2.1677-99.716z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="57" d="m232.67 981.98 0.72258 99.716s65.032 2.8904 66.477-2.8903c1.4452-5.7806 3.6129-99.716 3.6129-99.716z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="58" d="m234.84 1080.3-0.72258 101.16s68.645 2.1677 68.645-0.7226v-101.16z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="59" d="m231.95 1179.2s-2.1677 104.05 0.72257 101.16 65.755-54.193 68.645-56.361c2.8903-2.1677-1.4452-44.8-1.4452-44.8z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="60" d="m333.83 1078.8 3.6129 77.316 37.574-37.574 0.72257-40.464z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="61" d="m335.28 1000.8-0.72258 78.761 64.309-2.1677 1.4452-75.871z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="62" d="m338.17 922.73-2.1677 75.871 66.477 1.4452-1.4452-75.871z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="63" d="m445.11 314.32 2.8903 67.922s88.877 5.058 88.877 0v-62.864z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="64" d="m538.32 314.32s-5.058 70.09-1.4452 68.645c3.6129-1.4452 77.316-0.72258 77.316-0.72258l-0.72258-65.032z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="65" d="m615.64 315.04-2.8903 66.477h97.548l-1.4452-67.922z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="66" d="m759.43 923.45v78.038l62.142-2.1677-1.4452-76.593z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="67" d="m755.82 1001.5s-5.058 79.484 0 77.316c5.058-2.1677 64.309-0.7225 64.309-0.7225l-0.72258-78.038z" style="opacity:0"/>
               </g>
               </a>
-              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($status); ?>"onclick="checkStall(this)">
+              <a href="javascript:void(0);" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="custom-tooltip" data-bs-title="<?php echo htmlspecialchars($display_status); ?>"onclick="checkStall(this)">
               <g>
                 <path id="68" d="m781.11 1080.3 2.8903 38.297 36.851 36.852 2.1677-79.484z" style="opacity:0"/>
               </g>
               </a>
-              <?php// endforeach; ?>
+              <?php endforeach; ?>
               </svg>
 
               <script>
