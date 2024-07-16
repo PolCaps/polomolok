@@ -333,43 +333,77 @@ $result = $conn->query($sql);
                     </div>
                 </div>
             </div>
+            <style>
+            .message {
+                max-width: 200px; /* Set the maximum width for the message */
+                overflow: hidden; /* Hide the overflowed content */
+                text-overflow: ellipsis; /* Add the ellipsis for overflowed content */
+                white-space: nowrap; /* Prevent text from wrapping to the next line */
+            }
+            </style>
             <div class="card-body px-0 pb-2">
                 <div class="table-responsive">
-                    <table class="table align-items-center mb-0">
-                        <thead>
-                            <tr>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email Address</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
-                                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            if ($result->num_rows > 0) {
-                                while($row = $result->fetch_assoc()) {
-                                    echo "<tr>";
-                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["name"] . "</td>";
-                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["email_add"] . "</td>";
-                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["subject"] . "</td>";
-                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["message"] . "</td>";
-                                    echo "<td class='text-center text-xs font-weight-bold mb-0'>" . $row["sent_date"] . "</td>";
-                                    echo "</tr>";
-                                }
-                            } else {
-                                echo "<tr><td colspan='5' class='text-center text-xs font-weight-bold mb-0'>No inquiries found</td></tr>";
-                            }
-                            $conn->close();
-                            ?>
-                        </tbody>
-                    </table>
+                <table class="table align-items-center mb-0">
+                      <thead>
+                          <tr>
+                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email Address</th>
+                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
+                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
+                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
+                          </tr>
+                      </thead>
+                      <tbody>
+                          <?php
+                          if ($result->num_rows > 0) {
+                              while($row = $result->fetch_assoc()) {
+                                  echo "<tr>";
+                                  echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["name"]) . "</td>";
+                                  echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["email_add"]) . "</td>";
+                                  echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["subject"]) . "</td>";
+                                  echo "<td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='" . htmlspecialchars($row["message"]) . "'>" . htmlspecialchars(substr($row["message"], 0, 50)) . "...</td>";
+                                  echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["sent_date"]) . "</td>";
+                                  echo "</tr>";
+                              }
+                          } else {
+                              echo "<tr><td colspan='5' class='text-center text-xs font-weight-bold mb-0'>No inquiries found</td></tr>";
+                          }
+                          $conn->close();
+                          ?>
+                      </tbody>
+                  </table>
                 </div>
             </div>
         </div>
     </div>
-</div>
+  </div>
     </div>
+<!-- Bootstrap Modal -->
+          <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
+                      <div class="modal-header">
+                          <h5 class="modal-title" id="messageModalLabel">Message Details</h5>
+                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                          <p id="messageContent"></p>
+                      </div>
+                  </div>
+              </div>
+          </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const messageModal = document.getElementById('messageModal');
+            messageModal.addEventListener('show.bs.modal', (event) => {
+                const button = event.relatedTarget; // Button that triggered the modal
+                const message = button.getAttribute('data-message'); // Extract info from data-* attributes
+                const modalBody = messageModal.querySelector('.modal-body #messageContent');
+                modalBody.textContent = message; // Update the modal's content.
+            });
+        });
+    </script>
+
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" href="#">
