@@ -706,10 +706,12 @@ session_start()
                 <div class="col-md-12">
                 
                   <div class="form-floating mb-3">
-                    <textarea class="form-control" name="message" rows="6" placeholder="Message" id="message" required></textarea>
+                    <textarea class="form-control" style="height: 150px" name="message" placeholder="Message" id="message" required></textarea>
                     <label for="message">Message</label>
                   </div>
                   
+                  
+
                 </div>
 
                 <div class="col-md-12 text-center">
@@ -719,14 +721,14 @@ session_start()
                 <?php echo $_SESSION['alert_message']; ?>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
-            <?php
-            unset($_SESSION['alert_class']);
-            unset($_SESSION['alert_message']);
-            ?>
-        <?php endif; ?>
+                  <?php
+                  unset($_SESSION['alert_class']);
+                  unset($_SESSION['alert_message']);
+                  ?>
+                  <?php endif; ?>
                 
 
-                  <button type="submit" class="btn btn-warning">Send Message</button>
+                <button type="submit" class="btn btn-warning text-white">Send Message</button>
                 </div>
 
               </div>
