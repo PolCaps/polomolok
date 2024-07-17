@@ -17,6 +17,9 @@ session_start()
   <!-- <link href="assets/img/favicon.png" rel="icon"> -->
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   
   <!-- Fonts -->
   <link href="https://fonts.googleapis.com" rel="preconnect">
@@ -698,6 +701,7 @@ session_start()
         </div>
 
     </section><!-- /Services Section -->
+  
 
     <!-- Call To Action Section -->
     <section id="call-to-action" class="call-to-action section">
@@ -708,12 +712,16 @@ session_start()
             <div class="text-center">
               <h3>Interested In Owning a stall?</h3>
               <p>Occupy the stalls with your own liking!</p>
-              <a class="cta-btn" href="#contact">Click Here</a>
+              <a class="cta-btn" data-bs-toggle="modal" data-bs-target="#vendorApplicationModal">Click Here</a>
             </div>
           </div>
         </div>
       </div>
+      
 
+      
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     </section><!-- /Call To Action Section -->
 
     </section><!-- /Faq Section -->
@@ -820,6 +828,7 @@ session_start()
 
                 <button type="submit" class="btn btn-warning text-white">Send Message</button>
                 </div>
+                
 
               </div>
             </form>
@@ -827,18 +836,163 @@ session_start()
     <!-- Include Bootstrap JS and Popper.js for toast functionality -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.11.8/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-    <script>
-        // Initialize toast on page load
-        document.addEventListener('DOMContentLoaded', function () {
-            const toastEl = document.getElementById('liveToast');
-            if (toastEl) {
-                const toast = new bootstrap.Toast(toastEl);
-                toast.show();
-            }
-        });
-    </script>
+
         </div>
       </div>
+
+      <div class="modal fade" id="vendorApplicationModal" tabindex="-1" aria-labelledby="vendorApplicationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="vendorApplicationModalLabel">Rent Application Form</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="vendorApplicationForm" action="submit_application.php" method="POST">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <!-- Personal Details -->
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="first_name">First Name:</label>
+                                    <input type="text" id="first_name" class="form-control" name="first_name" required>
+                                    <div class="invalid-feedback">Please enter your first name.</div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="middle_name">Middle Name:</label>
+                                    <input type="text" id="middle_name" class="form-control" name="middle_name">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="last_name">Last Name:</label>
+                                    <input type="text" id="last_name" class="form-control" name="last_name" required>
+                                    <div class="invalid-feedback">Please enter your last name.</div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="contact_number">Contact Number:</label>
+                                    <input type="tel" id="contact_number" class="form-control" name="contact_number" required>
+                                    <div class="invalid-feedback">Please enter your contact number.</div>
+                                </div>
+                            </div>
+                            <!-- Business Details -->
+                            <div class="col-md-6">
+                                <div class="form-group mb-3">
+                                    <label for="age">Age:</label>
+                                    <input type="number" id="age" class="form-control" name="age">
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="email">Email:</label>
+                                    <input type="email" id="email" class="form-control" name="email" required>
+                                    <div class="invalid-feedback">Please enter your email.</div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="address">Address:</label>
+                                    <textarea id="address" name="address" class="form-control" required></textarea>
+                                    <div class="invalid-feedback">Please enter your address.</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-primary d-flex align-items-center" role="alert">
+                                    <i class="bi bi-exclamation-circle-fill me-2"></i>
+                                    <div>
+                                        Submitting the form will download the rent application. Please fill it up and submit it online to our email address or walk into our office.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="alert alert-warning d-flex align-items-center" role="alert">
+                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                                    <div>
+                                        Filling up this form does not reserve a stall booth and doesn't guarantee that you will occupy the stall. Please Message us for clarification and inquiries.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
+            <div id="alertContainer"></div>
+                <button type="button" class="btn btn-primary text-white" id="submitApplicationBtn">Submit Application</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="alertContainer"></div>
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- Include jQuery (if not already included) -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    $('#submitApplicationBtn').click(function(e) {
+        e.preventDefault();
+
+        // Clear previous alerts
+        $('#alertContainer').empty();
+
+        // Submit form via AJAX
+        var formData = $('#vendorApplicationForm').serialize();
+
+        $.ajax({
+            type: 'POST',
+            url: $('#vendorApplicationForm').attr('action'),
+            data: formData,
+            dataType: 'json',
+            success: function(response) {
+                if(response.success) {
+                    // Success alert
+                    $('#alertContainer').append(`
+                        <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <strong>Success!</strong> Application submitted successfully. Please download and fill the rent application form.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `);
+
+                    // Trigger file download
+                    var downloadUrl = 'DocumentFiles/RentApplication.docx'; // Replace with the actual path to the file
+                    var a = document.createElement('a');
+                    a.href = downloadUrl;
+                    a.download = 'RentApplication.docx';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    document.getElementById('vendorApplicationForm').reset();
+                } else {
+                    // Error alert
+                    $('#alertContainer').append(`
+                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <strong>Error!</strong> ${response.message}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                    `);
+                }
+            },
+            error: function(jqXHR, textStatus, errorThrown) {
+                // AJAX error alert
+                $('#alertContainer').append(`
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <strong>Error!</strong> An error occurred. Please try again.
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                `);
+                console.error('AJAX error:', textStatus, errorThrown);
+            }
+        });
+    });
+});
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+
 
     </section><!-- /Contact Section -->
 
@@ -900,6 +1054,7 @@ session_start()
 
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
 
   <!-- Preloader -->
   <div id="preloader"></div>
