@@ -369,7 +369,7 @@ session_start()
         <div class="announcement-item">
           <p>
             <i class="bi bi-quote quote-icon-left"></i>
-            <span>Check out our latest events happening this week!</span>
+            <span>Notice of vacant stalls on Building E!</span>
             <i class="bi bi-quote quote-icon-right"></i>
           </p>
           <img src="image/notice.jpg" class="announcement-img" alt="Event 1" style="width: 220px; height: 280px;" >
@@ -382,7 +382,7 @@ session_start()
         <div class="announcement-item">
           <p>
             <i class="bi bi-quote quote-icon-left"></i>
-            <span>Important updates about our services.</span>
+            <span>Notice of vacant stalls on Building J!</span>
             <i class="bi bi-quote quote-icon-right"></i>
           </p>
           <img src="image/notice.jpg" class="announcement-img" alt="Update 1" style="width: 220px; height: 280px;">
@@ -395,7 +395,7 @@ session_start()
         <div class="announcement-item">
           <p>
             <i class="bi bi-quote quote-icon-left"></i>
-            <span>Join us for our upcoming webinar.</span>
+            <span>Notice of vacant stalls on Building C!</span>
             <i class="bi bi-quote quote-icon-right"></i>
           </p>
           <img src="image/notice.jpg" class="announcement-img" alt="Webinar" style="width: 220px; height: 280px;">
@@ -403,6 +403,32 @@ session_start()
           <h4>Building C</h4>
         </div>
       </div><!-- End announcement item -->
+
+      <div class="swiper-slide">
+        <div class="announcement-item">
+          <p>
+            <i class="bi bi-quote quote-icon-left"></i>
+            <span>Notice of vacant stalls on Building D!</span>
+            <i class="bi bi-quote quote-icon-right"></i>
+          </p>
+          <img src="image/notice.jpg" class="announcement-img" alt="Webinar" style="width: 220px; height: 280px;">
+          <h3>stall 4</h3>
+          <h4>Building D</h4>
+        </div>
+      </div>
+
+      <div class="swiper-slide">
+        <div class="announcement-item">
+          <p>
+            <i class="bi bi-quote quote-icon-left"></i>
+            <span>Notice of vacant stalls on Building A!</span>
+            <i class="bi bi-quote quote-icon-right"></i>
+          </p>
+          <img src="image/notice.jpg" class="announcement-img" alt="Webinar" style="width: 220px; height: 280px;">
+          <h3>stall 6</h3>
+          <h4>Building A</h4>
+        </div>
+      </div>
 
       <!-- Add more announcements as needed -->
 
