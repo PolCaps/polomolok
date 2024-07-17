@@ -241,6 +241,7 @@ session_start()
         </p>
       </div><!-- End Section Title -->
 
+
       <div class="container">
 
         <div class="row gy-4">
@@ -320,6 +321,95 @@ session_start()
         </div>
       </div>
     </section>
+
+
+    <!-- Announcements Section -->
+<section id="announcements" class="announcements section">
+
+<!-- Section Title -->
+<div class="container section-title" data-aos="fade-up">
+  <h2>Announcements</h2>
+  <p>Stay updated with the latest news and events</p>
+</div><!-- End Section Title -->
+
+<div class="container" data-aos="fade-up" data-aos-delay="100">
+
+  <div class="swiper" data-speed="600" data-delay="5000" data-breakpoints="{ &quot;320&quot;: { &quot;slidesPerView&quot;: 1, &quot;spaceBetween&quot;: 40 }, &quot;1200&quot;: { &quot;slidesPerView&quot;: 3, &quot;spaceBetween&quot;: 40 } }">
+    <script type="application/json" class="swiper-config">
+      {
+        "loop": true,
+        "speed": 600,
+        "autoplay": {
+          "delay": 5000
+        },
+        "slidesPerView": "auto",
+        "pagination": {
+          "el": ".swiper-pagination",
+          "type": "bullets",
+          "clickable": true
+        },
+        "breakpoints": {
+          "320": {
+            "slidesPerView": 1,
+            "spaceBetween": 40
+          },
+          "1200": {
+            "slidesPerView": 3,
+            "spaceBetween": 20
+          }
+        }
+      }
+    </script>
+    <div class="swiper-wrapper">
+
+      <div class="swiper-slide">
+        <div class="announcement-item">
+          <p>
+            <i class="bi bi-quote quote-icon-left"></i>
+            <span>Check out our latest events happening this week!</span>
+            <i class="bi bi-quote quote-icon-right"></i>
+          </p>
+          <img src="image/notice.jpg" class="announcement-img" alt="Event 1" style="width: 220px; height: 280px;" >
+          <h3>Stall 1</h3>
+          <h4>Building E</h4>
+        </div>
+      </div><!-- End announcement item -->
+
+      <div class="swiper-slide">
+        <div class="announcement-item">
+          <p>
+            <i class="bi bi-quote quote-icon-left"></i>
+            <span>Important updates about our services.</span>
+            <i class="bi bi-quote quote-icon-right"></i>
+          </p>
+          <img src="image/notice.jpg" class="announcement-img" alt="Update 1" style="width: 220px; height: 280px;">
+          <h3>stall 22</h3>
+          <h4>Building J</h4>
+        </div>
+      </div><!-- End announcement item -->
+
+      <div class="swiper-slide">
+        <div class="announcement-item">
+          <p>
+            <i class="bi bi-quote quote-icon-left"></i>
+            <span>Join us for our upcoming webinar.</span>
+            <i class="bi bi-quote quote-icon-right"></i>
+          </p>
+          <img src="image/notice.jpg" class="announcement-img" alt="Webinar" style="width: 220px; height: 280px;">
+          <h3>stall 67</h3>
+          <h4>Building C</h4>
+        </div>
+      </div><!-- End announcement item -->
+
+      <!-- Add more announcements as needed -->
+
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
+
+</div>
+</section><!-- End Announcements Section -->
+
     
     <!-- Testimonials Section -->
     <section id="testimonials" class="testimonials section">

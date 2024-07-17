@@ -1,5 +1,12 @@
 <?php
 session_start();
+if (!isset($_SESSION['id'])) {
+  header("Location: index.php");
+  exit();
+}
+// Get the vendor ID from the session
+$user_id = $_SESSION['id'];
+
 include("database_config.php");
 
 try {
@@ -53,6 +60,23 @@ try {
     //  echo "<pre>";
     //  print_r($vendors);
     //  echo "</pre>";
+
+    $sqluser = "SELECT * FROM users WHERE id = ?";
+    $stmt = $conn->prepare($sqluser);
+    $stmt = $conn->prepare($sqluser);
+    if ($stmt === false) {
+        die("Prepare failed: " . $conn->error);
+    }
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $user = $result->fetch_assoc();
+    
+    // Check if vendor data is retrieved
+    if (!$user) {
+        die("No User found with ID " . htmlspecialchars($user_id));
+    }
+
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['pathId'])) {
         $pathId = $_POST['pathId'];
@@ -164,10 +188,10 @@ try {
           <div class="collapse" id="collapseMaps">
             <div class="right-aligned-links" style="text-align: right;">
               <a class="nav-link active" href="ABuildingA.php">Building A</a>
-              <a class="nav-link" href="ABuildingB.html">Building B</a>
-              <a class="nav-link" href="ABuildingC.html">Building C</a>
-              <a class="nav-link" href="ABuildingD.html">Building D</a>
-              <a class="nav-link" href="ABuildingE.html">Building E</a>
+              <a class="nav-link" href="ABuildingB.php">Building B</a>
+              <a class="nav-link" href="ABuildingC.php">Building C</a>
+              <a class="nav-link" href="ABuildingD.php">Building D</a>
+              <a class="nav-link" href="ABuildingE.php">Building E</a>
               <a class="nav-link" href="ABuildingF.html">Building F</a>
               <a class="nav-link" href="ABuildingG.html">Building G</a>
               <a class="nav-link" href="ABuildingH.html">Building H</a>
@@ -219,7 +243,7 @@ try {
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link  " href="AMRelocationRequest">
+          <a class="nav-link  " href="AMRelocationRequest.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <img src="image/icons/icons8-kiosk-on-wheels-48.png" alt="relocationimg" width="18px" height="18px">
             </div>
@@ -244,7 +268,7 @@ try {
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center"><?php echo $vendors['username'];?></h5>
+          <h5 class="text-center"><?php echo $user['username'];?></h5>
           <hr class="horizontal dark mt-0">
         </div>
       </div>
@@ -2159,16 +2183,16 @@ try {
                     }
 
                     // SQL query to get stall information and vendor usernames
-                    $sql = "SELECT stall_no , stall_status AS status FROM stalls";
+                    $sqlstall = "SELECT stall_no , stall_status AS status FROM stalls";
 
-                    $result = $conn->query($sql);
+                    $resultstall = $conn->query($sqlstall);
 
-                    if ($result === false) {
+                    if ($resultstall === false) {
                         throw new Exception("Error executing query: " . $conn->error);
                     }
 
                     $display_status='';
-                      while ($row = $result->fetch_assoc()) {
+                      while ($row = $resultstall->fetch_assoc()) {
                           $stall_no = $row['stall_no'];
                           $status = $row['status'];
 
@@ -2547,7 +2571,7 @@ try {
     <div class="card shadow-lg">
       <div class="card-header pb-0 pt-3">
         <div class="float-start">
-          <h5 class="mt-3 mb-0"><?php echo $row['admin_name'];?></h5>
+          <h5 class="mt-3 mb-0"><?php echo $user['username'];?></h5>
           <p>Admin</p>
         </div>
         <div class="float-end mt-4">

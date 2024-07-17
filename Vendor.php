@@ -66,6 +66,9 @@ if (!$vendor) {
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+ 
+
 
 
 </head>
@@ -538,15 +541,80 @@ if (isset($_POST['submit'])) {
         </div>
         <!-- End Toggle Button -->
       </div>
-      <hr class="horizontal dark my-1">
-      <div class="card-body pt-sm-3 pt-0">
-        <a class="btn bg-gradient-info w-85 text-white mx-4" href="#">Edit Profile</a>
-        <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
-        <hr class="horizontal dark my-1">
-        <div class="text-small">Fixed Navbar</div>
-      <div class="form-check form-switch ps-0">
-        <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+       <!-- Edit Profile Button -->
+  <div class="card-body pt-sm-3 pt-0">
+    <a class="btn bg-gradient-info w-85 text-white mx-4" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</a>
+    <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
+    <hr class="horizontal dark my-1">
+    <div class="text-small">Fixed Navbar</div>
+    <div class="form-check form-switch ps-0">
+      <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="false">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="createVendorForm" action="process_formVendor.php" method="POST" enctype="multipart/form-data">
+            <div class="form-group mb-3">
+              <label for="first_name">First Name:</label>
+              <input type="text" id="first_name" class="form-control" name="first_name" required>
+            </div>
+            <div class="form-group mb-3">
+              <label for="middle_name">Middle Name:</label>
+              <input type="text" id="middle_name" class="form-control" name="middle_name">
+            </div>
+            <div class="form-group mb-3">
+              <label for="last_name">Last Name:</label>
+              <input type="text" id="last_name" class="form-control" name="last_name" required>
+            </div>
+            <div class="form-group mb-3">
+              <label for="age">Age:</label>
+              <input type="number" id="age" class="form-control" name="age">
+            </div>
+            <div class="form-group mb-3">
+              <label for="contact_no">Contact Number:</label>
+              <input type="tel" id="contact_no" name="contact_number" class="form-control">
+            </div>
+            <div class="form-group mb-3">
+              <label for="address">Address:</label>
+              <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
+            </div>
+            <div class="form-group mb-3">
+              <label for="email_add">Email Address:</label>
+              <textarea id="email_add" name="email_add" class="form-control"></textarea>
+            </div>
+            <div class="form-group mb-3">
+              <label for="lease_agreements">Lease Agreements:</label>
+              <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
+            </div>
+            <div class="form-group mb-3">
+              <label for="business_permits">Business Permits:</label>
+              <input type="file" id="business_permits" name="business_permits" class="form-control">
+            </div>
+            <div class="form-group mb-3">
+              <label for="business_licenses">Business Licenses:</label>
+              <input type="file" id="business_licenses" name="business_licenses" class="form-control">
+            </div>
+            <div class="modal-footer">
+              <button type="submit" name="submit" id="submit" class="btn btn-info">Create Vendor</button>
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+          </form>
+        </div>
       </div>
+    </div>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
       <br>
       <hr class="horizontal dark my-1">
       <br>
@@ -579,6 +647,7 @@ if (isset($_POST['submit'])) {
   </div>
 
   <!--   Core JS Files   -->
+ 
   <script src="assets2/js/core/popper.min.js"></script>
   <script src="assets2/js/core/bootstrap.min.js"></script>
   <script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
