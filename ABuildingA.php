@@ -314,6 +314,288 @@ try {
     </nav>
     <!-- End Navbar -->
     <div class="col-lg-14 px-5">
+    <div class="row">
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Occupied Stalls</p>
+                    <h5 class="font-weight-bolder mb-0">
+                      -----
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
+                    <i class="bi bi-shop text-lg opacity-10" aria-hidden="true"></i>
+
+                    <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-shop mt-2" viewBox="0 0 16 16" aria-hidden="true">
+                      <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Vacant</p>
+                    <h5 class="font-weight-bolder mb-0">
+                      -----
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor" class="bi bi-shop-window mt-2" viewBox="0 0 16 16">
+                    <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h12V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5m2 .5a.5.5 0 0 1 .5.5V13h8V9.5a.5.5 0 0 1 1 0V13a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5a.5.5 0 0 1 .5-.5"/>
+                  </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Stalls</p>
+                    <h5 class="font-weight-bolder mb-0">
+                    ------
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="currentColor" class="bi bi-file-ruled mt-2" viewBox="0 0 16 16">
+                    <path d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2zm2-1a1 1 0 0 0-1 1v4h10V2a1 1 0 0 0-1-1zm9 6H6v2h7zm0 3H6v2h7zm0 3H6v2h6a1 1 0 0 0 1-1zm-8 2v-2H3v1a1 1 0 0 0 1 1zm-2-3h2v-2H3zm0-3h2V7H3z"/>
+                  </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xl-3 col-sm-6">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">To be edit</p>
+                    <h5 class="font-weight-bolder mb-0">
+                      ------
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
+                    <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+        <br>
+        <div class="row mt-2 d-flex flex-column align-items-center">
+            <div class="d-flex flex-column py-3 px-3">
+              <p class="text-title mb-3">Actions</p>
+              <div class="d-flex align-items-center">
+                <button type="button" class="btn btn-info me-3" data-bs-toggle="modal" data-bs-target="#addVendorModal">
+                  Assign Vendor to Stall
+                </button>
+                <button type="button" class="btn btn-danger me-3" data-bs-toggle="modal" data-bs-target="#removeVendorModal">
+                  Remove Assigned Vendor
+                </button>
+                <nav aria-label="Page navigation example">
+                  <ul class="pagination mb-0">
+                    <p class="mt-1 px-3 text-info">Floors</p>
+                    <li class="page-item mx-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ground Floor">
+                      <a class="page-link" href="ABuildingA.php">1</a>
+                    </li>
+                    <li class="page-item mx-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Second Floor">
+                      <a class="page-link" href="ABuildingA2.php">2</a>
+                    </li>
+                  </ul>
+                </nav>
+              </div>
+            </div>
+          </div>
+      <br>
+      <div class="modal fade" id="addVendorModal" tabindex="-1" aria-labelledby="addVendorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="addVendorModalLabel">Assign Vendor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="addVendorForm" action="add_vendor.php" method="POST" enctype="multipart/form-data">
+            <div class="container-fluid">
+              <div class="row">
+                <!-- Stall Number -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="stall_no">Stall Number:</label>
+                    <input type="text" id="stall_no" name="stall_no" class="form-control" required>
+                    <div class="invalid-feedback">Please enter the stall number.</div>
+                  </div>
+                </div>
+                <!-- Building Type -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="building_type">Building Type:</label>
+                    <select id="building_type" name="building_type" class="form-control" required>
+                      <option value="">Select Building Type</option>
+                      <option value="Building A">Building A</option>
+                      <option value="Building B">Building B</option>
+                      <option value="Building C">Building C</option>
+                      <option value="Building D">Building D</option>
+                      <option value="Building E">Building E</option>
+                      <option value="Building F">Building F</option>
+                      <option value="Building G">Building G</option>
+                      <option value="Building H">Building H</option>
+                      <option value="Building I">Building I</option>
+                      <option value="Building J">Building J</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a building type.</div>
+                  </div>
+                </div>
+                <!-- Building Floor -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="building_floor">Building Floor:</label>
+                    <select id="building_floor" name="building_floor" class="form-control" required>
+                      <option value="Ground Floor"></option>
+                      <option value="Ground Floor">Ground Floor</option>
+                      <option value="Second Floor">Second Floor</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a building floor.</div>
+                  </div>
+                </div>
+                  <!-- Vendor ID -->
+                 <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="vendor_id">Vendor ID:</label>
+                    <input type="text" id="vendor_id" name="vendor_id" class="form-control" required>
+                    <div class="invalid-feedback">Please enter the vendor ID.</div>
+                  </div>
+                </div>
+                  <!-- Monthly Rental -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="started_date">Started Date:</label>
+                    <input type="datetime" id="started_date" name="started_date" class="form-control" required>
+                    <div class="invalid-feedback">Please enter the monthly rental.</div>
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="monthly_rental">Monthly Rental:</label>
+                    <input type="number" id="monthly_rental" name="monthly_rental" class="form-control" required>
+                    <div class="invalid-feedback">Please enter the monthly rental.</div>
+                  </div>
+                </div>
+
+
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
+          <button type="submit" form="addVendorForm" class="btn btn-info">Add Vendor</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="removeVendorModal" tabindex="-1" aria-labelledby="removeVendorModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="removeVendorModalLabel">Remove Assigned Vendor</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form id="removeVendorForm" action="remove_vendor.php" method="POST" enctype="multipart/form-data">
+            <div class="container-fluid">
+              <div class="row">
+                <!-- Stall Number -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="stall_no">Stall Number:</label>
+                    <input type="text" id="stall_no" name="stall_no" class="form-control" required>
+                    <div class="invalid-feedback">Please enter the stall number.</div>
+                  </div>
+                </div>
+                <!-- Building Type -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="building_type">Building Type:</label>
+                    <select id="building_type" name="building_type" class="form-control" required>
+                      <option value="">Select Building Type</option>
+                      <option value="Building A">Building A</option>
+                      <option value="Building B">Building B</option>
+                      <option value="Building C">Building C</option>
+                      <option value="Building D">Building D</option>
+                      <option value="Building E">Building E</option>
+                      <option value="Building F">Building F</option>
+                      <option value="Building G">Building G</option>
+                      <option value="Building H">Building H</option>
+                      <option value="Building I">Building I</option>
+                      <option value="Building J">Building J</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a building type.</div>
+                  </div>
+                </div>
+                <!-- Building Floor -->
+                <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="building_floor">Building Floor:</label>
+                    <select id="building_floor" name="building_floor" class="form-control" required>
+                      <option value="Ground Floor"></option>
+                      <option value="Ground Floor">Ground Floor</option>
+                      <option value="Second Floor">Second Floor</option>
+                    </select>
+                    <div class="invalid-feedback">Please select a building floor.</div>
+                  </div>
+                </div>
+                  <!-- Vendor ID -->
+                 <div class="col-md-6">
+                  <div class="form-group">
+                    <label for="vendor_id">Vendor ID:</label>
+                    <input type="text" id="vendor_id" name="vendor_id" class="form-control" required>
+                    <div class="invalid-feedback">Please enter the vendor ID.</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
+          <button type="submit" form="removeVendorForm" class="btn btn-danger">Remove Vendor</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+     <!-- Modal for Adding New Vendor -->
+     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <div class="col-lg-14 px-5">
           <div class="card z-index-2">
             <div class="card-header pb-0">
               <h6>Building A</h6>
