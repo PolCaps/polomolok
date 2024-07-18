@@ -2183,7 +2183,7 @@ try {
                     }
 
                     // SQL query to get stall information and vendor usernames
-                    $sqlstall = "SELECT stall_no , stall_status AS status FROM stalls";
+                    $sqlstall = "SELECT stall_no, stall_status AS status FROM stalls";
 
                     $resultstall = $conn->query($sqlstall);
 
