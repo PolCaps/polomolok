@@ -250,18 +250,26 @@ session_start()
         <div class="row gy-4">
 
           <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
-            <p>
-            Polomolok Public MarketPolomolok Public MarketPolomolok Public MarketPolomolok Public MarketPolomolok Public MarketPolomolok Public Market  
-            </p>
+            <h5>
+            Polomolok Public Market's Accessbilities:
+            </h5>
             <ul>
-              <li><i class="bi bi-check2-circle"></i> <span>We sells goods sheets</span></li>
+              <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible entrance</span></li>
+              <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible parking lot</span></li>
+              <li><i class="bi bi-check2-circle"></i> <span>Vendor sells goods sheets</span></li>
               <li><i class="bi bi-check2-circle"></i> <span>Good Things</span></li>
               <li><i class="bi bi-check2-circle"></i> <span>Yummy Foodies</span></li>
             </ul>
           </div>
 
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-            <p>Polomolok Public MarketPolomolok Public MarketPolomolok Public MarketPolomolok Public MarketPolomolok Public MarketPolomolok Public MarketPolomolok Public MarketPolomolok Public MarketPolomolok Public MarketPolomolok Public MarketPolomolok Public Market</p>
+            <p>OF ALL the places that I could have explored at my hometown, Polomolok, South Cotabato, 
+              I found myself exploring the public market. I am low key fascinated by public markets. 
+              Not many would think much about it but just a destination to go to find what they need 
+              to cook food or for the house. <br> <br>
+              However, what fascinates me about the public markets 
+              is its vital role in the local economy of a small town like Polomolok. Compared to other 
+              municipalities, in South Cotabato, Polomolok is not small. </p>
             <a href="#" class="read-more bg-warning"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
           </div>
 
@@ -483,12 +491,14 @@ session_start()
               <div class="testimonial-item" "="">
             <p>
               <i class=" bi bi-quote quote-icon-left"></i>
-                <span>Super clean and well-maintained. One of the best public markets in the province. Super cheap veggies and fruits from nearby farms. Market day is Saturday when the place is packed with vendors selling fresh produce from all over.</span>
+                <span>Probably everything you need here if you take in The whole market and night street market 
+                  too Get most of our veg here and sea foods too good prices. 
+                  good quality. Always feel safe even evening where money is concerned</span>
                 <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img src="image/review/avelmanansala.png" class="testimonial-img" alt="photo">
-                <h3>Avel Manansala</h3>
-                <h4>Influencer &amp; Blogger</h4>
+                <h3>Jeremy Collin</h3>
+                <h4>Local Guide</h4>
               </div>
             </div><!-- End testimonial item -->
 
@@ -496,12 +506,12 @@ session_start()
               <div class="testimonial-item">
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Export tempor illum tamen malis malis eram quae irure esse labore quem cillum quid malis quorum velit fore eram velit sunt aliqua noster fugiat irure amet legam anim culpa.</span>
+                  <span>My Hometown Public Market. Fresh produce, meat and fish are available here all throughout the week. The market is also consideraby clean and well maintained by the vendors and local government. It can be quite crowded during market days. Stalls and facilities are constantly improved by the local government.</span>
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img src="assets/img/testimonials/testimonials-2.jpg" class="testimonial-img" alt="">
-                <h3>Sara Wilsson</h3>
-                <h4>Designer</h4>
+                <h3>John Exim</h3>
+                <h4>Local Guide</h4>
               </div>
             </div><!-- End testimonial item -->
 
@@ -509,12 +519,12 @@ session_start()
               <div class="testimonial-item">
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Enim nisi quem export duis labore cillum quae magna enim sint quorum nulla quem veniam duis minim tempor labore quem eram duis noster aute amet eram fore quis sint minim.</span>
+                  <span>Somehow its clean than its neighboring public market in the province. You barely see any plastic trash around. They dont usually allow usage of plastic so better have your own eco bag or katsa bag or rattan basket. And practice minimum health standard, face mask, distancing and hand washing.</span>
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img src="assets/img/testimonials/testimonials-3.jpg" class="testimonial-img" alt="">
-                <h3>Jena Karlis</h3>
-                <h4>Store Owner</h4>
+                <h3>Tapsiness Happiness</h3>
+                <h4>Local Guide</h4>
               </div>
             </div><!-- End testimonial item -->
 
@@ -522,12 +532,13 @@ session_start()
               <div class="testimonial-item">
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Fugiat enim eram quae cillum dolore dolor amet nulla culpa multos export minim fugiat dolor enim duis veniam ipsum anim magna sunt elit fore quem dolore labore illum veniam.</span>
+                  <span>Polomolok Municipal Market is dubbed as the cleanest market, and I can't argue with that. The place is clean, organized the atmosphere is not chaotic, not like the other wet and dry market. I've been to many markets, and I can say no doubt why this place tagged, as one of the cleanest markets. 
+                    We had a nice experience, every time we visit this place during our stay in Polomolok South Cotobato.</span>
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
                 <img src="assets/img/testimonials/testimonials-4.jpg" class="testimonial-img" alt="">
-                <h3>Matt Brandon</h3>
-                <h4>Freelancer</h4>
+                <h3>HikeWithMyk</h3>
+                <h4>Local Guide</h4>
               </div>
             </div><!-- End testimonial item -->
 
@@ -535,12 +546,13 @@ session_start()
               <div class="testimonial-item">
                 <p>
                   <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Quis quorum aliqua sint quem legam fore sunt eram irure aliqua veniam tempor noster veniam sunt culpa nulla illum cillum fugiat legam esse veniam culpa fore nisi cillum quid.</span>
+                  <span>Super clean and well-maintained. One of the best public markets in the province. Super cheap veggies and fruits from nearby farms. Market day is Saturday when the place is packed with vendors selling fresh produce from all over.
+                  </span>
                   <i class="bi bi-quote quote-icon-right"></i>
                 </p>
-                <img src="assets/img/testimonials/testimonials-5.jpg" class="testimonial-img" alt="">
-                <h3>John Larson</h3>
-                <h4>Entrepreneur</h4>
+                <img src="image/review/avelmanansala.png" class="testimonial-img" alt="">
+                <h3>Avel Manansala</h3>
+                <h4>Influencer &amp; Blogger</h4>
               </div>
             </div><!-- End testimonial item -->
 
@@ -576,7 +588,8 @@ session_start()
               <a href="BuildingE.html" class="stretched-link">
                 <h3>Building A</h3>
               </a>
-              <p>Provident nihil minus qui consequatur non omnis maiores. Eos accusantium minus dolores iure perferendis tempore et consequatur.</p>
+              <p>Polomolok Gymnasium, Offices, <br>
+                and Commercial Stores</p>
             </div>
           </div><!-- End Service Item -->
 
@@ -669,7 +682,8 @@ session_start()
               <a href="service-details.html" class="stretched-link">
                 <h3>Building G</h3>
               </a>
-              <p>Non et temporibus minus omnis sed dolor esse consequatur. Cupiditate sed error ea fuga sit provident adipisci neque.</p>
+              <p> Seafoods, Fish, and <br>
+              Driedfish Section</p>
               <a href="service-details.html" class="stretched-link"></a>
             </div>
           </div><!-- End Service Item -->
@@ -685,7 +699,8 @@ session_start()
               <a href="service-details.html" class="stretched-link">
                 <h3>Building H</h3>
               </a>
-              <p>Cumque et suscipit saepe. Est maiores autem enim facilis ut aut ipsam corporis aut. Sed animi at autem alias eius labore.</p>
+              <p>Fruits, Dry Goods, Carenderias, <br>
+                and Retail Store</p>
               <a href="service-details.html" class="stretched-link"></a>
             </div>
           </div><!-- End Service Item -->
@@ -758,7 +773,7 @@ session_start()
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
         <h2>Contact</h2>
-        <p>Polomolok Public MarketPolomolok Public MarketPolomolok Public MarketPolomolok Public Market</p>
+        <p>look the overview of Public Market and Contact us for more inquiries </p>
       </div><!-- End Section Title -->
 
       <div class="container" data-aos="fade-up" data-aos-delay="100">
@@ -1033,10 +1048,10 @@ $(document).ready(function() {
             
             <span class="sitename">Polomolok Public Market</span>
           </a>
-          <p>Follow us on social medias accounts:</p>
+          <p>Follow us on social media account:</p>
           <div class="social-links d-flex ">
             <a href=""><i class="bi bi-twitter-x"></i></a>
-            <a href=""><i class="bi bi-facebook"></i></a>
+            <a href="https://www.facebook.com/profile.php?id=100084174512254"><i class="bi bi-facebook"></i></a>
             <a href=""><i class="bi bi-instagram"></i></a>
             <a href=""><i class="bi bi-linkedin"></i></a>
           </div>
