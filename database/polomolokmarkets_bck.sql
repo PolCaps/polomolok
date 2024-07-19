@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 16, 2024 at 04:43 PM
+-- Generation Time: Jul 17, 2024 at 01:42 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -73,7 +73,9 @@ CREATE TABLE `inquiry` (
 INSERT INTO `inquiry` (`inquirdy_id`, `name`, `email_add`, `subject`, `message`, `sent_date`) VALUES
 (1, 'Customer1', 'customer1@gmail.com', 'Inquiry', 'May watermelon po kayo?', '2024-07-14 22:03:52'),
 (2, 'Customer2', 'yusreadadulo123@gmail.com', 'Question', 'Ey ka muna ey?', '2024-07-14 22:04:17'),
-(10, 'Customer3', 'yusreadadulo123@gmail.com', 'Message', 'Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellusCras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellusCras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus', '2024-07-16 04:48:09');
+(10, 'Customer3', 'yusreadadulo123@gmail.com', 'Message', 'Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellusCras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellusCras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus', '2024-07-16 04:48:09'),
+(11, 'Romblon Mae Junimar', 'romblonjuniemar12@gmail.com', 'Inquire', 'how much po yung stalls nyo sa building A?', '2024-07-17 03:54:22'),
+(12, 'qwd', 'qwdq@lsefn.ck', 'qwd', 'qwd', '2024-07-17 10:17:12');
 
 -- --------------------------------------------------------
 
@@ -135,6 +137,46 @@ INSERT INTO `receipts` (`receipts_id`, `vendor_id`, `receipts`, `issued_date`) V
 (5, 27, '', '2024-07-16'),
 (6, 28, '', '2024-07-23'),
 (7, 29, '', '2024-07-16');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `rent_application`
+--
+
+CREATE TABLE `rent_application` (
+  `rent_app_id` int(11) NOT NULL,
+  `first_name` varchar(250) NOT NULL,
+  `middle_name` varchar(50) NOT NULL,
+  `last_name` varchar(250) NOT NULL,
+  `contact_no` bigint(20) NOT NULL,
+  `age` int(11) DEFAULT NULL,
+  `email` varchar(250) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `sent_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `rent_application`
+--
+
+INSERT INTO `rent_application` (`rent_app_id`, `first_name`, `middle_name`, `last_name`, `contact_no`, `age`, `email`, `address`, `sent_date`) VALUES
+(1, 'Prince', 'Jay', 'Sayre', 9171600383, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:15:27'),
+(2, 'Prince Jay', 'J', 'Sayre', 9171600383, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:15:27'),
+(3, 'Prince Jay', 'J', 'Sayre', 9171600383, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:15:27'),
+(4, 'Prince Jay', 'J', 'Sayre', 9171600383, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:15:27'),
+(5, 'Meil', 'Sheida', 'Panaguiton', 9171600383, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:16:29'),
+(6, 'Meil', 'Sheida', 'Panaguiton', 9171600383, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:24:58'),
+(7, 'Prince', 'aaa', 'dqw', 22323, 12, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:30:41'),
+(8, 'Prince', 'aaa', 'dqw', 22323, 12, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:31:01'),
+(9, 'Prince', 'Joy', 'Eryas', 9171600383, 52, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:32:49'),
+(10, 'Chua', 'Briar', 'Rose', 91823791, 52, 'chuabriar@gmail.com', 'damakao', '2024-07-17 11:34:36'),
+(11, 'wewew', 'wewewe', 'fewfewe', 234234, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:35:57'),
+(12, 'wewew', 'wewewe', 'fewfewe', 234234, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:39:12'),
+(13, 'Halu', 'Halu', 'Halu', 214214, 12, 'Halu@akbd.c', 'HaluHaluHaluHalu', '2024-07-17 11:39:31'),
+(14, '', '', '', 0, 0, '', '', '2024-07-17 11:39:47'),
+(15, '', '', '', 0, 0, '', '', '2024-07-17 11:39:51'),
+(16, 'wdq', 'wdq', 'wdq', 21412, 21, 'wdq@adw.c', 'wdqwdqwdq', '2024-07-17 11:40:21');
 
 -- --------------------------------------------------------
 
@@ -368,6 +410,12 @@ ALTER TABLE `receipts`
   ADD KEY `vendor_id` (`vendor_id`);
 
 --
+-- Indexes for table `rent_application`
+--
+ALTER TABLE `rent_application`
+  ADD PRIMARY KEY (`rent_app_id`);
+
+--
 -- Indexes for table `stalls`
 --
 ALTER TABLE `stalls`
@@ -401,7 +449,7 @@ ALTER TABLE `documents`
 -- AUTO_INCREMENT for table `inquiry`
 --
 ALTER TABLE `inquiry`
-  MODIFY `inquirdy_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `inquirdy_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `message`
@@ -420,6 +468,12 @@ ALTER TABLE `pagebuilder_table`
 --
 ALTER TABLE `receipts`
   MODIFY `receipts_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+
+--
+-- AUTO_INCREMENT for table `rent_application`
+--
+ALTER TABLE `rent_application`
+  MODIFY `rent_app_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `stalls`

@@ -1,4 +1,4 @@
-<?php
+ease <?php
 session_start();
 
 // Check if the user is logged in and is a vendor

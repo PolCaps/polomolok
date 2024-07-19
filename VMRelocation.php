@@ -253,39 +253,78 @@ $conn->close();
         </nav>
         <!-- End Navbar -->
         <div class="container-fluid py-4">
-
-          <div class="row my-4">
-            <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
-              <div class="card">
-                <div class="card-body px-0 pb-2">
-                  <div class="table-responsive">
-                    <table class="table align-items-center mb-0">
-                      <thead>
-                        <tr>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Vendor Name</th>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Lease Agreement</th>
-                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Business License</th>
-                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Business Permits</th>
-                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Other Supporting Documents</th>
-                        </tr>
-                      </thead>
-                      <tbody id="dataTableBody">
-                        <tr>
-                          <td class="align-middle text-center text-sm">Vendor 1</td>
-                          <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 1.pdf</a></td>
-                          <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 2.docx</a></td>
-                          <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 3.xlsx</a></td>
-                          <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 4.txt</a></td>
-                        </tr>
-                      </tbody>
-                    </table>
+        <div class="d-grid gap-2 d-md-block py-3 px-3">
+        <p class="text-title">Actions</p>
+        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#messageModal">
+          Open Form Modal
+        </button>
+        </div>
+        <div class="row my-4">
+        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
+          <div class="card">
+            <div class="card-header pb-0">
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <h6 class="mx-8 my-2">Relocation Request</h6>
+                  
+                </div>
+                <div class="col-lg-6 col-5 my-auto text-end">
+                  <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                    <div class="input-group">
+                      <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                      <input type="text" class="form-control px-1" placeholder="Search for...">
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
+
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive max-height-400 overflow-auto">
+              <table class="table align-items-center mb-0"> 
+                <thead> 
+                  <tr> 
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Message</th> 
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">Relocation Request Status</th> 
+                  </tr> 
+                </thead> 
+                <tbody id="dataTableBody">
+                  <tr>
+                  <?php include 'fetch_relocation_request.php'; ?>
+                     </tr>
+                </tbody>
+            </table>
+            </div>
           </div>
-        
+
         </div>
+        <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="messageModalLabel">Request Relocation</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="insert_relocation_req.php" method="post">
+                        <div class="mb-3">
+                            <label for="vendorId" class="form-label">Vendor Id</label>
+                            <input class="form-control" type="text" id="vendorId" name="vendor_id" value="<?php echo htmlspecialchars($vendor['vendor_id']); ?>" aria-label="Disabled input example" readonly>
+                        </div>
+                        <div class="mb-3">
+                            <label for="messageInput" class="form-label">Message</label>
+                            <textarea class="form-control" id="messageInput" name="message" rows="3" placeholder="Enter your message"></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
       </main>
       <div class="fixed-plugin">
           <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
