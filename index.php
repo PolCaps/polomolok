@@ -237,7 +237,7 @@ session_start()
       <div class="container section-title" data-aos="fade-up">
         <h2>About Us<br></h2>
         <p>
-          This public market is very easy to access by public transportation. 
+          This Public Market is very easy to access by public transportation. 
           Where you can find affordable goods, fruits and different root crops. 
           This building is currently improved with the local government.  Located at French Street  Polomolok, South Cotabato. 
           There are a lot of thing to do in Polomolok South Cotabato, all you need to do is to enjoy the town for their rich culture and attraction as well.
@@ -1028,13 +1028,13 @@ $(document).ready(function() {
     <div class="container footer-top">
       <div class="row gy-4">
         <img src="assets/imgbg/BGImage.png" alt="" style="width: 220px; height: 190px;">
-        <div class="col-lg-5 col-md-12 footer-about">
+        <div class="col-lg-5 col-md-12 footer-about"> <br>
           <a href="index.php" class="logo d-flex align-items-center">
             
             <span class="sitename">Polomolok Public Market</span>
           </a>
-          <p>Cras fermentum odio eu feugiat lide par naso tierra. Justo eget nada terra videa magna derita valies darta donna mare fermentum iaculis eu non diam phasellus.</p>
-          <div class="social-links d-flex mt-4">
+          <p>Follow us on social medias accounts:</p>
+          <div class="social-links d-flex ">
             <a href=""><i class="bi bi-twitter-x"></i></a>
             <a href=""><i class="bi bi-facebook"></i></a>
             <a href=""><i class="bi bi-instagram"></i></a>
@@ -1043,24 +1043,19 @@ $(document).ready(function() {
         </div>
 
         <div class="col-lg-2 col-6 footer-links">
-          <h4>Our Services</h4>
+          <h4>Office Hours</h4>
           <ul>
-            <li><a href="#">Products Selling</a></li>
-            <li><a href="#">Product Management</a></li>
-            <li><a href="#">Product Management</a></li>
-            <li><a href="#">Product Management</a></li>
-            <li><a href="#">Product Management</a></li>
+            <li><a>8:00 AM - 5:00 PM </a></li>
+            
+          </ul>
+          <br>
+          <h4>Office Days</h4>
+          <ul>
+            <li><a>Monday - Friday</a></li>
+            
           </ul>
         </div>
 
-        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
-          <h4>Contact Us</h4>
-          <p>6397+H37, French St.</p>
-          <p>Polomolok South Cotabato</p>
-          <p>Philippines</p>
-          <p class="mt-4"><strong>Phone:</strong> <span>083 2252483</span></p>
-          <p><strong>Email:</strong> <span>info@example.com</span></p>
-        </div>
 
       </div>
     </div>
