@@ -630,6 +630,41 @@ if (isset($_GET['building'])) {
             }
         });
 
+        $(document).ready(function() {
+    $('#submit').on('click', function(e) {
+        e.preventDefault(); // Prevent default form submission
+
+        var buildingType = $('#building_type').val();
+        var stallNo = $('#stall_no').val();
+        var monthlyRentals = $('#monthly_rentals').val();
+        var startedDate = $('#started_date').val();
+        var endDate = $('#end_date').val();
+
+        $.ajax({
+            url: 'process_formVendor.php', // The server-side script URL
+            type: 'POST',
+            data: {
+                building_type: buildingType,
+                stall_no: stallNo,
+                monthly_rentals: monthlyRentals,
+                started_date: startedDate,
+                end_date: endDate
+            },
+            success: function(response) {
+                var result = JSON.parse(response);
+                if (result.status === 'success') {
+                    alert(result.message);
+                } else {
+                    alert(result.message);
+                }
+            },
+            error: function() {
+                alert('An error occurred while processing the request.');
+            }
+        });
+    });
+});
+
   </script>
           </div>
 

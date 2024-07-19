@@ -171,9 +171,9 @@ try {
             if (data.error) {
                 alert('Error: ' + data.error);
 
-              } else if (data.status === 'Vacant') {
+              } else if (data.status == 'Vacant') {
                 alert('Status: ' + data.status);
-            } else if (data.status === 'Occupied') {
+            } else if (data.status == 'Occupied') {
                 alert('Status: ' + data.status + ', Username: ' + data.username + ', stall number: ' + data.stall_no);
            
             } else {
