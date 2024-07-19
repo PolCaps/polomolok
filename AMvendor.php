@@ -34,8 +34,29 @@ if (!$user) {
     die("No User found with ID " . htmlspecialchars($user_id));
 }
 
-// Close the connection
-$conn->close();
+// Handle AJAX request
+if (isset($_GET['building'])) {
+  $building = $_GET['building'];
+
+  $valid_buildings = ['building_a', 'building_b', 'building_c', 'building_d', 'building_e', 'building_f', 'building_g', 'building_h', 'building_i', 'building_j'];
+
+  if (in_array($building, $valid_buildings)) {
+      $sql = "SELECT vendor_id, stall_status, stall_no, building_floor, monthly_rentals FROM $building";
+      $result = $conn->query($sql);
+
+      $stalls = [];
+      while ($row = $result->fetch_assoc()) {
+          $stalls[] = $row;
+      }
+
+      echo json_encode($stalls);
+  } else {
+      echo json_encode([]);
+  }
+
+  $conn->close();
+  exit;
+}
 ?>
 
 <!DOCTYPE html>
@@ -432,92 +453,49 @@ $conn->close();
                                                     </script>
                                                 </div>
                                                 <div class="form-group mb-3">
-                                                    <label for="first_name">First Name:</label>
-                                                    <input type="text" id="first_name" class="form-control" name="first_name" required>
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="middle_name">Middle Name:</label>
-                                                    <input type="text" id="middle_name" class="form-control" name="middle_name">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="last_name">Last Name:</label>
-                                                    <input type="text" id="last_name" class="form-control" name="last_name" required>
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="age">Age:</label>
-                                                    <input type="number" id="age" class="form-control" name="age">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="contact_no">Contact Number:</label>
-                                                    <input type="tel" id="contact_no" name="contact_number" class="form-control">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="address">Address:</label>
-                                                    <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
-                                                </div>
-                                                
-                                                <div class="form-group mb-3">
-                                                    <label for="stall_no">Stall Number:</label>
-                                                    <input type="text" id="stall_no" name="stall_no" class="form-control">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="email_add">Email Address:</label>
-                                                    <textarea id="email_add" name="email_add" class="form-control"></textarea>
-                                                </div>
-                                                <div class="form-group mb-3">
                                                     <label for="building_type">Buildings:</label>
                                                     <select id="building_type" name="building_type" class="form-control">
                                                         <option value="">Select Buildings</option>
-                                                        <option value="Building A">Building A</option>
-                                                        <option value="Building B">Building B</option>
-                                                        <option value="Building C">Building C</option>
-                                                        <option value="Building D">Building D</option>
-                                                        <option value="Building E">Building E</option>
-                                                        <option value="Building F">Building F</option>
-                                                        <option value="Building G">Building G</option>
-                                                        <option value="Building H">Building H</option>
-                                                        <option value="Building I">Building I</option>
-                                                        <option value="Building J">Building J</option>
+                                                        <option value="building_a">Building A</option>
+                                                        <option value="building_b">Building B</option>
+                                                        <option value="building_c">Building C</option>
+                                                        <option value="building_d">Building D</option>
+                                                        <option value="building_e">Building E</option>
+                                                        <option value="building_f">Building F</option>
+                                                        <option value="building_g">Building G</option>
+                                                        <option value="building_h">Building H</option>
+                                                        <option value="building_i">Building I</option>
+                                                        <option value="building_j">Building J</option>
                                                     </select>
                                                     <div class="invalid-feedback">Please select a building type.</div>
                                                 </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="lease_agreements">Lease Agreements:</label>
-                                                    <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="business_permits">Business Permits:</label>
-                                                    <input type="file" id="business_permits" name="business_permits" class="form-control">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="business_licenses">Business Licenses:</label>
-                                                    <input type="file" id="business_licenses" name="business_licenses" class="form-control">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="receipts">Payment Receipts:</label>
-                                                    <input type="file" id="receipts" name="receipts" class="form-control">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="monthly_rentals">Monthly Rentals:</label>
-                                                    <input type="number" id="monthly_rentals" name="monthly_rentals" class="form-control">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="building_floor">Building Floor:</label>
-                                                    <select id="building_floor" name="building_floor" class="form-control">
-                                                        <option value="">Select Building Floor:</option>
-                                                        <option value="Ground Floor">Ground Floor</option>
-                                                        <option value="Second Floor">Second Floor</option>
-                                                    </select>
-                                                    <div class="invalid-feedback">Please select a building floor.</div>
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="started_date">Started Date:</label>
-                                                    <input type="date" id="started_date" name="started_date" class="form-control">
-                                                </div>
-                                                <div class="form-group mb-3">
-                                                    <label for="end_date">End Date:</label>
-                                                    <input type="date" id="end_date" name="end_date" class="form-control">
-                                                </div>
+                                              <div class="form-group mb-3">
+                                                  <label for="building_floor">Building Floor:</label>
+                                                  <select id="building_floor" name="building_floor" class="form-control">
+                                                      <option value="">Select Building Floor:</option>
+                                                      <option value="">Select Floor</option>
+                                                  </select>
+                                                  <div class="invalid-feedback">Please select a building floor.</div>
+                                              </div>
+                                              <div class="form-group mb-3">
+                                                  <label for="stall_no">Stall Number:</label>
+                                                  <select id="stall_no" name="stall_no" class="form-control">
+                                                      <option value="">Select Stall</option>
+                                                  </select>
+                                                  <div class="invalid-feedback">Please select a stall number.</div>
+                                              </div>
+                                              <div class="form-group mb-3">
+                                                  <label for="monthly_rentals">Monthly Rentals:</label>
+                                                  <input type="text" id="monthly_rentals" name="monthly_rentals" class="form-control">
+                                              </div>
+                                              <div class="form-group mb-3">
+                                                  <label for="started_date">Started Date:</label>
+                                                  <input type="date" id="started_date" name="started_date" class="form-control">
+                                              </div>
+                                              <div class="form-group mb-3">
+                                                  <label for="end_date">End Date:</label>
+                                                  <input type="date" id="end_date" name="end_date" class="form-control">
+                                              </div>
                                                 <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
                                                     <button type="submit" name="submit" id="submit" class="btn btn-info lg">Create Vendor</button>
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -540,6 +518,18 @@ $conn->close();
       <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 
       <script>
+
+        function checkBuildingSelected() {
+            var building = document.getElementById('building_type').value;
+            if (!building) {
+                alert('Please select a building first.');
+                document.getElementById('building_type').focus();
+                return false;
+            }
+            return true;
+        }
+
+
         document.getElementById('account_type').addEventListener('change', function() {
           var accountType = this.value;
           var adminStaffAccordion = document.getElementById('collapseAdminStaff');
@@ -552,6 +542,92 @@ $conn->close();
             adminStaffAccordion.classList.remove('show');
             vendorAccordion.classList.add('show');
           }
+        });
+
+
+        document.getElementById('building_type').addEventListener('change', function() {
+            var building = this.value;
+            var stallSelect = document.getElementById('stall_no');
+            var floorSelect = document.getElementById('building_floor');
+            var rent = document.getElementById('monthly_rentals');
+
+            stallSelect.innerHTML = '<option value="">Select Stall</option>';
+            floorSelect.innerHTML = '<option value="">Select Building Floor</option>';
+            rent.value = '';
+
+            if (building) {
+                $.ajax({
+                    url: window.location.href,
+                    type: 'GET',
+                    data: { building: building },
+                    success: function(data) {
+                        var stalls = JSON.parse(data);
+                        var floors = new Set();
+
+                        stalls.forEach(function(stall) {
+                          if(stall.stall_status === 'Vacant' && !stall.vendor_id){
+                            var option = document.createElement('option');
+                            option.value = stall.stall_no;
+                            option.text = stall.stall_no;
+                            stallSelect.appendChild(option);
+
+                            floors.add(stall.building_floor);
+                          }
+                        });
+
+                        floors.forEach(function(floor) {
+                            var option = document.createElement('option');
+                            option.value = floor;
+                            option.text = floor;
+                            floorSelect.appendChild(option);
+                        });
+                    }
+                });
+            }
+        });
+
+        document.getElementById('stall_no').addEventListener('change', function() {
+            var stallNo = this.value;
+            var building = document.getElementById('building_type').value;
+            var rent = document.getElementById('monthly_rentals');
+
+            if (stallNo && building) {
+                $.ajax({
+                    url: window.location.href,
+                    type: 'GET',
+                    data: { building: building },
+                    success: function(data) {
+                        var stalls = JSON.parse(data);
+                        var selectedStall = stalls.find(stall => stall.stall_no === stallNo);
+
+                        if (selectedStall) {
+                            rent.value = selectedStall.monthly_rentals;
+                        } else {
+                            rent.value = '';
+                        }
+                    }
+                });
+            } else {
+                rent.value = '';
+            }
+        });
+
+        document.getElementById('building_floor').addEventListener('click', function() {
+            if (!checkBuildingSelected()) {
+                this.blur(); // Remove focus if building is not selected
+            }
+        });
+
+        document.getElementById('stall_no').addEventListener('click', function() {
+            if (!checkBuildingSelected()) {
+                this.blur(); // Remove focus if building is not selected
+            }
+        });
+
+        document.getElementById('monthly_rentals').addEventListener('click', function() {
+            if (!checkBuildingSelected()) {
+                this.blur(); // Remove focus if building is not selected
+            }
         });
 
   </script>
@@ -604,9 +680,9 @@ $conn->close();
                 }
 
                 // SQL query to get stall information and vendor usernames
-                $sql = "SELECT s.stall_no AS stall_no, s.stall_id, s.stall_status AS stall_status, v.username AS username, s.building_type AS building, s.monthly_rental AS payment_due
-                        FROM stalls s
-                        JOIN vendors v ON s.vendor_id = v.vendor_id";
+                $sql = "SELECT v.username AS username, a.monthly_rentals AS payment_due, a.stall_no AS stall_no, a.building_id, a.stall_status AS stall_status
+                        FROM vendors v 
+                        JOIN building_a a ON v.vendor_id = a.vendor_id";
 
                 $result = $conn->query($sql);
 
@@ -619,7 +695,7 @@ $conn->close();
                         ?>
                         <tr>
                             <td class='text-xs font-weight-bold'><?php echo htmlspecialchars($row['username']); ?></td>
-                            <td class='text-xs font-weight-bold'><?php echo htmlspecialchars($row['building']); ?></td>
+                            <td class='text-xs font-weight-bold'>$building</td>
                             <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($row['stall_no']); ?></td>
                             <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($row['payment_due']); ?></td>
                         </tr>

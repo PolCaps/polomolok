@@ -22,10 +22,10 @@ if ($conn->connect_error) {
 }
 
 // Fetch vendor information
-$sql = "SELECT v.*,s.*
+$sql = "SELECT v.*,a.*
 FROM vendors v
-JOIN stalls s ON v.vendor_id = s.vendor_id
-WHERE s.vendor_id = ?";
+JOIN building_a a  ON v.vendor_id = a.vendor_id
+WHERE a.vendor_id = ?";
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
     die("Prepare failed: " . $conn->error);
@@ -615,8 +615,97 @@ if (isset($_POST['submit'])) {
     </div>
   </div>
 
- 
+  <style>
+        .accordion-header {
+          flex: 1;
+          text-align: center;
+        }
+        .accordion-header button {
+          width: 100%;
+          text-align: center;
+        }
+        .accordion-item {
+          margin-bottom: 1rem;
+        }
+        .accordion-button:not(.collapsed) {
+          color: #0d6efd;
+          background-color: #e9ecef;
+        }
+        .accordion-button {
+          flex: 1;
+        }
+      </style>
 
+  <!-- Modal -->
+  <div class="modal fade" id="showexampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+        
+                   
+                        <div class="col-md-12">
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                        <div class="accordion-body">
+                                      <form id="createVendorForm" action="process_formVendor.php" method="POST" enctype="multipart/form-data">
+                                      <div class="container-fluid">
+                                      <div class="row mb-3">
+                                      <div class="col-md-6">
+                                        <div class="form-group mb-3">
+                                          <label for="first_name">First Name:</label>
+                                          <input type="text" id="first_name" class="form-control" name="first_name" required>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                          <label for="middle_name">Middle Name:</label>
+                                          <input type="text" id="middle_name" class="form-control" name="middle_name">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                          <label for="last_name">Last Name:</label>
+                                          <input type="text" id="last_name" class="form-control" name="last_name" required>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                          <label for="age">Age:</label>
+                                          <input type="number" id="age" class="form-control" name="age">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                          <label for="contact_no">Contact Number:</label>
+                                          <input type="tel" id="contact_no" name="contact_number" class="form-control">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                          <label for="address">Address:</label>
+                                          <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                          <label for="email_add">Email Address:</label>
+                                          <textarea id="email_add" name="email_add" class="form-control"></textarea>
+                                        </div>
+                                        <div class="form-group mb-3">
+                                          <label for="lease_agreements">Lease Agreements:</label>
+                                          <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                          <label for="business_permits">Business Permits:</label>
+                                          <input type="file" id="business_permits" name="business_permits" class="form-control">
+                                        </div>
+                                        <div class="form-group mb-3">
+                                          <label for="business_licenses">Business Licenses:</label>
+                                          <input type="file" id="business_licenses" name="business_licenses" class="form-control">
+                                        </div>
+                                        <div class="modal-footer">
+                                          <button type="submit" name="submit" id="submit" class="btn btn-info">Create Vendor</button>
+                                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        </div>
+                                      </form>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 
       <br>
       <hr class="horizontal dark my-1">
