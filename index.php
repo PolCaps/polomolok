@@ -874,7 +874,7 @@ session_start()
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="vendorApplicationForm" action="submit_application.php" method="POST">
+                <form id="vendorApplicationForm" action="submit_application.php" method="POST" novalidate>
                     <div class="container-fluid">
                         <div class="row">
                             <!-- Personal Details -->
@@ -912,7 +912,7 @@ session_start()
                                 </div>
                                 <div class="form-group mb-3">
                                     <label for="address">Address:</label>
-                                    <textarea id="address" name="address" class="form-control" required></textarea>
+                                    <textarea id="address" name="address" class="form-control"></textarea>
                                     <div class="invalid-feedback">Please enter your address.</div>
                                 </div>
                             </div>
@@ -932,7 +932,7 @@ session_start()
                                 <div class="alert alert-warning d-flex align-items-center" role="alert">
                                     <i class="bi bi-exclamation-triangle-fill me-2"></i>
                                     <div>
-                                        Filling up this form does not reserve a stall booth and doesn't guarantee that you will occupy the stall. Please Message us for clarification and inquiries.
+                                        Filling up this form does not reserve a stall booth and doesn't guarantee that you will occupy the stall. Please message us for clarification and inquiries.
                                     </div>
                                 </div>
                             </div>
@@ -941,7 +941,7 @@ session_start()
                 </form>
             </div>
             <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
-            <div id="alertContainer"></div>
+                <div id="alertContainer"></div>
                 <button type="button" class="btn btn-primary text-white" id="submitApplicationBtn">Submit Application</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
@@ -958,11 +958,32 @@ session_start()
 
 <script>
 $(document).ready(function() {
+    // Form validation
+    var forms = document.querySelectorAll('.needs-validation')
+    Array.prototype.slice.call(forms)
+    .forEach(function (form) {
+        form.addEventListener('submit', function (event) {
+            if (!form.checkValidity()) {
+                event.preventDefault()
+                event.stopPropagation()
+            }
+            form.classList.add('was-validated')
+        }, false)
+    })
+
     $('#submitApplicationBtn').click(function(e) {
         e.preventDefault();
 
         // Clear previous alerts
         $('#alertContainer').empty();
+
+        // Form validation check
+        var form = $('#vendorApplicationForm')[0];
+        if (form.checkValidity() === false) {
+            e.stopPropagation();
+            form.classList.add('was-validated');
+            return;
+        }
 
         // Submit form via AJAX
         var formData = $('#vendorApplicationForm').serialize();
@@ -1015,6 +1036,9 @@ $(document).ready(function() {
     });
 });
 </script>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
