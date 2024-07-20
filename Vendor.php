@@ -646,7 +646,7 @@ if (isset($_POST['submit'])) {
                             <div class="accordion" id="accordionExample">
                                 <div class="accordion-item">
                                         <div class="accordion-body">
-                                      <form id="createVendorForm" action="process_formVendor.php" method="POST" enctype="multipart/form-data">
+                                      <form id="createVendorForm" action="update_Vendor.php" method="POST" enctype="multipart/form-data">
                                       <div class="container-fluid">
                                       <div class="row mb-3">
                                       <div class="col-md-6">
@@ -691,7 +691,7 @@ if (isset($_POST['submit'])) {
                                           <input type="file" id="business_licenses" name="business_licenses" class="form-control">
                                         </div>
                                         <div class="modal-footer">
-                                          <button type="submit" name="submit" id="submit" class="btn btn-info">Create Vendor</button>
+                                          <button type="submit" name="submit" id="submit" class="btn btn-info">UPDATE PROFILE</button>
                                           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                                         </div>
                                       </form>
@@ -700,6 +700,31 @@ if (isset($_POST['submit'])) {
                                 </div>
                               </div>
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <script>
+$(document).ready(function () {
+    $('#createVendorForm').on('submit', function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+
+        $.ajax({
+            url: 'update_Vendor.php',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                $('#alertBox').removeClass('alert-danger').addClass('alert-success').text(response).show();
+                $('#showexampleModal').modal('hide');
+            },
+            error: function (xhr, status, error) {
+                var errorMessage = xhr.status + ': ' + xhr.statusText;
+                $('#alertBox').removeClass('alert-success').addClass('alert-danger').text('Error - ' + errorMessage).show();
+            }
+        });
+    });
+});
+</script>     
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
 
       <br>

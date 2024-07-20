@@ -44,16 +44,16 @@ if (!$vendor) {
     die("No vendor found with ID " . htmlspecialchars($vendor_id));
 }
 
-// Fetch stalls associated with the vendor
-$sql_stalls = "SELECT * FROM vendors WHERE vendor_id = ?";
-$stmt_stalls = $conn->prepare($sql_stalls);
-if ($stmt_stalls === false) {
-    die("Prepare failed: " . $conn->error);
-}
-$stmt_stalls->bind_param("i", $vendor_id);
-$stmt_stalls->execute();
-$result_stalls = $stmt_stalls->get_result();
-$stalls = $result_stalls->fetch_all(MYSQLI_ASSOC);
+// // Fetch stalls associated with the vendor
+// $sql_stalls = "SELECT * FROM vendors WHERE vendor_id = ?";
+// $stmt_stalls = $conn->prepare($sql_stalls);
+// if ($stmt_stalls === false) {
+//     die("Prepare failed: " . $conn->error);
+// }
+// $stmt_stalls->bind_param("i", $vendor_id);
+// $stmt_stalls->execute();
+// $result_stalls = $stmt_stalls->get_result();
+// $stalls = $result_stalls->fetch_all(MYSQLI_ASSOC);
 
 // Close the connection
 $conn->close();
@@ -223,7 +223,7 @@ $conn->close();
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center"><?php echo htmlspecialchars($row['first_name']) . ' ' . htmlspecialchars($row['middle_name']) . ' ' . htmlspecialchars($row['last_name']); ?></h5>
+          <h5 class="text-center"><?php echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); ?></h5>
       
           <hr class="horizontal dark mt-0">
         </div>
@@ -276,7 +276,7 @@ $conn->close();
               <div class="card">
               <div class="card-header pb-0">
               <div class="row">
-              <h6 class="text-center"><span class="text-sm text-secondary">Vendor Name:</span> <?php echo $row['username']; ?></h6>
+              <h6 class="text-center"><span class="text-sm text-secondary">Vendor Name:</span> <?php echo $vendor['username']; ?></h6>
               </div>
             </div>
 
@@ -298,10 +298,10 @@ $conn->close();
                           <td class="text-center">
                             <img src="datas/meedoss/2024-07-16/1.jpg" alt="Image 1" width="50" height="50" class="expandable-image">
                           </td>
-                          <td class="align-middle text-center text-sm"><?php echo $row['monthly_rentals']; ?></td>
-                          <td class="align-middle text-center text-sm"><?php echo $row['stall_no']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo $vendor['monthly_rentals']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo $vendor['stall_no']; ?></td>
 
-                          <td class="align-middle text-center text-sm"><?php echo $row['started_date']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo $vendor['started_date']; ?></td>
 
                         </tr>
                         <tr>
@@ -309,10 +309,10 @@ $conn->close();
                           <td class="text-center">
                             <img src="datas/meedoss/2024-07-16/1.jpg" alt="Image 2" width="50" height="50" class="expandable-image">
                           </td>
-                          <td class="align-middle text-center text-sm"><?php echo $row['monthly_rentals']; ?></td>
-                          <td class="align-middle text-center text-sm"><?php echo  $row['stall_no']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo $vendor['monthly_rentals']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo  $vendor['stall_no']; ?></td>
 
-                          <td class="align-middle text-center text-sm"><?php echo $row['started_date']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo $vendor['started_date']; ?></td>
                         </tr>
                         <!-- Add more table rows here -->
                       </tbody>
