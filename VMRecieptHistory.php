@@ -1,6 +1,14 @@
 <?php
 session_start();
 
+include('database_config.php');
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
 // Check if the user is logged in and is a vendor
 if (!isset($_SESSION['vendor_id'])) {
   header("Location: index.php");
@@ -14,12 +22,7 @@ $vendor_id = $_SESSION['vendor_id'];
 include('database_config.php');
 
 // Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 // Fetch vendor information
 $sql = "SELECT v.*, a.*  
@@ -34,14 +37,26 @@ if ($stmt === false) {
 $stmt->bind_param("i", $vendor_id);
 $stmt->execute();
 $result = $stmt->get_result();
-$row = $result->fetch_assoc();
+$vendor = $result->fetch_assoc();
 
 // Check if vendor data is retrieved
-if (!$row) {
+if (!$vendor) {
     die("No vendor found with ID " . htmlspecialchars($vendor_id));
 }
+
+// Fetch stalls associated with the vendor
+$sql_stalls = "SELECT * FROM vendors WHERE vendor_id = ?";
+$stmt_stalls = $conn->prepare($sql_stalls);
+if ($stmt_stalls === false) {
+    die("Prepare failed: " . $conn->error);
+}
+$stmt_stalls->bind_param("i", $vendor_id);
+$stmt_stalls->execute();
+$result_stalls = $stmt_stalls->get_result();
+$stalls = $result_stalls->fetch_all(MYSQLI_ASSOC);
+
 // Close the connection
-///$conn->close();
+$conn->close();
 ?>
 
 <!DOCTYPE html>

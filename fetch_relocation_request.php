@@ -21,7 +21,11 @@ $result = $stmt->get_result();
 // Display data
 while ($row = $result->fetch_assoc()) {
     echo "<tr>";
-    echo "<td class='text-center'>" . htmlspecialchars($row['message']) . "</td>";
+    echo "<td class='text-center'>";
+    $message = htmlspecialchars($row['message']);
+    $trimmedMessage = strlen($message) > 50 ? substr($message, 0, 50) . '...' : $message;
+    echo "<span data-bs-toggle='modal' data-bs-target='#messageModalEnlarge' data-message='" . $message . "' class='message-preview'>" . $trimmedMessage . "</span>";
+    echo "</td>";
     echo "<td class='text-center'>" . htmlspecialchars($row['relocation_status']) . "</td>";
     echo "</tr>";
 }

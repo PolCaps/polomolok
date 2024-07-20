@@ -1,6 +1,14 @@
 <?php
 session_start();
 
+include('database_config.php');
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
 // Check if the user is logged in and is a vendor
 if (!isset($_SESSION['vendor_id'])) {
   header("Location: index.php");
@@ -14,12 +22,7 @@ $vendor_id = $_SESSION['vendor_id'];
 include('database_config.php');
 
 // Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
 // Fetch vendor information
 $sql = "SELECT * FROM vendors WHERE vendor_id = ?";
@@ -142,9 +145,9 @@ $conn->close();
           </a>
           <div class="collapse" id="collapseMaps">
             <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="ABuildingA.html">Building A</a>
               <a class="nav-link" href="ABuildingB.html">Building B</a>
               <a class="nav-link" href="ABuildingC.html">Building C</a>
+              <a class="nav-link" href="ABuildingA.html">Building A</a>
               <a class="nav-link" href="ABuildingD.html">Building D</a>
               <a class="nav-link" href="ABuildingE.html">Building E</a>
               <a class="nav-link" href="ABuildingF.html">Building F</a>
@@ -296,34 +299,66 @@ $conn->close();
             </table>
             </div>
           </div>
+          
 
         </div>
-        <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="messageModalLabel">Request Relocation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="insert_relocation_req.php" method="post">
-                        <div class="mb-3">
-                            <label for="vendorId" class="form-label">Vendor Id</label>
-                            <input class="form-control" type="text" id="vendorId" name="vendor_id" value="<?php echo htmlspecialchars($vendor['vendor_id']); ?>" aria-label="Disabled input example" readonly>
-                        </div>
-                        <div class="mb-3">
-                            <label for="messageInput" class="form-label">Message</label>
-                            <textarea class="form-control" id="messageInput" name="message" rows="3" placeholder="Enter your message"></textarea>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">Send Message</button>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+          var messagePreviewElements = document.querySelectorAll('.message-preview');
+
+          messagePreviewElements.forEach(function(element) {
+            element.addEventListener('click', function() {
+              var fullMessage = element.getAttribute('data-message');
+              document.getElementById('modalMessage').textContent = fullMessage;
+            });
+          });
+        });
+        </script>
+        <!-- Modal for Enlarged Message -->
+<div class="modal fade" id="messageModalEnlarge" tabindex="-1" aria-labelledby="messageModalEnlargeLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="messageModalEnlargeLabel">Message Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p id="modalMessage"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
     </div>
+  </div>
+</div>
+
+<!-- Modal for Relocation Request -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="messageModalLabel">Request Relocation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form action="insert_relocation_req.php" method="post">
+          <div class="mb-3">
+            <label for="vendorId" class="form-label">Vendor Id</label>
+            <input class="form-control" type="text" id="vendorId" name="vendor_id" value="<?php echo htmlspecialchars($vendor['vendor_id']); ?>" aria-label="Disabled input example" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="messageInput" class="form-label">Message</label>
+            <textarea class="form-control" id="messageInput" name="message" required rows="3" placeholder="Enter your message"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Send Message</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
       </main>
       <div class="fixed-plugin">

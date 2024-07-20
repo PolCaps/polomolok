@@ -381,8 +381,8 @@ session_start()
             <i class="bi bi-quote quote-icon-right"></i>
           </p>
           <img src="image/notice.jpg" class="announcement-img" alt="Event 1" style="width: 220px; height: 280px;" >
-          <h3>Stall 1</h3>
-          <h4>Building E</h4>
+          <h4>Stall 1</h4>
+          <h5>Building E</h4>
         </div>
       </div><!-- End announcement item -->
 
@@ -394,8 +394,8 @@ session_start()
             <i class="bi bi-quote quote-icon-right"></i>
           </p>
           <img src="image/notice.jpg" class="announcement-img" alt="Update 1" style="width: 220px; height: 280px;">
-          <h3>stall 22</h3>
-          <h4>Building J</h4>
+          <h4>Stall 22</h4>
+          <h5>Building J</h5>
         </div>
       </div><!-- End announcement item -->
 
@@ -407,8 +407,8 @@ session_start()
             <i class="bi bi-quote quote-icon-right"></i>
           </p>
           <img src="image/notice.jpg" class="announcement-img" alt="Webinar" style="width: 220px; height: 280px;">
-          <h3>stall 67</h3>
-          <h4>Building C</h4>
+          <h4>Stall 67</h4>
+          <h5>Building C</h5>
         </div>
       </div><!-- End announcement item -->
 
@@ -420,8 +420,8 @@ session_start()
             <i class="bi bi-quote quote-icon-right"></i>
           </p>
           <img src="image/notice.jpg" class="announcement-img" alt="Webinar" style="width: 220px; height: 280px;">
-          <h3>stall 4</h3>
-          <h4>Building D</h4>
+          <h4>Stall 4</h4>
+          <h5>Building D</h5>
         </div>
       </div>
 
@@ -433,8 +433,8 @@ session_start()
             <i class="bi bi-quote quote-icon-right"></i>
           </p>
           <img src="image/notice.jpg" class="announcement-img" alt="Webinar" style="width: 220px; height: 280px;">
-          <h3>stall 6</h3>
-          <h4>Building A</h4>
+          <h4>Stall 6</h4>
+          <h5>Building A</h5>
         </div>
       </div>
 
