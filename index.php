@@ -184,7 +184,7 @@ session_start()
       <div class="container">
         <div class="row justify-content-center" data-aos="zoom-out">
           <div class="col-xl-7 col-lg-9 text-center">
-            <h1>Bagong Polomolok, Padayon Polomolok!</h1>
+            <h1>Bagong Polomolok</h1>
             <p>Municipal Economic Enterprise and Development Office</p>
           </div>
         </div>

@@ -3,7 +3,7 @@
 $db_host = 'localhost';
 $db_user = 'root';
 $db_password = '';
-$db_name = 'polomolokmarket';
+$db_name = 'polomolokmarkets';
 
 
 
