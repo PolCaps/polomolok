@@ -35,11 +35,6 @@ $stmt->execute();
 $result = $stmt->get_result();
 $vendor = $result->fetch_assoc();
 
-// Check if vendor data is retrieved
-if (!$vendor) {
-    die("No vendor found with ID " . htmlspecialchars($vendor_id));
-}
-
 ?>
     
 <!DOCTYPE html>
