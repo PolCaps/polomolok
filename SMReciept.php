@@ -117,7 +117,7 @@ $conn->close();
                 <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
               </svg>
             </div>
-            <span class="nav-link-text ms-1">Reciept</span>
+            <span class="nav-link-text ms-1">Receipt</span>
           </a>
         </li>
         <li class="nav-item">
@@ -257,7 +257,7 @@ $conn->close();
       <div class="d-grid gap-2 d-md-block py-3 px-3">
           <p class="text-title">Actions</p>
           <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#issueRecieptModal">
-            Issue Reciept
+            Issue Receipt
           </button>
         </div>
           <div class="card">
@@ -288,7 +288,7 @@ $conn->close();
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Reciept History</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt History</th>
                     </tr>
                   </thead>
                   <tbody id="dataTableBody">

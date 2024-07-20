@@ -536,9 +536,9 @@ if (isset($_POST['submit'])) {
               <div class="row">
                 <div class="col-lg-6">
                   <div class="d-flex flex-column h-100">
-                    <p class="mb-1 pt-2 text-bold">Polomolok</p>
-                    <h5 class="font-weight-bolder">PolPubMarket</h5>
-                    <p class="mb-5">Polomolok Public MarketPolomolok Public MarketPolomolok Public Market</p>
+                  
+                    <h5 class="font-weight-bolder">Polomolok Pubic Market</h5>
+                    <p class="mb-5">OF ALL the places that I could have explored at my hometown, Polomolok, South Cotabato.</p>
                     <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="javascript:;">
                       Read More
                       <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
@@ -564,8 +564,8 @@ if (isset($_POST['submit'])) {
             <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100" style="background-image: url('image/polpol.jpg');">
               <span class="mask bg-gradient-dark"></span>
               <div class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3">
-                <h5 class="text-white font-weight-bolder mb-4 pt-2">Polomokokoakok Hehe</h5>
-                <p class="text-white">Polomolok Public MarketPolomolok Public Market</p>
+                <h5 class="text-white font-weight-bolder mb-4 pt-2">Rehabilitation Of The Polomolok Public Market</h5>
+                <p class="text-white">On behalf of the Municipality, Mayor Honey L. Matti...</p>
                 <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="javascript:;">
                   Read More
                   <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
