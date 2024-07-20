@@ -41,7 +41,7 @@ CREATE TABLE `building_a` (
 --
 
 INSERT INTO `building_a` (`building_id`, `stall_no`, `building_floor`, `monthly_rentals`, `vendor_id`, `stall_status`) VALUES
-(1, 'A-01', 'Ground Floor', '3,060.00', 1, 'Occupied'),
+(1, 'A-01', 'Ground Floor', '3,060.00', NULL, 'Vacant'),
 (2, 'A-02', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
 (3, 'A-03', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
 (4, 'A-04', 'Ground Floor', '5,400.00', NULL, 'Vacant'),

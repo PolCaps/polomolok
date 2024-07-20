@@ -25,7 +25,11 @@ include('database_config.php');
 
 
 // Fetch vendor information
-$sql = "SELECT * FROM vendors WHERE vendor_id = ?";
+$sql = "SELECT v.*, a.*  
+FROM vendors v 
+JOIN building_a a ON v.vendor_id = a.vendor_id
+WHERE v.vendor_id = ?";
+
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
     die("Prepare failed: " . $conn->error);
@@ -283,7 +287,7 @@ $conn->close();
                       <thead>
                         <tr>
                           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Digital Reciept</th>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Building Type</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Monthly Rentals</th>
                           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Stall No.</th>
                           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Date</th>
                         </tr>
@@ -294,7 +298,7 @@ $conn->close();
                           <td class="text-center">
                             <img src="datas/meedoss/2024-07-16/1.jpg" alt="Image 1" width="50" height="50" class="expandable-image">
                           </td>
-                          <td class="align-middle text-center text-sm"><?php echo $row['building_type']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo $row['monthly_rentals']; ?></td>
                           <td class="align-middle text-center text-sm"><?php echo $row['stall_no']; ?></td>
 
                           <td class="align-middle text-center text-sm"><?php echo $row['started_date']; ?></td>
@@ -305,7 +309,7 @@ $conn->close();
                           <td class="text-center">
                             <img src="datas/meedoss/2024-07-16/1.jpg" alt="Image 2" width="50" height="50" class="expandable-image">
                           </td>
-                          <td class="align-middle text-center text-sm"><?php echo $row['building_type']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo $row['monthly_rentals']; ?></td>
                           <td class="align-middle text-center text-sm"><?php echo  $row['stall_no']; ?></td>
 
                           <td class="align-middle text-center text-sm"><?php echo $row['started_date']; ?></td>

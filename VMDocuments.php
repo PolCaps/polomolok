@@ -38,7 +38,7 @@ if (!$vendor) {
 }
 
 // Fetch stalls associated with the vendor
-$sql_stalls = "SELECT * FROM vendors WHERE vendor_id = ?";
+$sql_stalls = "SELECT * FROM building_a WHERE vendor_id = ?";
 $stmt_stalls = $conn->prepare($sql_stalls);
 if ($stmt_stalls === false) {
     die("Prepare failed: " . $conn->error);
