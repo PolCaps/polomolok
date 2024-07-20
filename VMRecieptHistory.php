@@ -1,4 +1,4 @@
-ease <?php
+<?php
 session_start();
 
 // Check if the user is logged in and is a vendor
@@ -22,9 +22,9 @@ if ($conn->connect_error) {
 }
 
 // Fetch vendor information
-$sql = "SELECT v.*, s.*  
+$sql = "SELECT v.*, a.*  
 FROM vendors v 
-JOIN stalls s ON v.vendor_id = s.vendor_id
+JOIN building_a a ON v.vendor_id = a.vendor_id
 WHERE v.vendor_id = ?";
 
 $stmt = $conn->prepare($sql);
@@ -272,7 +272,7 @@ if (!$row) {
                       <thead>
                         <tr>
                           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Digital Reciept</th>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Building Type</th>
+                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Monthly Rentals</th>
                           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Stall No.</th>
                           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Date</th>
                         </tr>
@@ -283,7 +283,7 @@ if (!$row) {
                           <td class="text-center">
                             <img src="datas/meedoss/2024-07-16/1.jpg" alt="Image 1" width="50" height="50" class="expandable-image">
                           </td>
-                          <td class="align-middle text-center text-sm"><?php echo $row['building_type']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo $row['monthly_rentals']; ?></td>
                           <td class="align-middle text-center text-sm"><?php echo $row['stall_no']; ?></td>
 
                           <td class="align-middle text-center text-sm"><?php echo $row['started_date']; ?></td>
@@ -294,7 +294,7 @@ if (!$row) {
                           <td class="text-center">
                             <img src="datas/meedoss/2024-07-16/1.jpg" alt="Image 2" width="50" height="50" class="expandable-image">
                           </td>
-                          <td class="align-middle text-center text-sm"><?php echo $row['building_type']; ?></td>
+                          <td class="align-middle text-center text-sm"><?php echo $row['monthly_rentals']; ?></td>
                           <td class="align-middle text-center text-sm"><?php echo  $row['stall_no']; ?></td>
 
                           <td class="align-middle text-center text-sm"><?php echo $row['started_date']; ?></td>
