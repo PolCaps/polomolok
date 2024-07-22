@@ -184,7 +184,7 @@ session_start()
       <div class="container">
         <div class="row justify-content-center" data-aos="zoom-out">
           <div class="col-xl-7 col-lg-9 text-center">
-            <h1>Bagong Polomolok</h1>
+            <h1>Bagong Polomolok, Padayon Polomolok!</h1>
             <p>Municipal Economic Enterprise and Development Office</p>
           </div>
         </div>
@@ -889,171 +889,193 @@ session_start()
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form id="vendorApplicationForm" action="submit_application.php" method="POST" novalidate>
-                    <div class="container-fluid">
-                        <div class="row">
-                            <!-- Personal Details -->
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label for="first_name">First Name:</label>
-                                    <input type="text" id="first_name" class="form-control" name="first_name" required>
-                                    <div class="invalid-feedback">Please enter your first name.</div>
+                <div id="formDetails" class="collapse">
+                <form id="vendorApplicationForm" action="submit_application.php" method="POST" class="row g-3 needs-validation" novalidate enctype="multipart/form-data">
+                        <div class="container-fluid">
+                        <div id="submissionAlert" class="alert d-none my-3 mb-3 text-center" role="alert"></div>
+                            <div class="row">
+                                <!-- Personal Details -->
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="first_name" class="form-label">First Name:</label>
+                                        <input type="text" id="first_name" class="form-control" name="first_name" required>
+                                        <div class="invalid-feedback">Please enter your first name.</div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="middle_name" class="form-label">Middle Name:</label>
+                                        <input type="text" id="middle_name" class="form-control" name="middle_name">
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="last_name" class="form-label">Last Name:</label>
+                                        <input type="text" id="last_name" class="form-control" name="last_name" required>
+                                        <div class="invalid-feedback">Please enter your last name.</div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="contact_number" class="form-label">Contact Number:</label>
+                                        <input type="tel" id="contact_number" class="form-control" name="contact_number" required>
+                                        <div class="invalid-feedback">Please enter a valid contact number.</div>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="building_type">Building Type</label>
+                                        <select id="building_type" class="form-control" name="account_type" required>
+                                            <option value=""></option>
+                                            <option value="Building A">Building A</option>
+                                            <option value="Building B">Building B</option>
+                                            <option value="Building C">Building C</option>
+                                            <option value="Building D">Building D</option>
+                                            <option value="Building E">Building E</option>
+                                            <option value="Building F">Building F</option>
+                                            <option value="Building G">Building G</option>
+                                            <option value="Building H">Building H</option>
+                                            <option value="Building I">Building I</option>
+                                            <option value="Building J">Building J</option>
+                                         </select>
+                                    </div>
+
+                                    <div class="form-group mb-3">
+                                        <label for="stall_no" class="form-label">Stall No.:</label>
+                                        <input type="number" id="stall_no" class="form-control" name="stall_no" required>
+                                        <div class="invalid-feedback">Please enter a stall no.</div>
+                                    </div>
                                 </div>
-                                <div class="form-group mb-3">
-                                    <label for="middle_name">Middle Name:</label>
-                                    <input type="text" id="middle_name" class="form-control" name="middle_name">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="last_name">Last Name:</label>
-                                    <input type="text" id="last_name" class="form-control" name="last_name" required>
-                                    <div class="invalid-feedback">Please enter your last name.</div>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="contact_number">Contact Number:</label>
-                                    <input type="tel" id="contact_number" class="form-control" name="contact_number" required>
-                                    <div class="invalid-feedback">Please enter your contact number.</div>
+                                <!-- Business Details -->
+                                <div class="col-md-6">
+                                    <div class="form-group mb-3">
+                                        <label for="age" class="form-label">Age:</label>
+                                        <input type="number" id="age" class="form-control" name="age">
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="email" class="form-label">Email:</label>
+                                        <input type="email" id="email" class="form-control" name="email" required>
+                                        <div class="invalid-feedback">Please enter a valid email address.</div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="address" class="form-label">Address:</label>
+                                        <textarea id="address" name="address" class="form-control"></textarea>
+                                        <div class="invalid-feedback">Please enter your address.</div>
+                                    </div>
+                                    <div class="form-group mb-3">
+                                        <label for="file_upload" class="form-label">Rent Application File:</label>
+                                        <input type="file" id="file_upload" class="form-control" name="file_upload" required>
+                                        <div class="invalid-feedback">Please upload your newly created rent application pdf file.</div>
+                                    </div>
                                 </div>
                             </div>
-                            <!-- Business Details -->
-                            <div class="col-md-6">
-                                <div class="form-group mb-3">
-                                    <label for="age">Age:</label>
-                                    <input type="number" id="age" class="form-control" name="age">
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="email">Email:</label>
-                                    <input type="email" id="email" class="form-control" name="email" required>
-                                    <div class="invalid-feedback">Please enter your email.</div>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="address">Address:</label>
-                                    <textarea id="address" name="address" class="form-control"></textarea>
-                                    <div class="invalid-feedback">Please enter your address.</div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="alert alert-primary d-flex align-items-center" role="alert">
-                                    <i class="bi bi-exclamation-circle-fill me-2"></i>
-                                    <div>
+                            <!-- Terms and Conditions -->
+                            <div class="form-group mb-3">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="invalidCheckTerms" required>
+                                    <label class="form-check-label" for="invalidCheckTerms">
+                                    Terms and Conditions 
+                                    <button type="button" class="btn btn-link p-0 ms-2" data-bs-toggle="collapse" data-bs-target="#termsDetails" aria-expanded="false" aria-controls="termsDetails">
+                                        <i class="bi bi-question-circle"></i>
+                                    </button>
+                                    </label>
+                                    <div id="termsDetails" class="collapse">
+                                    <p class="mb-2 text-primary">
                                         Submitting the form will download the rent application. Please fill it up and submit it online to our email address or walk into our office.
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="alert alert-warning d-flex align-items-center" role="alert">
-                                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-                                    <div>
                                         Filling up this form does not reserve a stall booth and doesn't guarantee that you will occupy the stall. Please message us for clarification and inquiries.
-                                    </div>
+                                    </p>
+                                </div>
+                                    <div class="invalid-feedback">You must agree to the terms and conditions to submit the form.</div>
                                 </div>
                             </div>
+                            <button type="submit" class="btn btn-primary text-white">Submit Application</button>
                         </div>
-                    </div>
-                </form>
+                    </form>
+                    
+                </div>
             </div>
             <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
                 <div id="alertContainer"></div>
-                <button type="button" class="btn btn-primary text-white" id="submitApplicationBtn">Submit Application</button>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-info text-white" id="openLinkBtn">
+                    Fill In the Rent Application Here
+                </button>
             </div>
         </div>
     </div>
 </div>
 
-<div id="alertContainer"></div>
-
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Include jQuery (if not already included) -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
 <script>
-$(document).ready(function() {
-    // Form validation
+document.getElementById('openLinkBtn').addEventListener('click', function() {
+    // Expand the accordion
+    var formDetails = document.getElementById('formDetails');
+    var bsCollapse = new bootstrap.Collapse(formDetails, {
+        toggle: true
+    });
+    
+    // Open the link in a new tab
+    window.open('https://form.jotform.com/242034145550042', '_blank');
+});
+
+// Bootstrap validation
+(function () {
+    'use strict'
+
+    // Fetch all the forms we want to apply custom Bootstrap validation styles to
     var forms = document.querySelectorAll('.needs-validation')
+
+    // Loop over them and prevent submission
     Array.prototype.slice.call(forms)
-    .forEach(function (form) {
-        form.addEventListener('submit', function (event) {
-            if (!form.checkValidity()) {
-                event.preventDefault()
-                event.stopPropagation()
-            }
-            form.classList.add('was-validated')
-        }, false)
-    })
-
-    $('#submitApplicationBtn').click(function(e) {
-        e.preventDefault();
-
-        // Clear previous alerts
-        $('#alertContainer').empty();
-
-        // Form validation check
-        var form = $('#vendorApplicationForm')[0];
-        if (form.checkValidity() === false) {
-            e.stopPropagation();
-            form.classList.add('was-validated');
-            return;
-        }
-
-        // Submit form via AJAX
-        var formData = $('#vendorApplicationForm').serialize();
-
-        $.ajax({
-            type: 'POST',
-            url: $('#vendorApplicationForm').attr('action'),
-            data: formData,
-            dataType: 'json',
-            success: function(response) {
-                if(response.success) {
-                    // Success alert
-                    $('#alertContainer').append(`
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong>Success!</strong> Application submitted successfully. Please download and fill the rent application form.
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    `);
-
-                    // Trigger file download
-                    var downloadUrl = 'DocumentFiles/RentApplication.docx'; // Replace with the actual path to the file
-                    var a = document.createElement('a');
-                    a.href = downloadUrl;
-                    a.download = 'RentApplication.docx';
-                    document.body.appendChild(a);
-                    a.click();
-                    document.body.removeChild(a);
-                    document.getElementById('vendorApplicationForm').reset();
-                } else {
-                    // Error alert
-                    $('#alertContainer').append(`
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong>Error!</strong> ${response.message}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    `);
+        .forEach(function (form) {
+            form.addEventListener('submit', function (event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault()
+                    event.stopPropagation()
                 }
-            },
-            error: function(jqXHR, textStatus, errorThrown) {
-                // AJAX error alert
-                $('#alertContainer').append(`
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <strong>Error!</strong> An error occurred. Please try again.
-                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                    </div>
-                `);
-                console.error('AJAX error:', textStatus, errorThrown);
-            }
-        });
+                form.classList.add('was-validated')
+            }, false)
+        })
+})();
+
+// Form submission with AJAX
+document.getElementById('vendorApplicationForm').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent default form submission
+
+    var form = this;
+    
+    if (!form.checkValidity()) {
+        form.classList.add('was-validated');
+        return; // Stop if form is not valid
+    }
+
+    var formData = new FormData(form);
+    
+    fetch('submit_application.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        var alert = document.getElementById('submissionAlert');
+        if (data.success) {
+            alert.className = 'alert alert-success';
+            alert.innerHTML = data.message;
+            setTimeout(() => {
+                form.reset(); // Clear the form fields
+                form.classList.remove('was-validated'); // Remove validation classes
+                alert.classList.add('d-none'); // Hide the alert after some time
+            }, 1000); // Clear the form and hide the alert after 2 seconds
+        } else {
+            alert.className = 'alert alert-danger';
+            alert.innerHTML = data.message;
+        }
+        alert.classList.remove('d-none');
+    })
+    .catch(error => {
+        var alert = document.getElementById('submissionAlert');
+        alert.className = 'alert alert-danger';
+        alert.innerHTML = 'An unexpected error occurred.';
+        alert.classList.remove('d-none');
     });
 });
 </script>
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+<div id="alertContainer"></div>
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
 
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
@@ -1102,10 +1124,6 @@ $(document).ready(function() {
     <div class="container copyright text-center mt-4">
       <p>© <span>Copyright</span> <strong class="px-1 sitename">Polomolok Public Market</strong> <span>All Rights Reserved</span></p>
       <div class="credits">
-        <!-- All the links in the footer should remain intact. -->
-        <!-- You can delete the links only if you've purchased the pro version. -->
-        <!-- Licensing information: https://bootstrapmade.com/license/ -->
-        <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
         Designed by The Students of STI - Sayre, Samontanes, Panaguiton, Chua</a>
       </div>
     </div>

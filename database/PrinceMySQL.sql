@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 17, 2024 at 01:42 PM
+-- Generation Time: Jul 22, 2024 at 10:12 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -18,8 +18,259 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `polomolokmarkets`
+-- Database: `polomolokmarket`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `building_a`
+--
+
+CREATE TABLE `building_a` (
+  `building_id` int(11) NOT NULL,
+  `stall_no` varchar(50) DEFAULT NULL,
+  `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
+  `monthly_rentals` varchar(100) DEFAULT NULL,
+  `vendor_id` bigint(20) DEFAULT NULL,
+  `stall_status` enum('Occupied','Vacant') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `building_a`
+--
+
+INSERT INTO `building_a` (`building_id`, `stall_no`, `building_floor`, `monthly_rentals`, `vendor_id`, `stall_status`) VALUES
+(1, 'A-01', 'Ground Floor', '3,060.00', 1, 'Occupied'),
+(2, 'A-02', 'Ground Floor', '5,400.00', 2, 'Occupied'),
+(3, 'A-03', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(4, 'A-04', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(5, 'A-05', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(6, 'A-06', 'Ground Floor', '3,060.00', NULL, 'Vacant'),
+(7, 'A-07', 'Ground Floor', '2,345.00', NULL, 'Vacant'),
+(8, 'A-08', 'Ground Floor', '2,345.00', NULL, 'Vacant'),
+(9, 'A-09', 'Ground Floor', '5,265.00', NULL, 'Vacant'),
+(10, 'A-10', 'Ground Floor', '3,968.00', NULL, 'Vacant'),
+(11, 'A-11', 'Ground Floor', '2,345.00', NULL, 'Vacant'),
+(12, 'A-12', 'Ground Floor', '2,746.00', NULL, 'Vacant'),
+(13, 'A-13', 'Ground Floor', '2,165.00', NULL, 'Vacant'),
+(14, 'A-14', 'Ground Floor', '2,345.00', NULL, 'Vacant'),
+(15, 'A-15', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(16, 'A-16', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(17, 'A-17', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(18, 'A-18', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(19, 'A-19', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(20, 'A-20', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(21, 'A-21', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(22, 'A-22', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(23, 'A-23', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(24, 'A-24', 'Ground Floor', '3,335.00', NULL, 'Vacant'),
+(25, 'A-25', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(26, 'A-26', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(27, 'A-27', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(28, 'A-28', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(29, 'A-29', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(30, 'A-30', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(31, 'A-31', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(32, 'A-32', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(33, 'A-33', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(34, 'A-34', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(35, 'A-35', 'Ground Floor', '6,179.00', NULL, 'Vacant'),
+(36, 'A-36', 'Ground Floor', '6,615.00', NULL, 'Vacant'),
+(37, 'A-37', 'Ground Floor', '6,750.00', NULL, 'Vacant'),
+(38, 'A-38', 'Ground Floor', '5,670.00', NULL, 'Vacant'),
+(39, 'A-39', 'Ground Floor', '5,076.00', NULL, 'Vacant'),
+(40, 'A-40', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(41, 'A-41', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(42, 'A-42', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(43, 'A-43', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(44, 'A-44', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(45, 'A-45', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(46, 'A-46', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(47, 'A-47', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(48, 'A-48', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(49, 'A-49', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(50, 'A-50', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(51, 'A-51', 'Ground Floor', '4,680.00', NULL, 'Vacant'),
+(52, 'A-52', 'Ground Floor', '4,680.00', NULL, 'Vacant'),
+(53, 'A-53', 'Ground Floor', '4,680.00', NULL, 'Vacant'),
+(54, 'A-54', 'Ground Floor', '4,680.00', NULL, 'Vacant'),
+(55, 'A-55', 'Ground Floor', '4,680.00', NULL, 'Vacant'),
+(56, 'A-56', 'Ground Floor', '4,680.00', NULL, 'Vacant'),
+(57, 'A-57', 'Ground Floor', '4,680.00', NULL, 'Vacant'),
+(58, 'A-58', 'Ground Floor', '4,680.00', NULL, 'Vacant'),
+(59, 'A-59', 'Ground Floor', '3,335.00', NULL, 'Vacant'),
+(60, 'A-60', 'Ground Floor', '1,190.00', NULL, 'Vacant'),
+(61, 'A-61', 'Ground Floor', '3,315.00', NULL, 'Vacant'),
+(62, 'A-62', 'Ground Floor', '3,315.00', NULL, 'Vacant'),
+(63, 'A-62A', 'Ground Floor', '3,700.00', NULL, 'Vacant'),
+(64, 'A-63', 'Ground Floor', '6,146.00', NULL, 'Vacant'),
+(65, 'A-64', 'Ground Floor', '6,254.00', NULL, 'Vacant'),
+(66, 'A-65', 'Ground Floor', '5,175.00', NULL, 'Vacant'),
+(67, 'A-66', 'Ground Floor', '3,175.00', NULL, 'Vacant'),
+(69, 'A-67', 'Ground Floor', '3,159.00', NULL, 'Vacant'),
+(70, 'A-68', 'Ground Floor', '1,706.00', NULL, 'Vacant'),
+(71, 'A-69', 'Second Floor', '4,464.00', NULL, 'Vacant'),
+(72, 'A-70', 'Second Floor', '4,464.00', NULL, 'Vacant'),
+(73, 'A-71', 'Second Floor', '4,464.00', NULL, 'Vacant'),
+(74, 'A-72', 'Second Floor', '4,464.00', NULL, 'Vacant'),
+(75, 'A-73', 'Second Floor', '3,729.00', NULL, 'Vacant'),
+(76, 'A-74', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(77, 'A-75', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(78, 'A-76', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(79, 'A-77', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(80, 'A-78', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(81, 'A-79', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(82, 'A-80', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(83, 'A-81', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(84, 'A-82', 'Second Floor', '5,266.00', NULL, 'Vacant'),
+(85, 'A-83', 'Second Floor', '4,032.00', NULL, 'Vacant'),
+(86, 'A-84', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(87, 'A-85', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(88, 'A-86', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(89, 'A-87', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(90, 'A-88', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(91, 'A-89', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(92, 'A-90', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(93, 'A-91', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(94, 'A-92', 'Second Floor', '3,730.00', NULL, 'Vacant'),
+(95, 'A-93', 'Second Floor', '5,266.00', NULL, 'Vacant'),
+(96, 'A-94', 'Second Floor', '3,730.00', NULL, 'Vacant');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `building_b`
+--
+
+CREATE TABLE `building_b` (
+  `building_id` int(11) NOT NULL,
+  `stall_no` varchar(50) DEFAULT NULL,
+  `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
+  `monthly_rentals` varchar(100) DEFAULT NULL,
+  `vendor_id` bigint(20) DEFAULT NULL,
+  `stall_status` enum('Occupied','Vacant') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `building_c`
+--
+
+CREATE TABLE `building_c` (
+  `building_id` int(11) NOT NULL,
+  `stall_no` varchar(50) DEFAULT NULL,
+  `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
+  `monthly_rentals` varchar(100) DEFAULT NULL,
+  `vendor_id` bigint(20) DEFAULT NULL,
+  `stall_status` enum('Occupied','Vacant') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `building_d`
+--
+
+CREATE TABLE `building_d` (
+  `building_id` int(11) NOT NULL,
+  `stall_no` varchar(50) DEFAULT NULL,
+  `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
+  `monthly_rentals` varchar(100) DEFAULT NULL,
+  `vendor_id` bigint(20) DEFAULT NULL,
+  `stall_status` enum('Occupied','Vacant') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `building_e`
+--
+
+CREATE TABLE `building_e` (
+  `building_id` int(11) NOT NULL,
+  `stall_no` varchar(50) DEFAULT NULL,
+  `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
+  `monthly_rentals` varchar(100) DEFAULT NULL,
+  `vendor_id` bigint(20) DEFAULT NULL,
+  `stall_status` enum('Occupied','Vacant') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `building_f`
+--
+
+CREATE TABLE `building_f` (
+  `building_id` int(11) NOT NULL,
+  `stall_no` varchar(50) DEFAULT NULL,
+  `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
+  `monthly_rentals` varchar(100) DEFAULT NULL,
+  `vendor_id` bigint(20) DEFAULT NULL,
+  `stall_status` enum('Occupied','Vacant') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `building_g`
+--
+
+CREATE TABLE `building_g` (
+  `building_id` int(11) NOT NULL,
+  `stall_no` varchar(50) DEFAULT NULL,
+  `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
+  `monthly_rentals` varchar(100) DEFAULT NULL,
+  `vendor_id` bigint(20) DEFAULT NULL,
+  `stall_status` enum('Occupied','Vacant') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `building_h`
+--
+
+CREATE TABLE `building_h` (
+  `building_id` int(11) NOT NULL,
+  `stall_no` varchar(50) DEFAULT NULL,
+  `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
+  `monthly_rentals` varchar(100) DEFAULT NULL,
+  `vendor_id` bigint(20) DEFAULT NULL,
+  `stall_status` enum('Occupied','Vacant') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `building_i`
+--
+
+CREATE TABLE `building_i` (
+  `building_id` int(11) NOT NULL,
+  `stall_no` varchar(50) DEFAULT NULL,
+  `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
+  `monthly_rentals` varchar(100) DEFAULT NULL,
+  `vendor_id` bigint(20) DEFAULT NULL,
+  `stall_status` enum('Occupied','Vacant') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `building_j`
+--
+
+CREATE TABLE `building_j` (
+  `building_id` int(11) NOT NULL,
+  `stall_no` varchar(50) DEFAULT NULL,
+  `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
+  `monthly_rentals` varchar(100) DEFAULT NULL,
+  `vendor_id` bigint(20) DEFAULT NULL,
+  `stall_status` enum('Occupied','Vacant') DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -110,7 +361,7 @@ CREATE TABLE `pagebuilder_table` (
 --
 
 INSERT INTO `pagebuilder_table` (`stats_id`, `buildings`, `overall_stalls`, `vendors`, `workers`) VALUES
-(1, 25, 12, 11, 10);
+(1, 10, 1039, 765, 50);
 
 -- --------------------------------------------------------
 
@@ -141,153 +392,60 @@ INSERT INTO `receipts` (`receipts_id`, `vendor_id`, `receipts`, `issued_date`) V
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `relocation_req`
+--
+
+CREATE TABLE `relocation_req` (
+  `relocation_id` int(11) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `date_sent` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `relocation_status` enum('Processing','Accepted','Declined') DEFAULT 'Processing'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `relocation_req`
+--
+
+INSERT INTO `relocation_req` (`relocation_id`, `vendor_id`, `message`, `date_sent`, `relocation_status`) VALUES
+(1, 1, 'hello world', '2024-07-19 19:33:57', 'Processing'),
+(2, 1, 'Hello i would like to relocate', '2024-07-19 19:35:59', 'Processing'),
+(3, 30, 'You cannot be shown', '2024-07-19 19:57:19', 'Accepted'),
+(4, 2, 'Hello Can i inquire about relocation, ive been monggoloid', '2024-07-20 00:02:24', 'Processing'),
+(5, 2, 'Hello Can i inquire about relocation, ive been monggoloidHello Can i inquire about relocation, ive been monggoloidHello Can i inquire about relocation, ive been monggoloidHello Can i inquire about relocation, ive been monggoloidHello Can i inquire about relocation, ive been monggoloid', '2024-07-20 00:04:35', 'Processing');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `rent_application`
 --
 
 CREATE TABLE `rent_application` (
-  `rent_app_id` int(11) NOT NULL,
+  `applicant_id` int(11) NOT NULL,
   `first_name` varchar(250) NOT NULL,
   `middle_name` varchar(50) NOT NULL,
   `last_name` varchar(250) NOT NULL,
   `contact_no` bigint(20) NOT NULL,
+  `building_type` text DEFAULT NULL,
+  `stall_no` bigint(20) DEFAULT NULL,
   `age` int(11) DEFAULT NULL,
   `email` varchar(250) DEFAULT NULL,
   `address` text DEFAULT NULL,
-  `sent_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `rentapp_file` text NOT NULL,
+  `applied_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rent_application`
 --
 
-INSERT INTO `rent_application` (`rent_app_id`, `first_name`, `middle_name`, `last_name`, `contact_no`, `age`, `email`, `address`, `sent_date`) VALUES
-(1, 'Prince', 'Jay', 'Sayre', 9171600383, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:15:27'),
-(2, 'Prince Jay', 'J', 'Sayre', 9171600383, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:15:27'),
-(3, 'Prince Jay', 'J', 'Sayre', 9171600383, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:15:27'),
-(4, 'Prince Jay', 'J', 'Sayre', 9171600383, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:15:27'),
-(5, 'Meil', 'Sheida', 'Panaguiton', 9171600383, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:16:29'),
-(6, 'Meil', 'Sheida', 'Panaguiton', 9171600383, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:24:58'),
-(7, 'Prince', 'aaa', 'dqw', 22323, 12, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:30:41'),
-(8, 'Prince', 'aaa', 'dqw', 22323, 12, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:31:01'),
-(9, 'Prince', 'Joy', 'Eryas', 9171600383, 52, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:32:49'),
-(10, 'Chua', 'Briar', 'Rose', 91823791, 52, 'chuabriar@gmail.com', 'damakao', '2024-07-17 11:34:36'),
-(11, 'wewew', 'wewewe', 'fewfewe', 234234, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:35:57'),
-(12, 'wewew', 'wewewe', 'fewfewe', 234234, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', '2024-07-17 11:39:12'),
-(13, 'Halu', 'Halu', 'Halu', 214214, 12, 'Halu@akbd.c', 'HaluHaluHaluHalu', '2024-07-17 11:39:31'),
-(14, '', '', '', 0, 0, '', '', '2024-07-17 11:39:47'),
-(15, '', '', '', 0, 0, '', '', '2024-07-17 11:39:51'),
-(16, 'wdq', 'wdq', 'wdq', 21412, 21, 'wdq@adw.c', 'wdqwdqwdq', '2024-07-17 11:40:21');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `stalls`
---
-
-CREATE TABLE `stalls` (
-  `stall_id` int(11) NOT NULL,
-  `stall_no` bigint(20) NOT NULL,
-  `building_type` varchar(255) NOT NULL,
-  `building_floor` varchar(255) NOT NULL,
-  `started_date` date DEFAULT NULL,
-  `monthly_rental` bigint(20) DEFAULT NULL,
-  `vendor_id` bigint(20) DEFAULT NULL,
-  `stall_status` enum('Occupied','Vacant') DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `stalls`
---
-
-INSERT INTO `stalls` (`stall_id`, `stall_no`, `building_type`, `building_floor`, `started_date`, `monthly_rental`, `vendor_id`, `stall_status`) VALUES
-(87, 1, 'Building A', 'Ground Floor', NULL, 17372, 16, 'Occupied'),
-(88, 2, 'Building A', 'Ground Floor', NULL, 16150, 26, 'Occupied'),
-(89, 3, 'Building A', 'Ground Floor', NULL, 18633, NULL, 'Vacant'),
-(90, 4, 'Building A', 'Ground Floor', NULL, 14715, NULL, 'Vacant'),
-(91, 5, 'Building A', 'Ground Floor', NULL, 27676, NULL, 'Vacant'),
-(92, 6, 'Building A', 'Ground Floor', NULL, 24235, NULL, 'Vacant'),
-(93, 7, 'Building A', 'Ground Floor', NULL, 28147, NULL, 'Vacant'),
-(94, 8, 'Building A', 'Ground Floor', NULL, 18029, NULL, 'Vacant'),
-(95, 9, 'Building A', 'Ground Floor', NULL, 15705, NULL, 'Vacant'),
-(96, 10, 'Building A', 'Ground Floor', NULL, 14438, NULL, 'Vacant'),
-(97, 11, 'Building A', 'Ground Floor', NULL, 15074, NULL, 'Vacant'),
-(98, 12, 'Building A', 'Ground Floor', NULL, 22058, NULL, 'Vacant'),
-(99, 13, 'Building A', 'Ground Floor', NULL, 15064, NULL, 'Vacant'),
-(100, 14, 'Building A', 'Ground Floor', NULL, 19150, NULL, 'Vacant'),
-(101, 15, 'Building A', 'Ground Floor', NULL, 20558, NULL, 'Vacant'),
-(102, 16, 'Building A', 'Ground Floor', NULL, 15340, NULL, 'Vacant'),
-(103, 17, 'Building A', 'Ground Floor', NULL, 25027, NULL, 'Vacant'),
-(104, 18, 'Building A', 'Ground Floor', NULL, 29113, NULL, 'Vacant'),
-(105, 19, 'Building A', 'Ground Floor', NULL, 20482, NULL, 'Vacant'),
-(106, 20, 'Building A', 'Ground Floor', NULL, 25071, NULL, 'Vacant'),
-(107, 21, 'Building A', 'Ground Floor', NULL, 13910, NULL, 'Vacant'),
-(108, 22, 'Building A', 'Ground Floor', NULL, 24341, NULL, 'Vacant'),
-(109, 23, 'Building A', 'Ground Floor', NULL, 29970, NULL, 'Vacant'),
-(110, 24, 'Building A', 'Ground Floor', NULL, 26829, NULL, 'Vacant'),
-(111, 25, 'Building A', 'Ground Floor', NULL, 14232, NULL, 'Vacant'),
-(112, 26, 'Building A', 'Ground Floor', NULL, 20675, NULL, 'Vacant'),
-(113, 27, 'Building A', 'Ground Floor', NULL, 10677, NULL, 'Vacant'),
-(114, 28, 'Building A', 'Ground Floor', NULL, 21363, NULL, 'Vacant'),
-(115, 29, 'Building A', 'Ground Floor', NULL, 24784, NULL, 'Vacant'),
-(116, 30, 'Building A', 'Ground Floor', NULL, 29831, NULL, 'Vacant'),
-(117, 31, 'Building A', 'Ground Floor', NULL, 24799, NULL, 'Vacant'),
-(118, 32, 'Building A', 'Ground Floor', NULL, 24504, NULL, 'Vacant'),
-(119, 33, 'Building A', 'Ground Floor', NULL, 18124, NULL, 'Vacant'),
-(120, 34, 'Building A', 'Ground Floor', NULL, 27107, NULL, 'Vacant'),
-(121, 35, 'Building A', 'Ground Floor', NULL, 11163, NULL, 'Vacant'),
-(122, 36, 'Building A', 'Ground Floor', NULL, 24496, NULL, 'Vacant'),
-(123, 37, 'Building A', 'Ground Floor', NULL, 18988, NULL, 'Vacant'),
-(124, 38, 'Building A', 'Ground Floor', NULL, 11454, NULL, 'Vacant'),
-(125, 39, 'Building A', 'Ground Floor', NULL, 10305, NULL, 'Vacant'),
-(126, 40, 'Building A', 'Ground Floor', NULL, 27164, NULL, 'Vacant'),
-(127, 41, 'Building A', 'Ground Floor', NULL, 14905, NULL, 'Vacant'),
-(128, 42, 'Building A', 'Ground Floor', NULL, 23033, NULL, 'Vacant'),
-(129, 43, 'Building A', 'Ground Floor', NULL, 20449, NULL, 'Vacant'),
-(130, 44, 'Building A', 'Ground Floor', NULL, 23146, NULL, 'Vacant'),
-(131, 45, 'Building A', 'Ground Floor', NULL, 24383, NULL, 'Vacant'),
-(132, 46, 'Building A', 'Ground Floor', NULL, 22476, NULL, 'Vacant'),
-(133, 47, 'Building A', 'Ground Floor', NULL, 29234, NULL, 'Vacant'),
-(134, 48, 'Building A', 'Ground Floor', NULL, 28739, NULL, 'Vacant'),
-(135, 49, 'Building A', 'Ground Floor', NULL, 25990, NULL, 'Vacant'),
-(136, 50, 'Building A', 'Ground Floor', NULL, 13736, NULL, 'Vacant'),
-(137, 51, 'Building A', 'Ground Floor', NULL, 20711, NULL, 'Vacant'),
-(138, 52, 'Building A', 'Ground Floor', NULL, 12348, NULL, 'Vacant'),
-(139, 53, 'Building A', 'Ground Floor', NULL, 29607, NULL, 'Vacant'),
-(140, 54, 'Building A', 'Ground Floor', NULL, 20986, NULL, 'Vacant'),
-(141, 55, 'Building A', 'Ground Floor', NULL, 26113, NULL, 'Vacant'),
-(142, 56, 'Building A', 'Ground Floor', NULL, 17603, NULL, 'Vacant'),
-(143, 57, 'Building A', 'Ground Floor', NULL, 19679, NULL, 'Vacant'),
-(144, 58, 'Building A', 'Ground Floor', NULL, 15586, NULL, 'Vacant'),
-(145, 59, 'Building A', 'Ground Floor', NULL, 28894, NULL, 'Vacant'),
-(146, 60, 'Building A', 'Ground Floor', NULL, 27709, NULL, 'Vacant'),
-(147, 61, 'Building A', 'Ground Floor', NULL, 21864, NULL, 'Vacant'),
-(148, 62, 'Building A', 'Ground Floor', NULL, 16194, NULL, 'Vacant'),
-(149, 63, 'Building A', 'Ground Floor', NULL, 25379, NULL, 'Vacant'),
-(150, 64, 'Building A', 'Ground Floor', NULL, 28313, NULL, 'Vacant'),
-(151, 65, 'Building A', 'Ground Floor', NULL, 15424, NULL, 'Vacant'),
-(152, 66, 'Building A', 'Ground Floor', NULL, 22183, NULL, 'Vacant'),
-(153, 67, 'Building A', 'Ground Floor', NULL, 14642, NULL, 'Vacant'),
-(154, 68, 'Building A', 'Ground Floor', NULL, 16663, NULL, 'Vacant');
-
---
--- Triggers `stalls`
---
-DELIMITER $$
-CREATE TRIGGER `set_stall_occupied_before_update` BEFORE UPDATE ON `stalls` FOR EACH ROW BEGIN
-    IF NEW.vendor_id IS NOT NULL THEN
-        SET NEW.stall_status = 'OCCUPIED';
-    END IF;
-END
-$$
-DELIMITER ;
-DELIMITER $$
-CREATE TRIGGER `set_stall_vacant_before_update` BEFORE UPDATE ON `stalls` FOR EACH ROW BEGIN
-    IF OLD.vendor_id IS NOT NULL AND NEW.vendor_id IS NULL THEN
-        SET NEW.stall_status = 'VACANT';
-    END IF;
-END
-$$
-DELIMITER ;
+INSERT INTO `rent_application` (`applicant_id`, `first_name`, `middle_name`, `last_name`, `contact_no`, `building_type`, `stall_no`, `age`, `email`, `address`, `rentapp_file`, `applied_date`) VALUES
+(37, 'Prince Jay', 'A', 'Sayre', 9171600383, 'Building A', 24, 22, 'yusreadadulo123@gmail.com', 'Purok Darussalam', 'rent_applications_file_dir/5974786937159993683-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-22 19:14:06'),
+(38, 'Meil', 'Sheida', 'Panaguiton', 900234723, 'Building A', 15, 24, 'seihbfsnk@aei.com', 'sayre residence purok darussalam bawing', 'rent_applications_file_dir/5974740497159401973-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-22 19:14:06'),
+(39, 'Reyan', 'Jan', 'Samontanes', 943453423, NULL, 9, 35, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', 'rent_applications_file_dir/5974850097152845324-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-22 19:26:51'),
+(40, 'Chua', 'Briar', 'Rose', 992347923, NULL, 29, 12, 'chua@gmail.com', 'Kiamber Seranganay', 'rent_applications_file_dir/5974857417158739359-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-22 19:31:27'),
+(41, 'Ticnap', '', 'Notnac', 99823479, NULL, 79, 56, 'Notnac@notnac.com', 'NotnacNotnacNakatira', 'rent_applications_file_dir/5974874457153279716-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-22 19:58:32'),
+(45, 'ibaed', 'qwd', 'qwdqwd', 25423, NULL, 21, 35, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', 'rent_applications_file_dir/5974879027155300046-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-22 20:10:53');
 
 -- --------------------------------------------------------
 
@@ -330,7 +488,8 @@ INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `middle_name`, 
 (19, 'tetrtr', '$2y$10$sgyzpX04XmnHfYERS6sl/.NHngVyMZfCs2XUAOnnnAI', 'qwdqw', 'dqwd', 'qwdqwd', 123, 'asdawd', 'awdawd', NULL, 'ADMIN'),
 (23, 'bagoni', '$2y$10$vqWlNzrXcIxRv95CZ8hdk.AevKMvWqaaG9Hgjy7ob.Q', 'olnaedln', 'nekl', 'lwefnkwn', 31, 'lkeafwelfnl', 'lnfesfwef', NULL, 'ADMIN'),
 (26, 'popol', '$2y$10$Y0EHGAUOWKY7ctsXe..Ba.uzrc/zS67QFCllEcMs.Bw', 'ijkensf', 'jnsf', 'nsef ', 231, 'ikebnfsefbkse', 'qwd', NULL, 'ADMIN'),
-(27, 'shete', 'hahaha', 'polokol', 'a', 'adsw', 21, 'awdawd', 'awdawd', NULL, 'STAFF');
+(27, 'shete', 'hahaha', 'polokol', 'a', 'adsw', 21, 'awdawd', 'awdawd', NULL, 'STAFF'),
+(28, 'reyanAdmin', 'meedko', 'Moroco', 'A', 'Palaka', 24, 'Taga Purok Di Makita', 'Palaka@gmail.com', 99234723433, 'ADMIN');
 
 -- --------------------------------------------------------
 
@@ -358,23 +517,82 @@ CREATE TABLE `vendors` (
 --
 
 INSERT INTO `vendors` (`vendor_id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `started_date`, `end_date`) VALUES
-(16, 'rj21', 'mine', 'mine', 'mine', '0', 17, 'Polotana Subdivision, West Drive.', 'ev34rfwed', 9510462062, '2024-07-15', '2024-08-29'),
-(17, 'janjan', 'janjan13', 'jan', 'jan', '0', 20, 'Polotana Subdivision, West Drive.', '7etyhjd65htyh', 95103620893, '2024-07-15', '2024-10-10'),
-(18, 'cry', 'cry123', 'cry', 'cry', '0', 45, 'Polotana Subdivision, West Drive.', '3242rqwfe24', 9510462062, '2024-07-18', '2024-09-19'),
-(19, 'ahay', 'kapoyna123', 'kapoy', 'H', '0', 20, 'Polotana Subdivision, West Drive.', '32rfwe34refwqq3', 1234234, '2024-07-15', '2024-07-15'),
-(20, 'atay', 'yawaaauy', 'mine', 'mine', 'mine', 121, 'Polotana Subdivision, West Drive.', '78ed76dcv', 9510462062, '2024-07-15', '2024-08-22'),
-(22, 'tdtetrdrtr', '78rffytedt', 'zxxf', 'xcuyfhv', 'ytxgchydcg', 33, 'Polotana Subdivision, West Drive.', '76ytxch', 98765456, '2024-07-15', '2024-08-16'),
-(23, '0987rfghn', '0987thn', 'atay', 'ahay', 'hahha', 33, 'Polotana Subdivision, West Drive.', 'q2erefdcegr', 98765456, '2024-07-15', '2024-07-15'),
-(24, '984yr8ewfiuweo', '-079y32h4iwef', '32rfwe', '235r24fwecds', 'f324t35grewf', 53, 'Polotana Subdivision, West Drive.', '3234trf32ew', 98765456, '2024-07-15', '2024-08-16'),
-(25, 'ayooo', 'ayoyoyooy', 'ayaywa', 'hahahaha', 'hehehehe', 190, 'Polotana Subdivision, West Drive.', '2345675644rgegvth', 314785643, '2024-07-15', '2024-07-15'),
-(26, 'RetryLangNaman', 'RetryLangNaman', 'RetryLangNaman', 'a', 'RetryLangNaman', 12, 'sayre residence purok darussalam bawing', 'RetryLangNaman@gmail.com', 9171600383, '2024-07-16', '2024-07-25'),
-(27, 'RETYYYYY', 'RETYYYYY', 'RETYYYYY', 'a', 'RETYYYYY', 23, 'sayre residence purok darussalam bawing', 'RETYYYYY@gmail.com', 9171600383, '2024-07-16', '2024-07-27'),
-(28, 'Chuass', 'Chuass', 'Chuass', 'a', 'Chuass', 21, 'sayre residence purok darussalam bawing', 'Chuass@cm.c', 9171600383, '2024-07-23', '2024-07-30'),
-(29, 'tryagain', 'tryagain', 'tryagain', 'a', 'tryagain', 53, 'sayre residence purok darussalam bawing', 'tryagain@gmail.com', 9171600383, '2024-07-16', '2024-07-26');
+(1, 'vendor1', 'password', 'Reyan ', 'Jan', 'Samontanes', 12, 'SamontanesSamontanes', 'Samontanes@ajwnd.co', 983454, NULL, NULL),
+(2, 'vendor2', 'secret', 'Reyasn ', 'J', 'Samontssanes', 22, 'SamontanesSamontanes', 'Samontanes@ajwnd.co', 983454, NULL, NULL);
 
 --
 -- Indexes for dumped tables
 --
+
+--
+-- Indexes for table `building_a`
+--
+ALTER TABLE `building_a`
+  ADD PRIMARY KEY (`building_id`),
+  ADD KEY `vendor_id` (`vendor_id`);
+
+--
+-- Indexes for table `building_b`
+--
+ALTER TABLE `building_b`
+  ADD PRIMARY KEY (`building_id`),
+  ADD KEY `vendor_id` (`vendor_id`);
+
+--
+-- Indexes for table `building_c`
+--
+ALTER TABLE `building_c`
+  ADD PRIMARY KEY (`building_id`),
+  ADD KEY `vendor_id` (`vendor_id`);
+
+--
+-- Indexes for table `building_d`
+--
+ALTER TABLE `building_d`
+  ADD PRIMARY KEY (`building_id`),
+  ADD KEY `vendor_id` (`vendor_id`);
+
+--
+-- Indexes for table `building_e`
+--
+ALTER TABLE `building_e`
+  ADD PRIMARY KEY (`building_id`),
+  ADD KEY `vendor_id` (`vendor_id`);
+
+--
+-- Indexes for table `building_f`
+--
+ALTER TABLE `building_f`
+  ADD PRIMARY KEY (`building_id`),
+  ADD KEY `vendor_id` (`vendor_id`);
+
+--
+-- Indexes for table `building_g`
+--
+ALTER TABLE `building_g`
+  ADD PRIMARY KEY (`building_id`),
+  ADD KEY `vendor_id` (`vendor_id`);
+
+--
+-- Indexes for table `building_h`
+--
+ALTER TABLE `building_h`
+  ADD PRIMARY KEY (`building_id`),
+  ADD KEY `vendor_id` (`vendor_id`);
+
+--
+-- Indexes for table `building_i`
+--
+ALTER TABLE `building_i`
+  ADD PRIMARY KEY (`building_id`),
+  ADD KEY `vendor_id` (`vendor_id`);
+
+--
+-- Indexes for table `building_j`
+--
+ALTER TABLE `building_j`
+  ADD PRIMARY KEY (`building_id`),
+  ADD KEY `vendor_id` (`vendor_id`);
 
 --
 -- Indexes for table `documents`
@@ -410,17 +628,16 @@ ALTER TABLE `receipts`
   ADD KEY `vendor_id` (`vendor_id`);
 
 --
+-- Indexes for table `relocation_req`
+--
+ALTER TABLE `relocation_req`
+  ADD PRIMARY KEY (`relocation_id`);
+
+--
 -- Indexes for table `rent_application`
 --
 ALTER TABLE `rent_application`
-  ADD PRIMARY KEY (`rent_app_id`);
-
---
--- Indexes for table `stalls`
---
-ALTER TABLE `stalls`
-  ADD PRIMARY KEY (`stall_id`),
-  ADD KEY `vendor_id` (`vendor_id`);
+  ADD PRIMARY KEY (`applicant_id`);
 
 --
 -- Indexes for table `users`
@@ -433,11 +650,42 @@ ALTER TABLE `users`
 -- Indexes for table `vendors`
 --
 ALTER TABLE `vendors`
-  ADD PRIMARY KEY (`vendor_id`);
+  ADD PRIMARY KEY (`vendor_id`),
+  ADD UNIQUE KEY `username` (`username`);
 
 --
 -- AUTO_INCREMENT for dumped tables
 --
+
+--
+-- AUTO_INCREMENT for table `building_a`
+--
+ALTER TABLE `building_a`
+  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=168;
+
+--
+-- AUTO_INCREMENT for table `building_b`
+--
+ALTER TABLE `building_b`
+  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `building_c`
+--
+ALTER TABLE `building_c`
+  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `building_d`
+--
+ALTER TABLE `building_d`
+  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `building_e`
+--
+ALTER TABLE `building_e`
+  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `documents`
@@ -470,38 +718,28 @@ ALTER TABLE `receipts`
   MODIFY `receipts_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
+-- AUTO_INCREMENT for table `relocation_req`
+--
+ALTER TABLE `relocation_req`
+  MODIFY `relocation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+
+--
 -- AUTO_INCREMENT for table `rent_application`
 --
 ALTER TABLE `rent_application`
-  MODIFY `rent_app_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
-
---
--- AUTO_INCREMENT for table `stalls`
---
-ALTER TABLE `stalls`
-  MODIFY `stall_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=155;
+  MODIFY `applicant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `stalls`
---
-ALTER TABLE `stalls`
-  ADD CONSTRAINT `fk_vendor` FOREIGN KEY (`vendor_id`) REFERENCES `vendors` (`vendor_id`) ON DELETE SET NULL;
+  MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
