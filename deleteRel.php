@@ -9,7 +9,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if 'ids' is set and is an array
+// Check if 'relocation_id' is set and is an array
 if (isset($_POST['relocation_id']) && is_array($_POST['relocation_id']) && count($_POST['relocation_id']) > 0) {
     $ids = $_POST['relocation_id'];
 
@@ -31,20 +31,25 @@ if (isset($_POST['relocation_id']) && is_array($_POST['relocation_id']) && count
 
             // Execute the statement
             if ($stmt->execute()) {
+                http_response_code(200);
                 echo 'Records deleted successfully.';
             } else {
+                http_response_code(500);
                 echo 'Error deleting records: ' . $stmt->error;
             }
 
             // Close the statement
             $stmt->close();
         } else {
+            http_response_code(500);
             echo 'Error preparing statement: ' . $conn->error;
         }
     } else {
+        http_response_code(400);
         echo 'No valid IDs provided.';
     }
 } else {
+    http_response_code(400);
     echo 'No IDs provided or invalid format.';
 }
 

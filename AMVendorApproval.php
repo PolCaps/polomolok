@@ -339,6 +339,7 @@ $conn->close();
                 <table class="table align-items-center mb-0" >
                   <thead>
                     <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Aproval Status</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Applicant ID</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Applicant Name</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Date of Submitted</th>
@@ -348,6 +349,7 @@ $conn->close();
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Stall No</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Address</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Rent Application File</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">DELETE</th>
                     </tr>
                   </thead>
                   <tbody id="table-body">
@@ -368,7 +370,18 @@ $conn->close();
                 data.forEach(item => {
                     const row = document.createElement('tr');
                     
-                    // Create table cells
+                    console.log(`Applicant ID: ${item.applicant_id}, Approval: ${item.Approval}`); // Log the approval status
+            
+                      // Create approval status dropdown cell
+                      const processCell = document.createElement('td');
+                    processCell.innerHTML = `
+                        <select class="form-select form-select-sm approval-status" data-id="${item.applicant_id}">
+                            <option value="PROCESSING" ${item.Approval === 'PROCESSING' ? 'selected' : ''}>PROCESSING</option>
+                            <option value="APPROVED" ${item.Approval === 'APPROVED' ? 'selected' : ''}>APPROVED</option>
+                            <option value="DECLINED" ${item.Approval === 'DECLINED' ? 'selected' : ''}>DECLINED</option>
+                        </select>
+                    `;
+
                     const applicantidCell = document.createElement('td');
                     applicantidCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div>`;
                    
@@ -396,7 +409,12 @@ $conn->close();
                     const fileCell = document.createElement('td');
                     fileCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center"><a href="${item.rentapp_file}" target="_blank">View File</a></h6></div>`;
 
+                    // Create delete button cell
+                    const deleteCell = document.createElement('td');
+                    deleteCell.innerHTML = `<button class="btn btn-danger btn-sm delete-button" data-id="${item.applicant_id}">Delete</button>`;
+
                     // Append cells to row
+                    row.appendChild(processCell);
                     row.appendChild(applicantidCell);
                     row.appendChild(nameCell);
                     row.appendChild(dateCell);
@@ -406,14 +424,58 @@ $conn->close();
                     row.appendChild(stallnoCell);
                     row.appendChild(addressCell);
                     row.appendChild(fileCell);
+                    row.appendChild(deleteCell);
                     
                     // Append row to table body
                     tableBody.appendChild(row);
                 });
+
+                 // Add event listener to approval status dropdowns
+                 document.querySelectorAll('.approval-status').forEach(select => {
+                    select.addEventListener('change', function() {
+                        const applicantId = this.dataset.id;
+                        const newStatus = this.value;
+
+                        fetch('updateApproval.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({ 'applicant_id': applicantId, 'status': newStatus })
+                        })
+                        .then(response => response.text())
+                        .then(result => {
+                            alert(result);
+                        })
+                        .catch(error => console.error('Error updating status:', error));
+                    });
+                });
+
+                // Add event listener to delete buttons
+                document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const applicantId = this.dataset.id;
+                        if (confirm('Are you sure you want to delete this record?')) {
+                            fetch('deleteApproval.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: new URLSearchParams({ 'applicant_id': applicantId })
+                            })
+                            .then(response => response.text())
+                            .then(result => {
+                                alert(result);
+                                location.reload(); // Reload page to see changes
+                            })
+                            .catch(error => console.error('Error deleting record:', error));
+                        }
+                    });
+                });
             } else {
                 const row = document.createElement('tr');
                 const cell = document.createElement('td');
-                cell.colSpan = 6;
+                cell.colSpan = 11; // Update colSpan to match the total number of columns
                 cell.textContent = 'No records found';
                 row.appendChild(cell);
                 tableBody.appendChild(row);
@@ -421,7 +483,8 @@ $conn->close();
         })
         .catch(error => console.error('Error fetching data:', error));
     });
-    </script>
+</script>
+
         </div>
       </div>
         </div>
