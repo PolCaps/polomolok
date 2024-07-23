@@ -1,0 +1,624 @@
+<?php
+
+require_once 'database_config.php'; // Include your database connection file
+session_start(); // Start the session
+
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+// Connect to the database
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+    try {
+        // Start transaction
+        $conn->begin_transaction();
+        // Collect form data
+        $username = $_POST['username'];
+        $password = $_POST['password'];
+        // $first_name = $_POST['first_name'];
+        // $middle_name = $_POST['middle_name'];
+        // $last_name = $_POST['last_name'];
+        // $age = $_POST['age'];
+        // $contact_number = $_POST['contact_number'];
+        // $address = $_POST['address'];
+        // $email_add = $_POST['email_add'];
+        $stall_no = $_POST['stall_no'];
+        $building_type = $_POST['building_type'];
+        $monthly_rentals = $_POST['monthly_rentals'];
+        $building_floor = $_POST['building_floor'];
+        $started_date = $_POST['started_date'];
+        $end_date = $_POST['end_date'];
+        $stall_status = "Occupied"; // Added default value for stall status
+
+        // $leaseAgreements = isset($_FILES['lease_agreements']) ? $_FILES['lease_agreements'] : null;
+        // $businessPermits = isset($_FILES['business_permits']) ? $_FILES['business_permits'] : null;
+        // $businessLicenses = isset($_FILES['business_licenses']) ? $_FILES['business_licenses'] : null;
+        // $receipts = isset($_FILES['receipts']) ? $_FILES['receipts'] : null;
+
+        // $fileErrors = [];
+        // $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf', '*/*'];
+
+        // function validate_and_handle_file($file, $allowedTypes, &$fileErrors) {
+        //     if ($file && isset($file['error']) && $file['error'] === UPLOAD_ERR_OK) {
+        //         if (!in_array($file['type'], $allowedTypes)) {
+        //             $fileErrors[] = "Invalid file type for " . basename($file["name"]) . ".";
+        //             return null;
+        //         }
+
+        //         $username = $_POST['username'];
+        //         $today = date('Y-m-d');
+        //         $targetDir = "datas/" . $username . "/" . $today . "/";
+
+        //         if (!is_dir($targetDir)) {
+        //             if (!mkdir($targetDir, 0755, true)) {
+        //                 $fileErrors[] = "Error creating directory: $targetDir";
+        //                 return null;
+        //             }
+        //         }
+        //         $targetFile = $targetDir . basename($file["name"]);
+
+        //         if (move_uploaded_file($file["tmp_name"], $targetFile)) {
+        //             return $targetFile; // Return path to the uploaded file
+        //         } else {
+        //             $fileErrors[] = "Error moving " . basename($file["name"]) . " file to destination.";
+        //             return null;
+        //         }
+        //     }
+        //     return null;
+        // }
+
+        // $upload_success = true;
+
+        // $receiptsDest = validate_and_handle_file($receipts, $allowedTypes, $fileErrors);
+        // $leaseAgreementsDest = validate_and_handle_file($leaseAgreements, $allowedTypes, $fileErrors);
+        // $businessPermitsDest = validate_and_handle_file($businessPermits, $allowedTypes, $fileErrors);
+        // $businessLicensesDest = validate_and_handle_file($businessLicenses, $allowedTypes, $fileErrors);
+
+        // if (!empty($fileErrors)) {
+        //     $_SESSION['alert_class'] = 'alert-danger';
+        //     $_SESSION['alert_message'] = implode("\n", $fileErrors);
+        //     header('Location: AMvendor.php');
+        //     exit();
+        // }
+
+        // Your SQL insert statement
+$sql_vendor = "INSERT INTO vendors (username, password, started_date, end_date) VALUES (?, ?, ?, ?)";
+
+// Prepare the statement
+$stmt_vendor = $conn->prepare($sql_vendor);
+if (!$stmt_vendor) {
+    throw new Exception('Error preparing statement: ' . $conn->error);
+}
+
+// Bind the parameters
+$stmt_vendor->bind_param('ssss', $username, $password, $started_date, $end_date);
+
+// Execute the statement (do not pass any arguments to execute())
+if (!$stmt_vendor->execute()) {
+    throw new Exception('Error executing statement: ' . $stmt_vendor->error);
+}
+
+// Get the last inserted ID
+$vendor_id = $stmt_vendor->insert_id;
+
+        // Determine building table
+    $tables = [
+        'building_a', 'building_b', 'building_c', 'building_d',
+        'building_e', 'building_f', 'building_g', 'building_h',
+        'building_i', 'building_j'
+    ];
+
+    if (in_array($building_type, $tables)) {
+        // Prepare the SQL update statement
+        $sql = "UPDATE $building_type 
+                SET vendor_id = ? 
+                WHERE stall_no = ?";
+        $stmt = $conn->prepare($sql);
+
+        if ($stmt) {
+            // Bind parameters and execute
+            $stmt->bind_param("ss", $stall_no, $stall_no);
+            if ($stmt->execute()) {
+                echo json_encode(['status' => 'success', 'message' => 'Stall updated successfully']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Update failed']);
+            }
+            $stmt->close();
+        } 
+        // $sql_documents = "INSERT INTO documents (vendor_id, lease_agreements, business_permits, business_license)
+        //                 VALUES (?, ?, ?, ?)";
+        // $stmt_documents = $conn->prepare($sql_documents);
+        // if (!$stmt_documents) {
+        //     throw new Exception('Error preparing statement: ' . $conn->error);
+        // }
+        // $param_types_documents = "ibbb";
+        // $stmt_documents->bind_param($param_types_documents, $vendor_id, $leaseAgreementsDest, $businessPermitsDest, $businessLicensesDest);
+        // // Assuming successful preparation...
+        // $stmt_documents->send_long_data(1, $leaseAgreementsDest);
+        // $stmt_documents->send_long_data(2, $businessPermitsDest);
+        // $stmt_documents->send_long_data(3, $businessLicensesDest);
+        // $stmt_documents->execute();
+
+        // $sql_receipts = "INSERT INTO receipts (vendor_id, receipts, issued_date)
+        //                 VALUES (?, ?, ?)";
+        // $stmt_receipts = $conn->prepare($sql_receipts);
+        // if (!$stmt_receipts) {
+        //     throw new Exception('Error preparing statement: ' . $conn->error);
+        // }
+        // $param_types_receipts = "ibs";
+        // $stmt_receipts->bind_param($param_types_receipts, $vendor_id, $receiptsDest, $started_date);
+        // $stmt_receipts->send_long_data(1, $receiptsDest);
+        // $stmt_receipts->execute();
+    }
+
+        $conn->commit();
+        
+
+        $_SESSION['alert_class'] = 'alert-success';
+        $_SESSION['alert_message'] = 'Vendor and Stall created successfully!';
+    } catch (Exception $e) {
+        $conn->rollback();
+        $_SESSION['alert_class'] = 'alert-danger';
+        $_SESSION['alert_message'] = 'An error occurred: ' . $e->getMessage();
+    }
+
+    header('Location: AMvendor.php');
+    exit();
+}
+
+?>
+
+
+
+
+
+CREATE TABLE users (
+  `id` int(11) PRIMARY KEY NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `middle_name` varchar(255) NOT NULL,
+  `last_name` varchar(255) NOT NULL,
+  `age` int(11) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `email_add` varchar(255) DEFAULT NULL,
+  `contact_no` bigint(20) DEFAULT NULL,
+  `user_type` enum('ADMIN','STAFF') NOT NULL
+);
+
+CREATE TABLE vendors (
+  `vendor_id` bigint(20) PRIMARY KEY NOT NULL,
+  `username` varchar(50) NOT NULL,
+  `password` varchar(50) NOT NULL,
+  `first_name` varchar(255) NOT NULL,
+  `middle_name` varchar(255) DEFAULT NULL,
+  `last_name` varchar(255) DEFAULT NULL,
+  `age` int(11) DEFAULT NULL,
+  `address` varchar(255) DEFAULT NULL,
+  `email_add` varchar(255) DEFAULT NULL,
+  `contact_no` bigint(20) DEFAULT NULL,
+  `started_date` varchar(255) DEFAULT NULL,
+  `end_date` varchar(255) DEFAULT NULL
+);
+
+CREATE TABLE documents (
+  `document_id` int(11) PRIMARY KEY NOT NULL,
+  `vendor_id` bigint(20) NOT NULL,
+  `lease_agreements` longblob DEFAULT NULL,
+  `business_permits` longblob DEFAULT NULL,
+  `business_license` longblob DEFAULT NULL,
+  `other_supporting` longblob DEFAULT NULL,
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE inquiry (
+  `inquiry_id` int(11) PRIMARY KEY NOT NULL,
+  `name` varchar(250) NOT NULL,
+  `email_add` varchar(250) NOT NULL,
+  `subject` varchar(250) NOT NULL,
+  `message` text NOT NULL,
+  `sent_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+);
+
+CREATE TABLE message (
+  `message_id` int(11) PRIMARY KEY NOT NULL,
+  `vendor_id` bigint(20) NOT NULL,
+  `id` int(11) NOT NULL,
+  `message` text NOT NULL,
+  `sent_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE pagebuilder_table (
+  `stats_id` bigint(20) PRIMARY KEY NOT NULL,
+  `buildings` bigint(20) NOT NULL,
+  `overall_stalls` bigint(20) NOT NULL,
+  `vendors` bigint(20) NOT NULL,
+  `workers` bigint(20) NOT NULL
+);
+
+CREATE TABLE receipts (
+  `receipts_id` int(11) PRIMARY KEY NOT NULL,
+  `vendor_id` bigint(20) NOT NULL,
+  `receipts` longblob DEFAULT NULL,
+  `issued_date` varchar(255) DEFAULT NULL,
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE buildings (
+    building_id INT PRIMARY KEY,
+    building_name VARCHAR(50)
+);
+
+CREATE TABLE stalls (
+  `stall_id` int(11) PRIMARY KEY NOT NULL,
+  `stall_no` VARCHAR(50) NOT NULL,
+   building_id INT,
+  `building_floor` varchar(255) NOT NULL,
+  `monthly_rental` bigint(20) DEFAULT NULL,
+  `vendor_id` bigint,
+  `stall_status` enum('Occupied','Vacant') DEFAULT NULL,
+    FOREIGN KEY (building_id) REFERENCES buildings(buildiing_id),
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE `rent_application` (
+  `rent_app_id` int(11) NOT NULL,
+  `first_name` varchar(250) NOT NULL,
+  `middle_name` varchar(50) NOT NULL,
+  `last_name` varchar(250) NOT NULL,
+  `contact_no` bigint(20) NOT NULL,
+  `age` int(11) DEFAULT NULL,
+  `email` varchar(250) DEFAULT NULL,
+  `address` text DEFAULT NULL,
+  `sent_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+);
+
+
+CREATE TABLE BUILDING_A (
+    building_id INT PRIMARY KEY AUTO_INCREMENT,
+    stall_no VARCHAR(50),
+    building_floor VARCHAR(50),
+    monthly_rentals VARCHAR(100), 
+    vendor_id BIGINT,
+    stall_status ENUM('Occupied','Vacant'),
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE BUILDING_B (
+    building_id INT PRIMARY KEY AUTO_INCREMENT,
+    stall_no VARCHAR(50),
+    building_floor VARCHAR(50),
+    monthly_rentals VARCHAR(100), 
+    vendor_id BIGINT,
+    stall_status ENUM('Occupied','Vacant'),
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE BUILDING_C (
+    building_id INT PRIMARY KEY AUTO_INCREMENT,
+    stall_no VARCHAR(50),
+    building_floor VARCHAR(50),
+    monthly_rentals VARCHAR(100), 
+    vendor_id BIGINT,
+    stall_status ENUM('Occupied','Vacant'),
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE BUILDING_D (
+    building_id INT PRIMARY KEY AUTO_INCREMENT,
+    stall_no VARCHAR(50),
+    building_floor VARCHAR(50),
+    monthly_rentals VARCHAR(100), 
+    vendor_id BIGINT,
+    stall_status ENUM('Occupied','Vacant'),
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE BUILDING_E (
+    building_id INT PRIMARY KEY AUTO_INCREMENT,
+    stall_no VARCHAR(50),
+    building_floor VARCHAR(50),
+    monthly_rentals VARCHAR(100), 
+    vendor_id BIGINT,
+    stall_status ENUM('Occupied','Vacant'),
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE BUILDING_F (
+    building_id INT PRIMARY KEY AUTO_INCREMENT,
+    stall_no VARCHAR(50),
+    building_floor VARCHAR(50),
+    monthly_rentals VARCHAR(100), 
+    vendor_id BIGINT,
+    stall_status ENUM('Occupied','Vacant'),
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE BUILDING_G (
+    building_id INT PRIMARY KEY AUTO_INCREMENT,
+    stall_no VARCHAR(50),
+    building_floor VARCHAR(50),
+    monthly_rentals VARCHAR(100), 
+    vendor_id BIGINT,
+    stall_status ENUM('Occupied','Vacant'),
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE BUILDING_H (
+    building_id INT PRIMARY KEY AUTO_INCREMENT,
+    stall_no VARCHAR(50),
+    building_floor VARCHAR(50),
+    monthly_rentals VARCHAR(100), 
+    vendor_id BIGINT,
+    stall_status ENUM('Occupied','Vacant'),
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE BUILDING_I (
+    building_id INT PRIMARY KEY AUTO_INCREMENT,
+    stall_no VARCHAR(50),
+    building_floor VARCHAR(50),
+    monthly_rentals VARCHAR(100), 
+    vendor_id BIGINT,
+    stall_status ENUM('Occupied','Vacant'),
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+CREATE TABLE BUILDING_J (
+    building_id INT PRIMARY KEY AUTO_INCREMENT,
+    stall_no VARCHAR(50),
+    building_floor VARCHAR(50),
+    monthly_rentals VARCHAR(100), 
+    vendor_id BIGINT,
+    stall_status ENUM('Occupied','Vacant'),
+    FOREIGN KEY (vendor_id) REFERENCES vendors(vendor_id)
+);
+
+
+
+INSERT INTO building_a (stall_no, building_floor, monthly_rentals, stall_status)
+VALUES ('A-01', 'Ground Floor', 'P3,060.00','Vacant'),
+       ('A-02', 'Ground Floor', 'P5,400.00','Vacant'),
+       ('A-03', 'Ground Floor', 'P5,400.00','Vacant'),
+       ('A-04', 'Ground Floor', 'P5,400.00','Vacant'),
+       ('A-05', 'Ground Floor', '$5,400.00','Vacant'),
+       ('A-06', 'Ground Floor', 'P3,060.00','Vacant'),
+	('A-07', 'Ground Floor', '2,345.00', 'Vacant'),
+       ('A-08', 'Ground Floor', '2,345.00', 'Vacant'),
+       ('A-09', 'Ground Floor', '5,265.00', 'Vacant'),
+       ('A-10', 'Ground Floor', '3,968.00', 'Vacant'),
+       ('A-11', 'Ground Floor', '2,345.00', 'Vacant'),
+       ('A-12', 'Ground Floor', '2,746.00', 'Vacant'),
+       ('A-13', 'Ground Floor', '2,165.00', 'Vacant'),
+       ('A-14', 'Ground Floor', '2,345.00', 'Vacant'),
+       ('A-15', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-16', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-17', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-18', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-19', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-20', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-21', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-22', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-23', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-24', 'Ground Floor', '3,335.00', 'Vacant'),
+       ('A-25', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-26', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-27', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-28', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-29', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-30', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-31', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-32', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-33', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-34', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-35', 'Ground Floor', '6,179.00', 'Vacant'),
+       ('A-36', 'Ground Floor', '6,615.00', 'Vacant'),
+       ('A-37', 'Ground Floor', '6,750.00', 'Vacant'),
+       ('A-38', 'Ground Floor', '5,670.00', 'Vacant'),
+       ('A-39', 'Ground Floor', '5,076.00', 'Vacant'),
+       ('A-40', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-41', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-42', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-43', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-44', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-45', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-46', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-47', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-48', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-49', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-50', 'Ground Floor', '5,400.00', 'Vacant'),
+       ('A-51', 'Ground Floor', '4,680.00', 'Vacant'),
+       ('A-52', 'Ground Floor', '4,680.00', 'Vacant'),
+       ('A-53', 'Ground Floor', '4,680.00', 'Vacant'),
+       ('A-54', 'Ground Floor', '4,680.00', 'Vacant'),
+       ('A-55', 'Ground Floor', '4,680.00', 'Vacant'),
+       ('A-56', 'Ground Floor', '4,680.00', 'Vacant'),
+       ('A-57', 'Ground Floor', '4,680.00', 'Vacant'),
+       ('A-58', 'Ground Floor', '4,680.00', 'Vacant'),
+       ('A-59', 'Ground Floor', '3,335.00', 'Vacant'),
+       ('A-60', 'Ground Floor', '1,190.00', 'Vacant'),
+       ('A-61', 'Ground Floor', '3,315.00', 'Vacant'),
+       ('A-62', 'Ground Floor', '3,315.00', 'Vacant'),
+       ('A-62A', 'Ground Floor', '3,700.00', 'Vacant'),
+       ('A-63', 'Ground Floor', '6,146.00', 'Vacant'),
+       ('A-64', 'Ground Floor', '6,254.00', 'Vacant'),
+       ('A-65', 'Ground Floor', '5,175.00', 'Vacant'),
+       ('A-66', 'Ground Floor', '3,159.00', 'Vacant'),
+       ('A-67', 'Ground Floor', '3,159.00', 'Vacant'),
+       ('A-68', 'Ground Floor', '1,706.00', 'Vacant'),
+       ('A-69', 'Second Floor', '4,464.00', 'Vacant'),
+       ('A-70', 'Second Floor', '4,464.00', 'Vacant'),
+       ('A-71', 'Second Floor', '4,464.00', 'Vacant'),
+       ('A-72', 'Second Floor', '4,464.00', 'Vacant'),
+       ('A-73', 'Second Floor', '3,729.00', 'Vacant'),
+       ('A-74', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-75', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-76', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-77', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-78', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-79', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-80', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-81', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-82', 'Second Floor', '5,266.00', 'Vacant'),
+       ('A-83', 'Second Floor', '4,032.00', 'Vacant'),
+       ('A-84', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-85', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-86', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-87', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-88', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-89', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-90', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-91', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-92', 'Second Floor', '3,730.00', 'Vacant'),
+       ('A-93', 'Second Floor', '5,266.00', 'Vacant'),
+       ('A-94', 'Second Floor', '3,730.00', 'Vacant');
+       
+INSERT INTO building_b (stall_no, building_floor, monthly_rentals, stall_status)
+VALUES	('B-01', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-02', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-03', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-04', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-05', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-06', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-07', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-08', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-09', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-10', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-11', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-12', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-13', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-14', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-15', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-16', 'Ground Floor', '2,025.00','Vacant'),
+       	('B-17', 'Ground Floor', '1,755.00', 'Vacant'),
+       	('B-18', 'Ground Floor', '1,755.00', 'Vacant'),
+       	('B-19', 'Ground Floor', '1,755.00', 'Vacant'), 
+       	('B-20', 'Ground Floor', '1,755.00', 'Vacant'), 
+       	('B-21', 'Ground Floor', '1,755.00', 'Vacant'),
+       	('B-22', 'Ground Floor', '1,755.00', 'Vacant'),
+       	('B-23', 'Ground Floor', '1,755.00', 'Vacant'),
+       	('B-24', 'Ground Floor', '1,755.00', 'Vacant'), 
+       	('B-25', 'Ground Floor', '2,025.00', 'Vacant'),
+       	('B-26', 'Ground Floor', '1,755.00', 'Vacant'),
+       	('B-27', 'Ground Floor', '1,755.00', 'Vacant'),  
+       	('B-28', 'Ground Floor', '1,755.00', 'Vacant'), 
+       	('B-29', 'Ground Floor', '1,755.00', 'Vacant'), 
+       	('B-30', 'Ground Floor', '1,755.00', 'Vacant'),
+       	('B-31', 'Ground Floor', '1,755.00', 'Vacant'), 
+       	('B-32', 'Ground Floor', '1,755.00', 'Vacant'),
+       	('B-33', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-34', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-35', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-36', 'Ground Floor', '2,700.00', 'Vacant'),
+	('B-37', 'Ground Floor', '2,700.00', 'Vacant'),
+	('B-38', 'Ground Floor', '2,340.00', 'Vacant'),
+	('B-39', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-40', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-41', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-42', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-43', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-44', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-45', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-46', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-47', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-48', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-49', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-50', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-51', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-52', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-53', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-54', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-55', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-56', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-57', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-58', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-59', 'Ground Floor', '2,340.00', 'Vacant'),
+	('B-60', 'Ground Floor', '2,700.00', 'Vacant'),
+	('B-61', 'Ground Floor', '2,700.00', 'Vacant'),
+	('B-62', 'Ground Floor', '2,340.00', 'Vacant'),
+	('B-63', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-64', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-65', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-66', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-67', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-68', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-69', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-70', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-71', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-72', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-73', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-74', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-75', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-76', 'Ground Floor', '1,465.00', 'Vacant'),
+	('B-77', 'Ground Floor', '1,465.00', 'Vacant'),
+	('B-78', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-79', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-80', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-81', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-82', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-83', 'Ground Floor', '2,340.00', 'Vacant'),
+	('B-84', 'Ground Floor', '2,700.00', 'Vacant'),
+	('B-85', 'Ground Floor', '2,700.00', 'Vacant'),
+	('B-86', 'Ground Floor', '2,340.00', 'Vacant'),
+	('B-87', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-88', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-89', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-90', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-91', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-92', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-93', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-94', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-95', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-96', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-97', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-98', 'Ground Floor',  '1,755.00', 'Vacant'),
+	('B-99', 'Ground Floor',  '1,755.00', 'Vacant'),
+	('B-100', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-101', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-102', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-103', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-104', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-105', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-106', 'Ground Floor', '1,755.00', 'Vacant'),
+	('B-107', 'Ground Floor', '2,340.00', 'Vacant'),
+	('B-108', 'Ground Floor', '2,700.00', 'Vacant'),
+	('B-109', 'Ground Floor', '2,700.00', 'Vacant'),
+	('B-110', 'Ground Floor', '2,700.00', 'Vacant'),
+	('B-111', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-112', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-113', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-114', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-115', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-116', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-117', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-118', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-119', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-120', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-121', 'Ground Floor', '2,025.00', 'Vacant'),
+	('B-122', 'Ground Floor', '506.00', 'Vacant'),
+	('B-123', 'Ground Floor', '506.00', 'Vacant'),
+	('B-124', 'Ground Floor', '506.00', 'Vacant'),
+	('B-125', 'Ground Floor', '506.00', 'Vacant'),
+	('B-126', 'Ground Floor', '506.00', 'Vacant'),
+	('B-127', 'Ground Floor', '506.00', 'Vacant'),
+	('B-128', 'Ground Floor', '506.00', 'Vacant'),
+	('B-129', 'Ground Floor', '506.00', 'Vacant'),
+	('B-130', 'Ground Floor', '506.00', 'Vacant'),
+	('B-131', 'Ground Floor', '506.00', 'Vacant'),
+	('B-132', 'Ground Floor', '506.00', 'Vacant'),
+	('B-133', 'Ground Floor', '506.00', 'Vacant'),
+	('B-134', 'Ground Floor', '506.00', 'Vacant'),
+	('B-135', 'Ground Floor', '506.00', 'Vacant'),
+	('B-136', 'Ground Floor', '506.00', 'Vacant'),
+	('B-137', 'Ground Floor', '506.00', 'Vacant'),
+	('B-138', 'Ground Floor', '506.00', 'Vacant'),
+	('B-139', 'Ground Floor', '506.00', 'Vacant'),
+	('B-140', 'Ground Floor', '506.00', 'Vacant'),
