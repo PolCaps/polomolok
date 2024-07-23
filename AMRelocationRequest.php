@@ -240,7 +240,7 @@ if ($conn->connect_error) {
 }
 
 // Define the SQL query
-$sql = "SELECT r.relocation_id AS id, v.first_name AS fn, v.last_name AS ln, r.message, r.date_sent, relocation_status AS relocation_status
+$sql = "SELECT r.relocation_id, v.first_name AS fn, v.last_name AS ln, r.message, r.date_sent, relocation_status AS relocation_status
         FROM relocation_req r
         LEFT JOIN vendors v ON r.vendor_id = v.vendor_id";
 
@@ -382,18 +382,18 @@ if ($result === false) {
                     while ($row = $result->fetch_assoc()) {
                         echo "<tr>";
                         echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["fn"] . ' ' . $row["ln"]) . "</td>";
-                        echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["id"]) . "</td>";
-                        echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["id"]) . "</td>";
+                        echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["relocation_id"]) . "</td>";
+                        echo "<td class='text-center text-xs font-weight-bold mb-0 data-id'>" . htmlspecialchars($row["relocation_id"]) . "</td>";
                         echo "<td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='" . htmlspecialchars($row["message"]) . "'>" . htmlspecialchars(substr($row["message"], 0, 50)) . "...</td>";
                         echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["date_sent"]) . "</td>";
                         echo "<td class='text-center text-xs font-weight-bold mb-0'>
-                                <select class='form-select relocation-status' data-id='" . htmlspecialchars($row["id"]) . "'>
+                                <select class='form-select relocation-status' data-statusid='" . htmlspecialchars($row["relocation_id"]) . "'>
                                     <option value='Processing'" . ($row["relocation_status"] == 'Processing' ? ' selected' : '') . ">Processing</option>
                                     <option value='Accepted'" . ($row["relocation_status"] == 'Accepted' ? ' selected' : '') . ">Accepted</option>
                                     <option value='Decline'" . ($row["relocation_status"] == 'Decline' ? ' selected' : '') . ">Decline</option>
                                 </select>
                               </td>";
-                        echo "<td class='text-center text-xs font-weight-bold mb-0'><input type='checkbox' class='delete-checkbox' data-id='" . htmlspecialchars($row["id"]) . "'></td>";
+                        echo "<td class='text-center text-xs font-weight-bold mb-0'><input type='checkbox' class='delete-checkbox' data-id='" . htmlspecialchars($row["relocation_id"]) . "'></td>";
                         echo "</tr>";
                     }
                 } else {
@@ -451,7 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <td class='text-center text-xs font-weight-bold mb-0'>${row.subject}</td>
                             <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${row.message}'>${row.message.substr(0, 50)}...</td>
                             <td class='text-center text-xs font-weight-bold mb-0'>${row.sent_date}</td>
-                            <td class='text-center text-xs font-weight-bold mb-0'><input type='checkbox' class='delete-checkbox' data-id='${row.id}'></td>
+                            <td class='text-center text-xs font-weight-bold mb-0'><input type='checkbox' class='delete-checkbox' data-id='${row.relocatio_id}'></td>
                         `;
                         tbody.appendChild(tr);
                     });
@@ -461,31 +461,30 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Handle delete button click
-    document.getElementById('deleteButton').addEventListener('click', () => {
-        const selectedCheckboxes = document.querySelectorAll('.delete-checkbox:checked');
-        const ids = Array.from(selectedCheckboxes).map(cb => cb.getAttribute('data-id'));
+document.getElementById('deleteButton').addEventListener('click', () => {
+    const selectedCheckboxes = document.querySelectorAll('.delete-checkbox:checked');
+    const ids = Array.from(selectedCheckboxes).map(cb => cb.dataset.id); // Use dataset.id instead of getAttribute('data-id')
 
-        if (ids.length > 0) {
-            fetch('deleteRel.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: new URLSearchParams({ ids: ids })
-            })
-            .then(response => response.text())
-            .then(result => {
-                alert(result);
-                location.reload(); // Reload page to see changes
-            })
-            .catch(error => console.error('Error deleting records:', error));
-        } else {
-            alert('No records selected for deletion.');
-        }
-    });
+    if (ids.length > 0) {
+        fetch('deleteRel.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ 'relocation_id': ids }) // Send the IDs as 'relocation_id' instead of 'ids'
+        })
+        .then(response => response.text())
+        .then(result => {
+            alert(result);
+            location.reload(); // Reload page to see changes
+        })
+        .catch(error => console.error('Error deleting records:', error));
+    } else {
+        alert('No records selected for deletion.');
+    }
+});
 });
 
-<script>
 document.addEventListener('DOMContentLoaded', () => {
     const statusDropdowns = document.querySelectorAll('.relocation-status');
 
@@ -518,9 +517,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 </script>
-
-
-    </script>
 
   </main>
   <div class="fixed-plugin">

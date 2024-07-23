@@ -10,8 +10,8 @@ if ($conn->connect_error) {
 }
 
 // Check if 'ids' is set and is an array
-if (isset($_POST['ids']) && is_array($_POST['ids']) && count($_POST['ids']) > 0) {
-    $ids = $_POST['ids'];
+if (isset($_POST['relocation_id']) && is_array($_POST['relocation_id']) && count($_POST['relocation_id']) > 0) {
+    $ids = $_POST['relocation_id'];
 
     // Ensure $ids contains integer values
     $ids = array_map('intval', $ids);
@@ -51,4 +51,3 @@ if (isset($_POST['ids']) && is_array($_POST['ids']) && count($_POST['ids']) > 0)
 // Close the connection
 $conn->close();
 ?>
-
