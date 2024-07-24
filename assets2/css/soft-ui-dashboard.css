@@ -2666,8 +2666,8 @@ progress {
 
 .table-responsive {
   overflow-x: auto;
-  overflow-y: hidden;
-  max-height: 200px;
+  overflow-y: auto;
+  max-height: 1000px;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -2675,7 +2675,7 @@ progress {
   .table-responsive-sm {
     overflow-x: auto;
     overflow-y: auto;
-    max-height: 200px;
+    max-height: 400px;
     -webkit-overflow-scrolling: touch;
   }
 }
@@ -2684,7 +2684,7 @@ progress {
   .table-responsive-md {
     overflow-x: auto;
     overflow-y: auto;
-    max-height: 300px;
+    max-height: 500px;
     -webkit-overflow-scrolling: touch;
   }
 }
@@ -2693,7 +2693,7 @@ progress {
   .table-responsive-lg {
     overflow-x: auto;
     overflow-y: hidden;
-    max-height: 500px;
+    max-height: 600px;
     -webkit-overflow-scrolling: touch;
   }
 }
@@ -2711,7 +2711,7 @@ progress {
   .table-responsive-xxl {
     overflow-x: auto;
     overflow-y: hidden;
-    max-height: 800px;
+    max-height: 1000px;
     -webkit-overflow-scrolling: touch;
   }
 }

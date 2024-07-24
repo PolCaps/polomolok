@@ -1,0 +1,54 @@
+<?php
+include('database_config.php');
+
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Check if 'ids' is set and is an array
+if (isset($_POST['ids']) && is_array($_POST['ids']) && count($_POST['ids']) > 0) {
+    $ids = $_POST['ids'];
+
+    // Ensure $ids contains integer values
+    $ids = array_map('intval', $ids);
+
+    // Ensure there are IDs to process
+    if (count($ids) > 0) {
+        // Create placeholders for the SQL query
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+
+        // Prepare the SQL statement with placeholders
+        $stmt = $conn->prepare("DELETE FROM inquiry WHERE inq_id IN ($placeholders)");
+
+        if ($stmt) {
+            // Bind parameters
+            $types = str_repeat('i', count($ids)); // Assuming IDs are integers
+            $stmt->bind_param($types, ...$ids);
+
+            // Execute the statement
+            if ($stmt->execute()) {
+                echo 'Records deleted successfully.';
+            } else {
+                echo 'Error deleting records: ' . $stmt->error;
+            }
+
+            // Close the statement
+            $stmt->close();
+        } else {
+            echo 'Error preparing statement: ' . $conn->error;
+        }
+    } else {
+        echo 'No valid IDs provided.';
+    }
+} else {
+    echo 'No IDs provided or invalid format.';
+}
+
+// Close the connection
+$conn->close();
+?>
+

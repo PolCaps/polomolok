@@ -62,6 +62,13 @@ $conn->close();
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <style>
+     .table-responsive{
+      max-height: 700px;
+      overflow-y: auto;
+     }
+      
+    </style>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -230,8 +237,11 @@ $conn->close();
     <!-- End Navbar -->
     <div class="container-fluid py-4">
       <!-- Add Vendor Applicant button -->
-      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addVendorApplicantModal">Add Vendor Applicant</button>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#">Add Vendor Applicant</button>
 
+      
+
+<<<<<<< HEAD
       <!-- Modal -->
       <div class="modal fade" id="addVendorApplicantModal" tabindex="-1" aria-labelledby="addVendorApplicantModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -297,8 +307,10 @@ $conn->close();
       </div>
 
       
+=======
+>>>>>>> ac43abaa2edda1744878bc0ffb0f02d9b1e1fad8
       <div class="row my-4">
-        <div class="col-lg-8 col-md-6 mb-md-0 mb-4">
+        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
           <div class="card">
             <div class="card-header pb-0">
               <div class="row">
@@ -309,7 +321,7 @@ $conn->close();
                     <span class="font-weight-bold ms-1">Stall Applicants</span> 
                   </p>
                 </div>
-               <div class="col-lg-6 col-5 my-auto text-end">
+               <div class="col-lg-6 col-5 my-auto text-end ">
                   <div class="dropdown float-lg-end pe-4 mx-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-week" viewBox="0 0 16 16" id="filterDate" data-bs-toggle="dropdown" aria-expanded="false">
                       <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
@@ -330,106 +342,224 @@ $conn->close();
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
                           <div class="modal-body">
-                            <input type="text" id="customDatePicker" class="form-control">
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          </div>
+                            <form id="customDateForm" method="POST">
+                                 <input type="text" id="customStartDate" name="start_date" class="form-control mb-2" placeholder="Start Date">
+                                 <input type="text" id="customEndDate" name="end_date" class="form-control" placeholder="End Date">
+                            </form>
+                        </div>
+                        <div class="modal-footer">
+                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                             <button type="button" class="btn btn-primary" onclick="submitCustomDateForm()">Apply</button>
+                        </div>
                         </div>
                       </div>
                     </div>
 
                     <script>
-                      document.addEventListener('DOMContentLoaded', function() {
-                        flatpickr('#customDatePicker', {
-                          dateFormat: 'Y-m-d',
-                          minDate: 'today'
-                        });
-                      });
-                    </script>
+                                document.addEventListener('DOMContentLoaded', function() {
+                                    flatpickr('#customStartDate', {
+                                        dateFormat: 'Y-m-d'
+                                    });
+                                    flatpickr('#customEndDate', {
+                                        dateFormat: 'Y-m-d'
+                                    });
+                                });
+
+                                function filterByDate(period) {
+                                    const today = new Date();
+                                    let startDate, endDate;
+
+                                    switch(period) {
+                                        case 'today':
+                                            startDate = endDate = today.toISOString().split('T')[0];
+                                            break;
+                                        case 'week':
+                                            const firstDayOfWeek = today.getDate() - today.getDay();
+                                            startDate = new Date(today.setDate(firstDayOfWeek)).toISOString().split('T')[0];
+                                            endDate = new Date(today.setDate(firstDayOfWeek + 6)).toISOString().split('T')[0];
+                                            break;
+                                        case 'month':
+                                            startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+                                            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+                                            break;
+                                    }
+
+                                    document.getElementById('customStartDate').value = startDate;
+                                    document.getElementById('customEndDate').value = endDate;
+                                    document.getElementById('customDateForm').submit();
+                                }
+
+                                function submitCustomDateForm() {
+                                    document.getElementById('customDateForm').submit();
+                                }
+                            </script>
+                            
                   </div>
                 </div>
               </div>
             </div>
-            <div class="card-body px-0 pb-2">
-              <div class="table-responsive">
-                <table class="table align-items-center mb-0">
+
+            
+
+
+            <div class="card-body px-0 pb-2" >
+              <div class="table-responsive" >
+                <table class="table align-items-center mb-0" >
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-start">Applicant Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Date</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Address</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Email Address</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Aproval Status</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Applicant ID</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Applicant Name</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Date of Submitted</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Contact No.</th>
-                      
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Email Address</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Building Type</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Stall No</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Address</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Rent Application File</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">DELETE</th>
                     </tr>
                   </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-3 py-1">
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="text-sm text-center">Reyan Jay Samontanes</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-1">
-                          <h6 class="text-xs text-center">05-21-24</h6>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-1">
-                          <h6 class="text-xs text-center">Labangal</h6>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-1">
-                          <h6 class="text-xs text-center">examplerani@email.com</h6>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-1">
-                          <h6 class="text-xs text-center">0992347932</h6>
-                        </div>
-                      </td>
-                    </tr>
+                  <tbody id="table-body">
+                    
                   </tbody>
                 </table>
               </div>
             </div>
+            <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('populate_rent_app.php')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('table-body');
+            tableBody.innerHTML = ''; // Clear existing content
+
+            if (Array.isArray(data) && data.length > 0) {
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+                    
+                    console.log(`Applicant ID: ${item.applicant_id}, Approval: ${item.Approval}`); // Log the approval status
+            
+                      // Create approval status dropdown cell
+                      const processCell = document.createElement('td');
+                    processCell.innerHTML = `
+                        <select class="form-select form-select-sm approval-status" data-id="${item.applicant_id}">
+                            <option value="PROCESSING" ${item.Approval === 'PROCESSING' ? 'selected' : ''}>PROCESSING</option>
+                            <option value="APPROVED" ${item.Approval === 'APPROVED' ? 'selected' : ''}>APPROVED</option>
+                            <option value="DECLINED" ${item.Approval === 'DECLINED' ? 'selected' : ''}>DECLINED</option>
+                        </select>
+                    `;
+
+                    const applicantidCell = document.createElement('td');
+                    applicantidCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div>`;
+                   
+                    const nameCell = document.createElement('td');
+                    nameCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.first_name} ${item.middle_name} ${item.last_name}</h6></div>`;
+                    
+                    const dateCell = document.createElement('td');
+                    dateCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applied_date}</h6></div>`;
+                    
+                    const contactCell = document.createElement('td');
+                    contactCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.contact_no}</h6></div>`;
+                    
+                    const emailCell = document.createElement('td');
+                    emailCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.email}</h6></div>`;
+
+                    const buildingTypeCell = document.createElement('td');
+                    buildingTypeCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.building_type}</h6></div>`;
+
+                    const stallnoCell = document.createElement('td');
+                    stallnoCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.stall_no}</h6></div>`;
+                    
+                    const addressCell = document.createElement('td');
+                    addressCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.address}</h6></div>`;
+                    
+                    const fileCell = document.createElement('td');
+                    fileCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center"><a href="${item.rentapp_file}" target="_blank">View File</a></h6></div>`;
+
+                    // Create delete button cell
+                    const deleteCell = document.createElement('td');
+                    deleteCell.innerHTML = `<button class="btn btn-danger btn-sm delete-button" data-id="${item.applicant_id}">Delete</button>`;
+
+                    // Append cells to row
+                    row.appendChild(processCell);
+                    row.appendChild(applicantidCell);
+                    row.appendChild(nameCell);
+                    row.appendChild(dateCell);
+                    row.appendChild(contactCell);
+                    row.appendChild(emailCell);
+                    row.appendChild(buildingTypeCell);
+                    row.appendChild(stallnoCell);
+                    row.appendChild(addressCell);
+                    row.appendChild(fileCell);
+                    row.appendChild(deleteCell);
+                    
+                    // Append row to table body
+                    tableBody.appendChild(row);
+                });
+
+                 // Add event listener to approval status dropdowns
+                 document.querySelectorAll('.approval-status').forEach(select => {
+                    select.addEventListener('change', function() {
+                        const applicantId = this.dataset.id;
+                        const newStatus = this.value;
+
+                        fetch('updateApproval.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: new URLSearchParams({ 'applicant_id': applicantId, 'status': newStatus })
+                        })
+                        .then(response => response.text())
+                        .then(result => {
+                            alert(result);
+                        })
+                        .catch(error => console.error('Error updating status:', error));
+                    });
+                });
+
+                // Add event listener to delete buttons
+                document.querySelectorAll('.delete-button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const applicantId = this.dataset.id;
+                        if (confirm('Are you sure you want to delete this record?')) {
+                            fetch('deleteApproval.php', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/x-www-form-urlencoded',
+                                },
+                                body: new URLSearchParams({ 'applicant_id': applicantId })
+                            })
+                            .then(response => response.text())
+                            .then(result => {
+                                alert(result);
+                                location.reload(); // Reload page to see changes
+                            })
+                            .catch(error => console.error('Error deleting record:', error));
+                        }
+                    });
+                });
+            } else {
+                const row = document.createElement('tr');
+                const cell = document.createElement('td');
+                cell.colSpan = 11; // Update colSpan to match the total number of columns
+                cell.textContent = 'No records found';
+                row.appendChild(cell);
+                tableBody.appendChild(row);
+            }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    });
+</script>
+
         </div>
       </div>
         </div>
         
+    
       </div>
-      <!-- send message Modal -->
-    <div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="sendMessageModalLabel">Send Message to Vendor</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-3">
-                <label for="vendor-name" class="col-form-label">Vendor Name:</label>
-                <input type="text" class="form-control" id="vendor-name" readonly value="<?php echo $vendor_name;?>">
-              </div>
-              <div class="mb-3">
-                <label for="message" class="col-form-label">Message:</label>
-                <textarea class="form-control" id="message" required></textarea>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="sendMessageBtn">Send Message</button>
-          </div>
-        </div>
-      </div>
-    </div>
+    
   
         </div>
       </div>
@@ -465,7 +595,7 @@ $conn->close();
   </div>
   
   <!--   Core JS Files   -->
-  <script src="assets2/js/core/popper.min.js"></script>
+  <script src="assets2/js/core/popper.min.js"></scrip>
   <script src="assets2/js/core/bootstrap.min.js"></script>
   <script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/smooth-scrollbar.min.js"></script>
