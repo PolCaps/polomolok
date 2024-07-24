@@ -241,7 +241,6 @@ $conn->close();
 
       
 
-<<<<<<< HEAD
       <!-- Modal -->
       <div class="modal fade" id="addVendorApplicantModal" tabindex="-1" aria-labelledby="addVendorApplicantModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -307,8 +306,6 @@ $conn->close();
       </div>
 
       
-=======
->>>>>>> ac43abaa2edda1744878bc0ffb0f02d9b1e1fad8
       <div class="row my-4">
         <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
           <div class="card">
