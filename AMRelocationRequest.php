@@ -135,7 +135,7 @@ $conn->close();
           </a> 
         </li>
         <li class="nav-item">
-          <a class="nav-link  active " href="AMinquiries.php">
+          <a class="nav-link " href="AMinquiries.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
               <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
@@ -156,8 +156,8 @@ $conn->close();
             <span class="nav-link-text ms-1">Vendor Approval</span>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="../pages/sign-in.html">
+        <li class="nav-item mt-3">
+          <a class="nav-link active" href="#">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <img src="image/icons/icons8-kiosk-on-wheels-48.png" alt="relocationimg" width="18px" height="18px">
             </div>
@@ -168,7 +168,7 @@ $conn->close();
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Page Customization</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="#">
+          <a class="nav-link" href="HomepageEditor.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <img src="image/icons/icons8-browser-settings-48.png" alt="approveicon" width="18px" height="18px">
             </div>
@@ -197,7 +197,7 @@ $conn->close();
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Admin</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modules</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Inquiries</h6>
+          <h6 class="font-weight-bolder mb-0">Relocation Request</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -228,28 +228,6 @@ $conn->close();
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
-    <?php
-include('database_config.php');
-
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$start_date = isset($_POST['start_date']) ? $_POST['start_date'] : '';
-$end_date = isset($_POST['end_date']) ? $_POST['end_date'] : '';
-
-$sql = "SELECT name, email_add, subject, message, sent_date FROM inquiry";
-
-if ($start_date && $end_date) {
-    $sql .= " WHERE sent_date BETWEEN '$start_date' AND '$end_date'";
-}
-
-$result = $conn->query($sql);
-?>
 
 <div class="row my-4">
     <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
@@ -257,7 +235,7 @@ $result = $conn->query($sql);
             <div class="card-header pb-0">
                 <div class="row">
                     <div class="col-lg-6 col-7">
-                        <h6 class="text-info">Inquiries</h6>
+                        <h6 class="text-info">REQUEST RELOCATION</h6>
                     </div>
                     <div class="col-lg-6 col-5 my-auto text-end">
                         <div class="dropdown float-lg-end pe-4 mx-2">
@@ -281,7 +259,7 @@ $result = $conn->query($sql);
                                         <div class="modal-body">
                                             <form id="customDateForm" method="POST">
                                                 <input type="text" id="customStartDate" name="start_date" class="form-control mb-2" placeholder="Start Date">
-                                                <input type="text" id="customEndDate" name="end_date" class="form-control" placeholder="End Date">
+                                                <!-- <input type="text" id="customEndDate" name="end_date" class="form-control" placeholder="End Date"> -->
                                             </form>
                                         </div>
                                         <div class="modal-footer">
@@ -321,7 +299,7 @@ $result = $conn->query($sql);
                                     }
 
                                     document.getElementById('customStartDate').value = startDate;
-                                    document.getElementById('customEndDate').value = endDate;
+                                    // document.getElementById('customEndDate').value = endDate;
                                     document.getElementById('customDateForm').submit();
                                 }
 
@@ -341,141 +319,182 @@ $result = $conn->query($sql);
                 white-space: nowrap; /* Prevent text from wrapping to the next line */
             }
             </style>
-            <div class="card-body px-0 pb-2">
-                <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                      <thead>
-                          <tr>
-                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">DALETE</th>
-                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Inquiry ID</th>
-                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email Address</th>
-                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
-                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
-                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
-                          </tr>
-                      </thead>
-                      <tbody id="data-table">
-                      
-                      </tbody>
-
-                  </table>
-                </div>
-                <script>
-    // Function to populate the table with data
-    document.addEventListener('DOMContentLoaded', function () {
-        fetch('get_inquiries.php')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                const tableBody = document.getElementById("data-table");
-                tableBody.innerHTML = ''; // Clear existing content
-
-                if (Array.isArray(data) && data.length > 0) {
-                    data.forEach(inquiry => {
-                        const row = document.createElement("tr");
-                        // Add delete button
-                        const deleteCell = document.createElement("td");
-                        deleteCell.className = 'text-center text-xs font-weight-bold mb-0';
-                        const deleteButton = document.createElement("button");
-                        deleteButton.className = 'btn btn-danger btn-sm';
-                        deleteButton.innerText = 'Delete';
-                        deleteButton.addEventListener('click', () => {
-                            if (confirm('Are you sure you want to delete this inquiry?')) {
-                                deleteInquiry(inquiry.inq_id);
-                            }
-                        });
-                        deleteCell.appendChild(deleteButton);
-                        row.appendChild(deleteCell);
-
-                        const idCell = document.createElement("td");
-                        idCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.inq_id}</div>`;
-                        row.appendChild(idCell);
-
-                        const nameCell = document.createElement("td");
-                        nameCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.name}</div>`;
-                        row.appendChild(nameCell);
-
-                        const emailCell = document.createElement("td");
-                        emailCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.email_add}</div>`;
-                        row.appendChild(emailCell);
-
-                        const subjectCell = document.createElement("td");
-                        subjectCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.subject}</div>`;
-                        row.appendChild(subjectCell);
-
-                        const messageCell = document.createElement("td");
-                        messageCell.className = 'text-center text-xs font-weight-bold mb-0 message';
-                        messageCell.innerHTML = `${inquiry.message.substring(0, 50)}...`;
-                        messageCell.dataset.bsToggle = 'modal';
-                        messageCell.dataset.bsTarget = '#messageModal';
-                        messageCell.dataset.message = inquiry.message;
-                        messageCell.addEventListener('click', () => {
-                            document.getElementById("messageContent").innerHTML = inquiry.message;
-                        });
-                        row.appendChild(messageCell);
-
-                        const dateCell = document.createElement("td");
-                        dateCell.className = 'text-center text-xs font-weight-bold mb-0';
-                        dateCell.innerHTML = inquiry.sent_date;
-                        row.appendChild(dateCell);
-
-                        tableBody.appendChild(row);
-                    });
-                } else {
-                    const row = document.createElement("tr");
-                    const cell = document.createElement("td");
-                    cell.colSpan = 6;
-                    cell.className = 'text-center text-xs font-weight-bold mb-0';
-                    cell.innerHTML = 'No inquiries found';
-                    row.appendChild(cell);
-                    tableBody.appendChild(row);
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-                // Optionally display an error message to the user
-            });
-    });
-                // Function to delete an inquiry
-function deleteInquiry(inq_id) {
-    fetch('delete_inq.php', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ inq_id })
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        return response.json();
-    })
-    .then(data => {
-        if (data.success) {
-            // Remove the row from the table
-            alert('Inquiry Deleted Succesfuly.');
-            document.querySelector(`tr[data-id="${inq_id}"]`).remove();
-            window.location.reload();
-        } else {
-            alert('Failed to delete the inquiry.');
-        }
-    })
-    .catch(error => {
-        console.error('Error deleting inquiry:', error);
-    });
-}
-</script>
-            </div>
+            <div class="card-body px-5 pb-2">
+    <div class="table-responsive">
+        <!-- Search and Delete Dropdown -->
+        <div class="d-flex justify-content-between mb-3">
+            <button class="btn btn-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Search User
+            </button>
+            <ul class="dropdown-menu">
+                <li>
+                    <form id="searchForm" class="px-4 py-2">
+                        <div class="mb-3">
+                            <label for="searchUsername" class="form-label">Username</label>
+                            <input type="text" class="form-control" id="searchUsername" placeholder="Enter username">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </form>
+                </li>
+            </ul>
+           
         </div>
+
+        <table class="table align-items-center mb-0">
+            <thead>
+                <tr>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stall No</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation ID</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Status</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
+                </tr>
+            </thead>
+            <tbody id="dataTableBody">
+            <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('fetch_RelReq.php')
+                .then(response => response.json())
+                .then(data => {
+                    const tableBody = document.getElementById('dataTableBody');
+                    if (data.length > 0) {
+                        data.forEach(item => {
+                            const row = document.createElement('tr');
+
+                            row.innerHTML = `
+                                <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.fn + ' ' + item.ln)}</td>
+                                <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.relocation_id)}</td>
+                                <td class='text-center text-xs font-weight-bold mb-0 data-id'>${escapeHtml(item.relocation_id)}</td>
+                                <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.message)}'>${escapeHtml(item.message.substring(0, 50))}...</td>
+                                <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.date_sent)}</td>
+                                <td class='text-center text-xs font-weight-bold mb-0'>
+                                    <select class='form-select relocation-status' data-statusid='${escapeHtml(item.relocation_id)}'>
+                                        <option value='Processing' ${item.relocation_status == 'Processing' ? 'selected' : ''}>Processing</option>
+                                        <option value='Accepted' ${item.relocation_status == 'Accepted' ? 'selected' : ''}>Accepted</option>
+                                        <option value='Decline' ${item.relocation_status == 'Decline' ? 'selected' : ''}>Decline</option>
+                                    </select>
+                                </td>
+                                <td class='text-center text-xs font-weight-bold mb-0'>  <button data-id='${escapeHtml(item.relocation_id)}' id="btnDel" class="btn btn-danger">Delete</button></td>
+                            `;
+
+                            tableBody.appendChild(row);
+                        });
+                    } else {
+                        const row = document.createElement('tr');
+                        row.innerHTML = "<td colspan='6' class='text-center text-xs font-weight-bold mb-0'>No inquiries found</td>";
+                        tableBody.appendChild(row);
+                    }
+                })
+                .catch(error => console.error('Error fetching data:', error));
+        });
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+
+        function addEventListeners() {
+            // Handle delete button click
+            document.getElementById('btnDel').addEventListener('click', () => {
+                const ids = (datas.relocation_id);
+
+                if (ids.length > 0) {
+                    fetch('deleteRel.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: new URLSearchParams({ 'relocation_id': ids }) 
+                    })
+                    .then(response => response.text())
+                    .then(result => {
+                        alert(result);
+                        location.reload();
+                    })
+                    .catch(error => console.error('Error deleting records:', error));
+                } else {
+                    alert('No records selected for deletion.');
+                }
+            });
+
+            // Handle status change
+            const statusDropdowns = document.querySelectorAll('.relocation-status');
+
+            statusDropdowns.forEach(dropdown => {
+                dropdown.addEventListener('change', function() {
+                    const relocationId = this.getAttribute('data-statusid');
+                    const newStatus = this.value;
+
+                    fetch('updateStatus.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: new URLSearchParams({
+                            'id': relocationId,
+                            'status': newStatus
+                        })
+                    })
+                    .then(response => response.text())
+                    .then(result => {
+                        console.log(result);
+                        if (result === 'Status updated successfully.') {
+                            alert('Status updated.');
+                        } else {
+                            alert('Error updating status.');
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // Handle search form submission
+            document.getElementById('searchForm').addEventListener('submit', function(event) {
+                event.preventDefault();
+                const username = document.getElementById('searchUsername').value;
+                if (username) {
+                    // Fetch and display results based on username
+                    fetch('searchRel.php?username=' + encodeURIComponent(username))
+                        .then(response => response.json())
+                        .then(data => {
+                            const tbody = document.getElementById('dataTableBody');
+                            tbody.innerHTML = ''; // Clear current table rows
+                            data.forEach(row => {
+                                const tr = document.createElement('tr');
+                                tr.innerHTML = `
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${row.name}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${row.email_add}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${row.subject}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${row.message}'>${row.message.substr(0, 50)}...</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${row.sent_date}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'><input type='checkbox' class='delete-checkbox' data-id='${row.relocatio_id}'></td>
+                                `;
+                                tbody.appendChild(tr);
+                            });
+
+                            addEventListeners();
+                        })
+                        .catch(error => console.error('Error searching for user:', error));
+                }
+            });
+        });
+    </script>
+            </tbody>
+        </table>
     </div>
-  </div>
-    </div>
+</div>
+
 <!-- Bootstrap Modal -->
           <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
               <div class="modal-dialog modal-lg">
@@ -500,7 +519,8 @@ function deleteInquiry(inq_id) {
                 modalBody.textContent = message; // Update the modal's content.
             });
         });
-    </script>
+
+</script>
 
   </main>
   <div class="fixed-plugin">
