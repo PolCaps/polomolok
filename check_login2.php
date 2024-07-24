@@ -1,5 +1,4 @@
 <?php
-session_start();
 include 'database_config.php'; // Include the database connection
 
 // Create a new MySQLi connection
@@ -12,7 +11,7 @@ if ($conn->connect_error) {
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
-    $password = $_POST['password']; // You were missing a closing quote here
+    $password = $_POST['password'];
 
     // Escape input data to prevent SQL injection
     $username = $conn->real_escape_string($username);
@@ -26,6 +25,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // User found in the `users` table
         $user = $result_users->fetch_assoc();
         $role = $user['user_type'];
+
+        // Set distinct session names based on user role
+        if ($role === 'ADMIN') {
+            session_name('admin_session');
+        } elseif ($role === 'STAFF') {
+            session_name('staff_session');
+        }
+        session_start();
+
+        // Clear previous session data if any
+        session_unset();
+
+        // Set session variables for users
         $_SESSION['id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
         $_SESSION['user_type'] = $role;
@@ -41,25 +53,37 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     } else {
         // Check in the `vendors` table
         $query_vendors = "SELECT * FROM vendors WHERE username = ? AND password = ?";
-    if ($stmt_vendors = $conn->prepare($query_vendors)) {
-        $stmt_vendors->bind_param('ss', $username, $password);
-        $stmt_vendors->execute();
-        $result_vendors = $stmt_vendors->get_result();
+        if ($stmt_vendors = $conn->prepare($query_vendors)) {
+            $stmt_vendors->bind_param('ss', $username, $password);
+            $stmt_vendors->execute();
+            $result_vendors = $stmt_vendors->get_result();
 
-        if ($result_vendors->num_rows > 0) {
-            $vendor = $result_vendors->fetch_assoc();
-            $_SESSION['vendor_id'] = $vendor['vendor_id'];
-            $_SESSION['username'] = $vendor['username'];
-            header('Location: Vendor.php');
-            exit();
+            if ($result_vendors->num_rows > 0) {
+                $vendor = $result_vendors->fetch_assoc();
+
+                // Set distinct session name for vendors
+                session_name('vendor_session');
+                session_start();
+
+                // Clear previous session data if any
+                session_unset();
+
+                // Set session variables for vendors
+                $_SESSION['vendor_id'] = $vendor['vendor_id'];
+                $_SESSION['username'] = $vendor['username'];
+
+                header('Location: Vendor.php');
+                exit();
+            } else {
+                session_name('default_session');
+                session_start();
+                $_SESSION['status'] = "Invalid Username or Password";
+                header("Location: index.php");
+                exit();
+            }
         } else {
-            $_SESSION['status'] = "Invalid Username or Password";
-            header("Location: index.php");
-            exit();
+            echo "Failed to prepare statement.";
         }
-    } else {
-        echo "Failed to prepare statement.";
     }
-}  
 }
 ?>

@@ -1,8 +1,10 @@
 <?php
+session_name('staff_session');
 session_start();
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] != 'STAFF') {
-  header("Location: index.php");
-  exit();
+
+if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'STAFF') {
+    header("Location: index.php");
+    exit();
 }
 $user_id = $_SESSION['id'];
 
