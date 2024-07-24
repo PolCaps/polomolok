@@ -356,6 +356,174 @@ $conn->close();
               </div>
             </div>
           </div>
+          
+          <!-- Modal for viewing and updating payment details -->
+          <div class="modal fade" id="paymentDetailsModal" tabindex="-1" aria-labelledby="paymentDetailsModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="paymentDetailsModalLabel">Payment Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                <div id="modalAlert" class="alert d-none" role="alert"></div>
+                  <form id="paymentDetailsForm">
+                    <div class="mb-3">
+                      <label for="modalApplicantId" class="form-label">Applicant ID</label>
+                      <input type="text" class="form-control" id="modalApplicantId" readonly>
+                    </div>
+                    <div class="mb-3">
+                      <label for="modalVerifyStatus" class="form-label">Verify Status</label>
+                      <select id="modalVerifyStatus" class="form-select">
+                        <option value="Unconfirmed">Unconfirmed</option>
+                        <option value="Verified">Verified</option>
+                      </select>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card mt-6">
+            <div class="card-header pb-0">
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <h6>Rent Applicants</h6>
+                  <p class="text-sm mb-0">
+                    <i class="fa fa-user-circle text-warning" aria-hidden="true"></i>
+                    <span class="font-weight-bold ms-1">List of Rental Applicants Payment and Status</span> 
+                  </p>
+                </div>
+                <div class="col-lg-6 col-5 my-auto text-end">
+                  <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                    <div class="input-group">
+                      <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                      <input type="text" class="form-control px-1" placeholder="Search for...">
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant ID</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Official Reciept No.</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Proof Of Payment</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Status</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Verify Status</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Date</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dataTableBodyReceipt">
+                  
+                </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                fetch('populate_rentapp_payment.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const tableBody = document.getElementById('dataTableBodyReceipt');
+                            tableBody.innerHTML = ''; // Clear existing rows
+                            data.data.forEach(item => {
+                                const row = document.createElement('tr');
+                                
+                                row.innerHTML = `
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.OR_no}</h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center"><a href="${item.proof_of_payment}" target="_blank">View Proof</a></h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.payment_status || 'N/A'}</h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.verify_status}</h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.payment_date || 'N/A'}</h6></div></td>
+                                `;
+                                
+                                tableBody.appendChild(row);
+                            });
+                        } else {
+                            console.error('Failed to fetch data:', data.message);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+          </script>
+           <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+           <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+           <script>
+            document.addEventListener('DOMContentLoaded', function() {
+            // Handle table row click
+            document.getElementById('dataTableBodyReceipt').addEventListener('click', function(event) {
+                if (event.target.closest('tr')) {
+                    const row = event.target.closest('tr');
+                    const cells = row.getElementsByTagName('td');
+                    
+                    // Extract data from the row
+                    const applicantId = cells[0].textContent.trim();
+                    const verifyStatus = cells[4].textContent.trim();
+
+                    // Populate the modal with row data
+                    document.getElementById('modalApplicantId').value = applicantId;
+                    document.getElementById('modalVerifyStatus').value = verifyStatus;
+
+                    // Show the modal
+                    new bootstrap.Modal(document.getElementById('paymentDetailsModal')).show();
+                }
+            });
+
+            // Handle save changes button click
+            document.getElementById('saveChangesBtn').addEventListener('click', function() {
+                const applicantId = document.getElementById('modalApplicantId').value.trim();
+                const verifyStatus = document.getElementById('modalVerifyStatus').value.trim();
+
+                if (!applicantId || !verifyStatus) {
+                    showAlert('alert-danger', 'Applicant ID and Verify Status are required.');
+                    return;
+                }
+
+                // Send an AJAX request to update verify_status
+                fetch('verify_payment.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ applicant_id: applicantId, verify_status: verifyStatus })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showAlert('alert-success', 'Status Verified!');
+                        setTimeout(() => {
+                            // Optionally refresh the page or hide the modal
+                            window.location.reload(); // Refresh page
+                            // Alternatively, hide the modal
+                            // new bootstrap.Modal(document.getElementById('paymentDetailsModal')).hide();
+                        }, 1000);
+                    } else {
+                        showAlert('alert-danger', 'Failed to Verify Status: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    showAlert('alert-danger', 'An error occurred. Please try again.');
+                    console.error('Error:', error);
+                });
+            });
+
+            // Function to show alert message
+            function showAlert(type, message) {
+                const alertDiv = document.getElementById('modalAlert');
+                alertDiv.className = `alert ${type}`;
+                alertDiv.textContent = message;
+                alertDiv.classList.remove('d-none');
+            }
+        });
+           </script>
+
         </div>
       </div>
       

@@ -11,7 +11,7 @@
                   }
 
                   // Fetch data
-                  $sql = "SELECT applicant_id, first_name, middle_name, last_name, contact_no, email, building_type, stall_no, address, rentapp_file, applied_date FROM rent_application";
+                  $sql = "SELECT applicant_id, first_name, middle_name, last_name, status, contact_no, email, building_type, stall_no, address, rentapp_file, applied_date FROM rent_application";
                   $result = $conn->query($sql);
 
                   $data = [];

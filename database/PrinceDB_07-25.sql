@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Jul 22, 2024 at 10:12 PM
+-- Generation Time: Jul 24, 2024 at 10:51 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -417,6 +417,30 @@ INSERT INTO `relocation_req` (`relocation_id`, `vendor_id`, `message`, `date_sen
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `rentapp_payment`
+--
+
+CREATE TABLE `rentapp_payment` (
+  `rentpayment_id` int(11) NOT NULL,
+  `OR_no` varchar(50) NOT NULL,
+  `proof_of_payment` text DEFAULT NULL,
+  `applicant_id` int(11) DEFAULT NULL,
+  `payment_status` enum('Unpaid','Paid') DEFAULT 'Unpaid',
+  `verify_status` enum('Unconfirmed','Verified') DEFAULT 'Unconfirmed',
+  `payment_date` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `rentapp_payment`
+--
+
+INSERT INTO `rentapp_payment` (`rentpayment_id`, `OR_no`, `proof_of_payment`, `applicant_id`, `payment_status`, `verify_status`, `payment_date`) VALUES
+(13, '983465OR', 'payment_proofs/rent_application/RobloxScreenShot20240511_200657641.png', 39, 'Paid', 'Verified', '2024-07-24 20:06:30'),
+(15, '89734823WQ', 'payment_proofs/rent_application/RobloxScreenShot20240511_020408470.png', 54, 'Paid', 'Unconfirmed', '2024-07-24 20:07:37');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `rent_application`
 --
 
@@ -425,27 +449,27 @@ CREATE TABLE `rent_application` (
   `first_name` varchar(250) NOT NULL,
   `middle_name` varchar(50) NOT NULL,
   `last_name` varchar(250) NOT NULL,
-  `contact_no` bigint(20) NOT NULL,
-  `building_type` text DEFAULT NULL,
+  `status` enum('Pending','Approved','Rejected') DEFAULT 'Pending',
+  `applied_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  `rentapp_file` text NOT NULL,
   `stall_no` bigint(20) DEFAULT NULL,
-  `age` int(11) DEFAULT NULL,
+  `building_type` varchar(250) DEFAULT NULL,
+  `contact_no` bigint(20) NOT NULL,
   `email` varchar(250) DEFAULT NULL,
   `address` text DEFAULT NULL,
-  `rentapp_file` text NOT NULL,
-  `applied_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `age` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `rent_application`
 --
 
-INSERT INTO `rent_application` (`applicant_id`, `first_name`, `middle_name`, `last_name`, `contact_no`, `building_type`, `stall_no`, `age`, `email`, `address`, `rentapp_file`, `applied_date`) VALUES
-(37, 'Prince Jay', 'A', 'Sayre', 9171600383, 'Building A', 24, 22, 'yusreadadulo123@gmail.com', 'Purok Darussalam', 'rent_applications_file_dir/5974786937159993683-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-22 19:14:06'),
-(38, 'Meil', 'Sheida', 'Panaguiton', 900234723, 'Building A', 15, 24, 'seihbfsnk@aei.com', 'sayre residence purok darussalam bawing', 'rent_applications_file_dir/5974740497159401973-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-22 19:14:06'),
-(39, 'Reyan', 'Jan', 'Samontanes', 943453423, NULL, 9, 35, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', 'rent_applications_file_dir/5974850097152845324-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-22 19:26:51'),
-(40, 'Chua', 'Briar', 'Rose', 992347923, NULL, 29, 12, 'chua@gmail.com', 'Kiamber Seranganay', 'rent_applications_file_dir/5974857417158739359-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-22 19:31:27'),
-(41, 'Ticnap', '', 'Notnac', 99823479, NULL, 79, 56, 'Notnac@notnac.com', 'NotnacNotnacNakatira', 'rent_applications_file_dir/5974874457153279716-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-22 19:58:32'),
-(45, 'ibaed', 'qwd', 'qwdqwd', 25423, NULL, 21, 35, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', 'rent_applications_file_dir/5974879027155300046-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-22 20:10:53');
+INSERT INTO `rent_application` (`applicant_id`, `first_name`, `middle_name`, `last_name`, `status`, `applied_date`, `rentapp_file`, `stall_no`, `building_type`, `contact_no`, `email`, `address`, `age`) VALUES
+(38, 'Meil', 'Sheida', 'Panaguiton', 'Pending', '2024-07-24 20:26:05', 'rent_applications_file_dir/5974740497159401973-Polomolok-Public-Market-Rent-Application-Form.pdf', 15, 'Building A', 900234723, 'seihbfsnk@aei.com', 'sayre residence purok darussalam bawing', 24),
+(39, 'Reyan', 'Jan', 'Samontanes', 'Rejected', '2024-07-24 20:35:30', 'rent_applications_file_dir/5974850097152845324-Polomolok-Public-Market-Rent-Application-Form.pdf', 9, NULL, 943453423, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', 35),
+(45, 'ibaed', 'qwd', 'qwdqwd', 'Rejected', '2024-07-24 20:35:46', 'rent_applications_file_dir/5974879027155300046-Polomolok-Public-Market-Rent-Application-Form.pdf', 21, NULL, 25423, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', 35),
+(46, 'Eryas', '', 'Di koalam', 'Rejected', '2024-07-24 20:35:53', 'rent_applications_file_dir/5974885937155050613-Polomolok-Public-Market-Rent-Application-Form.pdf', 19, NULL, 992374923, 'prince@gmail.com', 'sayre residence purok darussalam bawing', 22),
+(54, 'Justine', 'G', 'Vasquez', 'Approved', '2024-07-24 20:25:53', 'rent_applications_file_dir/5976473253649615301-Polomolok-Public-Market-Rent-Application-Form.pdf', 682, 'Building H', 439857, 'justine@axie.com', 'habwdaw', 22);
 
 -- --------------------------------------------------------
 
@@ -634,6 +658,13 @@ ALTER TABLE `relocation_req`
   ADD PRIMARY KEY (`relocation_id`);
 
 --
+-- Indexes for table `rentapp_payment`
+--
+ALTER TABLE `rentapp_payment`
+  ADD PRIMARY KEY (`rentpayment_id`),
+  ADD KEY `applicant_id` (`applicant_id`);
+
+--
 -- Indexes for table `rent_application`
 --
 ALTER TABLE `rent_application`
@@ -724,10 +755,16 @@ ALTER TABLE `relocation_req`
   MODIFY `relocation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
+-- AUTO_INCREMENT for table `rentapp_payment`
+--
+ALTER TABLE `rentapp_payment`
+  MODIFY `rentpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+
+--
 -- AUTO_INCREMENT for table `rent_application`
 --
 ALTER TABLE `rent_application`
-  MODIFY `applicant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=46;
+  MODIFY `applicant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=55;
 
 --
 -- AUTO_INCREMENT for table `users`
@@ -740,6 +777,16 @@ ALTER TABLE `users`
 --
 ALTER TABLE `vendors`
   MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `rentapp_payment`
+--
+ALTER TABLE `rentapp_payment`
+  ADD CONSTRAINT `rentapp_payment_ibfk_1` FOREIGN KEY (`applicant_id`) REFERENCES `rent_application` (`applicant_id`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

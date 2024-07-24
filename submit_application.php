@@ -47,7 +47,12 @@ if (isset($_FILES['file_upload']) && $_FILES['file_upload']['error'] == UPLOAD_E
         }
 
         if ($stmt->execute()) {
-            echo json_encode(['success' => true, 'message' => "New record created successfully"]);
+            $applicant_id = $stmt->insert_id; // Get the last inserted ID
+            echo json_encode([
+                'success' => true,
+                'message' => "Success! ",
+                'applicant_id' => $applicant_id
+            ]);
         } else {
             echo json_encode(['success' => false, 'message' => "Execute failed: " . $stmt->error]);
         }

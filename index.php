@@ -890,9 +890,10 @@ session_start()
             </div>
             <div class="modal-body">
                 <div id="formDetails" class="collapse">
-                <form id="vendorApplicationForm" action="submit_application.php" method="POST" class="row g-3 needs-validation" novalidate enctype="multipart/form-data">
+                    <form id="vendorApplicationForm" action="submit_application.php" method="POST" class="row g-3 needs-validation" novalidate enctype="multipart/form-data">
                         <div class="container-fluid">
-                        <div id="submissionAlert" class="alert d-none my-3 mb-3 text-center" role="alert"></div>
+                        <div id="submissionAlert" class="alert d-none"></div>
+                        <div id="applicant_id_display" class="alert alert-info d-none"></div>
                             <div class="row">
                                 <!-- Personal Details -->
                                 <div class="col-md-6">
@@ -915,10 +916,9 @@ session_start()
                                         <input type="tel" id="contact_number" class="form-control" name="contact_number" required>
                                         <div class="invalid-feedback">Please enter a valid contact number.</div>
                                     </div>
-
                                     <div class="form-group mb-3">
                                         <label for="building_type">Building Type</label>
-                                        <select id="building_type" class="form-control" name="account_type" required>
+                                        <select id="building_type" class="form-control" name="building_type" required>
                                             <option value=""></option>
                                             <option value="Building A">Building A</option>
                                             <option value="Building B">Building B</option>
@@ -930,9 +930,8 @@ session_start()
                                             <option value="Building H">Building H</option>
                                             <option value="Building I">Building I</option>
                                             <option value="Building J">Building J</option>
-                                         </select>
+                                        </select>
                                     </div>
-
                                     <div class="form-group mb-3">
                                         <label for="stall_no" class="form-label">Stall No.:</label>
                                         <input type="number" id="stall_no" class="form-control" name="stall_no" required>
@@ -967,24 +966,45 @@ session_start()
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" value="" id="invalidCheckTerms" required>
                                     <label class="form-check-label" for="invalidCheckTerms">
-                                    Terms and Conditions 
-                                    <button type="button" class="btn btn-link p-0 ms-2" data-bs-toggle="collapse" data-bs-target="#termsDetails" aria-expanded="false" aria-controls="termsDetails">
-                                        <i class="bi bi-question-circle"></i>
-                                    </button>
+                                        Terms and Conditions 
+                                        <button type="button" class="btn btn-link p-0 ms-2" data-bs-toggle="collapse" data-bs-target="#termsDetails" aria-expanded="false" aria-controls="termsDetails">
+                                            <i class="bi bi-question-circle"></i>
+                                        </button>
                                     </label>
                                     <div id="termsDetails" class="collapse">
-                                    <p class="mb-2 text-primary">
-                                        Submitting the form will download the rent application. Please fill it up and submit it online to our email address or walk into our office.
-                                        Filling up this form does not reserve a stall booth and doesn't guarantee that you will occupy the stall. Please message us for clarification and inquiries.
-                                    </p>
-                                </div>
+                                        <p class="mb-2 text-primary">
+                                            Submitting the form will download the rent application. Please fill it up and submit it online to our email address or walk into our office.
+                                            Filling up this form does not reserve a stall booth and doesn't guarantee that you will occupy the stall. Please message us for clarification and inquiries.
+                                        </p>
+                                    </div>
                                     <div class="invalid-feedback">You must agree to the terms and conditions to submit the form.</div>
                                 </div>
                             </div>
                             <button type="submit" class="btn btn-primary text-white">Submit Application</button>
                         </div>
                     </form>
-                    
+                </div>
+                <!-- Pay Rent Application Section -->
+                <div id="payRentDetails" class="collapse mt-4">
+                <div id="paymentAlert" class="alert d-none" role="alert"></div>
+                <form id="payRentForm" action="pay_rentApp.php" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
+                    <div class="form-group">
+                        <label for="applicant_id">Applicant ID:</label>
+                        <input type="text" id="applicant_id" name="applicant_id" class="form-control" required>
+                        <div class="invalid-feedback">Please enter your Applicant ID.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="OR_no">Official Reciept Number:</label>
+                        <input type="text" id="OR_no" name="OR_no" class="form-control" required>
+                        <div class="invalid-feedback">Please enter Official Reciept No.</div>
+                    </div>
+                    <div class="form-group">
+                        <label for="proof_of_payment">Proof of Payment (File/Image):</label>
+                        <input type="file" id="proof_of_payment" name="proof_of_payment" class="form-control" required>
+                        <div class="invalid-feedback">Please upload proof of payment.</div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit Payment</button>
+                </form>
                 </div>
             </div>
             <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
@@ -992,86 +1012,146 @@ session_start()
                 <button type="button" class="btn btn-info text-white" id="openLinkBtn">
                     Fill In the Rent Application Here
                 </button>
+                <button type="button" class="btn btn-success text-white" id="payRentBtn">
+                    Pay Rent Application Here
+                </button>
             </div>
         </div>
     </div>
 </div>
 
 <script>
+// Function to handle the opening of the link and collapsing/expanding sections
 document.getElementById('openLinkBtn').addEventListener('click', function() {
-    // Expand the accordion
+    // Collapse the other section
+    var payRentDetails = document.getElementById('payRentDetails');
+    if (payRentDetails) {
+        var bsCollapsePayRent = new bootstrap.Collapse(payRentDetails, {
+            toggle: false
+        });
+        bsCollapsePayRent.hide();
+    }
+
+    // Expand the current section
     var formDetails = document.getElementById('formDetails');
-    var bsCollapse = new bootstrap.Collapse(formDetails, {
-        toggle: true
-    });
-    
+    if (formDetails) {
+        var bsCollapseForm = new bootstrap.Collapse(formDetails, {
+            toggle: false
+        });
+        bsCollapseForm.show();
+    }
+
     // Open the link in a new tab
     window.open('https://form.jotform.com/242034145550042', '_blank');
 });
 
-// Bootstrap validation
-(function () {
-    'use strict'
+// Function to handle the opening of the pay rent section
+document.getElementById('payRentBtn').addEventListener('click', function() {
+    // Collapse the other section
+    var formDetails = document.getElementById('formDetails');
+    if (formDetails) {
+        var bsCollapseForm = new bootstrap.Collapse(formDetails, {
+            toggle: false
+        });
+        bsCollapseForm.hide();
+    }
 
-    // Fetch all the forms we want to apply custom Bootstrap validation styles to
-    var forms = document.querySelectorAll('.needs-validation')
+    // Expand the current section
+    var payRentDetails = document.getElementById('payRentDetails');
+    if (payRentDetails) {
+        var bsCollapsePayRent = new bootstrap.Collapse(payRentDetails, {
+            toggle: false
+        });
+        bsCollapsePayRent.show();
+    }
+});
 
-    // Loop over them and prevent submission
-    Array.prototype.slice.call(forms)
-        .forEach(function (form) {
-            form.addEventListener('submit', function (event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault()
-                    event.stopPropagation()
-                }
-                form.classList.add('was-validated')
-            }, false)
-        })
-})();
-
-// Form submission with AJAX
+// Function to handle vendor application form submission
 document.getElementById('vendorApplicationForm').addEventListener('submit', function(event) {
     event.preventDefault(); // Prevent default form submission
 
     var form = this;
-    
     if (!form.checkValidity()) {
         form.classList.add('was-validated');
         return; // Stop if form is not valid
     }
 
     var formData = new FormData(form);
-    
-    fetch('submit_application.php', {
-        method: 'POST',
+    fetch(form.action, {
+        method: form.method,
         body: formData
     })
     .then(response => response.json())
     .then(data => {
-        var alert = document.getElementById('submissionAlert');
+        var submissionAlert = document.getElementById('submissionAlert');
         if (data.success) {
-            alert.className = 'alert alert-success';
-            alert.innerHTML = data.message;
+            submissionAlert.classList.remove('d-none', 'alert-danger');
+            submissionAlert.classList.add('alert-success');
+            submissionAlert.innerText = `${data.message} Your Applicant ID is: ${data.applicant_id}, please save this for future reference.`;
+            
+            // Optionally display the applicant ID in a separate element
+            document.getElementById('applicant_id_display').innerText = `Your Applicant ID: ${data.applicant_id}, please save this for future reference.`;
+
             setTimeout(() => {
                 form.reset(); // Clear the form fields
                 form.classList.remove('was-validated'); // Remove validation classes
-                alert.classList.add('d-none'); // Hide the alert after some time
             }, 1000); // Clear the form and hide the alert after 2 seconds
         } else {
-            alert.className = 'alert alert-danger';
-            alert.innerHTML = data.message;
+            submissionAlert.classList.remove('d-none', 'alert-success');
+            submissionAlert.classList.add('alert-danger');
+            submissionAlert.innerText = data.message;
         }
-        alert.classList.remove('d-none');
+        submissionAlert.classList.remove('d-none');
     })
     .catch(error => {
-        var alert = document.getElementById('submissionAlert');
-        alert.className = 'alert alert-danger';
-        alert.innerHTML = 'An unexpected error occurred.';
-        alert.classList.remove('d-none');
+        var submissionAlert = document.getElementById('submissionAlert');
+        submissionAlert.classList.remove('d-none', 'alert-success');
+        submissionAlert.classList.add('alert-danger');
+        submissionAlert.innerText = 'An unexpected error occurred.';
+    });
+});
+
+// Function to handle pay rent form submission
+document.getElementById('payRentForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    var form = this;
+    if (form.checkValidity() === false) {
+        event.stopPropagation();
+        form.classList.add('was-validated');
+        return;
+    }
+
+    var formData = new FormData(form);
+    fetch(form.action, {
+        method: form.method,
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        var paymentAlert = document.getElementById('paymentAlert');
+        if (data.success) {
+            paymentAlert.classList.remove('d-none', 'alert-danger');
+            paymentAlert.classList.add('alert-success');
+            paymentAlert.innerText = 'Payment submitted successfully!';
+
+            setTimeout(() => {
+                form.reset(); // Clear the form fields
+                form.classList.remove('was-validated'); // Remove validation classes
+            }, 1000); // Clear the form and hide the alert after 2 seconds
+        } else {
+            paymentAlert.classList.remove('d-none', 'alert-success');
+            paymentAlert.classList.add('alert-danger');
+            paymentAlert.innerText = 'Failed to submit payment. Please try again.';
+        }
+    })
+    .catch(error => {
+        var paymentAlert = document.getElementById('paymentAlert');
+        paymentAlert.classList.remove('d-none', 'alert-success');
+        paymentAlert.classList.add('alert-danger');
+        paymentAlert.innerText = 'An error occurred. Please try again.';
     });
 });
 </script>
-
 <div id="alertContainer"></div>
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
@@ -1129,14 +1209,12 @@ document.getElementById('vendorApplicationForm').addEventListener('submit', func
     </div>
 
   </footer>
-
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
 
 
   <!-- Preloader -->
   <div id="preloader"></div>
-
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
