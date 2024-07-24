@@ -346,6 +346,8 @@ $result = $conn->query($sql);
                 <table class="table align-items-center mb-0">
                       <thead>
                           <tr>
+                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">DALETE</th>
+                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Inquiry ID</th>
                               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
                               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email Address</th>
                               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
@@ -353,26 +355,122 @@ $result = $conn->query($sql);
                               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
                           </tr>
                       </thead>
-                      <tbody>
-                          <?php
-                          if ($result->num_rows > 0) {
-                              while($row = $result->fetch_assoc()) {
-                                  echo "<tr>";
-                                  echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["name"]) . "</td>";
-                                  echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["email_add"]) . "</td>";
-                                  echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["subject"]) . "</td>";
-                                  echo "<td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='" . htmlspecialchars($row["message"]) . "'>" . htmlspecialchars(substr($row["message"], 0, 50)) . "...</td>";
-                                  echo "<td class='text-center text-xs font-weight-bold mb-0'>" . htmlspecialchars($row["sent_date"]) . "</td>";
-                                  echo "</tr>";
-                              }
-                          } else {
-                              echo "<tr><td colspan='5' class='text-center text-xs font-weight-bold mb-0'>No inquiries found</td></tr>";
-                          }
-                          $conn->close();
-                          ?>
+                      <tbody id="data-table">
+                      
                       </tbody>
+
                   </table>
                 </div>
+                <script>
+    // Function to populate the table with data
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('get_inquiries.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                const tableBody = document.getElementById("data-table");
+                tableBody.innerHTML = ''; // Clear existing content
+
+                if (Array.isArray(data) && data.length > 0) {
+                    data.forEach(inquiry => {
+                        const row = document.createElement("tr");
+                        // Add delete button
+                        const deleteCell = document.createElement("td");
+                        deleteCell.className = 'text-center text-xs font-weight-bold mb-0';
+                        const deleteButton = document.createElement("button");
+                        deleteButton.className = 'btn btn-danger btn-sm';
+                        deleteButton.innerText = 'Delete';
+                        deleteButton.addEventListener('click', () => {
+                            if (confirm('Are you sure you want to delete this inquiry?')) {
+                                deleteInquiry(inquiry.inq_id);
+                            }
+                        });
+                        deleteCell.appendChild(deleteButton);
+                        row.appendChild(deleteCell);
+
+                        const idCell = document.createElement("td");
+                        idCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.inq_id}</div>`;
+                        row.appendChild(idCell);
+
+                        const nameCell = document.createElement("td");
+                        nameCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.name}</div>`;
+                        row.appendChild(nameCell);
+
+                        const emailCell = document.createElement("td");
+                        emailCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.email_add}</div>`;
+                        row.appendChild(emailCell);
+
+                        const subjectCell = document.createElement("td");
+                        subjectCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.subject}</div>`;
+                        row.appendChild(subjectCell);
+
+                        const messageCell = document.createElement("td");
+                        messageCell.className = 'text-center text-xs font-weight-bold mb-0 message';
+                        messageCell.innerHTML = `${inquiry.message.substring(0, 50)}...`;
+                        messageCell.dataset.bsToggle = 'modal';
+                        messageCell.dataset.bsTarget = '#messageModal';
+                        messageCell.dataset.message = inquiry.message;
+                        messageCell.addEventListener('click', () => {
+                            document.getElementById("messageContent").innerHTML = inquiry.message;
+                        });
+                        row.appendChild(messageCell);
+
+                        const dateCell = document.createElement("td");
+                        dateCell.className = 'text-center text-xs font-weight-bold mb-0';
+                        dateCell.innerHTML = inquiry.sent_date;
+                        row.appendChild(dateCell);
+
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    const row = document.createElement("tr");
+                    const cell = document.createElement("td");
+                    cell.colSpan = 6;
+                    cell.className = 'text-center text-xs font-weight-bold mb-0';
+                    cell.innerHTML = 'No inquiries found';
+                    row.appendChild(cell);
+                    tableBody.appendChild(row);
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+                // Optionally display an error message to the user
+            });
+    });
+                // Function to delete an inquiry
+function deleteInquiry(inq_id) {
+    fetch('delete_inq.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ inq_id })
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();
+    })
+    .then(data => {
+        if (data.success) {
+            // Remove the row from the table
+            alert('Inquiry Deleted Succesfuly.');
+            document.querySelector(`tr[data-id="${inq_id}"]`).remove();
+            window.location.reload();
+        } else {
+            alert('Failed to delete the inquiry.');
+        }
+    })
+    .catch(error => {
+        console.error('Error deleting inquiry:', error);
+    });
+}
+</script>
             </div>
         </div>
     </div>

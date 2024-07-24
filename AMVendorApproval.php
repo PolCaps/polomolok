@@ -376,6 +376,7 @@ $conn->close();
                       const processCell = document.createElement('td');
                     processCell.innerHTML = `
                         <select class="form-select form-select-sm approval-status" data-id="${item.applicant_id}">
+                        <option value="">Select Status</option>
                             <option value="PROCESSING" ${item.Approval === 'PROCESSING' ? 'selected' : ''}>PROCESSING</option>
                             <option value="APPROVED" ${item.Approval === 'APPROVED' ? 'selected' : ''}>APPROVED</option>
                             <option value="DECLINED" ${item.Approval === 'DECLINED' ? 'selected' : ''}>DECLINED</option>
@@ -414,6 +415,7 @@ $conn->close();
                     deleteCell.innerHTML = `<button class="btn btn-danger btn-sm delete-button" data-id="${item.applicant_id}">Delete</button>`;
 
                     // Append cells to row
+                    
                     row.appendChild(processCell);
                     row.appendChild(applicantidCell);
                     row.appendChild(nameCell);

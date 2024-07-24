@@ -337,7 +337,7 @@ $conn->close();
                     </form>
                 </li>
             </ul>
-            <button id="btnDel" class="btn btn-danger">Delete</button>
+           
         </div>
 
         <table class="table align-items-center mb-0">
@@ -376,7 +376,7 @@ $conn->close();
                                         <option value='Decline' ${item.relocation_status == 'Decline' ? 'selected' : ''}>Decline</option>
                                     </select>
                                 </td>
-                                <td class='text-center text-xs font-weight-bold mb-0'><input type='checkbox' class='delete-checkbox' data-id='${escapeHtml(item.relocation_id)}'></td>
+                                <td class='text-center text-xs font-weight-bold mb-0'>  <button data-id='${escapeHtml(item.relocation_id)}' id="btnDel" class="btn btn-danger">Delete</button></td>
                             `;
 
                             tableBody.appendChild(row);
@@ -405,8 +405,7 @@ $conn->close();
         function addEventListeners() {
             // Handle delete button click
             document.getElementById('btnDel').addEventListener('click', () => {
-                const selectedCheckboxes = document.querySelectorAll('.delete-checkbox:checked');
-                const ids = Array.from(selectedCheckboxes).map(cb => cb.dataset.relocation_id);
+                const ids = (datas.relocation_id);
 
                 if (ids.length > 0) {
                     fetch('deleteRel.php', {
