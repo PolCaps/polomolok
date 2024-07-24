@@ -988,22 +988,22 @@ session_start()
                 <div id="payRentDetails" class="collapse mt-4">
                 <div id="paymentAlert" class="alert d-none" role="alert"></div>
                 <form id="payRentForm" action="pay_rentApp.php" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                    <div class="form-group">
+                    <div class="form-group  mt-2">
                         <label for="applicant_id">Applicant ID:</label>
                         <input type="text" id="applicant_id" name="applicant_id" class="form-control" required>
                         <div class="invalid-feedback">Please enter your Applicant ID.</div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group  mt-2">
                         <label for="OR_no">Official Reciept Number:</label>
                         <input type="text" id="OR_no" name="OR_no" class="form-control" required>
                         <div class="invalid-feedback">Please enter Official Reciept No.</div>
                     </div>
-                    <div class="form-group">
+                    <div class="form-group mt-2">
                         <label for="proof_of_payment">Proof of Payment (File/Image):</label>
                         <input type="file" id="proof_of_payment" name="proof_of_payment" class="form-control" required>
                         <div class="invalid-feedback">Please upload proof of payment.</div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit Payment</button>
+                    <button type="submit" class="btn btn-primary">Submit Proof of Payment</button>
                 </form>
                 </div>
             </div>
