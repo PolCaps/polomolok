@@ -1,8 +1,10 @@
 <?php
+session_name('admin_session');
 session_start();
-if (!isset($_SESSION['id'])) {
-  header("Location: index.php");
-  exit();
+
+if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'ADMIN') {
+    header("Location: index.php");
+    exit();
 }
 // Get the vendor ID from the session
 $user_id = $_SESSION['id'];
@@ -97,11 +99,6 @@ try {
       $vendors = [];
   }
 
-    //  //  Debugging output
-    //     echo "<pre>";
-    //     print_r($vendors);
-    //     echo "</pre>";
-
 
 } catch (Exception $e) {
       // Return JSON error response
@@ -115,7 +112,6 @@ try {
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
