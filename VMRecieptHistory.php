@@ -1,4 +1,5 @@
 <?php
+session_name('vendor_session');
 session_start();
 
 include('database_config.php');
@@ -9,11 +10,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if the user is logged in and is a vendor
+
+
 if (!isset($_SESSION['vendor_id'])) {
-  header("Location: index.php");
-  exit();
+    header("Location: index.php");
+    exit();
 }
+
 
 // Get the vendor ID from the session
 $vendor_id = $_SESSION['vendor_id'];
