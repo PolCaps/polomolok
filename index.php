@@ -33,6 +33,14 @@ session_start()
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
 
+  <!-- Progressive Web Application -->
+   <link rel="manifest" href="manifest.json">
+   <script>
+    if('serviceWorker' in navigator){
+      navigator.serviceWorker.register('sw.js');
+    };
+   </script>
+
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
 </head>
@@ -104,7 +112,9 @@ session_start()
               <li><a href="ABuildingJ.html">Building J</a></li>
             </ul>
           </li>
+          <li><a href="#call-to-action">Rent Stall</a></li>
           <li><a href="#contact">Contact</a></li>
+          
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
@@ -583,7 +593,7 @@ session_start()
                 <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
                   <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,521.0016835830174C376.1290562159157,517.8887921683347,466.0731472004068,529.7835943286574,510.70327084640275,468.03025145048787C554.3714126377745,407.6079735673963,508.03601936045806,328.9844924480964,491.2728898941984,256.3432110539036C474.5976632858925,184.082847569629,479.9380746630129,96.60480741107993,416.23090153303,58.64404602377083C348.86323505073057,18.502131276798302,261.93793281208167,40.57373210992963,193.5410806939664,78.93577620505333C130.42746243093433,114.334589627462,98.30271207620316,179.96522072025542,76.75703585869454,249.04625023123273C51.97151888228291,328.5150500222984,13.704378332031375,421.85034740162234,66.52175969318436,486.19268352777647C119.04800174914682,550.1803526380478,217.28368757567262,524.383925680826,300,521.0016835830174"></path>
                 </svg>
-                <i class="bi bi-activity"></i>
+                <i class="bi bi-shop"></i>
               </div>
               <a href="BuildingE.html" class="stretched-link">
                 <h3>Building A</h3>
@@ -677,7 +687,7 @@ session_start()
                 <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
                   <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,503.46388370962813C374.79870501325706,506.71871716319447,464.8034551963731,527.1746412648533,510.4981551193396,467.86667711651364C555.9287308511215,408.9015244558933,512.6030010748507,327.5744911775523,490.211057578863,256.5855673507754C471.097692560561,195.9906835881958,447.69079081568157,138.11976852964426,395.19560036434837,102.3242989838813C329.3053358748298,57.3949838291264,248.02791733380457,8.279543830951368,175.87071277845988,42.242879143198664C103.41431057327972,76.34704239035025,93.79494320519305,170.9812938413882,81.28167332365135,250.07896920659033C70.17666984294237,320.27484674793965,64.84698225790005,396.69656628748305,111.28512138212992,450.4950937839243C156.20124167950087,502.5303643271138,231.32542653798444,500.4755392045468,300,503.46388370962813"></path>
                 </svg>
-                <i class="bi bi-bounding-box-circles"></i>
+                <i class="fa-solid fa-fish"></i>
               </div>
               <a href="service-details.html" class="stretched-link">
                 <h3>Building G</h3>
@@ -752,7 +762,7 @@ session_start()
           <div class="col-xl-10">
             <div class="text-center">
               <h3>Interested In Owning a stall?</h3>
-              <p>Occupy the stalls with your own liking!</p>
+              <p>Unleash your business potential with us and Enjoy prime location and exposure!</p>
               <a class="cta-btn" data-bs-toggle="modal" data-bs-target="#vendorApplicationModal">Click Here</a>
             </div>
           </div>
@@ -897,7 +907,7 @@ session_start()
                             <div class="row">
                                 <!-- Personal Details -->
                                 <div class="col-md-6">
-                                    <div class="form-group mb-3">
+                                    <div class="form-group mb-3 mt-2">
                                         <label for="first_name" class="form-label">First Name:</label>
                                         <input type="text" id="first_name" class="form-control" name="first_name" required>
                                         <div class="invalid-feedback">Please enter your first name.</div>
@@ -939,7 +949,7 @@ session_start()
                                     </div>
                                 </div>
                                 <!-- Business Details -->
-                                <div class="col-md-6">
+                                <div class="col-md-6 mt-2">
                                     <div class="form-group mb-3">
                                         <label for="age" class="form-label">Age:</label>
                                         <input type="number" id="age" class="form-control" name="age">
@@ -973,8 +983,8 @@ session_start()
                                     </label>
                                     <div id="termsDetails" class="collapse">
                                         <p class="mb-2 text-primary">
-                                            Submitting the form will download the rent application. Please fill it up and submit it online to our email address or walk into our office.
-                                            Filling up this form does not reserve a stall booth and doesn't guarantee that you will occupy the stall. Please message us for clarification and inquiries.
+                                            Filling and Submitting the Rent Application Form does not reserve a stall booth and doesn't guarantee that you will occupy the desired stall.
+                                            Please message us for clarification and inquiries.
                                         </p>
                                     </div>
                                     <div class="invalid-feedback">You must agree to the terms and conditions to submit the form.</div>
@@ -988,22 +998,22 @@ session_start()
                 <div id="payRentDetails" class="collapse mt-4">
                 <div id="paymentAlert" class="alert d-none" role="alert"></div>
                 <form id="payRentForm" action="pay_rentApp.php" method="POST" enctype="multipart/form-data" class="needs-validation" novalidate>
-                    <div class="form-group  mt-2">
+                    <div class="form-group">
                         <label for="applicant_id">Applicant ID:</label>
                         <input type="text" id="applicant_id" name="applicant_id" class="form-control" required>
                         <div class="invalid-feedback">Please enter your Applicant ID.</div>
                     </div>
-                    <div class="form-group  mt-2">
+                    <div class="form-group  mt-3">
                         <label for="OR_no">Official Reciept Number:</label>
                         <input type="text" id="OR_no" name="OR_no" class="form-control" required>
                         <div class="invalid-feedback">Please enter Official Reciept No.</div>
                     </div>
-                    <div class="form-group mt-2">
+                    <div class="form-group mt-3">
                         <label for="proof_of_payment">Proof of Payment (File/Image):</label>
                         <input type="file" id="proof_of_payment" name="proof_of_payment" class="form-control" required>
                         <div class="invalid-feedback">Please upload proof of payment.</div>
                     </div>
-                    <button type="submit" class="btn btn-primary">Submit Proof of Payment</button>
+                    <button type="submit" class="btn btn-primary mt-4">Submit Proof of Payment</button>
                 </form>
                 </div>
             </div>
