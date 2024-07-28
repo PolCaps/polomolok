@@ -370,9 +370,10 @@ $conn->close();
         <div class="mb-3 text-start">
           <label for="status" class="form-label">Status:</label>
           <select id="status" name="status" class="form-control">
-            <option value="Pending">Pending</option>
-            <option value="Approved">Approved</option>
-            <option value="Rejected">Rejected</option>
+          <option value="PROCESSING">Processing</option>
+            <option value="PENDING">Pending</option>
+            <option value="APPROVED">Approved</option>
+            <option value="DECLINED">Declined</option>
           </select>
         </div>
         <button type="submit" class="btn btn-primary">Save changes</button>
@@ -481,7 +482,7 @@ $conn->close();
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Aproval Status</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Applicant ID</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Applicant Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Status</th>
+                      <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Status</th> -->
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Date of Submitted</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Rent Application File</th>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Stall No</th>
@@ -514,14 +515,26 @@ $conn->close();
                         row.setAttribute('class', 'clickable-row'); // Add a class for styling
 
                         // Create table cells
+
+                        const processCell = document.createElement('td');
+                    processCell.innerHTML = `
+                        <select class="form-select form-select-sm approval-status" data-id="${item.applicant_id}">
+                            <option value="PROCESSING" ${item.Approval === 'PROCESSING' ? 'selected' : ''}>PROCESSING</option>
+                            <option value="APPROVED" ${item.Approval === 'APPROVED' ? 'selected' : ''}>APPROVED</option>
+                            <option value="DECLINED" ${item.Approval === 'DECLINED' ? 'selected' : ''}>DECLINED</option>
+                            <option value="PENDING" ${item.Approval === 'PENDING' ? 'selected' : ''}>PENDING</option>
+                        </select>
+                    `;
+                    row.appendChild(processCell);
+
                         const applicantidCell = document.createElement('td');
                         applicantidCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div>`;
                         
                         const nameCell = document.createElement('td');
                         nameCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.first_name} ${item.middle_name} ${item.last_name}</h6></div>`;
                         
-                        const statusCell = document.createElement('td');
-                        statusCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.status}</h6></div>`;
+                        // const statusCell = document.createElement('td');
+                        // statusCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.Approval}</h6></div>`;
 
                         const dateCell = document.createElement('td');
                         dateCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applied_date}</h6></div>`;
@@ -547,7 +560,7 @@ $conn->close();
                         // Append cells to row
                         row.appendChild(applicantidCell);
                         row.appendChild(nameCell);
-                        row.appendChild(statusCell);
+                       // row.appendChild(statusCell);
                         row.appendChild(dateCell);
                         row.appendChild(fileCell);
                         row.appendChild(stallnoCell);

@@ -228,8 +228,7 @@ $conn->close();
                   <select id="vendorSelect" class="form-select">
                     <!-- populate this select with a list of vendors -->
                     <option value="">Select a vendor</option>
-                    <option value="1">Vendor 1</option>
-                    <option value="2">Vendor 2</option>
+                  
                     <!-- ... -->
                   </select>
                 </div>
@@ -286,74 +285,100 @@ $conn->close();
                   <thead>
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Issued Date</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt History</th>
                     </tr>
                   </thead>
                   <tbody id="dataTableBody">
-                    
-                  <script>
-  // Function to fetch data from PHP script
-  function fetchData() {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', 'get_reciepts.php', true);
-      xhr.onload = function () {
-          if (xhr.status >= 200 && xhr.status < 300) {
-              var data = JSON.parse(xhr.responseText);
-              displayData(data);
-          } else {
-              console.error('Request failed with status ' + xhr.status);
-          }
-      };
-      xhr.onerror = function () {
-          console.error('Network error occurred');
-      };
-      xhr.send();
-  }
-
-  // Function to display data in the HTML table
-  function displayData(data) {
-      var tbody = document.getElementById('dataTableBody');
-      var html = '';
-
-      data.forEach(function (row) {
-          html += '<tr>';
-          html += '  <td>';
-          html += '    <div class="d-flex px-3 py-1">';
-          html += '      <div class="d-flex flex-column justify-content-center">';
-          html += '        <h6 class="mb-0 text-sm">' + row.Fname + ' ' + row.Mname + ' ' + row.Lname + '</h6>';
-          html += '      </div>';
-          html += '    </div>';
-          html += '  </td>';
-          html += '  <td>';
-          html += '    <div class="avatar-group mt-1">';
-          html += '      <h6 class="mb-1 text-sm">' + row.building + '</h6>';
-          html += '    </div>';
-          html += '  </td>';
-          html += '  <td class="align-middle text-center text-sm">';
-          html += '    <span class="text-xs font-weight-bold">' + row.stallnum + '</span>';
-          html += '  </td>';
-          html += '  <td class="align-middle text-center text-sm">';
-          html += '    <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#openHistoryModal">Show Receipts</button>';
-          html += '  </td>';
-          html += '</tr>';
-      });
-
-      // Insert the generated HTML into the table body
-      tbody.innerHTML = html;
-  }
-
-                  
-                      // Call fetchData function when the page loads
-                      document.addEventListener('DOMContentLoaded', function () {
-                          fetchData();
-                      });
-                  </script>
                   
                 </tbody>
                 </table>
               </div>
+              <script>
+    // Function to fetch data from PHP script using XMLHttpRequest
+    function fetchData() {
+        const xhr = new XMLHttpRequest();
+        xhr.open('GET', 'get_receipts.php', true);
+
+        xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+                const data = JSON.parse(xhr.responseText);
+                displayData(data.receipts);
+                populateVendorSelect(data.vendors);
+            } else {
+                console.error('Network response was not ok: ' + xhr.statusText);
+            }
+        };
+
+        xhr.onerror = function() {
+            console.error('Fetch operation failed: ', xhr.statusText);
+        };
+
+        xhr.send();
+    }
+
+    // Function to display data in the HTML table
+    function displayData(receipts) {
+        const tbody = document.getElementById('dataTableBody');
+        let html = '';
+
+        receipts.forEach(row => {
+            html += '<tr>';
+            html += '  <td>';
+            html += '    <div class="d-flex px-3 py-1">';
+            html += '      <div class="d-flex flex-column justify-content-center">';
+            html += '        <h6 class="mb-0 text-sm">' + row.Fname + ' ' + row.Mname + ' ' + row.Lname + '</h6>';
+            html += '      </div>';
+            html += '    </div>';
+            html += '  </td>';
+            html += '  <td>';
+            html += '    <div class="avatar-group mt-1">';
+            html += '      <h6 class="mb-1 text-sm">' + row.receiptsNum + '</h6>';
+            html += '    </div>';
+            html += '  </td>';
+            html += '  <td class="align-middle text-center text-sm">';
+            html += '    <span class="text-xs font-weight-bold">' + row.stallnum + '</span>';
+            html += '  </td>';
+            html += '  <td class="align-middle text-center text-sm">';
+            html += '    <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#openHistoryModal" data-receipts="' + row.receipts_history + '">Show Receipts</button>';
+            html += '  </td>';
+            html += '</tr>';
+        });
+
+        // Insert the generated HTML into the table body
+        tbody.innerHTML = html;
+
+        // Add event listeners for the buttons to show receipts
+        document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
+            button.addEventListener('click', function() {
+                const receiptsContent = document.getElementById('receiptsContent');
+                receiptsContent.innerHTML = this.getAttribute('data-receipts');
+            });
+        });
+    }
+
+    // Function to populate vendor select dropdown
+    function populateVendorSelect(vendors) {
+            const vendorSelect = document.getElementById('vendorSelect');
+            vendorSelect.innerHTML = '<option value="">Select a vendor</option>'; // Clear existing options
+            vendors.forEach(vendor => {
+                const option = document.createElement('option');
+                option.value = vendor.vendor_id;
+                option.text = vendor.Fname + ' ' + vendor.Mname + ' ' + vendor.Lname + ' (Stall: ' + vendor.stallnum + ')';
+                vendorSelect.appendChild(option);
+            });
+        }
+
+    // Wait for the DOM to be fully loaded before running the script
+    document.addEventListener('DOMContentLoaded', function () {
+        fetchData();
+    });
+</script>
+
+
+
+
             </div>
           </div>
           

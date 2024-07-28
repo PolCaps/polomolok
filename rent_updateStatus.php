@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 
     // Prepare and bind
-    $stmt = $conn->prepare("UPDATE rent_application SET status = ? WHERE applicant_id = ?");
+    $stmt = $conn->prepare("UPDATE rent_application SET Approval = ? WHERE applicant_id = ?");
     $stmt->bind_param("si", $status, $applicant_id);
 
     // Execute the statement

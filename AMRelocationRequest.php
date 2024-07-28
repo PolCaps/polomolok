@@ -353,145 +353,169 @@ $conn->close();
                 </tr>
             </thead>
             <tbody id="dataTableBody">
-            <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('fetch_RelReq.php')
-                .then(response => response.json())
-                .then(data => {
-                    const tableBody = document.getElementById('dataTableBody');
-                    if (data.length > 0) {
-                        data.forEach(item => {
-                            const row = document.createElement('tr');
-
-                            row.innerHTML = `
-                                <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.fn + ' ' + item.ln)}</td>
-                                <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.relocation_id)}</td>
-                                <td class='text-center text-xs font-weight-bold mb-0 data-id'>${escapeHtml(item.relocation_id)}</td>
-                                <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.message)}'>${escapeHtml(item.message.substring(0, 50))}...</td>
-                                <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.date_sent)}</td>
-                                <td class='text-center text-xs font-weight-bold mb-0'>
-                                    <select class='form-select relocation-status' data-statusid='${escapeHtml(item.relocation_id)}'>
-                                        <option value='Processing' ${item.relocation_status == 'Processing' ? 'selected' : ''}>Processing</option>
-                                        <option value='Accepted' ${item.relocation_status == 'Accepted' ? 'selected' : ''}>Accepted</option>
-                                        <option value='Decline' ${item.relocation_status == 'Decline' ? 'selected' : ''}>Decline</option>
-                                    </select>
-                                </td>
-                                <td class='text-center text-xs font-weight-bold mb-0'>  <button data-id='${escapeHtml(item.relocation_id)}' id="btnDel" class="btn btn-danger">Delete</button></td>
-                            `;
-
-                            tableBody.appendChild(row);
-                        });
-                    } else {
-                        const row = document.createElement('tr');
-                        row.innerHTML = "<td colspan='6' class='text-center text-xs font-weight-bold mb-0'>No inquiries found</td>";
-                        tableBody.appendChild(row);
-                    }
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        });
-
-        function escapeHtml(text) {
-            const map = {
-                '&': '&amp;',
-                '<': '&lt;',
-                '>': '&gt;',
-                '"': '&quot;',
-                "'": '&#039;'
-            };
-            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
-        }
-
-
-        function addEventListeners() {
-            // Handle delete button click
-            document.getElementById('btnDel').addEventListener('click', () => {
-                const ids = (datas.relocation_id);
-
-                if (ids.length > 0) {
-                    fetch('deleteRel.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: new URLSearchParams({ 'relocation_id': ids }) 
-                    })
-                    .then(response => response.text())
-                    .then(result => {
-                        alert(result);
-                        location.reload();
-                    })
-                    .catch(error => console.error('Error deleting records:', error));
-                } else {
-                    alert('No records selected for deletion.');
-                }
-            });
-
-            // Handle status change
-            const statusDropdowns = document.querySelectorAll('.relocation-status');
-
-            statusDropdowns.forEach(dropdown => {
-                dropdown.addEventListener('change', function() {
-                    const relocationId = this.getAttribute('data-statusid');
-                    const newStatus = this.value;
-
-                    fetch('updateStatus.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                        body: new URLSearchParams({
-                            'id': relocationId,
-                            'status': newStatus
-                        })
-                    })
-                    .then(response => response.text())
-                    .then(result => {
-                        console.log(result);
-                        if (result === 'Status updated successfully.') {
-                            alert('Status updated.');
-                        } else {
-                            alert('Error updating status.');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-                });
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // Handle search form submission
-            document.getElementById('searchForm').addEventListener('submit', function(event) {
-                event.preventDefault();
-                const username = document.getElementById('searchUsername').value;
-                if (username) {
-                    // Fetch and display results based on username
-                    fetch('searchRel.php?username=' + encodeURIComponent(username))
-                        .then(response => response.json())
-                        .then(data => {
-                            const tbody = document.getElementById('dataTableBody');
-                            tbody.innerHTML = ''; // Clear current table rows
-                            data.forEach(row => {
-                                const tr = document.createElement('tr');
-                                tr.innerHTML = `
-                                    <td class='text-center text-xs font-weight-bold mb-0'>${row.name}</td>
-                                    <td class='text-center text-xs font-weight-bold mb-0'>${row.email_add}</td>
-                                    <td class='text-center text-xs font-weight-bold mb-0'>${row.subject}</td>
-                                    <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${row.message}'>${row.message.substr(0, 50)}...</td>
-                                    <td class='text-center text-xs font-weight-bold mb-0'>${row.sent_date}</td>
-                                    <td class='text-center text-xs font-weight-bold mb-0'><input type='checkbox' class='delete-checkbox' data-id='${row.relocatio_id}'></td>
-                                `;
-                                tbody.appendChild(tr);
-                            });
-
-                            addEventListeners();
-                        })
-                        .catch(error => console.error('Error searching for user:', error));
-                }
-            });
-        });
-    </script>
             </tbody>
         </table>
+
+
+        <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        fetch('fetch_RelReq.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tableBody = document.getElementById('dataTableBody');
+            tableBody.innerHTML = ''; // Clear existing content
+
+            if (data.length > 0) {
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+
+                    row.innerHTML = `
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.fn + ' ' + item.ln)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.relocation_id)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0 data-id'>${escapeHtml(item.relocation_id)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.message)}'>${escapeHtml(item.message.substring(0, 50))}...</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.date_sent)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>
+                            <select class='form-select relocation-status' data-statusid='${escapeHtml(item.relocation_id)}'>
+                                <option value='Processing' ${item.relocation_status === 'Processing' ? 'selected' : ''}>Processing</option>
+                                <option value='Accepted' ${item.relocation_status === 'Accepted' ? 'selected' : ''}>Accepted</option>
+                                <option value='Declined' ${item.relocation_status === 'Declined' ? 'selected' : ''}>Declined</option>
+                            </select>
+                        </td>
+                        <td class='text-center text-xs font-weight-bold mb-0'><button data-id='${escapeHtml(item.relocation_id)}' class="btn btn-danger btnDel">Delete</button></td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
+
+                // Add event listener to delete buttons
+                document.querySelectorAll('.btnDel').forEach(button => {
+                    button.addEventListener('click', function () {
+                        const id = this.getAttribute('data-id');
+                        deleteRow(id);
+                    });
+                });
+
+                // Add event listener to status dropdowns
+                document.querySelectorAll('.relocation-status').forEach(dropdown => {
+                    dropdown.addEventListener('change', function () {
+                        const relocationId = this.getAttribute('data-statusid');
+                        const newStatus = this.value;
+
+                        fetch('updateRelStatus.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: new URLSearchParams({
+                                'id': relocationId,
+                                'status': newStatus
+                            })
+                        })
+                        .then(response => response.text())
+                        .then(result => {
+                            console.log(result);
+                            if (result === 'Status updated successfully.') {
+                              window.location.reload();
+                                alert('Status updated.');
+                            } else {
+                              window.location.reload();
+                                alert('Error updating status.');
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                    });
+                });
+
+            } else {
+                const row = document.createElement('tr');
+                row.innerHTML = "<td colspan='7' class='text-center text-xs font-weight-bold mb-0'>No inquiries found</td>";
+                tableBody.appendChild(row);
+            }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+    });
+
+    // Escape HTML function
+    function escapeHtml(text) {
+        const map = {
+            '&': '&amp;',
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#039;'
+        };
+        return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+    }
+
+    // Delete row function
+    function deleteRow(id) {
+        fetch('deleteRel.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: new URLSearchParams({ 'relocation_id': id })
+        })
+        .then(response => response.text())
+        .then(result => {
+            alert(result);
+            location.reload(); // Reload page to see changes
+        })
+        .catch(error => console.error('Error deleting record:', error));
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+    // Handle search form submission
+    document.getElementById('searchForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const username = document.getElementById('searchUsername').value;
+        if (username) {
+            // Fetch and display results based on username
+            fetch('searchRel.php?username=' + encodeURIComponent(username))
+                .then(response => response.json())
+                .then(data => {
+                    const tbody = document.getElementById('dataTableBody');
+                    tbody.innerHTML = ''; // Clear current table rows
+
+                    data.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.innerHTML = `
+                            <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(row.name)}</td>
+                            <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(row.email_add)}</td>
+                            <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(row.subject)}</td>
+                            <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(row.message)}'>${escapeHtml(row.message.substr(0, 50))}...</td>
+                            <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(row.sent_date)}</td>
+                            <td class='text-center text-xs font-weight-bold mb-0'><input type='checkbox' class='delete-checkbox' data-id='${escapeHtml(row.relocation_id)}'></td>
+                        `;
+                        tbody.appendChild(tr);
+                    });
+
+                    // Add event listeners to new elements
+                    addEventListeners();
+                })
+                .catch(error => console.error('Error searching for user:', error));
+        }
+    });
+});
+
+
+        function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+    </script>
     </div>
 </div>
 

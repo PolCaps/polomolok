@@ -452,6 +452,7 @@ function deleteInquiry(inq_id) {
     })
     .then(response => {
         if (!response.ok) {
+          window.location.reload();
             throw new Error('Network response was not ok');
         }
         return response.json();
@@ -459,14 +460,17 @@ function deleteInquiry(inq_id) {
     .then(data => {
         if (data.success) {
             // Remove the row from the table
+            window.location.reload();
             alert('Inquiry Deleted Succesfuly.');
             document.querySelector(`tr[data-id="${inq_id}"]`).remove();
-            window.location.reload();
+            
         } else {
             alert('Failed to delete the inquiry.');
+            window.location.reload();
         }
     })
     .catch(error => {
+      window.location.reload();
         console.error('Error deleting inquiry:', error);
     });
 }

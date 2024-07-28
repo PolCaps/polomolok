@@ -12,7 +12,7 @@ $conn->autocommit(FALSE);
 
 try {
     // Fetch applicant_ids of rejected applicants
-    $sql = "SELECT applicant_id FROM rent_application WHERE status = 'Rejected'";
+    $sql = "SELECT applicant_id FROM rent_application WHERE Approval = 'DECLINED'";
     $result = $conn->query($sql);
     
     if ($result->num_rows > 0) {
@@ -29,7 +29,7 @@ try {
     }
 
     // Delete rejected applicants from rent_applications
-    $sql = "DELETE FROM rent_application WHERE status = 'Rejected'";
+    $sql = "DELETE FROM rent_application WHERE Approval = 'DECLINED'";
     if ($conn->query($sql) === TRUE) {
         $conn->commit();
         echo json_encode(['success' => true, 'message' => "Rejected applicants deleted successfully."]);

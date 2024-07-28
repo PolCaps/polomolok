@@ -19,10 +19,10 @@ if (empty($username)) {
 }
 
 // Prepare the SQL statement with a LIKE clause to search for the username
-$sql = "SELECT r.*, s.* 
+$sql = "SELECT r.*, v.* 
 FROM relocation_req r
-JOIN vendors V ON r.vendor_id = v.vendor_id
-WHERE name LIKE ?";
+JOIN vendors v ON r.vendor_id = v.vendor_id
+WHERE v.first_name LIKE ?";
 $stmt = $conn->prepare($sql);
 
 if ($stmt) {
