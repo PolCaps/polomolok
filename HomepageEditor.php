@@ -1,9 +1,12 @@
 <?php
+session_name('admin_session');
 session_start();
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] != 'ADMIN') {
+
+if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'ADMIN') {
     header("Location: index.php");
     exit();
 }
+
 // Get the vendor ID from the session
 $user_id = $_SESSION['id'];
 
