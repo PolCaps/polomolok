@@ -299,7 +299,7 @@ $conn->close();
                         <tr>
                           
                           <td class="text-center">
-                            <img src="datas/meedoss/2024-07-16/1.jpg" alt="Image 1" width="50" height="50" class="expandable-image">
+                            <img src="image/gcash.jpeg" alt="Image 1" width="50" height="50" class="expandable-image">
                           </td>
                           <td class="align-middle text-center text-sm"><?php echo $vendor['monthly_rentals']; ?></td>
                           <td class="align-middle text-center text-sm"><?php echo $vendor['stall_no']; ?></td>
@@ -310,7 +310,7 @@ $conn->close();
                         <tr>
                          
                           <td class="text-center">
-                            <img src="datas/meedoss/2024-07-16/1.jpg" alt="Image 2" width="50" height="50" class="expandable-image">
+                            <img src="image/gcash.jpeg" alt="Image 2" width="50" height="50" class="expandable-image">
                           </td>
                           <td class="align-middle text-center text-sm"><?php echo $vendor['monthly_rentals']; ?></td>
                           <td class="align-middle text-center text-sm"><?php echo  $vendor['stall_no']; ?></td>

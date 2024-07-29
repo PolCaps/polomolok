@@ -241,34 +241,61 @@ $conn->close();
                 </div>
               </div>
             </div>
-            <div class="card-body px-0 pb-2">
-              <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Vendor Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Lease Agreement</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Business License</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Business Permits</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Other Supporting Documents</th>
-                    </tr>
-                  </thead>
-                  <tbody id="dataTableBody">
-                    <tr>
-                      <td class="align-middle text-center text-sm">Vendor 1</td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 1.pdf</a></td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 2.docx</a></td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 3.xlsx</a></td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 4.txt</a></td>
-                    </tr>
-                    <tr>
-                      <td class="align-middle text-center text-sm">Vendor 2</td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 5.pptx</a></td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 6.csv</a></td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 7.pdf</a></td>
-                      <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View File 8.docx</a></td>
-                    </tr>
-                    <!-- repeat for each row -->
+
+            <?php
+include('database_config.php');
+
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+if ($conn->connect_error) {
+    die(json_encode(['success' => false, 'message' => "Connection failed: " . $conn->connect_error]));
+}
+
+// Query to fetch data
+$sqlA = "SELECT v.username, d.lease_agreements, d.business_permits, d.business_license, d.other_supporting 
+FROM vendors v
+JOIN documents d ON v.vendor_id = d.vendor_id";
+
+$resultA = $conn->query($sqlA);
+$tableRows = '';
+if ($resultA === false) {
+    die("Error executing query: " . $conn->error);
+}
+
+// Check if there are results
+if ($resultA->num_rows > 0) {
+    while($rowA = $resultA->fetch_assoc()) {
+        $tableRows .= '
+        <tr>
+            <td class="align-middle text-center text-sm">' . htmlspecialchars($rowA['username']) . '</td>
+            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['lease_agreement']) . '</a></td>
+            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['business_license']) . '</a></td>
+            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['business_permits']) . '</a></td>
+            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['other_supporting']) . '</a></td>
+        </tr>';
+    }
+} else {
+    $tableRows = '<tr><td colspan="5" class="text-center">No records found</td></tr>';
+}
+
+// Close connection
+$conn->close();
+?>
+
+<div class="card-body px-0 pb-2">
+    <div class="table-responsive">
+        <table class="table align-items-center mb-0">
+            <thead>
+                <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Vendor Name</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Lease Agreement</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Business License</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Business Permits</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Other Supporting Documents</th>
+                </tr>
+            </thead>
+            <tbody id="dataTableBody">
+                <?= $tableRows ?>
                   </tbody>
                 </table>
               </div>

@@ -230,7 +230,7 @@ $conn->close();
                   <h6>Vendors</h6>
                   <p class="text-sm mb-0">
                     <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
-                    <span class="font-weight-bold ms-1">30 Vendors that are overdued</span> this month
+                    <span class="font-weight-bold ms-1">List of Vendors that are overdued</span>
                   </p>
                 </div>
                 
@@ -276,49 +276,83 @@ $conn->close();
                 </div>
               </div>
             </div>
+
+            <?php
+include('database_config.php');
+
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$sqlvendor = "SELECT v.username AS name, v.end_date AS due_date, a.stall_no AS stalls, a.monthly_rentals AS rent_due
+FROM vendors v
+JOIN building_a a ON v.vendor_id = a.vendor_id";
+
+$resultA = $conn->query($sqlvendor);
+
+$tableRows = '';
+if ($resultA === false) {
+    die("Error executing query: " . $conn->error);
+}
+
+if ($resultA->num_rows > 0) {
+    while ($rowA = $resultA->fetch_assoc()) {
+        $tableRows .= '
+        <tr>
+            <td>
+                <div class="d-flex px-3 py-1">
+                    <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm">' . htmlspecialchars($rowA['name']) . '</h6>
+                    </div>
+                </div>
+            </td>
+            <td>
+                <div class="avatar-group mt-1">
+                    <h6 class="mb-1 text-sm">' . htmlspecialchars($rowA['name']) . '</h6>
+                </div>
+            </td>
+            <td class="align-middle text-center text-sm">
+                <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['stalls']) . '</span>
+            </td>
+            <td class="align-middle text-center text-sm">
+                <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['rent_due']) . '</span>
+            </td>
+            <td class="align-middle text-center text-sm">
+                <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['due_date']) . '</span>
+            </td>
+            <td class="align-middle text-center text-sm">
+                <button type="button" class="btn btn-sm btn-primary my-1" onclick="openSendMessageModal(\'' . htmlspecialchars($rowA['name']) . '\')">
+                    Send Message
+                </button>
+            </td>
+        </tr>';
+    }
+} else {
+    $tableRows = '<tr><td colspan="6" class="text-center">No data available</td></tr>';
+}
+
+$conn->close();
+?>
             <div class="card-body px-0 pb-2">
               <div class="table-responsive">
                 <table class="table align-items-center mb-0">
-                  <thead>
+                <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Building</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due Date</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Send Message</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
+                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due Date</th>
+                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Send Message</th>
                     </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td>
-                        <div class="d-flex px-3 py-1">
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">Reyan Jay Samontanes</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td>
-                        <div class="avatar-group mt-1">
-                          <h6 class="mb-1 text-sm">Building E</h6>
-                        </div>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold"> 47 </span>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold">P25,250</span>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <span class="text-xs font-weight-bold">2023-02-15</span>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#sendMessageModal">
-                          Send Message
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
+                </thead>
+                <tbody id="tbody">
+                    <?= $tableRows ?>
+                </tbody>
                 </table>
               </div>
             </div>
@@ -355,34 +389,43 @@ $conn->close();
       </div>
     </div>
 
-    <!--
-    
-    JavaScript to handle the send message functionality
-      <script>
-        $(document).ready(function() {
-          $('#sendMessageBtn').on('click', function() {
-            var vendorName = $('#vendor-name').val();
-            var message = $('#message').val();
-            
-            // Make an AJAX request to send the message to the vendor
-            $.ajax({
-              type: 'POST',
-              url: 'end_message.php', // Replace with your PHP script to send the message
-              data: { vendor_name: vendorName, message: message },
-              success: function(response) {
-                if (response == 'uccess') {
-                  $('#sendMessageModal').modal('hide');
-                  alert('Message sent successfully!');
-                } else {
-                  alert('Error sending message. Please try again.');
-                }
-              }
-            });
-          });
-        });
-      </script>
-          -->
 
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      document.getElementById('sendMessageBtn').addEventListener('click', () => {
+        const vendorName = document.getElementById('vendor-name').value;
+        const message = document.getElementById('message').value;
+
+        fetch('send_message.php', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ vendor_name: vendorName, message: message })
+        })
+        .then(response => response.text())
+        .then(response => {
+          if (response === 'success') {
+            const modal = bootstrap.Modal.getInstance(document.getElementById('sendMessageModal'));
+            modal.hide();
+            alert('Message sent successfully!');
+          } else {
+            alert('Error sending message. Please try again.');
+          }
+        })
+        .catch(error => {
+          console.error('Error sending message:', error);
+          alert('Error sending message. Please try again.');
+        });
+      });
+    });
+
+    function openSendMessageModal(vendorName) {
+      document.getElementById('vendor-name').value = vendorName;
+      const sendMessageModal = new bootstrap.Modal(document.getElementById('sendMessageModal'));
+      sendMessageModal.show();
+    }
+  </script>
 
 
     </div>
