@@ -36,8 +36,7 @@ if (!$user) {
     die("No User found with ID " . htmlspecialchars($user_id));
 }
 
-// Close the connection
-$conn->close();
+
 ?>
 
 
@@ -278,16 +277,9 @@ $conn->close();
             </div>
 
             <?php
-include('database_config.php');
 
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
+// Fetch vendor details for display
 $sqlvendor = "SELECT v.username AS name, v.end_date AS due_date, a.stall_no AS stalls, a.monthly_rentals AS rent_due
 FROM vendors v
 JOIN building_a a ON v.vendor_id = a.vendor_id";
@@ -296,46 +288,45 @@ $resultA = $conn->query($sqlvendor);
 
 $tableRows = '';
 if ($resultA === false) {
-    die("Error executing query: " . $conn->error);
+  die("Error executing query: " . $conn->error);
 }
 
 if ($resultA->num_rows > 0) {
-    while ($rowA = $resultA->fetch_assoc()) {
-        $tableRows .= '
-        <tr>
-            <td>
-                <div class="d-flex px-3 py-1">
-                    <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm">' . htmlspecialchars($rowA['name']) . '</h6>
-                    </div>
-                </div>
-            </td>
-            <td>
-                <div class="avatar-group mt-1">
-                    <h6 class="mb-1 text-sm">' . htmlspecialchars($rowA['name']) . '</h6>
-                </div>
-            </td>
-            <td class="align-middle text-center text-sm">
-                <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['stalls']) . '</span>
-            </td>
-            <td class="align-middle text-center text-sm">
-                <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['rent_due']) . '</span>
-            </td>
-            <td class="align-middle text-center text-sm">
-                <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['due_date']) . '</span>
-            </td>
-            <td class="align-middle text-center text-sm">
-                <button type="button" class="btn btn-sm btn-primary my-1" onclick="openSendMessageModal(\'' . htmlspecialchars($rowA['name']) . '\')">
-                    Send Message
-                </button>
-            </td>
-        </tr>';
-    }
+  while ($rowA = $resultA->fetch_assoc()) {
+      $tableRows .= '
+      <tr>
+          <td>
+              <div class="d-flex px-3 py-1">
+                  <div class="d-flex flex-column justify-content-center">
+                      <h6 class="mb-0 text-sm">' . htmlspecialchars($rowA['name']) . '</h6>
+                  </div>
+              </div>
+          </td>
+          <td>
+              <div class="avatar-group mt-1">
+                  <h6 class="mb-1 text-sm">' . htmlspecialchars($rowA['name']) . '</h6>
+              </div>
+          </td>
+          <td class="align-middle text-center text-sm">
+              <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['stalls']) . '</span>
+          </td>
+          <td class="align-middle text-center text-sm">
+              <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['rent_due']) . '</span>
+          </td>
+          <td class="align-middle text-center text-sm">
+              <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['due_date']) . '</span>
+          </td>
+          <td class="align-middle text-center text-sm">
+              <button type="button" class="btn btn-sm btn-primary my-1" onclick="openSendMessageModal(\'' . htmlspecialchars($rowA['name']) . '\')">
+                  Send Message
+              </button>
+          </td>
+      </tr>';
+  }
 } else {
-    $tableRows = '<tr><td colspan="6" class="text-center">No data available</td></tr>';
+  $tableRows = '<tr><td colspan="6" class="text-center">No data available</td></tr>';
 }
 
-$conn->close();
 ?>
             <div class="card-body px-0 pb-2">
               <div class="table-responsive">
@@ -373,17 +364,17 @@ $conn->close();
             <form>
               <div class="mb-3">
                 <label for="vendor-name" class="col-form-label">Vendor Name:</label>
-                <input type="text" class="form-control" id="vendor-name" readonly value="<?php echo $vendor_name;?>">
+                <input type="text" class="form-control" id="vendor-name" name="vendor-name" readonly value="<?php echo $vendor_name;?>">
               </div>
               <div class="mb-3">
                 <label for="message" class="col-form-label">Message:</label>
-                <textarea class="form-control" id="message" required></textarea>
+                <textarea class="form-control" id="message" name="message" required></textarea>
               </div>
             </form>
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="sendMessageBtn">Send Message</button>
+            <button type="button" class="btn btn-primary" id="sendMessageBtn">Send</button>
           </div>
         </div>
       </div>
@@ -391,41 +382,95 @@ $conn->close();
 
 
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      document.getElementById('sendMessageBtn').addEventListener('click', () => {
-        const vendorName = document.getElementById('vendor-name').value;
-        const message = document.getElementById('message').value;
 
-        fetch('send_message.php', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({ vendor_name: vendorName, message: message })
-        })
-        .then(response => response.text())
-        .then(response => {
-          if (response === 'success') {
-            const modal = bootstrap.Modal.getInstance(document.getElementById('sendMessageModal'));
-            modal.hide();
-            alert('Message sent successfully!');
-          } else {
-            alert('Error sending message. Please try again.');
-          }
-        })
-        .catch(error => {
-          console.error('Error sending message:', error);
-          alert('Error sending message. Please try again.');
+// document.addEventListener('DOMContentLoaded', () => {
+//     // Add event listener for the button
+//     document.getElementById('sendMessageBtn').addEventListener('click', () => {
+//         const vendorName = document.getElementById('vendor-name').value;
+//         const message = document.getElementById('message').value;
+
+//         // Send data to PHP script
+//         fetch('send_message.php', {
+//             method: 'POST',
+//             headers: {
+//                 'Content-Type': 'application/json'
+//             },
+//             body: JSON.stringify({ vendor_name: vendorName, message: message })
+//         })
+//         .then(response => response.json())
+//         .then(data => {
+//             if (data.success) {
+//                 // Hide modal and show success alert
+//                 const modal = bootstrap.Modal.getInstance(document.getElementById('sendMessageModal'));
+//                 modal.hide();
+//                 alert('Message sent successfully!');
+//             } else {
+//                 // Show error alert if message sending failed
+//                 alert('Error sending message. Please try again.');
+//             }
+//         })
+//         .catch(error => {
+//             console.error('Error:', error);
+//             alert('Error sending message. Please try again.');
+//         });
+//     });
+// });
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Ensure that the button exists before adding the event listener
+    const sendMessageBtn = document.getElementById('sendMessageBtn');
+    if (sendMessageBtn) {
+        sendMessageBtn.addEventListener('click', () => {
+            const vendorName = document.getElementById('vendor-name').value;
+            const message = document.getElementById('message').value;
+
+            const myHeaders = new Headers();
+            myHeaders.append("Authorization", "App d45463d7941bec1c5d5c855242aa1689-1e7845e7-4025-47ba-88d2-19aeef67de3a");
+            myHeaders.append("Content-Type", "application/json");
+            myHeaders.append("Accept", "application/json");
+
+            const raw = JSON.stringify({
+                "messages": [
+                    {
+                        "destinations": [{"to": "639945817565"}, {"to": "639510462062"}],
+                        "from": "MEEDO Polomolok",
+                        "text": "This is from MEEDO Polomolok\nPay your due next week with the sum of 3,060.00.\nGo ahead and check the delivery report in the next step."
+                    }
+                ]
+            });
+
+            const requestOptions = {
+                method: "POST",
+                headers: myHeaders,
+                body: raw,
+                redirect: "follow"
+            };
+
+            fetch("https://6gxw8e.api.infobip.com/sms/2/text/advanced", requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    console.log(result);
+                    // Handle the result (e.g., display a success message)
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Handle the error (e.g., display an error message)
+                });
         });
-      });
-    });
-
-    function openSendMessageModal(vendorName) {
-      document.getElementById('vendor-name').value = vendorName;
-      const sendMessageModal = new bootstrap.Modal(document.getElementById('sendMessageModal'));
-      sendMessageModal.show();
     }
-  </script>
+
+    // Function to open the modal and set vendor name
+    function openSendMessageModal(vendorName) {
+        document.getElementById('vendor-name').value = vendorName;
+        const sendMessageModal = new bootstrap.Modal(document.getElementById('sendMessageModal'));
+        sendMessageModal.show();
+    }
+
+    // Ensure openSendMessageModal is available for use
+    window.openSendMessageModal = openSendMessageModal;
+});
+
+</script>
 
 
     </div>

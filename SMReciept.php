@@ -246,7 +246,7 @@ $conn->close();
             </div>
             <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="issueReceiptBtn">Issue Receipt</button>
+              <button type="button" class="btn btn-primary" id="issueReceiptBtn">Generate Receipt</button>
             </div>
           </div>
         </div>
@@ -261,6 +261,46 @@ $conn->close();
             Issue Receipt
           </button>
         </div>
+
+        <?php
+
+include("database_config.php");
+
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+if ($conn->connect_error) {
+    echo "Connection failed: " . $conn->connect_error;
+    exit;
+}
+
+$sqlV = "SELECT v.vendor_id, v.first_name, v.middle_name, v.last_name, r.receipt_id, r.receipt
+        FROM vendors v
+        LEFT JOIN receipts r ON v.vendor_id = r.vendor_id";
+
+$resultV = $conn->query($sqlV);
+
+if ($resultV === false) {
+    echo "Error executing query: " . $conn->error;
+    exit;
+}
+
+$dataV = [];
+if ($resultV->num_rows > 0) {
+    while ($row = $resultV->fetch_assoc()) {
+        $dataV[] = $row;
+    }
+} else {
+    $dataV = [];
+}
+
+$conn->close();
+
+?>
+
+
+
+
+
           <div class="card">
             <div class="card-header pb-0">
               <div class="row">
@@ -293,89 +333,58 @@ $conn->close();
                     </tr>
                   </thead>
                   <tbody id="dataTableBody">
-                  
-                </tbody>
+        <?php foreach ($dataV as $row) { ?>
+            <tr>
+                <td>
+                    <div class="d-flex px-3 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm"><?php echo $row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']; ?></h6>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="avatar-group mt-1">
+                        <h6 class="mb-1 text-sm"><?php echo $row['receipt_id']; ?></h6>
+                    </div>
+                </td>
+                <td class="align-middle text-center text-sm">
+                    <span class="text-xs font-weight-bold"><?php echo $row['vendor_id']; ?></span>
+                </td>
+                <td class="align-middle text-center text-sm">
+                    <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#openHistoryModal" data-receipts="<?php echo $row['receipt']; ?>">Show Receipts</button>
+                </td>
+            </tr>
+        <?php } ?>
+    </tbody>
                 </table>
               </div>
               <script>
-    // Function to fetch data from PHP script using XMLHttpRequest
-    function fetchData() {
-        const xhr = new XMLHttpRequest();
-        xhr.open('GET', 'get_receipts.php', true);
-
-        xhr.onload = function() {
-            if (xhr.status >= 200 && xhr.status < 300) {
-                const data = JSON.parse(xhr.responseText);
-                displayData(data.receipts);
-                populateVendorSelect(data.vendors);
-            } else {
-                console.error('Network response was not ok: ' + xhr.statusText);
-            }
-        };
-
-        xhr.onerror = function() {
-            console.error('Fetch operation failed: ', xhr.statusText);
-        };
-
-        xhr.send();
-    }
-
-    // Function to display data in the HTML table
-    function displayData(receipts) {
-        const tbody = document.getElementById('dataTableBody');
-        let html = '';
-
-        receipts.forEach(row => {
-            html += '<tr>';
-            html += '  <td>';
-            html += '    <div class="d-flex px-3 py-1">';
-            html += '      <div class="d-flex flex-column justify-content-center">';
-            html += '        <h6 class="mb-0 text-sm">' + row.Fname + ' ' + row.Mname + ' ' + row.Lname + '</h6>';
-            html += '      </div>';
-            html += '    </div>';
-            html += '  </td>';
-            html += '  <td>';
-            html += '    <div class="avatar-group mt-1">';
-            html += '      <h6 class="mb-1 text-sm">' + row.receiptsNum + '</h6>';
-            html += '    </div>';
-            html += '  </td>';
-            html += '  <td class="align-middle text-center text-sm">';
-            html += '    <span class="text-xs font-weight-bold">' + row.stallnum + '</span>';
-            html += '  </td>';
-            html += '  <td class="align-middle text-center text-sm">';
-            html += '    <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#openHistoryModal" data-receipts="' + row.receipts_history + '">Show Receipts</button>';
-            html += '  </td>';
-            html += '</tr>';
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
+        button.addEventListener('click', function() {
+            const receiptsContent = document.getElementById('receiptsContent');
+            receiptsContent.innerHTML = this.getAttribute('data-receipts');
         });
-
-        // Insert the generated HTML into the table body
-        tbody.innerHTML = html;
-
-        // Add event listeners for the buttons to show receipts
-        document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
-            button.addEventListener('click', function() {
-                const receiptsContent = document.getElementById('receiptsContent');
-                receiptsContent.innerHTML = this.getAttribute('data-receipts');
-            });
-        });
-    }
-
+    });
     // Function to populate vendor select dropdown
     function populateVendorSelect(vendors) {
-            const vendorSelect = document.getElementById('vendorSelect');
-            vendorSelect.innerHTML = '<option value="">Select a vendor</option>'; // Clear existing options
-            vendors.forEach(vendor => {
-                const option = document.createElement('option');
-                option.value = vendor.vendor_id;
-                option.text = vendor.Fname + ' ' + vendor.Mname + ' ' + vendor.Lname + ' (Stall: ' + vendor.stallnum + ')';
-                vendorSelect.appendChild(option);
-            });
-        }
+        const vendorSelect = document.getElementById('vendorSelect');
+        vendorSelect.innerHTML = '<option value="">Select a vendor</option>'; // Clear existing options
+        vendors.forEach(data => {
+            const option = document.createElement('option');
+            option.value = data.vendor_id;
+            option.text = data.first_name + ' ' + data.middle_name + ' ' + data.last_name + ' (Stall: ' + data.receipt_id + ')';
+            vendorSelect.appendChild(option);
+        });
+    }
 
-    // Wait for the DOM to be fully loaded before running the script
-    document.addEventListener('DOMContentLoaded', function () {
-        fetchData();
-    });
+    // Call the function to populate the vendor select dropdown
+    const vendors = <?php echo json_encode($dataV); ?>;
+    populateVendorSelect(vendors);
+
+    // // Wait for the DOM to be fully loaded before running the script
+    // document.addEventListener('DOMContentLoaded', function () {
+    //     fetchData();
+    // });
 </script>
 
 

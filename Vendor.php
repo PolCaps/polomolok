@@ -68,7 +68,12 @@ $vendor = $result->fetch_assoc();
 
 </head>
 
+
 <body class="g-sidenav-show  bg-gray-100">
+
+
+
+
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -366,6 +371,33 @@ $vendor = $result->fetch_assoc();
     </div>
   </div>
 
+  <div class="modal fade" id="fillApplicantModal" tabindex="-1" aria-labelledby="fillApplicantModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="fillApplicantModalLabel">Fill Lease Agreement </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <button id="frmPdfBtn" class="btn btn-info">Lease Agreements Form</button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('frmPdfBtn').addEventListener('click', function() {
+        // Redirect to the JotForm link
+        window.open('https://form.jotform.com/242292954644060', '_blank');
+    });
+</script>
+
+
   <!-- Bootstrap 5.3 scripts -->
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
@@ -602,6 +634,8 @@ if (isset($_POST['submit'])) {
        <!-- Edit Profile Button -->
   <div class="card-body pt-sm-3 pt-0">
     <a class="btn bg-gradient-info w-85 text-white mx-4" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</a>
+    <a class="btn bg-gradient-info w-85 text-white mx-4" href="#" data-bs-toggle="modal" data-bs-target="#fillApplicantModal">Fill Lease Agreement</a>
+  
     <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
     <hr class="horizontal dark my-1">
     <div class="text-small">Fixed Navbar</div>
@@ -666,5 +700,9 @@ if (isset($_POST['submit'])) {
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
 </body>
+
+<link rel="stylesheet" href="loading.css">
+  <script src="loading.js" defer></script>
+  <div class="loader"></div>
 
 </html>

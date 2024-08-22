@@ -159,7 +159,7 @@ $conn->close();
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="../pages/sign-in.html">
+          <a class="nav-link" href="AMRelocationRequest.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <img src="image/icons/icons8-kiosk-on-wheels-48.png" alt="relocationimg" width="18px" height="18px">
             </div>
