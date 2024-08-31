@@ -27,13 +27,17 @@ session_start()
   <link
     href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
     rel="stylesheet">
-
   <!-- Vendor CSS Files -->
   <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
   <link href="assets/vendor/aos/aos.css" rel="stylesheet">
   <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
   <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Lightbox CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+  <!-- Lightbox JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox.min.js"></script>
 
   <!-- Progressive Web Application -->
   <link rel="manifest" href="manifest.json">
@@ -378,25 +382,25 @@ session_start()
     </section>
 
 
-    <!-- Announcements Section -->
-    <section id="announcements" class="announcements section">
+   <!-- Announcements Section -->
+<section id="announcements" class="announcements section">
 
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>Announcements</h2>
-        <p>Stay updated with the latest news and events</p>
-      </div><!-- End Section Title -->
+<!-- Section Title -->
+<div class="container section-title" data-aos="fade-up">
+  <h2>Announcements</h2>
+  <p>Stay updated with the latest news and events</p>
+</div><!-- End Section Title -->
 
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
+<div class="container" data-aos="fade-up" data-aos-delay="100">
 
-        <div class="swiper" data-speed="600" data-delay="5000"
-          data-breakpoints="{ &quot;320&quot;: { &quot;slidesPerView&quot;: 1, &quot;spaceBetween&quot;: 40 }, &quot;1200&quot;: { &quot;slidesPerView&quot;: 3, &quot;spaceBetween&quot;: 40 } }">
-          <script type="application/json" class="swiper-config">
+  <div class="swiper" data-speed="600" data-delay="5000"
+    data-breakpoints="{ &quot;320&quot;: { &quot;slidesPerView&quot;: 1, &quot;spaceBetween&quot;: 40 }, &quot;1200&quot;: { &quot;slidesPerView&quot;: 3, &quot;spaceBetween&quot;: 40 } }">
+    <script type="application/json" class="swiper-config">
       {
         "loop": true,
         "speed": 600,
         "autoplay": {
-          "delay": 5000
+          "delay": 10000
         },
         "slidesPerView": "auto",
         "pagination": {
@@ -416,82 +420,76 @@ session_start()
         }
       }
     </script>
-          <div class="swiper-wrapper">
 
-            <div class="swiper-slide">
-              <div class="announcement-item">
-                <p>
-                  <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Notice of vacant stalls on Building E!</span>
-                  <i class="bi bi-quote quote-icon-right"></i>
-                </p>
-                <img src="image/notice.jpg" class="announcement-img" alt="Event 1" style="width: 220px; height: 280px;">
-                <h4>Stall 1</h4>
-                <h5>Building E</h4>
-              </div>
-            </div><!-- End announcement item -->
+    <div class="swiper-wrapper">
+      <?php
+      // Include database configuration
+      include 'database_config.php';
+      $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-            <div class="swiper-slide">
-              <div class="announcement-item">
-                <p>
-                  <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Notice of vacant stalls on Building J!</span>
-                  <i class="bi bi-quote quote-icon-right"></i>
-                </p>
-                <img src="image/notice.jpg" class="announcement-img" alt="Update 1"
-                  style="width: 220px; height: 280px;">
-                <h4>Stall 22</h4>
-                <h5>Building J</h5>
-              </div>
-            </div><!-- End announcement item -->
+      // Fetch announcements from database
+      $result = $conn->query("SELECT * FROM announcements");
 
-            <div class="swiper-slide">
-              <div class="announcement-item">
-                <p>
-                  <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Notice of vacant stalls on Building C!</span>
-                  <i class="bi bi-quote quote-icon-right"></i>
-                </p>
-                <img src="image/notice.jpg" class="announcement-img" alt="Webinar" style="width: 220px; height: 280px;">
-                <h4>Stall 67</h4>
-                <h5>Building C</h5>
-              </div>
-            </div><!-- End announcement item -->
+      // Check if there was an error with the query
+      if (!$result) {
+          echo "<div class='swiper-slide'>
+                  <div class='announcement-item'>
+                      <p>Error fetching announcements. Please try again later.</p>
+                  </div>
+                </div>";
+      } else {
+          // Check if there are any announcements
+          if ($result->num_rows > 0) {
+              // Output announcements
+              while ($row = $result->fetch_assoc()) {
+                  echo "<div class='swiper-slide'>
+                      <div class='announcement-item'>
+                          <p>
+                              <i class='bi bi-quote quote-icon-left'></i>
+                              <span>{$row['title']}</span>
+                              <i class='bi bi-quote quote-icon-right'></i>
+                          </p>
+                          <a href='{$row['image_path']}' data-lightbox='announcements' data-title='{$row['title']}'>
+                              <img src='{$row['image_path']}' class='announcement-img' alt='{$row['description']}' style='width: 220px; height: 280px;'>
+                          </a>
+                          <h4>{$row['building']}</h4>
+                          <h5>{$row['stall']}</h5>
+                      </div>
+                  </div>";
+              }
+          } else {
+              // Display message if no announcements are available
+              echo "<div class='swiper-slide'>
+                      <div class='announcement-item'>
+                          <p>No announcement at this time.</p>
+                      </div>
+                    </div>";
+          }
+      }
+      ?>
+    </div>
+    <div class="swiper-pagination"></div>
+  </div>
 
-            <div class="swiper-slide">
-              <div class="announcement-item">
-                <p>
-                  <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Notice of vacant stalls on Building D!</span>
-                  <i class="bi bi-quote quote-icon-right"></i>
-                </p>
-                <img src="image/notice.jpg" class="announcement-img" alt="Webinar" style="width: 220px; height: 280px;">
-                <h4>Stall 4</h4>
-                <h5>Building D</h5>
-              </div>
-            </div>
+  <style>
+    .announcement-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
 
-            <div class="swiper-slide">
-              <div class="announcement-item">
-                <p>
-                  <i class="bi bi-quote quote-icon-left"></i>
-                  <span>Notice of vacant stalls on Building A!</span>
-                  <i class="bi bi-quote quote-icon-right"></i>
-                </p>
-                <img src="image/notice.jpg" class="announcement-img" alt="Webinar" style="width: 220px; height: 280px;">
-                <h4>Stall 6</h4>
-                <h5>Building A</h5>
-              </div>
-            </div>
+    .announcement-img {
+      display: block;
+      margin: 0 auto;
+    }
+  </style>
 
-            <!-- Add more announcements as needed -->
+</div><!-- End container -->
 
-          </div>
-          <div class="swiper-pagination"></div>
-        </div>
+</section><!-- End Announcements Section -->
 
-      </div>
-    </section><!-- End Announcements Section -->
+
 
 
     <!-- Testimonials Section -->
@@ -634,12 +632,7 @@ session_start()
       <div class="container">
 
         <div class="row gy-4">
-          <div class="col-12 d-flex justify-content-center">
-            <a href="marketnavigation.html" class="btn btn-primary btn-lg"
-              style="background-color: #ffffe0; color: #000; border: 4px solid #add8e6; width: 200px; text-align: center;">
-              GO TO MAPS
-            </a>
-          </div>
+
 
           <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
             <div class="service-item item-cyan position-relative">
