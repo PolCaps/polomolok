@@ -64,6 +64,9 @@ $conn->close();
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -180,15 +183,23 @@ $conn->close();
       </ul>
     </div>
     <div class="sidenav-footer mx-3 mt-5">
-      <div class="card card-background shadow-none card-background-mask-info" id="sidenavCard">
+    <div class="card card-background shadow-none card-background-mask-info" id="sidenavCard">
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
-          <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center"><?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?></h5>
-          <hr class="horizontal dark mt-0">
+            <?php
+            // Check if the user has a profile picture set; if not, use a default image
+            $profilePicture = !empty($user['picture_profile']) ? $user['picture_profile'] : 'image/profile.jpg';
+            ?>
+            <img src="<?php echo htmlspecialchars($profilePicture); ?>" class="img-fluid" alt="Admin Profile Picture" style="height: 100px; width: 100px; border-radius: 1rem; margin-left: 40px;">
+            <h5 class="text-center mt-2">
+                <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
+            </h5>
+            <hr class="horizontal dark mt-0">
         </div>
-      </div>
     </div>
+</div>
+
+
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->

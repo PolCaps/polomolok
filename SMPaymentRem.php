@@ -278,11 +278,26 @@ if (!$user) {
 
             <?php
 
-
 // Fetch vendor details for display
-$sqlvendor = "SELECT v.username AS name, v.end_date AS due_date, a.stall_no AS stalls, a.monthly_rentals AS rent_due
-FROM vendors v
-JOIN building_a a ON v.vendor_id = a.vendor_id";
+$sqlvendor = "
+    SELECT 
+        CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+        v.username AS username, 
+        v.end_date AS due_date, 
+        a.monthly_rentals AS rent_due,
+        v.vendor_id AS vendor_id
+    FROM vendors v
+    JOIN building_a a ON v.vendor_id = a.vendor_id
+    LEFT JOIN building_b b ON v.vendor_id = b.vendor_id
+    LEFT JOIN building_c c ON v.vendor_id = c.vendor_id
+    LEFT JOIN building_d d ON v.vendor_id = d.vendor_id
+    LEFT JOIN building_e e ON v.vendor_id = e.vendor_id
+    LEFT JOIN building_f f ON v.vendor_id = f.vendor_id
+    LEFT JOIN building_g g ON v.vendor_id = g.vendor_id
+    LEFT JOIN building_h h ON v.vendor_id = h.vendor_id
+    LEFT JOIN building_i i ON v.vendor_id = i.vendor_id
+    LEFT JOIN building_j j ON v.vendor_id = j.vendor_id
+";
 
 $resultA = $conn->query($sqlvendor);
 
@@ -304,11 +319,8 @@ if ($resultA->num_rows > 0) {
           </td>
           <td>
               <div class="avatar-group mt-1">
-                  <h6 class="mb-1 text-sm">' . htmlspecialchars($rowA['name']) . '</h6>
+                  <h6 class="mb-1 text-sm">' . htmlspecialchars($rowA['username']) . '</h6>
               </div>
-          </td>
-          <td class="align-middle text-center text-sm">
-              <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['stalls']) . '</span>
           </td>
           <td class="align-middle text-center text-sm">
               <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['rent_due']) . '</span>
@@ -317,160 +329,162 @@ if ($resultA->num_rows > 0) {
               <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['due_date']) . '</span>
           </td>
           <td class="align-middle text-center text-sm">
-              <button type="button" class="btn btn-sm btn-primary my-1" onclick="openSendMessageModal(\'' . htmlspecialchars($rowA['name']) . '\')">
-                  Send Message
+              <button type="button" class="btn btn-sm btn-primary my-1" onclick="openSendMessageModal(\'' . htmlspecialchars($rowA['name']) . '\', ' . htmlspecialchars($rowA['vendor_id']) . ')">
+                  Send Reminders
               </button>
           </td>
       </tr>';
   }
 } else {
-  $tableRows = '<tr><td colspan="6" class="text-center">No data available</td></tr>';
+  $tableRows = '<tr><td colspan="5" class="text-center">No data available</td></tr>';
 }
 
 ?>
-            <div class="card-body px-0 pb-2">
-              <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                <thead>
-                    <tr>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
-                        <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due Date</th>
-                        <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Send Message</th>
-                    </tr>
-                </thead>
-                <tbody id="tbody">
-                    <?= $tableRows ?>
-                </tbody>
-                </table>
-              </div>
-            </div>
-        </div>
+
+<div class="card-body px-0 pb-2">
+  <div class="table-responsive">
+    <table class="table align-items-center mb-0">
+      <thead>
+        <tr>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
+          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
+          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due Date</th>
+          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+        </tr>
+      </thead>
+      <tbody id="tbody">
+        <?= $tableRows ?>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+<!-- send message Modal -->
+<div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sendMessageModalLabel">Send Reminders to Vendor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-        </div>
-        
+      <div class="modal-body">
+        <form id="sendMessageForm" method="POST" action="generateSOA.php">
+          <div class="mb-3">
+            <label for="vendor-name" class="col-form-label">Vendor Name:</label>
+            <input type="text" class="form-control" id="vendor-name" name="vendor-name" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
+            <input type="text" class="form-control" id="remaining-balance" name="remaining-balance" required>
+          </div>
+          <div class="mb-3">
+            <label for="monthly-rentals" class="col-form-label">Monthly Rentals:</label>
+            <input type="text" class="form-control" id="monthly-rentals" name="monthly_rentals_total" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="miscellaneous-fees" class="col-form-label">Miscellaneous Fees (optional):</label>
+            <input type="text" class="form-control" id="miscellaneous-fees" name="miscellaneous-fees">
+          </div>
+          <div class="mb-3">
+            <label for="other-fees" class="col-form-label">Other Fees (optional):</label>
+            <input type="text" class="form-control" id="other-fees" name="other-fees">
+          </div>
+          <input type="hidden" id="vendor-id" name="vendor-id">
+          <button type="submit" id="submit" class="btn btn-primary">Generate Invoice</button>
+        </form>
       </div>
-      <!-- send message Modal -->
-    <div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="sendMessageModalLabel">Send Message to Vendor</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-3">
-                <label for="vendor-name" class="col-form-label">Vendor Name:</label>
-                <input type="text" class="form-control" id="vendor-name" name="vendor-name" readonly value="<?php echo $vendor_name;?>">
-              </div>
-              <div class="mb-3">
-                <label for="message" class="col-form-label">Message:</label>
-                <textarea class="form-control" id="message" name="message" required></textarea>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary" id="sendMessageBtn">Send</button>
-          </div>
-        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
+  </div>
+</div>
 
 
-    <script>
-
-// document.addEventListener('DOMContentLoaded', () => {
-//     // Add event listener for the button
-//     document.getElementById('sendMessageBtn').addEventListener('click', () => {
-//         const vendorName = document.getElementById('vendor-name').value;
-//         const message = document.getElementById('message').value;
-
-//         // Send data to PHP script
-//         fetch('send_message.php', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify({ vendor_name: vendorName, message: message })
-//         })
-//         .then(response => response.json())
-//         .then(data => {
-//             if (data.success) {
-//                 // Hide modal and show success alert
-//                 const modal = bootstrap.Modal.getInstance(document.getElementById('sendMessageModal'));
-//                 modal.hide();
-//                 alert('Message sent successfully!');
-//             } else {
-//                 // Show error alert if message sending failed
-//                 alert('Error sending message. Please try again.');
-//             }
-//         })
-//         .catch(error => {
-//             console.error('Error:', error);
-//             alert('Error sending message. Please try again.');
-//         });
-//     });
-// });
-
+<script>
 document.addEventListener('DOMContentLoaded', () => {
-    // Ensure that the button exists before adding the event listener
-    const sendMessageBtn = document.getElementById('sendMessageBtn');
-    if (sendMessageBtn) {
-        sendMessageBtn.addEventListener('click', () => {
-            const vendorName = document.getElementById('vendor-name').value;
-            const message = document.getElementById('message').value;
+  // Function to open the modal and set vendor details
+  function openSendMessageModal(vendorName, vendorId) {
+    document.getElementById('vendor-name').value = vendorName;
+    document.getElementById('vendor-id').value = vendorId;
 
-            const myHeaders = new Headers();
-            myHeaders.append("Authorization", "App d45463d7941bec1c5d5c855242aa1689-1e7845e7-4025-47ba-88d2-19aeef67de3a");
-            myHeaders.append("Content-Type", "application/json");
-            myHeaders.append("Accept", "application/json");
+    // Fetch monthly rentals based on vendorId
+    fetchMonthlyRentals(vendorId);
 
-            const raw = JSON.stringify({
-                "messages": [
-                    {
-                        "destinations": [{"to": "639945817565"}, {"to": "639510462062"}],
-                        "from": "MEEDO Polomolok",
-                        "text": "This is from MEEDO Polomolok\nPay your due next week with the sum of 3,060.00.\nGo ahead and check the delivery report in the next step."
-                    }
-                ]
-            });
+    const sendMessageModal = new bootstrap.Modal(document.getElementById('sendMessageModal'));
+    sendMessageModal.show();
+  }
 
-            const requestOptions = {
-                method: "POST",
-                headers: myHeaders,
-                body: raw,
-                redirect: "follow"
-            };
+  // Fetch monthly rentals from the server
+  function fetchMonthlyRentals(vendorId) {
+    fetch(`getMonthlyRentals.php?vendor_id=${vendorId}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('monthly-rentals').value = data.monthly_rentals;
+        } else {
+          alert('Error fetching monthly rentals: ' + data.message);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
 
-            fetch("https://6gxw8e.api.infobip.com/sms/2/text/advanced", requestOptions)
-                .then(response => response.text())
-                .then(result => {
-                    console.log(result);
-                    // Handle the result (e.g., display a success message)
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // Handle the error (e.g., display an error message)
-                });
-        });
-    }
+  // Handle form submission
+  document.querySelector('#sendMessageForm').addEventListener('submit', function(event) {
+    // Prevent default form submission
+    event.preventDefault();
 
-    // Function to open the modal and set vendor name
-    function openSendMessageModal(vendorName) {
-        document.getElementById('vendor-name').value = vendorName;
-        const sendMessageModal = new bootstrap.Modal(document.getElementById('sendMessageModal'));
-        sendMessageModal.show();
-    }
+    // Create a FormData object from the form
+    const formData = new FormData(this);
 
-    // Ensure openSendMessageModal is available for use
-    window.openSendMessageModal = openSendMessageModal;
+    // Use Fetch API to submit the form
+    fetch('generateSOA.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Display a popup with the PDF download link
+        alert('Invoice generated successfully!');
+        // Optionally, you can open the PDF directly
+        window.open(data.file, '_blank');
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  });
+
+  // Ensure openSendMessageModal is available for use
+  window.openSendMessageModal = openSendMessageModal;
 });
-
 </script>
+<style>
+
+.alert-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  z-index: 1000;
+}
+
+.alert-popup-content {
+  text-align: center;
+}
+
+.alert-popup .btn {
+  margin: 10px;
+}
+
+</style>
 
 
     </div>

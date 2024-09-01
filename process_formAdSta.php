@@ -21,13 +21,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $address = $_POST['address'];
     $email_add = $_POST['email_add'];
 
+    // // Hash the password
+    // $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+
     try {
         $stmt = $pdo->prepare("INSERT INTO users (user_type, username, password, first_name, middle_name, last_name, age, contact_no, address, email_add) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        $stmt->execute([$user_type, $username, $password, $first_name, $middle_name, $last_name, $age, $contact_no, $address, $email_add]);
+        $stmt->execute([$user_type, $username, $hashed_password, $first_name, $middle_name, $last_name, $age, $contact_no, $address, $email_add]);
 
         $_SESSION['alert_class'] = 'alert-success';
         $_SESSION['alert_message'] = 'User created successfully!';
     } catch (PDOException $e) {
+        error_log($e->getMessage()); // Log the error message for debugging
         if ($e->getCode() == 23000) { // 23000 is the code for a duplicate entry
             $_SESSION['alert_class'] = 'alert-danger';
             $_SESSION['alert_message'] = 'Username already exists. Please choose a different username.';

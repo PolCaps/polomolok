@@ -46,8 +46,8 @@ $vendor = $result->fetch_assoc();
 if (!$vendor) {
     die("No vendor found with ID " . htmlspecialchars($vendor_id));
 }
-$conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -58,7 +58,7 @@ $conn->close();
     <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
     <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
     <title>
-        Request Relocation
+        REMINDERS
     </title>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -295,99 +295,109 @@ $conn->close();
         </nav>
         <!-- End Navbar -->
         <div class="container-fluid py-4">
+    <div class="row my-4">
+        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <div class="row">
+                        <h6 class="text-center">
+                            <span class="text-sm text-secondary">Vendor Name:</span>
+                            <?php echo htmlspecialchars($vendor['username']); ?>
+                        </h6>
+                    </div>
+                </div>
 
-            <div class="row my-4">
-                <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
-                    <div class="card">
-                        <div class="card-header pb-0">
-                            <div class="row">
-                                <h6 class="text-center"><span class="text-sm text-secondary">Vendor Name:</span>
-                                    <?php echo $vendor['username']; ?></h6>
+                
+
+
+                <div class="card-body px-0 pb-2">
+                    <div class="container">
+                        <!-- Messages Reminders Label -->
+                        <div class="row">
+                            <div class="col-12">
+                                <h4 class="text-uppercase text-secondary font-weight-bolder opacity-7" style="font-size: 2rem;">
+                                    STATEMENT OF ACCOUNT REMINDERS
+                                </h4>
                             </div>
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-                        <div class="card-body px-0 pb-2">
-                            <div class="container">
-                                <!-- Messages Reminders Label -->
-                                <div class="row">
-                                    <div class="col-12">
-                                        <h4 class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                                            Messages Reminders</h4>
-                                    </div>
-                                </div>
+<!-- PDF Display Section -->
+<div id="pdfContainer" style="display: none;">
+    <iframe id="pdfIframe" width="100%" height="500px"></iframe>
+</div>
+<div id="pdfError" style="display: none; color: red;"></div>
 
-                                <!-- Firebase Messaging Box -->
-                                <div class="row mt-3">
-                                    <div class="col-12">
-                                        <div class="card">
-                                            <div class="card-body">
-                                                <div id="firebaseMessagingBox"
-                                                    style="height: 300px; overflow-y: auto; border: 1px solid #ccc; padding: 10px;">
 
-                                                    <script type="module">
-                                                        // Import Firebase modules
-                                                        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-                                                        import { database } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
-                                                        import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-analytics.js";
-                                                        import { getMessaging, getToken } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-messaging.js";
+<script>
+    async function fetchPdfData() {
+        try {
+            // Send a request to fetch the file path from the server
+            const response = await fetch('soa.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ $vendor_id }) // Use the JavaScript variable
+            });
 
-                                                        const firebaseConfig = {
-                                                            apiKey: "AIzaSyCAyyeXhnpox_Nbl0Jr45XghbMhc6-IMK8",
-                                                            authDomain: "polomolokreminder.firebaseapp.com",
-                                                            projectId: "polomolokreminder",
-                                                            storageBucket: "polomolokreminder.appspot.com",
-                                                            messagingSenderId: "963259045435",
-                                                            appId: "1:963259045435:web:30c5f915f04fb98f99ae1e"
-                                                            measurementId: "G-MJSXVMPVP5"
-                                                        };
+            if (response.ok) {
+                const data = await response.json();
 
-                                                        // Initialize Firebase
-                                                        const app = initializeApp(firebaseConfig);
+                const pdfIframe = document.getElementById('pdfIframe');
+                const pdfContainer = document.getElementById('pdfContainer');
+                const pdfError = document.getElementById('pdfError');
 
-                                                        const analytics = getAnalytics(app);
+                if (data.success && data.filePath) {
+                    // Display the iframe with the PDF
+                    pdfIframe.src = data.filePath;
+                    pdfContainer.style.display = 'block'; // Show the PDF container
+                    pdfError.style.display = 'none'; // Hide the error message
+                } else {
+                    // Hide the iframe and show an error message
+                    pdfContainer.style.display = 'none'; // Hide the PDF container
+                    pdfError.textContent = data.message || 'No PDF file found.';
+                    pdfError.style.display = 'block'; // Show the error message
+                }
+            } else {
+                // Handle network error
+                document.getElementById('pdfContainer').style.display = 'none'; // Hide the PDF container
+                document.getElementById('pdfError').textContent = 'Error: Network response was not ok';
+                document.getElementById('pdfError').style.display = 'block'; // Show the error message
+            }
+        } catch (error) {
+            // Handle fetch errors
+            document.getElementById('pdfContainer').style.display = 'none'; // Hide the PDF container
+            document.getElementById('pdfError').textContent = 'Error: ' + error.message;
+            document.getElementById('pdfError').style.display = 'block'; // Show the error message
+        }
+    }
 
-                                                        // Initialize Firebase Cloud Messaging
-                                                        const messaging = getMessaging(app);
+    // Call the function to fetch PDF data
+    fetchPdfData();
+</script>
 
-                                                        // Request permission to display notifications
-                                                        function requestPermission() {
-                                                            console.log('Requesting permission...');
-                                                            Notification.requestPermission().then((permission) => {
-                                                                if (permission === 'granted') {
-                                                                    console.log('Notification permission granted.');
 
-                                                                    // Get the registration token for this device
-                                                                    getToken(messaging, { vapidKey: "BKagOny0KF_2pCJQ3m....moL0ewzQ8rZu" }).then((currentToken) => {
-                                                                        if (currentToken) {
-                                                                            console.log('Token generated: ', currentToken);
-                                                                            // Send the token to your server for further processing
-                                                                        } else {
-                                                                            console.log('No registration token available. Request permission to generate one.');
-                                                                        }
-                                                                    }).catch((err) => {
-                                                                        console.error('An error occurred while retrieving token. ', err);
-                                                                    });
-                                                                } else {
-                                                                    console.log('Notification permission denied.');
-                                                                }
-                                                            });
-                                                        }
 
-                                                        // Call the requestPermission function when the page loads
-                                                        requestPermission();
-                                                    </script>
 
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
+
+
+
+
+
+
+
+
+
+
                             </div>
                         </div>
-
-
-
                     </div>
                 </div>
             </div>
