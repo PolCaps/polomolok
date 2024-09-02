@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 02, 2024 at 02:53 PM
+-- Generation Time: Sep 02, 2024 at 03:03 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -45,7 +45,7 @@ INSERT INTO `announcements` (`id`, `title`, `description`, `image_path`, `buildi
 (7, 'Notice Of Stall Vacancy', 'Stall Vacant in progress of meedo.', 'announcements/notice.jpg', 'Building A', 'A-07', '2024-08-31 08:53:48'),
 (8, 'Notice of Vacancy', 'Vacant', 'announcements/notice.jpg', 'Building J', 'J-76', '2024-09-01 10:40:19'),
 (9, 'Notice Of Vacancy', 'vacant corner', 'announcements/notice.jpg', 'Building c', 'C-45', '2024-09-01 11:05:38'),
-(11, 'Notive Of Missing Person', 'Tall Dark Short Hair', 'announcements/IMG_20220226_195004.jpg', '', '', '2024-09-01 11:25:14'),
+(11, 'Notice Of Missing Person', 'Tall Dark Short Hair', 'announcements/IMG_20220226_195004.jpg', 'Name:', 'REYAN JAN SAMONTANES', '2024-09-01 11:25:14'),
 (12, 'Polomolok Fest', 'Small fest', 'announcements/download.jfif', '', '', '2024-09-02 08:05:20');
 
 -- --------------------------------------------------------
