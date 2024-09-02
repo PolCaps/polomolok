@@ -576,8 +576,8 @@ $conn->close();
                         // Create table cells
 
                         const processCell = document.createElement('td');
-                        processCell.innerHTML = `<span class="approval-status" data-id="${item.applicant_id}">${item.Approval}</span>`;
-                        row.appendChild(processCell);
+                        processCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.Approval}</span></h6></div>`;
+                        
 
 
                         const applicantidCell = document.createElement('td');
@@ -611,6 +611,7 @@ $conn->close();
                         addressCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.address}</h6></div>`;
 
                         // Append cells to row
+                        row.appendChild(processCell);
                         row.appendChild(applicantidCell);
                         row.appendChild(nameCell);
                         // row.appendChild(statusCell);
