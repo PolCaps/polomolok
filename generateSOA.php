@@ -29,8 +29,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Fetch monthly rentals and username from various tables
     $tables = ['building_a', 'building_b', 'building_c', 'building_d', 'building_e', 'building_f', 'building_g', 'building_h', 'building_i', 'building_j'];
 
-    // First fetch the username
-    $sqlVendor = "SELECT username FROM vendors WHERE vendor_id = ?";
+    // First fetch the username and concatenate the name fields
+    $sqlVendor = "SELECT username, CONCAT(first_name, ' ', middle_name, ' ', last_name) AS name FROM vendors WHERE vendor_id = ?";
     $stmtVendor = $conn->prepare($sqlVendor);
     $stmtVendor->bind_param("i", $vendorId);
     $stmtVendor->execute();
@@ -39,12 +39,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($resultVendor->num_rows > 0) {
         $rowVendor = $resultVendor->fetch_assoc();
         $username = $rowVendor['username'];
+        $name = $rowVendor['name'];
     } else {
         echo json_encode(['success' => false, 'message' => 'Vendor not found']);
         exit;
     }
 
     $stmtVendor->close();
+
 
     // Fetch monthly rentals
     foreach ($tables as $table) {
@@ -66,30 +68,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Sanitize the username for filename
     $sanitizedUsername = preg_replace('/[^a-zA-Z0-9-_]/', '_', $username);
-    $filePath = 'invoice/invoice_' . $sanitizedUsername . '.pdf';
+
+    // Create the file path including the username and date
+    $filePath = 'invoice/invoice_' . $sanitizedUsername . '_' . $date . '.pdf';
 
     // Prepare the data for the statement of accounts
-   // Prepare the data for the statement of accounts
-$data = array(
-    "from" => $from,
-    "to" => $username, // Use the fetched username
-    "logo" => $logo,
-    "number" => 1,
-    "date" => $date,
-    "custom_fields[0][name]" => "Remaining Balance",
-    "custom_fields[0][value]" => $remainingBalance,
-    "items[0][name]" => "Monthly Rental",
-    "items[0][quantity]" => 1,
-    "items[0][unit_cost]" => $monthly_rent,
-    "items[1][name]" => "Miscellaneous Fee",
-    "items[1][quantity]" => 1,
-    "items[1][unit_cost]" => $miscellaneousFees,
-    "items[2][name]" => "Other Fee",
-    "items[2][quantity]" => 1,
-    "items[2][unit_cost]" => $otherFees,
-    "total" => $monthly_rent - $miscellaneousFees + $otherFees + $remainingBalance // Compute total
-);
-
+    $data = array(
+        "from" => $from,
+        "to" => $name, // Use the fetched username
+        "logo" => $logo,
+        "number" => 1,
+        "date" => $date,
+        "custom_fields[0][name]" => "Remaining Balance",
+        "custom_fields[0][value]" => $remainingBalance,
+        "items[0][name]" => "Monthly Rental",
+        "items[0][quantity]" => 1,
+        "items[0][unit_cost]" => $monthly_rent,
+        "items[1][name]" => "Miscellaneous Fee",
+        "items[1][quantity]" => 1,
+        "items[1][unit_cost]" => $miscellaneousFees,
+        "items[2][name]" => "Other Fee",
+        "items[2][quantity]" => 1,
+        "items[2][unit_cost]" => $otherFees,
+        "total" => $monthly_rent + $miscellaneousFees + $otherFees + $remainingBalance // Compute total
+    );
 
     // Initialize cURL session
     $ch = curl_init();

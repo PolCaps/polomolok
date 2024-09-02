@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 01, 2024 at 12:47 PM
+-- Generation Time: Sep 02, 2024 at 02:53 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -42,8 +42,11 @@ CREATE TABLE `announcements` (
 --
 
 INSERT INTO `announcements` (`id`, `title`, `description`, `image_path`, `building`, `stall`, `created_at`) VALUES
-(7, 'Notice Of Stall Vacancy', 'Stall Vacant in progress of meedo.', '', 'Building A', 'A-07', '2024-08-31 08:53:48'),
-(8, 'Notice of Vacancy', 'Vacant', 'announcements/notice.jpg', 'Building J', 'J-76', '2024-09-01 10:40:19');
+(7, 'Notice Of Stall Vacancy', 'Stall Vacant in progress of meedo.', 'announcements/notice.jpg', 'Building A', 'A-07', '2024-08-31 08:53:48'),
+(8, 'Notice of Vacancy', 'Vacant', 'announcements/notice.jpg', 'Building J', 'J-76', '2024-09-01 10:40:19'),
+(9, 'Notice Of Vacancy', 'vacant corner', 'announcements/notice.jpg', 'Building c', 'C-45', '2024-09-01 11:05:38'),
+(11, 'Notive Of Missing Person', 'Tall Dark Short Hair', 'announcements/IMG_20220226_195004.jpg', '', '', '2024-09-01 11:25:14'),
+(12, 'Polomolok Fest', 'Small fest', 'announcements/download.jfif', '', '', '2024-09-02 08:05:20');
 
 -- --------------------------------------------------------
 
@@ -1340,7 +1343,6 @@ INSERT INTO `inquiry` (`inq_id`, `name`, `email_add`, `subject`, `message`, `sen
 (25, 'Teresa Saragosa', 'teresa@gmail.com', 'Transfer', 'Pwede mag transfer stalls?', '2024-07-29 03:49:29'),
 (26, 'Saybil Pudadera', 'saybil@gmail.com', 'List of Permits', 'Unsay mga permits kaylangan ani?', '2024-07-29 03:50:39'),
 (27, 'Jhay Mark Tubig', 'Jhay@gmail.com', 'Cost of relocation', 'Naka bayad nako sa relocation.', '2024-07-29 03:52:07'),
-(28, 'Zed De Castro', 'decastro@gmail.com', 'stalls Information', 'Pila ka stalls available?', '2024-07-29 03:53:21'),
 (29, 'Cryzzy Uy', 'Uy@gmail.com', 'Karnehan', 'Available pa pwesto sa karnehan?', '2024-07-29 03:54:23');
 
 -- --------------------------------------------------------
@@ -1534,7 +1536,7 @@ CREATE TABLE `vendors` (
 INSERT INTO `vendors` (`Vendor Status`, `vendor_id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `started_date`, `end_date`) VALUES
 ('INACTIVE', 55, 'jp', '21jp', 'John', 'P', 'Paras', 38, 'Poblacion, Polomolok', 'jp@gmail.com', '+639510462062', '2024-07-28', '2024-08-08'),
 ('INACTIVE', 56, 'james', 'james321', 'James', 'T', 'Kauray', 54, 'Cannery Site', NULL, '+639945817565', '2024-07-28', '2025-01-08'),
-('INACTIVE', 57, 'meedo', '21meedo', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-07-28', '2024-10-15'),
+('INACTIVE', 57, 'meedo', '21meedo', 'John', 'De', 'Baptist', NULL, NULL, NULL, NULL, '2024-07-28', '2024-10-15'),
 ('INACTIVE', 58, 'cre', '21cre', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-07-28', '2024-11-07'),
 ('INACTIVE', 59, 'King', 'pj123', '', NULL, NULL, NULL, NULL, NULL, NULL, '2023-12-21', '2024-11-07'),
 ('INACTIVE', 60, 'mads', 'mads123', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-07-29', '2024-07-29'),
@@ -1567,8 +1569,8 @@ CREATE TABLE `vendorsoa` (
 
 INSERT INTO `vendorsoa` (`id`, `vendor_id`, `username`, `remaining_balance`, `monthly_rentals`, `miscellaneous_fees`, `other_fees`, `total_amount`, `date`, `file_path`) VALUES
 (5, 55, 'jp', '1566', '3060', '700', '666', '5992', '2024-09-01', 'invoice/invoice_jp.pdf'),
-(6, 56, 'james', '4500', '5400', '700', '20', '10620', '2024-09-01', 'invoice/invoice_james.pdf'),
-(7, 57, 'meedo', '3500', '5400', '400', '200', '9500', '2024-09-01', 'invoice/invoice_meedo.pdf');
+(6, 56, 'james', '4500', '5400', '0', '0', '9900', '2024-09-01', 'invoice/invoice_james_2024-09-01.pdf'),
+(7, 57, 'meedo', '5400', '5400', '0', '0', '10800', '2024-09-01', 'invoice/invoice_meedo_2024-09-01.pdf');
 
 --
 -- Indexes for dumped tables
@@ -1731,7 +1733,7 @@ ALTER TABLE `vendorsoa`
 -- AUTO_INCREMENT for table `announcements`
 --
 ALTER TABLE `announcements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT for table `building_a`

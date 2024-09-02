@@ -19,7 +19,7 @@ if (!isset($_SESSION['vendor_id'])) {
 
 
 // Get the vendor ID from the session
-$vendor_id = $_SESSION['vendor_id'];
+$vendor_id = isset($_SESSION['vendor_id']) ? $_SESSION['vendor_id'] : 0;
 
 // Include database configuration
 include('database_config.php');
@@ -307,7 +307,6 @@ if (!$vendor) {
                     </div>
                 </div>
 
-                
 
 
                 <div class="card-body px-0 pb-2">
@@ -333,9 +332,12 @@ if (!$vendor) {
     <iframe id="pdfIframe" width="100%" height="500px"></iframe>
 </div>
 <div id="pdfError" style="display: none; color: red;"></div>
-
+<div id="jsonError" style="display: none; color: green;"></div> <!-- JSON error display -->
 
 <script>
+    // Embed the PHP variable in JavaScript
+    const vendorId = <?php echo json_encode($vendor_id); ?>;
+
     async function fetchPdfData() {
         try {
             // Send a request to fetch the file path from the server
@@ -344,51 +346,49 @@ if (!$vendor) {
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ $vendor_id }) // Use the JavaScript variable
+                body: JSON.stringify({ 'vendor_id': vendorId }) // Use the JavaScript variable
             });
+
+            const pdfIframe = document.getElementById('pdfIframe');
+            const pdfContainer = document.getElementById('pdfContainer');
+            const pdfError = document.getElementById('pdfError');
+            const jsonError = document.getElementById('jsonError'); // Locator for JSON errors
 
             if (response.ok) {
                 const data = await response.json();
-
-                const pdfIframe = document.getElementById('pdfIframe');
-                const pdfContainer = document.getElementById('pdfContainer');
-                const pdfError = document.getElementById('pdfError');
 
                 if (data.success && data.filePath) {
                     // Display the iframe with the PDF
                     pdfIframe.src = data.filePath;
                     pdfContainer.style.display = 'block'; // Show the PDF container
                     pdfError.style.display = 'none'; // Hide the error message
+                    jsonError.style.display = 'none'; // Hide JSON error message
                 } else {
                     // Hide the iframe and show an error message
                     pdfContainer.style.display = 'none'; // Hide the PDF container
                     pdfError.textContent = data.message || 'No PDF file found.';
                     pdfError.style.display = 'block'; // Show the error message
+                    jsonError.style.display = 'none'; // Hide JSON error message
                 }
             } else {
                 // Handle network error
-                document.getElementById('pdfContainer').style.display = 'none'; // Hide the PDF container
-                document.getElementById('pdfError').textContent = 'Error: Network response was not ok';
-                document.getElementById('pdfError').style.display = 'block'; // Show the error message
+                pdfContainer.style.display = 'none'; // Hide the PDF container
+                pdfError.textContent = 'Error: Network response was not ok';
+                pdfError.style.display = 'block'; // Show the error message
+                jsonError.style.display = 'none'; // Hide JSON error message
             }
         } catch (error) {
-            // Handle fetch errors
+            // Display error message for fetch or JSON errors
             document.getElementById('pdfContainer').style.display = 'none'; // Hide the PDF container
-            document.getElementById('pdfError').textContent = 'Error: ' + error.message;
-            document.getElementById('pdfError').style.display = 'block'; // Show the error message
+            document.getElementById('pdfError').style.display = 'none'; // Hide regular error message
+            jsonError.textContent = 'Error: ' + error.message;
+            jsonError.style.display = 'block'; // Show JSON error message
         }
     }
 
     // Call the function to fetch PDF data
     fetchPdfData();
 </script>
-
-
-
-
-
-
-
 
 
 

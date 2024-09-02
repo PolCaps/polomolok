@@ -1238,17 +1238,7 @@ section,
   fill: #f3268c;
 }
 
-.announcement-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
 
-.announcement-img {
-  display: block;
-  margin: 0 auto;
-}
 
 
 /*--------------------------------------------------------------
