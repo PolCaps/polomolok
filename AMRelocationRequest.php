@@ -357,7 +357,7 @@ $conn->close();
             <thead>
                 <tr>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stall No</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Vendor ID</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation ID</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
@@ -389,7 +389,7 @@ $conn->close();
 
                     row.innerHTML = `
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.fn + ' ' + item.ln)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.relocation_id)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.vendor_id)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0 data-id'>${escapeHtml(item.relocation_id)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.message)}'>${escapeHtml(item.message.substring(0, 50))}...</td>
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.date_sent)}</td>

@@ -1,0 +1,384 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE svg
+PUBLIC "-//W3C//DTD SVG 1.1//EN"
+       "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg viewBox="41 101 829 778" width="788px" height="677px" xmlns="http://www.w3.org/2000/svg" version="1.1">
+   <line x1="556" y1="412" x2="566" y2="412" style="stroke:#bbb;stroke-width:1;"/>
+   <line x1="560" y1="509" x2="570" y2="509" style="stroke:#bbb;stroke-width:1;"/>
+   <line x1="566" y1="412" x2="560" y2="509" style="stroke:#bbb;stroke-width:1;"/>
+   <line x1="563.5" y1="412" x2="559.96446609407" y2="415.53553390593" style="stroke:#bbb;stroke-width:2;"/>
+   <line x1="563.5" y1="412" x2="559.96446609407" y2="408.46446609407" style="stroke:#bbb;stroke-width:2;"/>
+   <line x1="565" y1="509" x2="561.46446609407" y2="512.53553390593" style="stroke:#bbb;stroke-width:2;"/>
+   <line x1="565" y1="509" x2="561.46446609407" y2="505.46446609407" style="stroke:#bbb;stroke-width:2;"/>
+   <line x1="412" y1="192" x2="422" y2="192" style="stroke:#b0b;stroke-width:1;"/>
+   <line x1="560" y1="509" x2="570" y2="509" style="stroke:#b0b;stroke-width:1;"/>
+   <line x1="422" y1="192" x2="560" y2="509" style="stroke:#b0b;stroke-width:1;"/>
+   <line x1="419.5" y1="192" x2="415.96446609407" y2="195.53553390593" style="stroke:#b0b;stroke-width:2;"/>
+   <line x1="419.5" y1="192" x2="415.96446609407" y2="188.46446609407" style="stroke:#b0b;stroke-width:2;"/>
+   <line x1="565" y1="509" x2="561.46446609407" y2="512.53553390593" style="stroke:#b0b;stroke-width:2;"/>
+   <line x1="565" y1="509" x2="561.46446609407" y2="505.46446609407" style="stroke:#b0b;stroke-width:2;"/>
+   <line x1="321" y1="326" x2="331" y2="326" style="stroke:#0b0;stroke-width:1;"/>
+   <line x1="391" y1="533" x2="401" y2="533" style="stroke:#0b0;stroke-width:1;"/>
+   <line x1="331" y1="326" x2="391" y2="533" style="stroke:#0b0;stroke-width:1;"/>
+   <line x1="328.5" y1="326" x2="324.96446609407" y2="329.53553390593" style="stroke:#0b0;stroke-width:2;"/>
+   <line x1="328.5" y1="326" x2="324.96446609407" y2="322.46446609407" style="stroke:#0b0;stroke-width:2;"/>
+   <line x1="396" y1="533" x2="392.46446609407" y2="536.53553390593" style="stroke:#0b0;stroke-width:2;"/>
+   <line x1="396" y1="533" x2="392.46446609407" y2="529.46446609407" style="stroke:#0b0;stroke-width:2;"/>
+   <line x1="224" y1="167" x2="234" y2="167" style="stroke:#cb0;stroke-width:1;"/>
+   <line x1="560" y1="509" x2="570" y2="509" style="stroke:#cb0;stroke-width:1;"/>
+   <line x1="234" y1="167" x2="560" y2="509" style="stroke:#cb0;stroke-width:1;"/>
+   <line x1="231.5" y1="167" x2="227.96446609407" y2="170.53553390593" style="stroke:#cb0;stroke-width:2;"/>
+   <line x1="231.5" y1="167" x2="227.96446609407" y2="163.46446609407" style="stroke:#cb0;stroke-width:2;"/>
+   <line x1="565" y1="509" x2="561.46446609407" y2="512.53553390593" style="stroke:#cb0;stroke-width:2;"/>
+   <line x1="565" y1="509" x2="561.46446609407" y2="505.46446609407" style="stroke:#cb0;stroke-width:2;"/>
+   <rect width="147" height="20" x="650" y="473" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="655" y="487" style="fill:#fff;" font-family="Arial" font-size="16px"> announcements</text>
+   <rect width="147" height="20" x="650" y="493" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="655" y="507" style="fill:black;" font-family="Arial" font-size="16px">id</text>
+   <rect width="147" height="20" x="650" y="513" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="655" y="527" style="fill:black;" font-family="Arial" font-size="16px">title</text>
+   <rect width="147" height="20" x="650" y="533" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="655" y="547" style="fill:black;" font-family="Arial" font-size="16px">description</text>
+   <rect width="147" height="20" x="650" y="553" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="655" y="567" style="fill:black;" font-family="Arial" font-size="16px">image_path</text>
+   <rect width="147" height="20" x="650" y="573" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="655" y="587" style="fill:black;" font-family="Arial" font-size="16px">building</text>
+   <rect width="147" height="20" x="650" y="593" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="655" y="607" style="fill:black;" font-family="Arial" font-size="16px">stall</text>
+   <rect width="147" height="20" x="650" y="613" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="655" y="627" style="fill:black;" font-family="Arial" font-size="16px">created_at</text>
+   <rect width="147" height="20" x="409" y="302" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="414" y="316" style="fill:#fff;" font-family="Arial" font-size="16px"> building_a</text>
+   <rect width="147" height="20" x="409" y="322" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="414" y="336" style="fill:black;" font-family="Arial" font-size="16px">building_id</text>
+   <rect width="147" height="20" x="409" y="342" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="414" y="356" style="fill:black;" font-family="Arial" font-size="16px">stall_no</text>
+   <rect width="147" height="20" x="409" y="362" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="414" y="376" style="fill:black;" font-family="Arial" font-size="16px">building_floor</text>
+   <rect width="147" height="20" x="409" y="382" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="414" y="396" style="fill:black;" font-family="Arial" font-size="16px">monthly_rentals</text>
+   <rect width="147" height="20" x="409" y="402" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="414" y="416" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="409" y="422" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="414" y="436" style="fill:black;" font-family="Arial" font-size="16px">stall_status</text>
+   <rect width="147" height="20" x="535" y="360" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="540" y="374" style="fill:#fff;" font-family="Arial" font-size="16px"> building_b</text>
+   <rect width="147" height="20" x="535" y="380" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="540" y="394" style="fill:black;" font-family="Arial" font-size="16px">building_id</text>
+   <rect width="147" height="20" x="535" y="400" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="540" y="414" style="fill:black;" font-family="Arial" font-size="16px">stall_no</text>
+   <rect width="147" height="20" x="535" y="420" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="540" y="434" style="fill:black;" font-family="Arial" font-size="16px">building_floor</text>
+   <rect width="147" height="20" x="535" y="440" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="540" y="454" style="fill:black;" font-family="Arial" font-size="16px">monthly_rentals</text>
+   <rect width="147" height="20" x="535" y="460" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="540" y="474" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="535" y="480" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="540" y="494" style="fill:black;" font-family="Arial" font-size="16px">stall_status</text>
+   <rect width="147" height="20" x="689" y="121" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="694" y="135" style="fill:#fff;" font-family="Arial" font-size="16px"> building_c</text>
+   <rect width="147" height="20" x="689" y="141" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="694" y="155" style="fill:black;" font-family="Arial" font-size="16px">building_id</text>
+   <rect width="147" height="20" x="689" y="161" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="694" y="175" style="fill:black;" font-family="Arial" font-size="16px">stall_no</text>
+   <rect width="147" height="20" x="689" y="181" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="694" y="195" style="fill:black;" font-family="Arial" font-size="16px">building_floor</text>
+   <rect width="147" height="20" x="689" y="201" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="694" y="215" style="fill:black;" font-family="Arial" font-size="16px">monthly_rentals</text>
+   <rect width="147" height="20" x="689" y="221" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="694" y="235" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="689" y="241" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="694" y="255" style="fill:black;" font-family="Arial" font-size="16px">stall_status</text>
+   <rect width="147" height="20" x="216" y="305" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="221" y="319" style="fill:#fff;" font-family="Arial" font-size="16px"> building_d</text>
+   <rect width="147" height="20" x="216" y="325" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="221" y="339" style="fill:black;" font-family="Arial" font-size="16px">building_id</text>
+   <rect width="147" height="20" x="216" y="345" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="221" y="359" style="fill:black;" font-family="Arial" font-size="16px">stall_no</text>
+   <rect width="147" height="20" x="216" y="365" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="221" y="379" style="fill:black;" font-family="Arial" font-size="16px">building_floor</text>
+   <rect width="147" height="20" x="216" y="385" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="221" y="399" style="fill:black;" font-family="Arial" font-size="16px">monthly_rentals</text>
+   <rect width="147" height="20" x="216" y="405" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="221" y="419" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="216" y="425" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="221" y="439" style="fill:black;" font-family="Arial" font-size="16px">stall_status</text>
+   <rect width="147" height="20" x="102" y="150" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="107" y="164" style="fill:#fff;" font-family="Arial" font-size="16px"> building_e</text>
+   <rect width="147" height="20" x="102" y="170" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="107" y="184" style="fill:black;" font-family="Arial" font-size="16px">building_id</text>
+   <rect width="147" height="20" x="102" y="190" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="107" y="204" style="fill:black;" font-family="Arial" font-size="16px">stall_no</text>
+   <rect width="147" height="20" x="102" y="210" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="107" y="224" style="fill:black;" font-family="Arial" font-size="16px">building_floor</text>
+   <rect width="147" height="20" x="102" y="230" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="107" y="244" style="fill:black;" font-family="Arial" font-size="16px">monthly_rentals</text>
+   <rect width="147" height="20" x="102" y="250" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="107" y="264" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="102" y="270" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="107" y="284" style="fill:black;" font-family="Arial" font-size="16px">stall_status</text>
+   <rect width="147" height="20" x="76" y="390" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="81" y="404" style="fill:#fff;" font-family="Arial" font-size="16px"> building_f</text>
+   <rect width="147" height="20" x="76" y="410" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="81" y="424" style="fill:black;" font-family="Arial" font-size="16px">building_id</text>
+   <rect width="147" height="20" x="76" y="430" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="81" y="444" style="fill:black;" font-family="Arial" font-size="16px">stall_no</text>
+   <rect width="147" height="20" x="76" y="450" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="81" y="464" style="fill:black;" font-family="Arial" font-size="16px">building_floor</text>
+   <rect width="147" height="20" x="76" y="470" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="81" y="484" style="fill:black;" font-family="Arial" font-size="16px">monthly_rentals</text>
+   <rect width="147" height="20" x="76" y="490" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="81" y="504" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="76" y="510" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="81" y="524" style="fill:black;" font-family="Arial" font-size="16px">stall_status</text>
+   <rect width="147" height="20" x="381" y="237" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="386" y="251" style="fill:#fff;" font-family="Arial" font-size="16px"> building_g</text>
+   <rect width="147" height="20" x="381" y="257" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="386" y="271" style="fill:black;" font-family="Arial" font-size="16px">building_id</text>
+   <rect width="147" height="20" x="381" y="277" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="386" y="291" style="fill:black;" font-family="Arial" font-size="16px">stall_no</text>
+   <rect width="147" height="20" x="381" y="297" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="386" y="311" style="fill:black;" font-family="Arial" font-size="16px">building_floor</text>
+   <rect width="147" height="20" x="381" y="317" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="386" y="331" style="fill:black;" font-family="Arial" font-size="16px">monthly_rentals</text>
+   <rect width="147" height="20" x="381" y="337" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="386" y="351" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="381" y="357" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="386" y="371" style="fill:black;" font-family="Arial" font-size="16px">stall_status</text>
+   <rect width="147" height="20" x="163" y="549" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="168" y="563" style="fill:#fff;" font-family="Arial" font-size="16px"> building_h</text>
+   <rect width="147" height="20" x="163" y="569" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="168" y="583" style="fill:black;" font-family="Arial" font-size="16px">building_id</text>
+   <rect width="147" height="20" x="163" y="589" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="168" y="603" style="fill:black;" font-family="Arial" font-size="16px">stall_no</text>
+   <rect width="147" height="20" x="163" y="609" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="168" y="623" style="fill:black;" font-family="Arial" font-size="16px">building_floor</text>
+   <rect width="147" height="20" x="163" y="629" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="168" y="643" style="fill:black;" font-family="Arial" font-size="16px">monthly_rentals</text>
+   <rect width="147" height="20" x="163" y="649" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="168" y="663" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="163" y="669" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="168" y="683" style="fill:black;" font-family="Arial" font-size="16px">stall_status</text>
+   <rect width="147" height="20" x="312" y="362" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="317" y="376" style="fill:#fff;" font-family="Arial" font-size="16px"> building_i</text>
+   <rect width="147" height="20" x="312" y="382" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="317" y="396" style="fill:black;" font-family="Arial" font-size="16px">building_id</text>
+   <rect width="147" height="20" x="312" y="402" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="317" y="416" style="fill:black;" font-family="Arial" font-size="16px">stall_no</text>
+   <rect width="147" height="20" x="312" y="422" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="317" y="436" style="fill:black;" font-family="Arial" font-size="16px">building_floor</text>
+   <rect width="147" height="20" x="312" y="442" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="317" y="456" style="fill:black;" font-family="Arial" font-size="16px">monthly_rentals</text>
+   <rect width="147" height="20" x="312" y="462" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="317" y="476" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="312" y="482" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="317" y="496" style="fill:black;" font-family="Arial" font-size="16px">stall_status</text>
+   <rect width="147" height="20" x="441" y="147" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="446" y="161" style="fill:#fff;" font-family="Arial" font-size="16px"> building_j</text>
+   <rect width="147" height="20" x="441" y="167" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="446" y="181" style="fill:black;" font-family="Arial" font-size="16px">building_id</text>
+   <rect width="147" height="20" x="441" y="187" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="446" y="201" style="fill:black;" font-family="Arial" font-size="16px">stall_no</text>
+   <rect width="147" height="20" x="441" y="207" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="446" y="221" style="fill:black;" font-family="Arial" font-size="16px">building_floor</text>
+   <rect width="147" height="20" x="441" y="227" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="446" y="241" style="fill:black;" font-family="Arial" font-size="16px">monthly_rentals</text>
+   <rect width="147" height="20" x="441" y="247" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="446" y="261" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="441" y="267" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="446" y="281" style="fill:black;" font-family="Arial" font-size="16px">stall_status</text>
+   <rect width="147" height="20" x="618" y="140" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="623" y="154" style="fill:#fff;" font-family="Arial" font-size="16px"> documents</text>
+   <rect width="147" height="20" x="618" y="160" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="623" y="174" style="fill:black;" font-family="Arial" font-size="16px">document_id</text>
+   <rect width="147" height="20" x="618" y="180" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="623" y="194" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="618" y="200" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="623" y="214" style="fill:black;" font-family="Arial" font-size="16px">lease_agreements</text>
+   <rect width="147" height="20" x="618" y="220" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="623" y="234" style="fill:black;" font-family="Arial" font-size="16px">business_permits</text>
+   <rect width="147" height="20" x="618" y="240" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="623" y="254" style="fill:black;" font-family="Arial" font-size="16px">business_license</text>
+   <rect width="147" height="20" x="618" y="260" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="623" y="274" style="fill:black;" font-family="Arial" font-size="16px">other_supporting</text>
+   <rect width="147" height="20" x="405" y="471" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="410" y="485" style="fill:#fff;" font-family="Arial" font-size="16px"> inquiry</text>
+   <rect width="147" height="20" x="405" y="491" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="410" y="505" style="fill:black;" font-family="Arial" font-size="16px">inq_id</text>
+   <rect width="147" height="20" x="405" y="511" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="410" y="525" style="fill:black;" font-family="Arial" font-size="16px">name</text>
+   <rect width="147" height="20" x="405" y="531" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="410" y="545" style="fill:black;" font-family="Arial" font-size="16px">email_add</text>
+   <rect width="147" height="20" x="405" y="551" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="410" y="565" style="fill:black;" font-family="Arial" font-size="16px">subject</text>
+   <rect width="147" height="20" x="405" y="571" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="410" y="585" style="fill:black;" font-family="Arial" font-size="16px">message</text>
+   <rect width="147" height="20" x="405" y="591" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="410" y="605" style="fill:black;" font-family="Arial" font-size="16px">sent_date</text>
+   <rect width="147" height="20" x="197" y="429" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="202" y="443" style="fill:#fff;" font-family="Arial" font-size="16px"> message</text>
+   <rect width="147" height="20" x="197" y="449" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="202" y="463" style="fill:black;" font-family="Arial" font-size="16px">message_id</text>
+   <rect width="147" height="20" x="197" y="469" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="202" y="483" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="197" y="489" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="202" y="503" style="fill:black;" font-family="Arial" font-size="16px">id</text>
+   <rect width="147" height="20" x="197" y="509" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="202" y="523" style="fill:black;" font-family="Arial" font-size="16px">message</text>
+   <rect width="147" height="20" x="197" y="529" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="202" y="543" style="fill:black;" font-family="Arial" font-size="16px">sent_date</text>
+   <rect width="147" height="20" x="165" y="199" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="170" y="213" style="fill:#fff;" font-family="Arial" font-size="16px"> pagebuilder_table</text>
+   <rect width="147" height="20" x="165" y="219" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="170" y="233" style="fill:black;" font-family="Arial" font-size="16px">stats_id</text>
+   <rect width="147" height="20" x="165" y="239" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="170" y="253" style="fill:black;" font-family="Arial" font-size="16px">buildings</text>
+   <rect width="147" height="20" x="165" y="259" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="170" y="273" style="fill:black;" font-family="Arial" font-size="16px">overall_stalls</text>
+   <rect width="147" height="20" x="165" y="279" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="170" y="293" style="fill:black;" font-family="Arial" font-size="16px">vendors</text>
+   <rect width="147" height="20" x="165" y="299" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="170" y="313" style="fill:black;" font-family="Arial" font-size="16px">workers</text>
+   <rect width="147" height="20" x="265" y="142" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="270" y="156" style="fill:#fff;" font-family="Arial" font-size="16px"> receipts</text>
+   <rect width="147" height="20" x="265" y="162" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="270" y="176" style="fill:black;" font-family="Arial" font-size="16px">receipt_id</text>
+   <rect width="147" height="20" x="265" y="182" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="270" y="196" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="265" y="202" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="270" y="216" style="fill:black;" font-family="Arial" font-size="16px">receipt</text>
+   <rect width="147" height="20" x="265" y="222" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="270" y="236" style="fill:black;" font-family="Arial" font-size="16px">issued_date</text>
+   <rect width="147" height="20" x="56" y="487" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="61" y="501" style="fill:#fff;" font-family="Arial" font-size="16px"> relocation_req</text>
+   <rect width="147" height="20" x="56" y="507" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="61" y="521" style="fill:black;" font-family="Arial" font-size="16px">relocation_id</text>
+   <rect width="147" height="20" x="56" y="527" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="61" y="541" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="56" y="547" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="61" y="561" style="fill:black;" font-family="Arial" font-size="16px">message</text>
+   <rect width="147" height="20" x="56" y="567" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="61" y="581" style="fill:black;" font-family="Arial" font-size="16px">date_sent</text>
+   <rect width="147" height="20" x="56" y="587" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="61" y="601" style="fill:black;" font-family="Arial" font-size="16px">relocation_status</text>
+   <rect width="147" height="20" x="174" y="236" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="179" y="250" style="fill:#fff;" font-family="Arial" font-size="16px"> rentapp_payment</text>
+   <rect width="147" height="20" x="174" y="256" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="179" y="270" style="fill:black;" font-family="Arial" font-size="16px">rentpayment_id</text>
+   <rect width="147" height="20" x="174" y="276" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="179" y="290" style="fill:black;" font-family="Arial" font-size="16px">OR_no</text>
+   <rect width="147" height="20" x="174" y="296" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="179" y="310" style="fill:black;" font-family="Arial" font-size="16px">proof_of_payment</text>
+   <rect width="147" height="20" x="174" y="316" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="179" y="330" style="fill:black;" font-family="Arial" font-size="16px">applicant_id</text>
+   <rect width="147" height="20" x="174" y="336" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="179" y="350" style="fill:black;" font-family="Arial" font-size="16px">payment_status</text>
+   <rect width="147" height="20" x="174" y="356" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="179" y="370" style="fill:black;" font-family="Arial" font-size="16px">verify_status</text>
+   <rect width="147" height="20" x="174" y="376" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="179" y="390" style="fill:black;" font-family="Arial" font-size="16px">payment_date</text>
+   <rect width="147" height="20" x="401" y="483" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="406" y="497" style="fill:#fff;" font-family="Arial" font-size="16px"> rent_application</text>
+   <rect width="147" height="20" x="401" y="503" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="406" y="517" style="fill:black;" font-family="Arial" font-size="16px">Approval</text>
+   <rect width="147" height="20" x="401" y="523" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="406" y="537" style="fill:black;" font-family="Arial" font-size="16px">applicant_id</text>
+   <rect width="147" height="20" x="401" y="543" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="406" y="557" style="fill:black;" font-family="Arial" font-size="16px">first_name</text>
+   <rect width="147" height="20" x="401" y="563" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="406" y="577" style="fill:black;" font-family="Arial" font-size="16px">middle_name</text>
+   <rect width="147" height="20" x="401" y="583" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="406" y="597" style="fill:black;" font-family="Arial" font-size="16px">last_name</text>
+   <rect width="147" height="20" x="401" y="603" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="406" y="617" style="fill:black;" font-family="Arial" font-size="16px">contact_no</text>
+   <rect width="147" height="20" x="401" y="623" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="406" y="637" style="fill:black;" font-family="Arial" font-size="16px">building_type</text>
+   <rect width="147" height="20" x="401" y="643" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="406" y="657" style="fill:black;" font-family="Arial" font-size="16px">stall_no</text>
+   <rect width="147" height="20" x="401" y="663" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="406" y="677" style="fill:black;" font-family="Arial" font-size="16px">age</text>
+   <rect width="147" height="20" x="401" y="683" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="406" y="697" style="fill:black;" font-family="Arial" font-size="16px">email</text>
+   <rect width="147" height="20" x="401" y="703" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="406" y="717" style="fill:black;" font-family="Arial" font-size="16px">address</text>
+   <rect width="147" height="20" x="401" y="723" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="406" y="737" style="fill:black;" font-family="Arial" font-size="16px">rentapp_file</text>
+   <rect width="147" height="20" x="401" y="743" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="406" y="757" style="fill:black;" font-family="Arial" font-size="16px">applied_date</text>
+   <rect width="147" height="20" x="161" y="116" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="166" y="130" style="fill:#fff;" font-family="Arial" font-size="16px"> users</text>
+   <rect width="147" height="20" x="161" y="136" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="166" y="150" style="fill:black;" font-family="Arial" font-size="16px">id</text>
+   <rect width="147" height="20" x="161" y="156" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="166" y="170" style="fill:black;" font-family="Arial" font-size="16px">username</text>
+   <rect width="147" height="20" x="161" y="176" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="166" y="190" style="fill:black;" font-family="Arial" font-size="16px">password</text>
+   <rect width="147" height="20" x="161" y="196" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="166" y="210" style="fill:black;" font-family="Arial" font-size="16px">first_name</text>
+   <rect width="147" height="20" x="161" y="216" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="166" y="230" style="fill:black;" font-family="Arial" font-size="16px">middle_name</text>
+   <rect width="147" height="20" x="161" y="236" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="166" y="250" style="fill:black;" font-family="Arial" font-size="16px">last_name</text>
+   <rect width="147" height="20" x="161" y="256" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="166" y="270" style="fill:black;" font-family="Arial" font-size="16px">age</text>
+   <rect width="147" height="20" x="161" y="276" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="166" y="290" style="fill:black;" font-family="Arial" font-size="16px">address</text>
+   <rect width="147" height="20" x="161" y="296" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="166" y="310" style="fill:black;" font-family="Arial" font-size="16px">email_add</text>
+   <rect width="147" height="20" x="161" y="316" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="166" y="330" style="fill:black;" font-family="Arial" font-size="16px">contact_no</text>
+   <rect width="147" height="20" x="161" y="336" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="166" y="350" style="fill:black;" font-family="Arial" font-size="16px">user_type</text>
+   <rect width="147" height="20" x="161" y="356" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="166" y="370" style="fill:black;" font-family="Arial" font-size="16px">picture_profile</text>
+   <rect width="147" height="20" x="570" y="459" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="575" y="473" style="fill:#fff;" font-family="Arial" font-size="16px"> vendors</text>
+   <rect width="147" height="20" x="570" y="479" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="575" y="493" style="fill:black;" font-family="Arial" font-size="16px">Vendor Status</text>
+   <rect width="147" height="20" x="570" y="499" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="575" y="513" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="570" y="519" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="575" y="533" style="fill:black;" font-family="Arial" font-size="16px">username</text>
+   <rect width="147" height="20" x="570" y="539" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="575" y="553" style="fill:black;" font-family="Arial" font-size="16px">password</text>
+   <rect width="147" height="20" x="570" y="559" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="575" y="573" style="fill:black;" font-family="Arial" font-size="16px">first_name</text>
+   <rect width="147" height="20" x="570" y="579" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="575" y="593" style="fill:black;" font-family="Arial" font-size="16px">middle_name</text>
+   <rect width="147" height="20" x="570" y="599" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="575" y="613" style="fill:black;" font-family="Arial" font-size="16px">last_name</text>
+   <rect width="147" height="20" x="570" y="619" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="575" y="633" style="fill:black;" font-family="Arial" font-size="16px">age</text>
+   <rect width="147" height="20" x="570" y="639" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="575" y="653" style="fill:black;" font-family="Arial" font-size="16px">address</text>
+   <rect width="147" height="20" x="570" y="659" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="575" y="673" style="fill:black;" font-family="Arial" font-size="16px">email_add</text>
+   <rect width="147" height="20" x="570" y="679" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="575" y="693" style="fill:black;" font-family="Arial" font-size="16px">contact_no</text>
+   <rect width="147" height="20" x="570" y="699" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="575" y="713" style="fill:black;" font-family="Arial" font-size="16px">started_date</text>
+   <rect width="147" height="20" x="570" y="719" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="575" y="733" style="fill:black;" font-family="Arial" font-size="16px">end_date</text>
+   <rect width="147" height="20" x="77" y="117" style="fill:#007;stroke:black;"/>
+   <text width="147" height="20" x="82" y="131" style="fill:#fff;" font-family="Arial" font-size="16px"> vendorsoa</text>
+   <rect width="147" height="20" x="77" y="137" style="fill:#aea;stroke:black;"/>
+   <text width="147" height="20" x="82" y="151" style="fill:black;" font-family="Arial" font-size="16px">id</text>
+   <rect width="147" height="20" x="77" y="157" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="82" y="171" style="fill:black;" font-family="Arial" font-size="16px">vendor_id</text>
+   <rect width="147" height="20" x="77" y="177" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="82" y="191" style="fill:black;" font-family="Arial" font-size="16px">username</text>
+   <rect width="147" height="20" x="77" y="197" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="82" y="211" style="fill:black;" font-family="Arial" font-size="16px">remaining_balance</text>
+   <rect width="147" height="20" x="77" y="217" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="82" y="231" style="fill:black;" font-family="Arial" font-size="16px">monthly_rentals</text>
+   <rect width="147" height="20" x="77" y="237" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="82" y="251" style="fill:black;" font-family="Arial" font-size="16px">miscellaneous_fees</text>
+   <rect width="147" height="20" x="77" y="257" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="82" y="271" style="fill:black;" font-family="Arial" font-size="16px">other_fees</text>
+   <rect width="147" height="20" x="77" y="277" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="82" y="291" style="fill:black;" font-family="Arial" font-size="16px">total_amount</text>
+   <rect width="147" height="20" x="77" y="297" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="82" y="311" style="fill:black;" font-family="Arial" font-size="16px">date</text>
+   <rect width="147" height="20" x="77" y="317" style="fill:none;stroke:black;"/>
+   <text width="147" height="20" x="82" y="331" style="fill:black;" font-family="Arial" font-size="16px">file_path</text>
+</svg>
