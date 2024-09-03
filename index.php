@@ -126,16 +126,16 @@ session_start()
           <li class="dropdown"><a href="#services"><span>Building Directory</span> <i
                 class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
-              <li><a href="ABuildingA.html">Building A</a></li>
-              <li><a href="ABuildingB.html">Building B</a></li>
-              <li><a href="ABuildingC.html">Building C</a></li>
-              <li><a href="ABuildingD.html">Building D</a></li>
-              <li><a href="ABuildingE.html">Building E</a></li>
-              <li><a href="ABuildingF.html">Building F</a></li>
-              <li><a href="ABuildingG.html">Building G</a></li>
-              <li><a href="ABuildingH.html">Building H</a></li>
-              <li><a href="ABuildingI.html">Building I</a></li>
-              <li><a href="ABuildingJ.html">Building J</a></li>
+              <li><a href="BuildingDirectoryA.php">Building A</a></li>
+              <li><a href="DirectoryBuildingB.php">Building B</a></li>
+              <li><a href="DirectoryBuildingC.php">Building C</a></li>
+              <li><a href="DirectoryBuildingD.php">Building D</a></li>
+              <li><a href="DirectoryBuildingE.php">Building E</a></li>
+              <li><a href="DirectoryBuildingF.php">Building F</a></li>
+              <li><a href="DirectoryBuildingG.php">Building G</a></li>
+              <li><a href="DirectoryBuildingH.php">Building H</a></li>
+              <li><a href="DirectoryBuildingI.php">Building I</a></li>
+              <li><a href="DirectoryBuildingJ.php">Building J</a></li>
             </ul>
           </li>
           <li><a href="#call-to-action">Rent Stall</a></li>

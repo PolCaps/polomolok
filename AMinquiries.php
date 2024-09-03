@@ -357,7 +357,7 @@ $result = $conn->query($sql);
                 <table class="table align-items-center mb-0">
                       <thead>
                           <tr>
-                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">DALETE</th>
+                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
                               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Inquiry ID</th>
                               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
                               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email Address</th>
