@@ -126,7 +126,7 @@ session_start()
           <li class="dropdown"><a href="#services"><span>Building Directory</span> <i
                 class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
-              <li><a href="DirectoryBuildingA.php">Building A</a></li>
+              <li><a href="BuildingDirectoryA.php">Building A</a></li>
               <li><a href="DirectoryBuildingB.php">Building B</a></li>
               <li><a href="DirectoryBuildingC.php">Building C</a></li>
               <li><a href="DirectoryBuildingD.php">Building D</a></li>

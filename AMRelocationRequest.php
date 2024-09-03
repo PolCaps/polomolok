@@ -357,7 +357,7 @@ $conn->close();
             <thead>
                 <tr>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stall No</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Vendor ID</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation ID</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
@@ -389,7 +389,7 @@ $conn->close();
 
                     row.innerHTML = `
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.fn + ' ' + item.ln)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.relocation_id)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.vendor_id)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0 data-id'>${escapeHtml(item.relocation_id)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.message)}'>${escapeHtml(item.message.substring(0, 50))}...</td>
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.date_sent)}</td>
@@ -609,6 +609,10 @@ $conn->close();
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
+
+  <link rel="stylesheet" href="loading.css">
+  <script src="loading.js" defer></script>
+  <div class="loader"></div>
 </body>
 
 </html>

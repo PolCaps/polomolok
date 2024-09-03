@@ -11,7 +11,7 @@ if ($conn->connect_error) {
 }
 
 // Define the SQL query
-$sql = "SELECT r.relocation_id, v.first_name AS fn, v.last_name AS ln, r.message, r.date_sent, relocation_status AS relocation_status
+$sql = "SELECT r.relocation_id, v.first_name AS fn, v.last_name AS ln, r.message, r.date_sent, relocation_status AS relocation_status, v.vendor_id
         FROM relocation_req r
         LEFT JOIN vendors v ON r.vendor_id = v.vendor_id";
 
