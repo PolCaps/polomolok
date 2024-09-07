@@ -264,21 +264,22 @@ if (isset($_GET['building'])) {
       </ul>
     </div>
     <div class="sidenav-footer mx-3 mt-5">
-    <div class="card card-background shadow-none card-background-mask-info" id="sidenavCard">
+      <div class="card card-background shadow-none card-background-mask-info" id="sidenavCard">
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
-            <?php
-            // Check if the user has a profile picture set; if not, use a default image
-            $profilePicture = !empty($user['picture_profile']) ? $user['picture_profile'] : 'image/profile.jpg';
-            ?>
-            <img src="<?php echo htmlspecialchars($profilePicture); ?>" class="img-fluid" alt="Admin Profile Picture" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; margin-left: 40px;">
-            <h5 class="text-center mt-2">
-                <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
-            </h5>
-            <hr class="horizontal dark mt-0">
+          <?php
+          // Check if the user has a profile picture set; if not, use a default image
+          $profilePicture = !empty($user['picture_profile']) ? $user['picture_profile'] : 'image/profile.jpg';
+          ?>
+          <img src="<?php echo htmlspecialchars($profilePicture); ?>" class="img-fluid" alt="Admin Profile Picture"
+            style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; margin-left: 40px;">
+          <h5 class="text-center mt-2">
+            <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
+          </h5>
+          <hr class="horizontal dark mt-0">
         </div>
+      </div>
     </div>
-</div>
 
   </aside>
 
@@ -459,7 +460,7 @@ if (isset($_GET['building'])) {
                                   </div>
                                   <div class="form-group mb-3">
                                     <label for="contact_no">Contact Number:</label>
-                                    <input type="tel" id="contact_no" name="contact_number" class="form-control">
+                                    <input type="text" id="contact_no" name="contact_no" class="form-control">
                                   </div>
                                   <div class="form-group mb-3">
                                     <label for="address">Address:</label>
@@ -471,7 +472,7 @@ if (isset($_GET['building'])) {
                                     <textarea id="email_add" name="email_add" class="form-control"></textarea>
                                   </div>
                                   <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
-                                    <button type="submit" name="submitA" id="submitA" class="btn btn-info lg">CREATE
+                                    <button type="submit" name="submit" id="submit" class="btn btn-info lg">CREATE
                                       USER</button>
                                     <button type="button" class="btn btn-secondary"
                                       data-bs-dismiss="modal">Close</button>
@@ -480,12 +481,6 @@ if (isset($_GET['building'])) {
                               </div>
                             </div>
                           </div>
-                          <script>
-                            document.getElementById('submitA').addEventListener('click', function () {
-                              console.log('Submit button clicked');
-                            });
-
-                          </script>
 
                           <div class="accordion-item">
                             <div id="collapseVendor" class="accordion-collapse collapse" aria-labelledby="headingVendor"
@@ -568,7 +563,7 @@ if (isset($_GET['building'])) {
                                     <input type="date" id="end_date" name="end_date" class="form-control">
                                   </div>
                                   <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
-                                    <button type="submit" name="submit" id="submit" class="btn btn-info lg">Create
+                                    <button type="submit" name="submitV" id="submit" class="btn btn-info lg">Create
                                       Vendor</button>
                                     <button type="button" class="btn btn-secondary"
                                       data-bs-dismiss="modal">Close</button>
@@ -703,40 +698,40 @@ if (isset($_GET['building'])) {
               }
             });
 
-            $(document).ready(function () {
-              $('#submit').on('click', function (e) {
-                e.preventDefault(); // Prevent default form submission
+            // $(document).ready(function () {
+            //   $('#submit').on('click', function (e) {
+            //     e.preventDefault(); // Prevent default form submission
 
-                var buildingType = $('#building_type').val();
-                var stallNo = $('#stall_no').val();
-                var monthlyRentals = $('#monthly_rentals').val();
-                var startedDate = $('#started_date').val();
-                var endDate = $('#end_date').val();
+            //     var buildingType = $('#building_type').val();
+            //     var stallNo = $('#stall_no').val();
+            //     var monthlyRentals = $('#monthly_rentals').val();
+            //     var startedDate = $('#started_date').val();
+            //     var endDate = $('#end_date').val();
 
-                $.ajax({
-                  url: 'process_formVendor.php', // The server-side script URL
-                  type: 'POST',
-                  data: {
-                    building_type: buildingType,
-                    stall_no: stallNo,
-                    monthly_rentals: monthlyRentals,
-                    started_date: startedDate,
-                    end_date: endDate
-                  },
-                  success: function (response) {
-                    var result = JSON.parse(response);
-                    if (result.status === 'success') {
-                      alert(result.message);
-                    } else {
-                      alert(result.message);
-                    }
-                  },
-                  error: function () {
-                    alert('An error occurred while processing the request.');
-                  }
-                });
-              });
-            });
+            //     $.ajax({
+            //       url: 'process_formVendor.php', // The server-side script URL
+            //       type: 'POST',
+            //       data: {
+            //         building_type: buildingType,
+            //         stall_no: stallNo,
+            //         monthly_rentals: monthlyRentals,
+            //         started_date: startedDate,
+            //         end_date: endDate
+            //       },
+            //       success: function (response) {
+            //         var result = JSON.parse(response);
+            //         if (result.status === 'success') {
+            //           alert(result.message);
+            //         } else {
+            //           alert(result.message);
+            //         }
+            //       },
+            //       error: function () {
+            //         alert('An error occurred while processing the request.');
+            //       }
+            //     });
+            //   });
+            // });
 
           </script>
       </div>
@@ -789,27 +784,44 @@ if (isset($_GET['building'])) {
                       die("Connection failed: " . $conn->connect_error);
                     }
 
-                    // SQL query to get stall information and vendor usernames
-                    $sql = "SELECT v.username AS username, a.monthly_rentals AS payment_due, a.stall_no AS stall_no, a.building_id, a.stall_status AS stall_status
-                        FROM vendors v 
-                        JOIN building_a a ON v.vendor_id = a.vendor_id";
+                    // SQL query to get stall information and vendor usernames from all buildings
+                    $sql = "SELECT v.username AS username, a.monthly_rentals AS payment_due, a.stall_no AS stall_no, 'Building A' AS building FROM vendors v JOIN building_a a ON v.vendor_id = a.vendor_id
+                    UNION ALL
+                    SELECT v.username AS username, b.monthly_rentals AS payment_due, b.stall_no AS stall_no, 'Building B' AS building FROM vendors v JOIN building_b b ON v.vendor_id = b.vendor_id
+                    UNION ALL
+                    SELECT v.username AS username, c.monthly_rentals AS payment_due, c.stall_no AS stall_no, 'Building C' AS building FROM vendors v JOIN building_c c ON v.vendor_id = c.vendor_id
+                    UNION ALL
+                    SELECT v.username AS username, d.monthly_rentals AS payment_due, d.stall_no AS stall_no, 'Building D' AS building FROM vendors v JOIN building_d d ON v.vendor_id = d.vendor_id
+                    UNION ALL
+                    SELECT v.username AS username, e.monthly_rentals AS payment_due, e.stall_no AS stall_no, 'Building E' AS building FROM vendors v JOIN building_e e ON v.vendor_id = e.vendor_id
+                    UNION ALL
+                    SELECT v.username AS username, f.monthly_rentals AS payment_due, f.stall_no AS stall_no, 'Building F' AS building FROM vendors v JOIN building_f f ON v.vendor_id = f.vendor_id
+                    UNION ALL
+                    SELECT v.username AS username, g.monthly_rentals AS payment_due, g.stall_no AS stall_no, 'Building G' AS building FROM vendors v JOIN building_g g ON v.vendor_id = g.vendor_id
+                    UNION ALL
+                    SELECT v.username AS username, h.monthly_rentals AS payment_due, h.stall_no AS stall_no, 'Building H' AS building FROM vendors v JOIN building_h h ON v.vendor_id = h.vendor_id
+                    UNION ALL
+                    SELECT v.username AS username, i.monthly_rentals AS payment_due, i.stall_no AS stall_no, 'Building I' AS building FROM vendors v JOIN building_i i ON v.vendor_id = i.vendor_id
+                    UNION ALL
+                    SELECT v.username AS username, j.monthly_rentals AS payment_due, j.stall_no AS stall_no, 'Building J' AS building FROM vendors v JOIN building_j j ON v.vendor_id = j.vendor_id";
 
-                    $result = $conn->query($sql);
+                    $resultV = $conn->query($sql);
 
-                    if ($result === false) {
+                    if ($resultV === false) {
                       die("Error executing query: " . $conn->error);
                     }
 
-                    if ($result->num_rows > 0) {
-                      while ($row = $result->fetch_assoc()) {
+                    if ($resultV->num_rows > 0) {
+                      while ($rowV = $resultV->fetch_assoc()) {
                         ?>
                         <tr>
-                          <td class='text-xs font-weight-bold'><?php echo htmlspecialchars($row['username']); ?></td>
-                          <td class='text-xs font-weight-bold'>$building</td>
-                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($row['stall_no']); ?>
+                          <td class='text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['username']); ?></td>
+                          <td class='text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['building']); ?></td>
+                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['stall_no']); ?>
                           </td>
                           <td class='text-center text-xs font-weight-bold'>
-                            <?php echo htmlspecialchars($row['payment_due']); ?></td>
+                            <?php echo htmlspecialchars($rowV['payment_due']); ?>
+                          </td>
                         </tr>
                         <?php
                       }
@@ -893,6 +905,11 @@ if (isset($_GET['building'])) {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-Dbc4rNzEfaO0/1A/f8Gk+9mE6k5vZlF8d4G9ktBf3mHk5sZj98m1F2FPH+E/XKlS"
     crossorigin="anonymous"></script>
+
+    
+  <link rel="stylesheet" href="loading.css">
+  <script src="loading.js" defer></script>
+  <div class="loader"></div>
 
 </body>
 

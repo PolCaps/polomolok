@@ -15,7 +15,7 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitV'])) {
     try {
         // Start transaction
         $conn->begin_transaction();
@@ -103,7 +103,7 @@ $vendor_id = $stmt_vendor->insert_id;
     }
     
        
-    //  // Determine stall status based on vendor_id
+    // Determine stall status based on vendor_id
      if ($vendor_id !== null) {
         $stall_status = 'Occupied';
     } else {
