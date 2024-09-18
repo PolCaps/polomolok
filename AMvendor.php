@@ -764,8 +764,8 @@ if (isset($_GET['building'])) {
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall
                         #</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -815,8 +815,8 @@ if (isset($_GET['building'])) {
                       while ($rowV = $resultV->fetch_assoc()) {
                         ?>
                         <tr>
-                          <td class='text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['username']); ?></td>
-                          <td class='text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['building']); ?></td>
+                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['username']); ?></td>
+                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['building']); ?></td>
                           <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['stall_no']); ?>
                           </td>
                           <td class='text-center text-xs font-weight-bold'>
