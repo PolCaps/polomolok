@@ -75,7 +75,7 @@ $conn->close();
 </head>
 
 <div class="g-sidenav-show  bg-gray-100">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
     id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
@@ -122,7 +122,7 @@ $conn->close();
           </a>
           <div class="collapse" id="collapseMaps">
             <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="ABuildingA.html">Building A</a>
+              <a class="nav-link" href="ABuildingA.php">Building A</a>
               <a class="nav-link" href="ABuildingB.html">Building B</a>
               <a class="nav-link" href="ABuildingC.html">Building C</a>
               <a class="nav-link" href="ABuildingD.html">Building D</a>
@@ -136,7 +136,8 @@ $conn->close();
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="AMvendor.php">
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAccounts"
+            aria-expanded="false" aria-controls="collapseAccounts">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000"
@@ -145,8 +146,14 @@ $conn->close();
                   d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z" />
               </svg>
             </div>
-            <span class="nav-link-text ms-1">Vendors/Users</span>
+            <span class="nav-link-text ms-1">Accounts</span>
           </a>
+          <div class="collapse" id="collapseAccounts">
+            <div class="right-aligned-links" style="text-align: right;">
+              <a class="nav-link" href="AMUser.php">Users</a>
+              <a class="nav-link" href="AMVendor.php">Vendors</a>
+            </div>
+          </div>
         </li>
         <li class="nav-item">
           <a class="nav-link " href="AMmessages.php">
@@ -179,22 +186,37 @@ $conn->close();
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Vendor and Stall Approval</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link active " href="#">
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVendorApproval"
+            aria-expanded="false" aria-controls="collapseVendorApproval">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <img src="image/icons/icons8-approve-48.png" alt="approveicon" width="18px" height="18px">
             </div>
             <span class="nav-link-text ms-1">Vendor Approval</span>
           </a>
+          <div class="collapse" id="collapseVendorApproval">
+            <div class="right-aligned-links" style="text-align: right;">
+              <a class="nav-link" href="AMStallApp.php">Stall Applicants</a>
+              <a class="nav-link" href="AMReadydraw.php">Ready for Drawlots</a>
+            </div>
+          </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link  " href="AMRelocationRequest.php">
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRelRequest"
+            aria-expanded="false" aria-controls="collapseRelRequest">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <img src="image/icons/icons8-kiosk-on-wheels-48.png" alt="relocationimg" width="18px" height="18px">
             </div>
             <span class="nav-link-text ms-1">Relocation Request</span>
           </a>
+          <div class="collapse" id="collapseRelRequest">
+            <div class="right-aligned-links" style="text-align: right;">
+              <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
+              <a class="nav-link" href="AMRelReqProcessing.php">Processing</a>
+              <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
+            </div>
+          </div>
         </li>
         <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Page Customization</h6>
@@ -211,21 +233,22 @@ $conn->close();
       </ul>
     </div>
     <div class="sidenav-footer mx-3 mt-5">
-    <div class="card card-background shadow-none card-background-mask-info" id="sidenavCard">
+      <div class="card card-background shadow-none card-background-mask-info" id="sidenavCard">
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
-            <?php
-            // Check if the user has a profile picture set; if not, use a default image
-            $profilePicture = !empty($user['picture_profile']) ? $user['picture_profile'] : 'image/profile.jpg';
-            ?>
-            <img src="<?php echo htmlspecialchars($profilePicture); ?>" class="img-fluid" alt="Admin Profile Picture" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; margin-left: 40px;">
-            <h5 class="text-center mt-2">
-                <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
-            </h5>
-            <hr class="horizontal dark mt-0">
+          <?php
+          // Check if the user has a profile picture set; if not, use a default image
+          $profilePicture = !empty($user['picture_profile']) ? $user['picture_profile'] : 'image/profile.jpg';
+          ?>
+          <img src="<?php echo htmlspecialchars($profilePicture); ?>" class="img-fluid" alt="Admin Profile Picture"
+            style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; margin-left: 40px;">
+          <h5 class="text-center mt-2">
+            <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
+          </h5>
+          <hr class="horizontal dark mt-0">
         </div>
+      </div>
     </div>
-</div>
 
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
@@ -344,14 +367,27 @@ $conn->close();
                     <i class="fa fa-user-circle text-warning" aria-hidden="true"></i>
                     <span class="font-weight-bold ms-1">Stall Applicants</span>
                   </p>
+                    
                 </div>
 
+              
+
                 <div class="col-lg-6 col-5 my-auto text-end d-flex">
+              <!-- Status Filter Dropdown -->
+                <div class="dropdown float-lg pe-1 mx-1 my-1">
+                  <select id="statusFilter" class="form-select" onchange="filterByStatus()">
+                    <option value="ALL">All</option>
+                    <option value="ACCEPTED">Accepted</option>
+                    <option value="PROCESSING">Processing</option>
+                    <option value="DECLINED">Declined</option>
+                  </select>
+                </div>
 
                   <div class="input-group mx-3">
                     <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
                     <input type="text" id="searchInput" class="form-control" placeholder="Search for...">
                   </div>
+                  
 
                   <div class="dropdown float-lg-end pe-4 mx-2 my-1">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -417,7 +453,6 @@ $conn->close();
                                 <label for="status" class="form-label">Status:</label>
                                 <select id="status" name="status" class="form-control">
                                   <option value="PROCESSING">Processing</option>
-                                  <option value="PENDING">Pending</option>
                                   <option value="APPROVED">Approved</option>
                                   <option value="DECLINED">Declined</option>
                                 </select>
@@ -664,82 +699,6 @@ $conn->close();
 
       </div>
 
-      <div class="card mt-6 col-lg-11">
-        <div class="card-header pb-0">
-          <div class="row">
-            <div class="col-lg-6 col-7">
-              <h6>Rent Applicants</h6>
-              <p class="text-sm mb-0">
-                <i class="fa fa-check-circle text-success" aria-hidden="true"></i>
-                <span class="font-weight-bold ms-1">List of Rental Applicants That are ready for Drawlots </span>
-              </p>
-            </div>
-            <div class="col-lg-6 col-5 my-auto text-end">
-              <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                <div class="input-group">
-                  <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                  <input type="text" class="form-control px-1" placeholder="Search for...">
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card-body px-0 pb-2">
-          <div class="table-responsive">
-            <table class="table align-items-center mb-0">
-              <thead>
-                <tr>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant
-                    ID</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Official
-                    Reciept No.</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Proof Of
-                    Payment</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment
-                    Status</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Verify
-                    Status</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment
-                    Date</th>
-                </tr>
-              </thead>
-              <tbody id="dataTableBodyReceipt">
-
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          fetch('populate_rentapp_paymentFiltered.php')
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                const tableBody = document.getElementById('dataTableBodyReceipt');
-                tableBody.innerHTML = ''; // Clear existing rows
-                data.data.forEach(item => {
-                  const row = document.createElement('tr');
-
-                  row.innerHTML = `
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.OR_no}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center"><a href="${item.proof_of_payment}" target="_blank">View Proof</a></h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.payment_status || 'N/A'}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.verify_status}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.payment_date || 'N/A'}</h6></div></td>
-                                `;
-
-                  tableBody.appendChild(row);
-                });
-              } else {
-                console.error('Failed to fetch data:', data.message);
-              }
-            })
-            .catch(error => console.error('Error:', error));
-        });
-      </script>
     </div>
 
 

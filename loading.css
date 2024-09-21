@@ -17,7 +17,7 @@
     border-radius: 50%;
     width: 60px;
     height: 60px;
-    animation: loading 1.5s linear infinite;
+    animation: loading 1.0s linear infinite;
   }
 
 .loader-hidden {
@@ -32,7 +32,7 @@
     border: 6px solid #ffffff;
     border-color: #2487ce transparent #2487ce transparent;
     border-radius: 50%;
-    animation: loading 1.5s linear infinite;
+    animation: loading 1.0s linear infinite;
 }
 
 @keyframes loading {

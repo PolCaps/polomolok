@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 02, 2024 at 03:03 PM
+-- Generation Time: Sep 21, 2024 at 07:21 AM
 -- Server version: 10.4.32-MariaDB
--- PHP Version: 8.0.30
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -45,8 +45,7 @@ INSERT INTO `announcements` (`id`, `title`, `description`, `image_path`, `buildi
 (7, 'Notice Of Stall Vacancy', 'Stall Vacant in progress of meedo.', 'announcements/notice.jpg', 'Building A', 'A-07', '2024-08-31 08:53:48'),
 (8, 'Notice of Vacancy', 'Vacant', 'announcements/notice.jpg', 'Building J', 'J-76', '2024-09-01 10:40:19'),
 (9, 'Notice Of Vacancy', 'vacant corner', 'announcements/notice.jpg', 'Building c', 'C-45', '2024-09-01 11:05:38'),
-(11, 'Notice Of Missing Person', 'Tall Dark Short Hair', 'announcements/IMG_20220226_195004.jpg', 'Name:', 'REYAN JAN SAMONTANES', '2024-09-01 11:25:14'),
-(12, 'Polomolok Fest', 'Small fest', 'announcements/download.jfif', '', '', '2024-09-02 08:05:20');
+(11, 'Notice Of Missing Person', 'Tall Dark Short Hair', 'announcements/IMG_20220226_195004.jpg', 'Name:', 'REYAN JAN SAMONTANES', '2024-09-01 11:25:14');
 
 -- --------------------------------------------------------
 
@@ -520,7 +519,7 @@ INSERT INTO `building_d` (`building_id`, `stall_no`, `building_floor`, `monthly_
 (30, 'D-30', 'Ground Floor', '4,200.00', NULL, 'Vacant'),
 (31, 'D-31', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
 (32, 'D-32', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
-(33, 'D-33', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
+(33, 'D-33', 'Ground Floor', '3,900.00', 65, 'Occupied'),
 (34, 'D-34', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
 (35, 'D-35', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
 (36, 'D-36', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
@@ -1335,15 +1334,14 @@ CREATE TABLE `inquiry` (
 --
 
 INSERT INTO `inquiry` (`inq_id`, `name`, `email_add`, `subject`, `message`, `sent_date`) VALUES
-(18, 'pj', 'pj@gmail.com', 'Stall inquiry', 'available pa stalls?', '2024-07-28 22:30:44'),
-(20, 'cray', 'cray@gmail.com', 'Inquiries', 'available pa stalls?', '2024-07-28 22:31:51'),
 (22, 'Jaime Kabulan', 'jaime@gmail.com', 'cooperator', 'rental Occupations', '2024-07-29 03:46:42'),
 (23, 'John Kranzinsky', 'john@gmail.com', 'Owning Stalls', 'I want to own stalls can you contact me?', '2024-07-29 03:47:36'),
 (24, 'kimberly Ayugyugon', 'kim@gmail.com', 'Vendors Approval', 'Sending Approvals', '2024-07-29 03:48:29'),
 (25, 'Teresa Saragosa', 'teresa@gmail.com', 'Transfer', 'Pwede mag transfer stalls?', '2024-07-29 03:49:29'),
 (26, 'Saybil Pudadera', 'saybil@gmail.com', 'List of Permits', 'Unsay mga permits kaylangan ani?', '2024-07-29 03:50:39'),
 (27, 'Jhay Mark Tubig', 'Jhay@gmail.com', 'Cost of relocation', 'Naka bayad nako sa relocation.', '2024-07-29 03:52:07'),
-(29, 'Cryzzy Uy', 'Uy@gmail.com', 'Karnehan', 'Available pa pwesto sa karnehan?', '2024-07-29 03:54:23');
+(29, 'Cryzzy Uy', 'Uy@gmail.com', 'Karnehan', 'Available pa pwesto sa karnehan?', '2024-07-29 03:54:23'),
+(30, 'Prince', 'princejasy@gmai.com', 'Inquiry', 'May Rentable stall po ba kayo?', '2024-09-02 13:45:18');
 
 -- --------------------------------------------------------
 
@@ -1412,10 +1410,13 @@ CREATE TABLE `relocation_req` (
 --
 
 INSERT INTO `relocation_req` (`relocation_id`, `vendor_id`, `message`, `date_sent`, `relocation_status`) VALUES
-(10, 57, 'pwede change stalls?', '2024-08-31 09:11:55', 'Declined'),
-(11, 57, 'naa pay pwesto?', '2024-07-29 00:41:23', 'Processing'),
-(12, 61, 'request relocation', '2024-07-29 08:27:32', 'Processing'),
-(13, 55, 'pa transfer po.', '2024-08-18 13:29:34', 'Processing');
+(13, 55, 'pa transfer po.', '2024-08-18 13:29:34', 'Processing'),
+(14, 55, 'I am requesting a relocation', '2024-09-21 02:50:06', 'Accepted'),
+(15, 55, 'I am wanting to request a relocation because i have no maney\r\n', '2024-09-03 03:25:13', 'Processing'),
+(16, 55, 'I am wanting to request a relocation because i have no maneysajwndawdqwd\r\n', '2024-09-03 03:25:41', 'Processing'),
+(17, 55, 'Hello', '2024-09-03 03:29:22', 'Processing'),
+(18, 55, 'relocation request.', '2024-09-21 02:45:21', 'Declined'),
+(19, 55, 'test', '2024-09-21 02:50:00', 'Accepted');
 
 -- --------------------------------------------------------
 
@@ -1441,8 +1442,8 @@ INSERT INTO `rentapp_payment` (`rentpayment_id`, `OR_no`, `proof_of_payment`, `a
 (17, '786556t', 'payment_proofs/rent_application/434407561_318504671251414_8738135139194585822_n.jpg', 2028, 'Paid', 'Verified', '2024-07-27 23:25:49'),
 (19, '203084858', 'payment_proofs/rent_application/gcash.jpeg', 2030, 'Paid', 'Unconfirmed', '2024-07-29 00:32:13'),
 (20, '3252236546', 'payment_proofs/rent_application/gcash.jpeg', 2031, 'Paid', 'Verified', '2024-07-29 00:34:44'),
-(21, '9y7534hyf5378', 'payment_proofs/rent_application/gcash.jpeg', 2032, 'Paid', 'Unconfirmed', '2024-07-29 05:20:02'),
-(23, '2343e23rwe32wedw', 'payment_proofs/rent_application/gcash.jpeg', 2033, 'Paid', 'Verified', '2024-07-29 08:08:39');
+(21, '9y7534hyf5378', 'payment_proofs/rent_application/gcash.jpeg', 2032, 'Paid', 'Verified', '2024-07-29 05:20:02'),
+(24, '39475hbefs', 'payment_proofs/rent_application/img20240818_23394173.jpg', 2034, 'Paid', 'Verified', '2024-09-07 10:13:29');
 
 -- --------------------------------------------------------
 
@@ -1471,11 +1472,11 @@ CREATE TABLE `rent_application` (
 --
 
 INSERT INTO `rent_application` (`Approval`, `applicant_id`, `first_name`, `middle_name`, `last_name`, `contact_no`, `building_type`, `stall_no`, `age`, `email`, `address`, `rentapp_file`, `applied_date`) VALUES
-('APPROVED', 2028, 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 9510462062, 'Building A', 20, 56, 'reyanjansamontanes@gmail.com', 'Polotana Subdivision, West Drive.', 'rent_applications_file_dir/samontanes.pdf', '2024-09-01 01:41:32'),
-('PENDING', 2030, 'May', 'Bel', 'Beleigne', 94536723456, 'Building A', 78, 56, 'may@gmail.com', 'Gensan', 'rent_applications_file_dir/samontanes.pdf', '2024-09-01 10:44:59'),
-('PENDING', 2031, 'Duke', 'B', 'Shelby', 934793849, 'Building E', 87, 45, 'duke@gmail.com', 'Bermingham', 'rent_applications_file_dir/Building-A-2nd-Floor.pdf', '2024-07-29 00:39:22'),
-('PROCESSING', 2032, 'Ivy ', 'Grace ', 'Laurente', 9510462062, 'Building A', 89, 45, 'ivy@gmail.com', 'Cannery Site', 'rent_applications_file_dir/rentAppMeedo.pdf', '2024-07-29 05:18:46'),
-('APPROVED', 2033, 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 9510462062, 'Building A', 20, 54, 'reyanjansamontanes@gmail.com', 'Polotana Subdivision, West Drive.', 'rent_applications_file_dir/5974879027155300046-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-29 08:13:10');
+('APPROVED', 2028, 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 9510462062, 'Building A', 20, 56, 'reyanjansamontanes@gmail.com', 'Polotana Subdivision, West Drive.', 'rent_applications_file_dir/samontanes.pdf', '2024-09-02 14:07:41'),
+('PROCESSING', 2030, 'May', 'Bel', 'Beleigne', 94536723456, 'Building A', 78, 56, 'may@gmail.com', 'Gensan', 'rent_applications_file_dir/samontanes.pdf', '2024-09-21 03:44:38'),
+('APPROVED', 2031, 'Duke', 'B', 'Shelby', 934793849, 'Building E', 87, 45, 'duke@gmail.com', 'Bermingham', 'rent_applications_file_dir/Building-A-2nd-Floor.pdf', '2024-09-02 14:08:49'),
+('PENDING', 2032, 'Ivy ', 'Grace ', 'Laurente', 9510462062, 'Building A', 89, 45, 'ivy@gmail.com', 'Cannery Site', 'rent_applications_file_dir/rentAppMeedo.pdf', '2024-09-02 14:10:41'),
+('APPROVED', 2034, 'Test', 'te', 'TEs', 9834534534, 'Building A', 25, 0, 'teste@gmail.com', 'awd', 'rent_applications_file_dir/01_Seatwork_1_Sayre.pdf', '2024-09-07 10:10:04');
 
 -- --------------------------------------------------------
 
@@ -1494,7 +1495,7 @@ CREATE TABLE `users` (
   `address` varchar(255) DEFAULT NULL,
   `email_add` varchar(255) DEFAULT NULL,
   `contact_no` bigint(20) DEFAULT NULL,
-  `user_type` enum('ADMIN','STAFF') NOT NULL,
+  `user_type` enum('ADMIN','CASHIER','DOCUMENT_HANDLER','CUSTOMER_SERVICE') NOT NULL,
   `picture_profile` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1503,9 +1504,13 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `user_type`, `picture_profile`) VALUES
-(11, 'rj', 'rj', 'reyan', 'jan', 'samontanes', 43, 'polomolok', 'gmail.com', 3233252, 'ADMIN', 'adminProfile/IMG20220417102318.jpg'),
-(28, 'June', 'june123', 'June', 'vene', 'veneracion', 38, 'Polotana Subdivision, West Drive.', 'ggmeil@gmail.com', 9510462062, 'STAFF', NULL),
-(30, 'adminMeedo', '123', 'MEEDO', 'MEEDO', 'MEEDO', 43, 'Polotana Subdivision, West Drive.', '@gmail.com', NULL, 'ADMIN', 'adminProfile/download.jfif');
+(11, 'rj', 'rj', 'reyan', 'jan', 'samontanes', 43, 'polomolok', 'gmail.com', 3233252, 'ADMIN', 'adminProfile/10 by 10 orthogonal maze (1).png'),
+(28, 'June', 'june123', 'June', 'vene', 'veneracion', 38, 'Polotana Subdivision, West Drive.', 'ggmeil@gmail.com', 9510462062, '', NULL),
+(30, 'adminMeedo', '123', 'MEEDO', 'MEEDO', 'MEEDO', 43, 'Polotana Subdivision, West Drive.', '@gmail.com', NULL, 'ADMIN', 'adminProfile/download.jfif'),
+(31, 'Staf2024', 'Staff2024', 'MeedoStaff', 'S', 'StaffngMeedo', 74, 'sayre residence purok darussalam bawing', 'meedstaff232@gmail.com', 9213812312, '', NULL),
+(32, 'cashier', 'cashiercheck', 'Montana', 'D.', 'Revilla', 21, 'Purok Dimansia', 'montana@gmail.com', 9938739511, 'CASHIER', NULL),
+(33, 'Longanisa', 'Talong', 'DocuMen', 'K.', 'Bambalolong', 44, 'Purok. Drimatia, Kalfungal', 'Documen@gmail.com', 9938757326, 'DOCUMENT_HANDLER', NULL),
+(34, 'cusman', 'degusman', 'Daniel', 'C.', 'Padilla', 28, 'Manila, Tondo South Cotabato', 'DanielPadilla@gmail.com', 9936256273, 'CUSTOMER_SERVICE', NULL);
 
 -- --------------------------------------------------------
 
@@ -1542,7 +1547,8 @@ INSERT INTO `vendors` (`Vendor Status`, `vendor_id`, `username`, `password`, `fi
 ('INACTIVE', 60, 'mads', 'mads123', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-07-29', '2024-07-29'),
 ('INACTIVE', 61, 'vendors', 'vendor123', '', NULL, NULL, NULL, NULL, NULL, NULL, '2022-11-24', '2023-10-13'),
 ('INACTIVE', 62, 'June', 'june123', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-07-29', '2024-08-29'),
-('INACTIVE', 64, 'polcapts', '9504', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-10', '2024-09-02');
+('INACTIVE', 64, 'polcapts', '9504', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-10', '2024-09-02'),
+('INACTIVE', 65, 'Vendor21', 'vendor2024', 'Vend', 'D', 'Or', 99, 'POlomolokHAWD', 'POlomolokHAWD@gmai.com', '123123123', '2024-09-07', '2024-09-20');
 
 -- --------------------------------------------------------
 
@@ -1568,7 +1574,7 @@ CREATE TABLE `vendorsoa` (
 --
 
 INSERT INTO `vendorsoa` (`id`, `vendor_id`, `username`, `remaining_balance`, `monthly_rentals`, `miscellaneous_fees`, `other_fees`, `total_amount`, `date`, `file_path`) VALUES
-(5, 55, 'jp', '1566', '3060', '700', '666', '5992', '2024-09-01', 'invoice/invoice_jp.pdf'),
+(5, 55, 'jp', '3060', '3060', '0', '0', '6120', '2024-09-07', 'invoice/invoice_jp_2024-09-07.pdf'),
 (6, 56, 'james', '4500', '5400', '0', '0', '9900', '2024-09-01', 'invoice/invoice_james_2024-09-01.pdf'),
 (7, 57, 'meedo', '5400', '5400', '0', '0', '10800', '2024-09-01', 'invoice/invoice_meedo_2024-09-01.pdf');
 
@@ -1805,7 +1811,7 @@ ALTER TABLE `documents`
 -- AUTO_INCREMENT for table `inquiry`
 --
 ALTER TABLE `inquiry`
-  MODIFY `inq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
+  MODIFY `inq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
 
 --
 -- AUTO_INCREMENT for table `message`
@@ -1823,31 +1829,31 @@ ALTER TABLE `pagebuilder_table`
 -- AUTO_INCREMENT for table `relocation_req`
 --
 ALTER TABLE `relocation_req`
-  MODIFY `relocation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `relocation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT for table `rentapp_payment`
 --
 ALTER TABLE `rentapp_payment`
-  MODIFY `rentpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `rentpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `rent_application`
 --
 ALTER TABLE `rent_application`
-  MODIFY `applicant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2034;
+  MODIFY `applicant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2035;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=65;
+  MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
 
 --
 -- AUTO_INCREMENT for table `vendorsoa`

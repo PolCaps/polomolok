@@ -118,7 +118,7 @@ if (isset($_GET['building'])) {
 <?php endif; ?>
 
 <body class="g-sidenav-show  bg-gray-100">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
     id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
@@ -305,7 +305,7 @@ if (isset($_GET['building'])) {
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Admin</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modules</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Vendors</h6>
+          <h6 class="font-weight-bolder mb-0">Users</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -343,7 +343,7 @@ if (isset($_GET['building'])) {
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Vendors:</p>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Users:</p>
                     <h5 class="font-weight-bolder mb-0">
                       8,231
                     </h5>
@@ -754,7 +754,7 @@ if (isset($_GET['building'])) {
             <div class="card-header pb-0">
               <div class="row">
                 <div class="col-lg-6 col-7">
-                  <h6>Vendors</h6>
+                  <h6>Users</h6>
                   <p class="text-sm mb-0">
                     <i class="fa fa-exclamation-circle text-warning" aria-hidden="true"></i>
                     <span class="font-weight-bold ms-1">Click User to see full details!</span>
@@ -776,76 +776,69 @@ if (isset($_GET['building'])) {
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall
-                        #</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        Payment Due</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">User Type</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Full Name</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Age</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Address</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email Add</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact No.</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Profile Picture</th>
                     </tr>
                   </thead>
                   <tbody id="dataTableBody">
-                    <?php
-                    include("database_config.php");
+                  <?php
+                  include("database_config.php");
 
-                    // Create connection
-                    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+                  // Create connection
+                  $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-                    // Check connection
-                    if ($conn->connect_error) {
-                      die("Connection failed: " . $conn->connect_error);
-                    }
+                  // Check connection
+                  if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                  }
 
-                    // SQL query to get stall information and vendor usernames from all buildings
-                    $sql = "SELECT v.username AS username, a.monthly_rentals AS payment_due, a.stall_no AS stall_no, 'Building A' AS building FROM vendors v JOIN building_a a ON v.vendor_id = a.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, b.monthly_rentals AS payment_due, b.stall_no AS stall_no, 'Building B' AS building FROM vendors v JOIN building_b b ON v.vendor_id = b.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, c.monthly_rentals AS payment_due, c.stall_no AS stall_no, 'Building C' AS building FROM vendors v JOIN building_c c ON v.vendor_id = c.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, d.monthly_rentals AS payment_due, d.stall_no AS stall_no, 'Building D' AS building FROM vendors v JOIN building_d d ON v.vendor_id = d.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, e.monthly_rentals AS payment_due, e.stall_no AS stall_no, 'Building E' AS building FROM vendors v JOIN building_e e ON v.vendor_id = e.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, f.monthly_rentals AS payment_due, f.stall_no AS stall_no, 'Building F' AS building FROM vendors v JOIN building_f f ON v.vendor_id = f.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, g.monthly_rentals AS payment_due, g.stall_no AS stall_no, 'Building G' AS building FROM vendors v JOIN building_g g ON v.vendor_id = g.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, h.monthly_rentals AS payment_due, h.stall_no AS stall_no, 'Building H' AS building FROM vendors v JOIN building_h h ON v.vendor_id = h.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, i.monthly_rentals AS payment_due, i.stall_no AS stall_no, 'Building I' AS building FROM vendors v JOIN building_i i ON v.vendor_id = i.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, j.monthly_rentals AS payment_due, j.stall_no AS stall_no, 'Building J' AS building FROM vendors v JOIN building_j j ON v.vendor_id = j.vendor_id";
+                  // SQL query to fetch user details from the `user` table
+                  $sql = "SELECT id, username, first_name, middle_name, last_name, age, address, email_add, contact_no, user_type, picture_profile FROM users";
 
-                    $resultV = $conn->query($sql);
+                  $resultV = $conn->query($sql);
 
-                    if ($resultV === false) {
-                      die("Error executing query: " . $conn->error);
-                    }
+                  if ($resultV === false) {
+                    die("Error executing query: " . $conn->error);
+                  }
 
-                    if ($resultV->num_rows > 0) {
-                      while ($rowV = $resultV->fetch_assoc()) {
-                        ?>
-                        <tr>
-                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['username']); ?></td>
-                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['building']); ?></td>
-                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['stall_no']); ?>
-                          </td>
-                          <td class='text-center text-xs font-weight-bold'>
-                            <?php echo htmlspecialchars($rowV['payment_due']); ?>
-                          </td>
-                        </tr>
-                        <?php
-                      }
-                    } else {
+                  if ($resultV->num_rows > 0) {
+                    while ($rowV = $resultV->fetch_assoc()) {
                       ?>
                       <tr>
-                        <td colspan='5' class='text-center'>No results found.</td>
+                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['id']); ?></td>
+                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['user_type']); ?></td>
+                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['username']); ?></td>
+                        <td class='text-center text-xs font-weight-bold'>
+                            <?php
+                            echo htmlspecialchars($rowV['first_name'] . ' ' . $rowV['middle_name'] . ' ' . $rowV['last_name']);
+                            ?>
+                        </td>
+                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['age']); ?></td>
+                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['address']); ?></td>
+                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['email_add']); ?></td>
+                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['contact_no']); ?></td>
+                        <td class='text-center text-xs font-weight-bold'>
+                          <img src="<?php echo htmlspecialchars($rowV['picture_profile']); ?>" alt="No Profile Pic" style="width: 50px; height: 50px;">
+                        </td>
                       </tr>
                       <?php
                     }
-                    $conn->close();
+                  } else {
                     ?>
+                    <tr>
+                      <td colspan='11' class='text-center'>No results found.</td>
+                    </tr>
+                    <?php
+                  }
+                  $conn->close();
+              ?>
                   </tbody>
                 </table>
               </div>

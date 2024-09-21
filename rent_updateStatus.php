@@ -21,9 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     // Execute the statement
     if ($stmt->execute()) {
-        header("Location: AMVendorApproval.php");
+        header("Location: AMStallApp.php");
     } else {
-        header("Location: AMVendorApproval.php");
+        header("Location: AMStallApp.php");
     }
 
     // Close connection

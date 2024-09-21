@@ -29,8 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Set distinct session names based on user role
         if ($role === 'ADMIN') {
             session_name('admin_session');
-        } elseif ($role === 'STAFF') {
-            session_name('staff_session');
+        } elseif ($role === 'CASHIER') {
+            session_name('cashier_session');
+        } elseif ($role === 'DOCUMENT_HANDLER'){
+            session_name('docuhandler_session');
+        } elseif ($role === 'CUSTOMER_SERVICE'){
+            session_name('customerservice_session');
         }
         session_start();
 
@@ -47,11 +51,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         if ($role === 'ADMIN') {
             header('Location: Admin.php');
             exit();
-        } elseif ($role === 'STAFF') {
-            header('Location: Staff.php');
+        } elseif ($role === 'CASHIER') {
+            header('Location: Cashier.php');
             exit();
-        }
-    } else {
+        } elseif ($role === 'DOCUMENT_HANDLER') {
+            header('Location: DocumentHandler.php');
+            exit();
+        } elseif ($role === 'CUSTOMER_SERVICE') {
+            header('Location: CustomerService.php');
+            exit();
+        } else {
         // Check in the `vendors` table
         $query_vendors = "SELECT * FROM vendors WHERE username = ? AND password = ?";
         if ($stmt_vendors = $conn->prepare($query_vendors)) {
@@ -85,6 +94,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         } else {
             echo "Failed to prepare statement.";
         }
+        } 
     }
-}
+    }
 ?>
