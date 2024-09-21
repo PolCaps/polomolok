@@ -22,10 +22,10 @@ if ($conn->connect_error) {
 }
 
 // Fetch vendor information
-$sql = "SELECT v.*,a.*
-FROM vendors v
-JOIN building_a a  ON v.vendor_id = a.vendor_id
-WHERE a.vendor_id = ?";
+$sql = "SELECT v.*,a.* 
+        FROM vendors v 
+        JOIN building_a a ON v.vendor_id = a.vendor_id 
+        WHERE a.vendor_id = ?";
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
     die("Prepare failed: " . $conn->error);
@@ -35,7 +35,60 @@ $stmt->execute();
 $result = $stmt->get_result();
 $vendor = $result->fetch_assoc();
 
+
+if ($vendor === null) {
+  echo "<script>
+          alert('No data found. You need to fill up your account first!');
+          document.addEventListener('DOMContentLoaded', function() {
+              // Open the accordion by setting the correct class and showing the section
+              var accordion = document.getElementById('accountAccordion');
+              accordion.classList.add('show');
+              var formSection = document.getElementById('createVendorAccordion');
+              formSection.classList.add('show'); // Open accordion
+              formSection.scrollIntoView({behavior: 'smooth'});
+          });
+        </script>";
+} else {
+  echo "<script>
+          console.log('Vendor data available'); // Or handle vendor data as needed
+        </script>";
+}
+
+
+$query = "SELECT started_date, payment_due FROM vendors WHERE vendor_id = ?";
+$stmt1 = $conn->prepare($query);
+$stmt1->bind_param('i', $vendor_id);
+$stmt1->execute();
+$stmt1->bind_result($started_date, $payment_due);
+$stmt1->fetch();
+$stmt1->close();
+
 ?>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const alertClass = "<?php echo isset($_SESSION['alert_class']) ? $_SESSION['alert_class'] : ''; ?>";
+        const alertMessage = "<?php echo isset($_SESSION['alert_message']) ? $_SESSION['alert_message'] : ''; ?>";
+
+        if (alertClass && alertMessage) {
+            // Display the alert using Achor
+            alert(alertMessage); // Replace this with your Achor alert function if you have one
+
+            // Clear session data after displaying the alert
+            <?php 
+                unset($_SESSION['alert_class']);
+                unset($_SESSION['alert_message']);
+            ?>
+        }
+    });
+
+
+
+
+    const startedDate = new Date("<?php echo $started_date; ?>");
+    const paymentDue = "<?php echo $payment_due; ?>";
+</script>
     
 <!DOCTYPE html>
 <html lang="en">
@@ -70,9 +123,6 @@ $vendor = $result->fetch_assoc();
 
 
 <body class="g-sidenav-show  bg-gray-100">
-
-
-
 
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main">
     <div class="sidenav-header">
@@ -175,7 +225,16 @@ $vendor = $result->fetch_assoc();
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center"><?php echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); ?></h5>
+          <h5 class="text-center">
+    <?php 
+    if ($vendor === null || !isset($vendor['first_name'], $vendor['middle_name'], $vendor['last_name'])) {
+        echo "EMPTY"; 
+    } else {
+        echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); 
+    }
+    ?>
+</h5>
+
           <hr class="horizontal dark mt-0">
         </div>
       </div>
@@ -311,6 +370,69 @@ $vendor = $result->fetch_assoc();
           </div>
         </div>
       </div>
+     
+
+      <div class="accordion" id="accountAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <!-- <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#createVendorAccordion" aria-expanded="false" aria-controls="createVendorAccordion">
+                Fill in Your Account Information
+            </button> -->
+        </h2>
+        <div id="createVendorAccordion" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accountAccordion">
+            <div class="accordion-body">
+                <form id="createVendorForm" action="process_formVendor.php" method="POST" enctype="multipart/form-data">
+                    <div class="mb-3">
+                        <label for="first_name" class="form-label">First Name:</label>
+                        <input type="text" id="first_name" class="form-control" name="first_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="middle_name" class="form-label">Middle Name:</label>
+                        <input type="text" id="middle_name" class="form-control" name="middle_name">
+                    </div>
+                    <div class="mb-3">
+                        <label for="last_name" class="form-label">Last Name:</label>
+                        <input type="text" id="last_name" class="form-control" name="last_name" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="age" class="form-label">Age:</label>
+                        <input type="number" id="age" class="form-control" name="age">
+                    </div>
+                    <div class="mb-3">
+                        <label for="contact_no" class="form-label">Contact Number:</label>
+                        <input type="tel" id="contact_no" name="contact_number" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="address" class="form-label">Address:</label>
+                        <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="email_add" class="form-label">Email Address:</label>
+                        <textarea id="email_add" name="email_add" class="form-control"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lease_agreements" class="form-label">Lease Agreements:</label>
+                        <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="business_permits" class="form-label">Business Permits:</label>
+                        <input type="file" id="business_permits" name="business_permits" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="business_licenses" class="form-label">Business Licenses:</label>
+                        <input type="file" id="business_licenses" name="business_licenses" class="form-control">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" name="submit" id="submit" class="btn btn-info">Create Account</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <!-- Modal -->
 <div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">
@@ -391,11 +513,52 @@ $vendor = $result->fetch_assoc();
 </div>
 
 <script>
+
+document.addEventListener('DOMContentLoaded', function() {
+    const today = new Date();
+    let reminderDate;
+
+    if (paymentDue === 'MONTHLY') {
+        reminderDate = new Date(startedDate.setMonth(startedDate.getMonth() + 1));
+    } else if (paymentDue === 'QUARTERLY') {
+        reminderDate = new Date(startedDate.setMonth(startedDate.getMonth() + 3));
+    } else if (paymentDue === 'YEARLY') {
+        reminderDate = new Date(startedDate.setFullYear(startedDate.getFullYear() + 1));
+    }
+
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    const formattedDate = reminderDate.toLocaleDateString(undefined, options);
+
+    if (reminderDate <= today) {
+        // Trigger toast reminder for vendor
+        showToast('Your next payment is due on: ' + formattedDate);
+    }
+
+    // Function to show toast message
+    function showToast(message) {
+        const toastHTML = `
+            <div class="toast" style="position: absolute; top: 0; right: 0;" data-delay="5000">
+                <div class="toast-header">
+                    <strong class="mr-auto">Payment Reminder</strong>
+                    <small>Just now</small>
+                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
+                </div>
+                <div class="toast-body">
+                    ${message}
+                </div>
+            </div>
+        `;
+        document.body.insertAdjacentHTML('beforeend', toastHTML);
+        $('.toast').toast('show');
+    }
+});
+
+
     document.getElementById('frmPdfBtn').addEventListener('click', function() {
         // Redirect to the JotForm link
         window.open('https://form.jotform.com/242292954644060', '_blank');
     });
-</script>
+</>
 
 
   <!-- Bootstrap 5.3 scripts -->
@@ -413,12 +576,39 @@ $vendor = $result->fetch_assoc();
                     <img src="image/profile.jpg" class="img-fluid rounded-circle" alt="Admin Profile Picture">
                   </div>
                   <div class="col-md-8 my-3">
-                    <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); ?></h6>
-                    <p class="card-text">Username: <?php echo htmlspecialchars($vendor['username']); ?></p>
-                    <p class="card-text">Role: Vendor</p>
-                    <p class="card-text">Stall No.: <?php echo htmlspecialchars($vendor['stall_no']); ?></p>
-                 
-                  </div>
+    <h6 class="card-subtitle mb-2 text-muted">
+        Name: 
+        <?php 
+        if ($vendor === null) {
+            echo "EMPTY"; 
+        } else {
+            echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); 
+        }
+        ?>
+    </h6>
+    <p class="card-text">
+        Username: 
+        <?php 
+        if ($vendor === null) {
+            echo "EMPTY"; 
+        } else {
+            echo htmlspecialchars($vendor['username']); 
+        }
+        ?>
+    </p>
+    <p class="card-text">Role: Vendor</p>
+    <p class="card-text">
+        Stall No.: 
+        <?php 
+        if ($vendor === null) {
+            echo "EMPTY"; 
+        } else {
+            echo htmlspecialchars($vendor['stall_no']); 
+        }
+        ?>
+    </p>
+</div>
+
                 </div>
                 <hr class="horizontal dark my-3">
                 <div class="d-flex my-4 mx-5">
@@ -701,8 +891,5 @@ if (isset($_POST['submit'])) {
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
 </body>
 
-<link rel="stylesheet" href="loading.css">
-  <script src="loading.js" defer></script>
-  <div class="loader"></div>
 
 </html>

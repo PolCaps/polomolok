@@ -609,8 +609,12 @@ if (isset($_GET['building'])) {
                                     <input type="date" id="started_date" name="started_date" class="form-control">
                                   </div>
                                   <div class="form-group mb-3">
-                                    <label for="end_date">End Date:</label>
-                                    <input type="date" id="end_date" name="end_date" class="form-control">
+                                    <label for="payment_due">Payment Due:</label>
+                                    <select id="payment_due" name="payment_due" class="form-control">
+                                        <option value="MONTHLY">Monthly</option>
+                                        <option value="QUARTERLY">Quarterly</option>
+                                        <option value="YEARLY">Yearly</option>
+                                    </select>
                                   </div>
                                   <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
                                     <button type="submit" name="submitV" id="submit" class="btn btn-info lg">Create
@@ -745,19 +749,19 @@ document.getElementById('stall_no').addEventListener('change', function () {
 
 document.getElementById('building_floor').addEventListener('click', function () {
   if (!checkBuildingSelected()) {
-    this.blur(); // Remove focus if building is not selected
+    this.blur(); 
   }
 });
 
 document.getElementById('stall_no').addEventListener('click', function () {
   if (!checkBuildingSelected()) {
-    this.blur(); // Remove focus if building is not selected
+    this.blur();
   }
 });
 
 document.getElementById('monthly_rentals').addEventListener('click', function () {
   if (!checkBuildingSelected()) {
-    this.blur(); // Remove focus if building is not selected
+    this.blur();
   }
 });
 
