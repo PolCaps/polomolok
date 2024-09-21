@@ -311,7 +311,8 @@ if (isset($_GET['building'])) {
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
             <div class="input-group">
               <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-              <input type="text" class="form-control" placeholder="Search for...">
+              <input type="text" class="form-control px-1" placeholder="Search for...">
+
             </div>
           </div>
           <ul class="navbar-nav  justify-content-end">
@@ -345,7 +346,33 @@ if (isset($_GET['building'])) {
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Vendors:</p>
                     <h5 class="font-weight-bolder mb-0">
-                      8,231
+                    <?php
+                    // Database configuration
+                    // Include database configuration
+                    include('database_config.php');
+
+                    // Create a connection
+                    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+                    // Check the connection
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+
+                    // SQL query to count the number of vendors
+                    $sql = "SELECT COUNT(*) as vendor_count FROM vendors";
+                    $result = $conn->query($sql);
+
+                    if ($result) {
+                        $row = $result->fetch_assoc();
+                        echo $row['vendor_count'];
+                    } else {
+                        echo "Error: " . $conn->error;
+                    }
+
+                    // Close the connection
+                    $conn->close();
+                    ?>
                     </h5>
                   </div>
                 </div>
@@ -360,12 +387,7 @@ if (isset($_GET['building'])) {
         </div>
       </div>
       <div class="row mt-4">
-        <div class="d-grid gap-2 d-md-block py-3 px-3">
-          <p class="text-title">Actions</p>
-          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#showexampleModal">
-            Add New Vendor/User
-          </button>
-        </div>
+        
 
         <body>
           <style>
@@ -764,7 +786,19 @@ if (isset($_GET['building'])) {
                   <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                     <div class="input-group">
                       <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                      <input type="text" class="form-control px-1" placeholder="Search for...">
+                      <input type="text" class="form-control px-1" id="searchInput" placeholder="Search for...">
+
+                      <script>
+                        document.getElementById('searchInput').addEventListener('keyup', function() {
+                            var filter = this.value.toLowerCase();
+                            var rows = document.querySelectorAll('#dataTableBody tr');
+
+                            rows.forEach(function(row) {
+                                var text = row.textContent.toLowerCase();
+                                row.style.display = text.includes(filter) ? '' : 'none';
+                            });
+                        });
+                        </script>
                     </div>
                   </div>
                 </div>

@@ -345,7 +345,33 @@ if (isset($_GET['building'])) {
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Users:</p>
                     <h5 class="font-weight-bolder mb-0">
-                      8,231
+                    <?php
+                    // Database configuration
+                    // Include database configuration
+                    include('database_config.php');
+
+                    // Create a connection
+                    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+                    // Check the connection
+                    if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                    }
+
+                    // SQL query to count the number of vendors
+                    $sql = "SELECT COUNT(*) as users_count FROM users";
+                    $result = $conn->query($sql);
+
+                    if ($result) {
+                        $row = $result->fetch_assoc();
+                        echo $row['users_count'];
+                    } else {
+                        echo "Error: " . $conn->error;
+                    }
+
+                    // Close the connection
+                    $conn->close();
+                    ?>
                     </h5>
                   </div>
                 </div>
@@ -392,6 +418,16 @@ if (isset($_GET['building'])) {
               flex: 1;
             }
           </style>
+
+                
+              <script>
+                $(document).ready(function() {
+                    // Show the modal if there is a message
+                    <?php if (isset($_SESSION['message'])): ?>
+                        $('#successModal').modal('show');
+                    <?php endif; ?>
+                });
+            </script>
           <div class="modal fade" id="showexampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -426,8 +462,10 @@ if (isset($_GET['building'])) {
                                   <div class="form-group mb-3">
                                     <label for="account_type">Account Type:</label>
                                     <select id="account_type" class="form-control" name="account_type" required>
-                                      <option value="Admin">Admin</option>
-                                      <option value="Staff">Staff</option>
+                                      <option value="ADMIN">Admin</option>
+                                      <option value="CASHIER">Cashier</option>
+                                      <option value="DOCUMENT_HANDLER">Document_Handler</option>
+                                      <option value="CUSTOMER_SERVICE">Customer_Service</option>
                                     </select>
                                     <div class="invalid-feedback">Please select an account type.</div>
                                   </div>
@@ -484,8 +522,8 @@ if (isset($_GET['building'])) {
                                     <textarea id="email_add" name="email_add" class="form-control"></textarea>
                                   </div>
                                   <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
-                                    <button type="submit" name="submit" id="submit" class="btn btn-info lg">CREATE
-                                      USER</button>
+                                    <button type="submit" name="submit" id="submit" class="btn btn-info lg">Create
+                                      User</button>
                                     <button type="button" class="btn btn-secondary"
                                       data-bs-dismiss="modal">Close</button>
                                   </div>
@@ -592,158 +630,24 @@ if (isset($_GET['building'])) {
               </div>
             </div>
           </div>
-
+          
           <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
           <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
           <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-
+          
+          
           <script>
 
-            function checkBuildingSelected() {
-              var building = document.getElementById('building_type').value;
-              if (!building) {
-                alert('Please select a building first.');
-                document.getElementById('building_type').focus();
-                return false;
-              }
-              return true;
-            }
-
-
-            document.getElementById('account_type').addEventListener('change', function () {
-              var accountType = this.value;
-              var adminStaffAccordion = document.getElementById('collapseAdminStaff');
-              var vendorAccordion = document.getElementById('collapseVendor');
-
-              if (accountType === 'Admin' || accountType === 'Staff') {
-                adminStaffAccordion.classList.add('show');
-                vendorAccordion.classList.remove('show');
-              } else if (accountType === 'Vendor') {
-                adminStaffAccordion.classList.remove('show');
-                vendorAccordion.classList.add('show');
-              }
-            });
-
-
-            document.getElementById('building_type').addEventListener('change', function () {
-              var building = this.value;
-              var stallSelect = document.getElementById('stall_no');
-              var floorSelect = document.getElementById('building_floor');
-              var rent = document.getElementById('monthly_rentals');
-
-              stallSelect.innerHTML = '<option value="">Select Stall</option>';
-              floorSelect.innerHTML = '<option value="">Select Building Floor</option>';
-              rent.value = '';
-
-              if (building) {
-                $.ajax({
-                  url: window.location.href,
-                  type: 'GET',
-                  data: { building: building },
-                  success: function (data) {
-                    var stalls = JSON.parse(data);
-                    var floors = new Set();
-
-                    stalls.forEach(function (stall) {
-                      if (stall.stall_status === 'Vacant' && !stall.vendor_id) {
-                        var option = document.createElement('option');
-                        option.value = stall.stall_no;
-                        option.text = stall.stall_no;
-                        stallSelect.appendChild(option);
-
-                        floors.add(stall.building_floor);
-                      }
-                    });
-
-                    floors.forEach(function (floor) {
-                      var option = document.createElement('option');
-                      option.value = floor;
-                      option.text = floor;
-                      floorSelect.appendChild(option);
-                    });
-                  }
-                });
-              }
-            });
-
-            document.getElementById('stall_no').addEventListener('change', function () {
-              var stallNo = this.value;
-              var building = document.getElementById('building_type').value;
-              var rent = document.getElementById('monthly_rentals');
-
-              if (stallNo && building) {
-                $.ajax({
-                  url: window.location.href,
-                  type: 'GET',
-                  data: { building: building },
-                  success: function (data) {
-                    var stalls = JSON.parse(data);
-                    var selectedStall = stalls.find(stall => stall.stall_no === stallNo);
-
-                    if (selectedStall) {
-                      rent.value = selectedStall.monthly_rentals;
-                    } else {
-                      rent.value = '';
-                    }
-                  }
-                });
-              } else {
-                rent.value = '';
-              }
-            });
-
-            document.getElementById('building_floor').addEventListener('click', function () {
-              if (!checkBuildingSelected()) {
-                this.blur(); // Remove focus if building is not selected
-              }
-            });
-
-            document.getElementById('stall_no').addEventListener('click', function () {
-              if (!checkBuildingSelected()) {
-                this.blur(); // Remove focus if building is not selected
-              }
-            });
-
-            document.getElementById('monthly_rentals').addEventListener('click', function () {
-              if (!checkBuildingSelected()) {
-                this.blur(); // Remove focus if building is not selected
-              }
-            });
-
-            // $(document).ready(function () {
-            //   $('#submit').on('click', function (e) {
-            //     e.preventDefault(); // Prevent default form submission
-
-            //     var buildingType = $('#building_type').val();
-            //     var stallNo = $('#stall_no').val();
-            //     var monthlyRentals = $('#monthly_rentals').val();
-            //     var startedDate = $('#started_date').val();
-            //     var endDate = $('#end_date').val();
-
-            //     $.ajax({
-            //       url: 'process_formVendor.php', // The server-side script URL
-            //       type: 'POST',
-            //       data: {
-            //         building_type: buildingType,
-            //         stall_no: stallNo,
-            //         monthly_rentals: monthlyRentals,
-            //         started_date: startedDate,
-            //         end_date: endDate
-            //       },
-            //       success: function (response) {
-            //         var result = JSON.parse(response);
-            //         if (result.status === 'success') {
-            //           alert(result.message);
-            //         } else {
-            //           alert(result.message);
-            //         }
-            //       },
-            //       error: function () {
-            //         alert('An error occurred while processing the request.');
-            //       }
-            //     });
-            //   });
-            // });
+          fetch('process_formAdSta.php', {
+              method: 'POST',
+              body: new FormData(document.querySelector('form'))
+          })
+          .then(response => response.json())
+          .then(data => {
+              const alertContainer = document.getElementById('alert-container'); // Make sure this exists in your HTML
+              alertContainer.innerHTML = data.message; // Insert the alert HTML
+          })
+          .catch(error => console.error('Error:', error));
 
           </script>
       </div>
@@ -764,7 +668,20 @@ if (isset($_GET['building'])) {
                   <div class="ms-md-auto pe-md-3 d-flex align-items-center">
                     <div class="input-group">
                       <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                      <input type="text" class="form-control px-1" placeholder="Search for...">
+                      <input type="text" class="form-control px-1" id="searchInput" placeholder="Search for...">
+
+                      <script>
+                        document.getElementById('searchInput').addEventListener('keyup', function() {
+                            var filter = this.value.toLowerCase();
+                            var rows = document.querySelectorAll('#dataTableBody tr');
+
+                            rows.forEach(function(row) {
+                                var text = row.textContent.toLowerCase();
+                                row.style.display = text.includes(filter) ? '' : 'none';
+                            });
+                        });
+                        </script>
+
                     </div>
                   </div>
                 </div>
