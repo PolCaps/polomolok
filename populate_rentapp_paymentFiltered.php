@@ -11,7 +11,8 @@ if ($conn->connect_error) {
 // Update the SQL query to filter by payment_status = 'Paid'
 $sql = "SELECT applicant_id, OR_no, proof_of_payment, payment_status, verify_status, payment_date 
         FROM rentapp_payment 
-        WHERE verify_status = 'Verified'";
+        WHERE verify_status = 'Verified'
+        ORDER BY payment_date DESC";
 $result = $conn->query($sql);
 
 $data = [];

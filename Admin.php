@@ -67,6 +67,11 @@ $conn->close();
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
+  <!-- boosttrap ni bago  -->
+  <link href="assets\vendor\bootstrap-icons\bootstrap-icons.css" rel="stylesheet" />
+
+  
+
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -259,7 +264,9 @@ $conn->close();
           <h6 class="font-weight-bolder mb-0">Dashboard</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+          
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            
             <div class="input-group">
               <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
               <input type="text" class="form-control" placeholder="Search for...">
@@ -281,6 +288,8 @@ $conn->close();
                 </div>
               </a>
             </li>
+
+            
           </ul>
         </div>
       </div>
@@ -650,6 +659,123 @@ $conn->close();
           </button>
         </div>
       </div>
+      <br>
+
+      <!-- Notification Collapse Button -->
+<li class="nav-item">
+  <a class="nav-icon d-flex align-items-center" href="#" data-bs-toggle="collapse" data-bs-target="#notificationContainer">
+    <i class="bi bi-bell-fill me-2" style="font-size: 3rem;"></i>
+    <h6 class="mb-0">NOTIFICATION</h6>
+    <span class="badge bg-primary badge-number me-2">4</span>
+  </a>
+
+  <!-- Collapsible Notification Container -->
+  <div class="collapse mt-3" id="notificationContainer">
+    <div class="container border rounded shadow p-3">
+      <div class="d-flex justify-content-between align-items-center mb-3">
+        <h6 class="mb-0">You have 4 new notifications</h6>
+        <a href="#"><span class="badge rounded-pill bg-primary p-2">View all</span></a>
+      </div>
+      <hr>
+
+      <!-- First Notification -->
+      <div class="d-flex align-items-start mb-3">
+        <i class="bi bi-exclamation-circle text-warning me-3"></i>
+        <div>
+          <h6 class="mb-1">ADMINISTRATOR</h6>
+          <p class="mb-0">Quae dolorem earum veritatis oditseno</p>
+          <small>30 min. ago</small>
+        </div>
+      </div>
+      <hr>
+
+      <!-- Second Notification -->
+      <div class="d-flex align-items-start mb-3">
+        <i class="bi bi-x-circle text-danger me-3"></i>
+        <div>
+          <h6 class="mb-1">STAFF</h6>
+          <p class="mb-0">Quae dolorem earum veritatis oditseno</p>
+          <small>1 hr. ago</small>
+        </div>
+      </div>
+      <hr>
+
+      <!-- Third Notification -->
+      <div class="d-flex align-items-start mb-3">
+        <i class="bi bi-check-circle text-success me-3"></i>
+        <div>
+          <h6 class="mb-1">CASHIER</h6>
+          <p class="mb-0">Quae dolorem earum veritatis oditseno</p>
+          <small>2 hrs. ago</small>
+        </div>
+      </div>
+      <hr>
+
+      <!-- Fourth Notification -->
+      <div class="d-flex align-items-start">
+        <i class="bi bi-info-circle text-primary me-3"></i>
+        <div>
+          <h6 class="mb-1">STAFF MEEDO</h6>
+          <p class="mb-0">Quae dolorem earum veritatis oditseno</p>
+          <small>4 hrs. ago</small>
+        </div>
+      </div>
+    </div>
+  </div>
+</li>
+
+
+<li class="nav-item dropdown">
+
+<!-- Button to toggle messages -->
+<a class="nav-icon d-flex align-items-center" href="#" data-bs-toggle="collapse" data-bs-target="#messageContainer">
+  <i class="bi bi-chat-left-text me-2" style="font-size: 3rem;"></i>
+  <h6 class="mb-0">MESSAGE</h6>
+  <span class="badge bg-success badge-number me-2">3</span>
+</a>
+
+<!-- Collapsible message container -->
+<div class="collapse mt-3" id="messageContainer">
+  <div class="container border rounded shadow p-3">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h6 class="mb-0">You have 3 new messages</h6>
+      <a href="#"><span class="badge rounded-pill bg-primary p-2">View all</span></a>
+    </div>
+    <hr>
+    <!-- First message -->
+    <div class="d-flex align-items-start mb-3">
+      <i class="bi bi-chat-left-text me-3"></i> <!-- Icon -->
+      <div>
+        <h6 class="mb-1">Maria Hudson</h6>
+        <p class="mb-0 text-muted">Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+        <small>4 hrs. ago</small>
+      </div>
+    </div>
+    <hr>
+    <!-- Second message -->
+    <div class="d-flex align-items-start mb-3">
+      <i class="bi bi-chat-left-text me-3"></i> <!-- Icon -->
+      <div>
+        <h6 class="mb-1">Anna Nelson</h6>
+        <p class="mb-0 text-muted">Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+        <small>6 hrs. ago</small>
+      </div>
+    </div>
+    <hr>
+    <!-- Third message -->
+    <div class="d-flex align-items-start">
+      <i class="bi bi-chat-left-text me-3"></i> <!-- Icon -->
+      <div>
+        <h6 class="mb-1">David Muldon</h6>
+        <p class="mb-0 text-muted">Velit asperiores et ducimus soluta repudiandae labore officia est ut...</p>
+        <small>8 hrs. ago</small>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
       <hr class="horizontal dark my-1">
       <div class="card-body pt-sm-3 pt-0">
         <a class="btn bg-gradient-info w-85 text-white mx-4" href="Admin.php">Edit Profile</a>
@@ -686,8 +812,8 @@ $conn->close();
 
 </body>
 
-<link rel="stylesheet" href="loading.css">
+<!-- <link rel="stylesheet" href="loading.css">
 <script src="loading.js" defer></script>
-<div class="loader"></div>
+<div class="loader"></div> -->
 
 </html>

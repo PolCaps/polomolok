@@ -942,10 +942,10 @@ if (isset($_GET['building'])) {
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
 
-    
+<!--     
   <link rel="stylesheet" href="loading.css">
   <script src="loading.js" defer></script>
-  <div class="loader"></div>
+  <div class="loader"></div> -->
 
 </body>
 

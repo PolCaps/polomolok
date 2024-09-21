@@ -10,11 +10,12 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Define the SQL query, selecting only accepted vendors
 $sql = "SELECT r.relocation_id, v.first_name AS fn, v.last_name AS ln, r.message, r.date_sent, r.relocation_status, v.vendor_id
         FROM relocation_req r
         LEFT JOIN vendors v ON r.vendor_id = v.vendor_id
-        WHERE r.relocation_status = 'Accepted'"; // Filter for accepted vendors
+        WHERE r.relocation_status = 'Accepted'
+        ORDER BY r.date_sent DESC";
+
 
 // Execute the query
 $result = $conn->query($sql);

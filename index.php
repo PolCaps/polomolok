@@ -222,7 +222,7 @@ session_start()
       <div class="container">
         <div class="row justify-content-center" data-aos="zoom-out">
           <div class="col-xl-7 col-lg-9 text-center">
-            <h1>Bagong Polomolok, Padayon Polomolok!</h1>
+            <h1>Bagong Polomolok!</h1>
             <p>Municipal Economic Enterprise and Development Office</p>
           </div>
         </div>
@@ -298,11 +298,11 @@ session_start()
               Polomolok Public Market's Accessbilities:
             </h5>
             <ul>
-              <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible entrance</span></li>
-              <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible parking lot</span></li>
-              <li><i class="bi bi-check2-circle"></i> <span>Vendor sells goods sheets</span></li>
-              <li><i class="bi bi-check2-circle"></i> <span>Good Things</span></li>
-              <li><i class="bi bi-check2-circle"></i> <span>Yummy Foodies</span></li>
+              <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible entrance.</span></li>
+              <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible parking lot.</span></li>
+              <li><i class="bi bi-check2-circle"></i> <span>Cleanest market in South Cotabato.</span></li>
+              <li><i class="bi bi-check2-circle"></i> <span>Smoke free zone.</span></li>
+              <li><i class="bi bi-check2-circle"></i> <span>Affordable farm to market goods.</span></li>
             </ul>
           </div>
 
@@ -836,8 +836,8 @@ session_start()
           <div class="col-xl-10">
             <div class="text-center">
               <h3>Interested In Owning a stall?</h3>
-              <p>Unleash your business potential with us and Enjoy prime location and exposure!</p>
-              <a class="cta-btn" data-bs-toggle="modal" data-bs-target="#vendorApplicationModal">Click Here</a>
+              <p>Open the "Apply Application" to fill up application form!</p>
+              <a class="cta-btn" data-bs-toggle="modal" data-bs-target="#vendorApplicationModal">Apply Application</a>
             </div>
           </div>
         </div>
@@ -977,6 +977,8 @@ session_start()
               <h5 class="modal-title" id="vendorApplicationModalLabel">Rent Application Form</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+
+            <p>Note: Fill the application, download and print the form then go to Polomolok public Market Office to validate your application!</p>
             <div class="modal-body">
               <div id="formDetails" class="collapse">
                 <form id="vendorApplicationForm" action="submit_application.php" method="POST"
