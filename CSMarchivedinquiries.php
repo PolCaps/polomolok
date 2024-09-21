@@ -89,7 +89,7 @@ $conn->close();
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="CSMinquiries.php">
+          <a class="nav-link" href="CSMinquiries.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
               <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
@@ -101,7 +101,7 @@ $conn->close();
         <br>
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Archives</h6>
         <li class="nav-item">
-          <a class="nav-link" href="CSMarchivedinquiries.php">
+          <a class="nav-link active" href="CSMarchivedinquiries.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
               <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
@@ -165,8 +165,6 @@ $conn->close();
     <!-- End Navbar -->
     <div class="container-fluid py-4">
 
-    <button class="btn btn-primary" id="archiveBtn">Archive Selected</button>
-
     <button class="btn btn-danger" id="deleteBtn">Delete Selected</button>
 
     <?php
@@ -183,7 +181,7 @@ if ($conn->connect_error) {
 $start_date = isset($_POST['start_date']) ? $_POST['start_date'] : '';
 $end_date = isset($_POST['end_date']) ? $_POST['end_date'] : '';
 
-$sql = "SELECT name, email_add, subject, message, sent_date FROM inquiry";
+$sql = "SELECT name, email_add, subject, message, sent_date FROM archived_inquiries";
 
 if ($start_date && $end_date) {
     $sql .= " WHERE sent_date BETWEEN '$start_date' AND '$end_date'";
@@ -282,7 +280,8 @@ $result = $conn->query($sql);
                 white-space: nowrap; /* Prevent text from wrapping to the next line */
             }
             </style>
-            <div class="card-body px-0 pb-2">
+
+<div class="card-body px-0 pb-2">
     <div class="table-responsive">
         <table class="table align-items-center mb-0">
             <thead>
@@ -304,125 +303,129 @@ $result = $conn->query($sql);
 
     <script>
         // Fetch and populate the inquiries table
-        document.addEventListener('DOMContentLoaded', function () {
-            fetch('get_inquiries.php')
-                .then(response => response.json())
-                .then(data => {
-                    const tableBody = document.getElementById("data-table");
-                    tableBody.innerHTML = ''; // Clear existing content
+      document.addEventListener('DOMContentLoaded', function () {
+          fetch('get_archivedinquiries.php')
+              .then(response => {
+                  if (!response.ok) {
+                      throw new Error('Network response was not ok');
+                  }
+                  return response.json();
+              })
+              .then(data => {
+                  const tableBody = document.getElementById("data-table");
+                  tableBody.innerHTML = ''; // Clear existing content
 
-                    if (Array.isArray(data) && data.length > 0) {
-                        data.forEach(inquiry => {
-                            const row = document.createElement("tr");
+                  if (data.error) {
+                      const row = document.createElement("tr");
+                      const cell = document.createElement("td");
+                      cell.colSpan = 7; // Adjust based on the number of columns
+                      cell.className = 'text-center text-xs font-weight-bold mb-0';
+                      cell.innerHTML = data.error; // Display error if present
+                      row.appendChild(cell);
+                      tableBody.appendChild(row);
+                      return; // Stop further execution
+                  }
 
-                            // Checkbox for each row
-                            const checkboxCell = document.createElement("td");
-                            checkboxCell.className = "text-center";
-                            checkboxCell.innerHTML = `<input type="checkbox" class="inquiry-checkbox" value="${inquiry.inq_id}">`;
-                            row.appendChild(checkboxCell);
+                  if (Array.isArray(data) && data.length > 0) {
+                      data.forEach(inquiry => {
+                          const row = document.createElement("tr");
 
-                            const idCell = document.createElement("td");
-                            idCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.inq_id}</div>`;
-                            row.appendChild(idCell);
+                          // Checkbox for each row
+                          const checkboxCell = document.createElement("td");
+                          checkboxCell.className = "text-center";
+                          checkboxCell.innerHTML = `<input type="checkbox" class="inquiry-checkbox" value="${inquiry.inquiry_id}">`;
+                          row.appendChild(checkboxCell);
 
-                            const nameCell = document.createElement("td");
-                            nameCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.name}</div>`;
-                            row.appendChild(nameCell);
+                          const idCell = document.createElement("td");
+                          idCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.inquiry_id}</div>`;
+                          row.appendChild(idCell);
 
-                            const emailCell = document.createElement("td");
-                            emailCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.email_add}</div>`;
-                            row.appendChild(emailCell);
+                          const nameCell = document.createElement("td");
+                          nameCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.name}</div>`;
+                          row.appendChild(nameCell);
 
-                            const subjectCell = document.createElement("td");
-                            subjectCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.subject}</div>`;
-                            row.appendChild(subjectCell);
+                          const emailCell = document.createElement("td");
+                          emailCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.email_add}</div>`;
+                          row.appendChild(emailCell);
 
-                            const messageCell = document.createElement("td");
-                            messageCell.className = 'text-center text-xs font-weight-bold mb-0 message';
-                            messageCell.innerHTML = `${inquiry.message.substring(0, 50)}...`;
-                            row.appendChild(messageCell);
+                          const subjectCell = document.createElement("td");
+                          subjectCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.subject}</div>`;
+                          row.appendChild(subjectCell);
 
-                            const dateCell = document.createElement("td");
-                            dateCell.className = 'text-center text-xs font-weight-bold mb-0';
-                            dateCell.innerHTML = inquiry.sent_date;
-                            row.appendChild(dateCell);
+                          const messageCell = document.createElement("td");
+                          messageCell.className = 'text-center text-xs font-weight-bold mb-0';
+                          messageCell.innerHTML = `${inquiry.message.substring(0, 50)}...`;
+                          row.appendChild(messageCell);
 
-                            tableBody.appendChild(row);
-                        });
-                    } else {
-                        const row = document.createElement("tr");
-                        const cell = document.createElement("td");
-                        cell.colSpan = 7;
-                        cell.className = 'text-center text-xs font-weight-bold mb-0';
-                        cell.innerHTML = 'No inquiries found';
-                        row.appendChild(cell);
-                        tableBody.appendChild(row);
-                    }
-                })
-                .catch(error => console.error('Error fetching data:', error));
-        });
+                          const dateCell = document.createElement("td");
+                          dateCell.className = 'text-center text-xs font-weight-bold mb-0';
+                          dateCell.innerHTML = inquiry.sent_date;
+                          row.appendChild(dateCell);
 
-        function toggleSelectAll(source) {
-            const checkboxes = document.querySelectorAll('.inquiry-checkbox');
-            checkboxes.forEach(checkbox => {
-                checkbox.checked = source.checked;
-            });
-        }
+                          tableBody.appendChild(row);
+                      });
+                  } else {
+                      const row = document.createElement("tr");
+                      const cell = document.createElement("td");
+                      cell.colSpan = 7; // Adjust based on the number of columns
+                      cell.className = 'text-center text-xs font-weight-bold mb-0';
+                      cell.innerHTML = 'No inquiries found';
+                      row.appendChild(cell);
+                      tableBody.appendChild(row);
+                  }
+              })
+              .catch(error => {
+                  console.error('Error fetching data:', error);
+              });
+      });
 
-        document.getElementById("archiveBtn").addEventListener("click", function () {
-            const selectedIds = [];
-            document.querySelectorAll('input.inquiry-checkbox:checked').forEach(checkbox => {
-                selectedIds.push(checkbox.value);
-            });
+      function toggleSelectAll(source) {
+          const checkboxes = document.querySelectorAll('.inquiry-checkbox');
+          checkboxes.forEach(checkbox => {
+              checkbox.checked = source.checked;
+          });
+      }
 
-            if (selectedIds.length > 0) {
-                // Redirect to archive inquiries page with IDs as query string
-                window.location.href = `CSMarchivedinquiries.php.php?ids=${JSON.stringify(selectedIds)}`;
-            } else {
-                alert("Please select at least one inquiry to archive.");
-            }
-            });
-
-            document.getElementById("deleteBtn").addEventListener("click", function () {
+      document.getElementById("deleteBtn").addEventListener("click", function () {
           const selectedIds = [];
           document.querySelectorAll('input.inquiry-checkbox:checked').forEach(checkbox => {
               selectedIds.push(checkbox.value);
           });
 
-            if (selectedIds.length > 0) {
-                if (confirm("Are you sure you want to delete the selected inquiries? This action cannot be undone.")) {
-                    // Send delete request using fetch
-                    fetch('delete_inquiries.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ ids: selectedIds })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            alert("Inquiries deleted successfully!");
-                            // Optionally reload the table to reflect changes
-                            location.reload();
-                        } else {
-                            alert("Error deleting inquiries. Please try again.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert("An error occurred while deleting inquiries.");
-                    });
-                }
-            } else {
-                alert("Please select at least one inquiry to delete.");
-            }
-        });
+          if (selectedIds.length > 0) {
+              if (confirm("Are you sure you want to delete the selected inquiries? This action cannot be undone.")) {
+                  // Send delete request using fetch
+                  fetch('delete_inquiriesarchive.php', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ ids: selectedIds })
+                  })
+                  .then(response => {
+                      if (!response.ok) {
+                          throw new Error('Network response was not ok');
+                      }
+                      return response.json();
+                  })
+                  .then(data => {
+                      if (data.success) {
+                          alert("Inquiries deleted successfully!");
+                          // Reload the table to reflect changes
+                          location.reload();
+                      } else {
+                          alert("Error deleting inquiries: " + data.message);
+                      }
+                  })
+                  .catch(error => {
+                      console.error('Error:', error);
+                      alert("An error occurred while deleting inquiries.");
+                  });
+              }
+          } else {
+              alert("Please select at least one inquiry to delete.");
+          }
+      });
     </script>
 </div>
         </div>
