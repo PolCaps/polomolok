@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 21, 2024 at 07:21 AM
+-- Generation Time: Sep 21, 2024 at 10:58 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -46,6 +46,29 @@ INSERT INTO `announcements` (`id`, `title`, `description`, `image_path`, `buildi
 (8, 'Notice of Vacancy', 'Vacant', 'announcements/notice.jpg', 'Building J', 'J-76', '2024-09-01 10:40:19'),
 (9, 'Notice Of Vacancy', 'vacant corner', 'announcements/notice.jpg', 'Building c', 'C-45', '2024-09-01 11:05:38'),
 (11, 'Notice Of Missing Person', 'Tall Dark Short Hair', 'announcements/IMG_20220226_195004.jpg', 'Name:', 'REYAN JAN SAMONTANES', '2024-09-01 11:25:14');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `archived_inquiries`
+--
+
+CREATE TABLE `archived_inquiries` (
+  `inquiry_id` int(11) NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email_add` varchar(255) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `message` text NOT NULL,
+  `sent_date` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `archived_inquiries`
+--
+
+INSERT INTO `archived_inquiries` (`inquiry_id`, `name`, `email_add`, `subject`, `message`, `sent_date`) VALUES
+(24, 'kimberly Ayugyugon', 'kim@gmail.com', 'Vendors Approval', 'Sending Approvals', '2024-07-29 11:48:29'),
+(30, 'Prince', 'princejasy@gmai.com', 'Inquiry', 'May Rentable stall po ba kayo?', '2024-09-02 21:45:18');
 
 -- --------------------------------------------------------
 
@@ -1334,14 +1357,7 @@ CREATE TABLE `inquiry` (
 --
 
 INSERT INTO `inquiry` (`inq_id`, `name`, `email_add`, `subject`, `message`, `sent_date`) VALUES
-(22, 'Jaime Kabulan', 'jaime@gmail.com', 'cooperator', 'rental Occupations', '2024-07-29 03:46:42'),
-(23, 'John Kranzinsky', 'john@gmail.com', 'Owning Stalls', 'I want to own stalls can you contact me?', '2024-07-29 03:47:36'),
-(24, 'kimberly Ayugyugon', 'kim@gmail.com', 'Vendors Approval', 'Sending Approvals', '2024-07-29 03:48:29'),
-(25, 'Teresa Saragosa', 'teresa@gmail.com', 'Transfer', 'Pwede mag transfer stalls?', '2024-07-29 03:49:29'),
-(26, 'Saybil Pudadera', 'saybil@gmail.com', 'List of Permits', 'Unsay mga permits kaylangan ani?', '2024-07-29 03:50:39'),
-(27, 'Jhay Mark Tubig', 'Jhay@gmail.com', 'Cost of relocation', 'Naka bayad nako sa relocation.', '2024-07-29 03:52:07'),
-(29, 'Cryzzy Uy', 'Uy@gmail.com', 'Karnehan', 'Available pa pwesto sa karnehan?', '2024-07-29 03:54:23'),
-(30, 'Prince', 'princejasy@gmai.com', 'Inquiry', 'May Rentable stall po ba kayo?', '2024-09-02 13:45:18');
+(33, 'MannyPakiyaw', 'Manny@outlook.com', 'Sparring Partner', 'I want to punch someone', '2024-09-21 07:04:28');
 
 -- --------------------------------------------------------
 
@@ -1589,6 +1605,12 @@ ALTER TABLE `announcements`
   ADD PRIMARY KEY (`id`);
 
 --
+-- Indexes for table `archived_inquiries`
+--
+ALTER TABLE `archived_inquiries`
+  ADD PRIMARY KEY (`inquiry_id`);
+
+--
 -- Indexes for table `building_a`
 --
 ALTER TABLE `building_a`
@@ -1742,6 +1764,12 @@ ALTER TABLE `announcements`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
+-- AUTO_INCREMENT for table `archived_inquiries`
+--
+ALTER TABLE `archived_inquiries`
+  MODIFY `inquiry_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+
+--
 -- AUTO_INCREMENT for table `building_a`
 --
 ALTER TABLE `building_a`
@@ -1811,7 +1839,7 @@ ALTER TABLE `documents`
 -- AUTO_INCREMENT for table `inquiry`
 --
 ALTER TABLE `inquiry`
-  MODIFY `inq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=31;
+  MODIFY `inq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
 
 --
 -- AUTO_INCREMENT for table `message`
