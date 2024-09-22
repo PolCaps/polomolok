@@ -6,7 +6,8 @@ $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 // Check connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    echo "<script>alert('Connection failed: " . $conn->connect_error . "'); window.location.href = 'index.php';</script>";
+    exit();
 }
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -43,8 +44,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $_SESSION['username'] = $user['username'];
                 $_SESSION['user_type'] = $role;
 
-                // Redirect based on user role
-                if ($role === 'ADMIN') {
+                 // Redirect based on user role
+                 if ($role === 'ADMIN') {
                     header('Location: Admin.php');
                     exit();
                 } elseif ($role === 'CASHIER') {
@@ -56,15 +57,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 } elseif ($role === 'CUSTOMER_SERVICE') {
                     header('Location: CustomerService.php');
                     exit();
-                } // Added closing parenthesis here
+                }
+                exit();
             } else {
-                $_SESSION['status'] = "Invalid Username or Password";
-                header("Location: index.php");
+                echo "<script>alert('Invalid Username or Password'); window.location.href = 'index.php';</script>";
                 exit();
             }
+        } else {
+            echo "<script>alert('Invalid Username or Password'); window.location.href = 'index.php';</script>";
+            exit();
         }
     } else {
-        echo "Failed to prepare statement for users.";
+        echo "<script>alert('Failed to prepare statement for users.'); window.location.href = 'index.php';</script>";
+        exit();
     }
 
     // Check in the `vendors` table if not found in users
@@ -92,17 +97,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 header('Location: Vendor.php');
                 exit();
             } else {
-                $_SESSION['status'] = "Invalid Username or Password";
-                header("Location: index.php");
+                echo "<script>alert('Invalid Username or Password'); window.location.href = 'index.php';</script>";
                 exit();
             }
         } else {
-            $_SESSION['status'] = "Invalid Username or Password";
-            header("Location: index.php");
+            echo "<script>alert('Invalid Username or Password'); window.location.href = 'index.php';</script>";
             exit();
         }
     } else {
-        echo "Failed to prepare statement for vendors.";
+        echo "<script>alert('Failed to prepare statement for vendors.'); window.location.href = 'index.php';</script>";
+        exit();
     }
 }
 ?>

@@ -22,37 +22,94 @@ if ($conn->connect_error) {
 }
 
 // Fetch vendor information
-$sql = "SELECT v.*,a.* 
-        FROM vendors v 
-        JOIN building_a a ON v.vendor_id = a.vendor_id 
-        WHERE a.vendor_id = ?";
+$sql = "
+    SELECT v.*, b.* 
+    FROM vendors v 
+    JOIN (
+        SELECT * FROM building_a WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_b WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_c WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_d WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_e WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_f WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_g WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_h WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_i WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_j WHERE vendor_id = ?
+    ) b ON v.vendor_id = b.vendor_id
+";
+$values = array_fill(0, 10, $vendor_id);
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
     die("Prepare failed: " . $conn->error);
 }
-$stmt->bind_param("i", $vendor_id);
+$types = str_repeat('i', count($values));
+$stmt->bind_param($types, ...$values);
 $stmt->execute();
 $result = $stmt->get_result();
 $vendor = $result->fetch_assoc();
 
 
-if ($vendor === null) {
+if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
+
   echo "<script>
-          alert('No data found. You need to fill up your account first!');
-          document.addEventListener('DOMContentLoaded', function() {
-              // Open the accordion by setting the correct class and showing the section
-              var accordion = document.getElementById('accountAccordion');
-              accordion.classList.add('show');
-              var formSection = document.getElementById('createVendorAccordion');
-              formSection.classList.add('show'); // Open accordion
-              formSection.scrollIntoView({behavior: 'smooth'});
-          });
-        </script>";
+   alert('No information in your account. You need to fill-up your account first!');
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+      var accountModal = new bootstrap.Modal(document.getElementById('accountModal'));
+      accountModal.show();
+
+      var form = document.getElementById('createVendorForm');
+      var modalElement = document.getElementById('accountModal'); // Reference the entire modal element
+
+      // Handle clicks outside the modal window (including the backdrop)
+      document.addEventListener('click', function(event) {
+          if (!modalElement.contains(event.target) && !form.checkValidity()) {
+              event.preventDefault(); // Prevent closing the modal
+              alert('Please fill out all required fields before closing.');
+          }
+      });
+
+      // Handle close button click
+      var closeButton = document.getElementById('closeButton');
+      closeButton.addEventListener('click', function() {
+          if (form.checkValidity()) {
+              accountModal.hide(); // Close the modal if the form is valid
+          } else {
+              alert('Please fill out all required fields before closing.');
+          }
+      });
+
+      // Disable accordion interaction (optional, adjust selector if needed)
+      var accordions = document.querySelectorAll('.accordion-header, .accordion-toggle');
+      accordions.forEach(function(accordion) {
+          accordion.style.pointerEvents = 'none';
+          accordion.style.opacity = '0.5';
+      });
+
+      // Prevent back navigation
+      window.history.pushState(null, null, window.location.href);
+      window.onpopstate = function() {
+          window.history.pushState(null, null, window.location.href);
+      };
+  });
+  </script>";
 } else {
   echo "<script>
           console.log('Vendor data available'); // Or handle vendor data as needed
         </script>";
 }
+
 
 
 $query = "SELECT started_date, payment_due FROM vendors WHERE vendor_id = ?";
@@ -227,7 +284,7 @@ $stmt1->close();
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
           <h5 class="text-center">
     <?php 
-    if ($vendor === null || !isset($vendor['first_name'], $vendor['middle_name'], $vendor['last_name'])) {
+    if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
         echo "EMPTY"; 
     } else {
         echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); 
@@ -372,43 +429,104 @@ $stmt1->close();
       </div>
      
 
-      <div class="accordion" id="accountAccordion">
-    <div class="accordion-item">
-        <h2 class="accordion-header" id="headingOne">
-            <!-- <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#createVendorAccordion" aria-expanded="false" aria-controls="createVendorAccordion">
-                Fill in Your Account Information
-            </button> -->
-        </h2>
-        <div id="createVendorAccordion" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accountAccordion">
-            <div class="accordion-body">
-                <form id="createVendorForm" action="process_formVendor.php" method="POST" enctype="multipart/form-data">
+  <!-- Modal Structure -->
+<div class="modal fade" id="accountModal" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="accountModalLabel">Fill in Your Account Information</h5>
+      </div>
+      <div class="modal-body">
+        <form id="createVendorForm" action="vendorAccountCreate.php" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="first_name" class="form-label">First Name:</label>
+            <input type="text" id="first_name" class="form-control" name="first_name" required>
+          </div>
+          <div class="mb-3">
+            <label for="middle_name" class="form-label">Middle Name:</label>
+            <input type="text" id="middle_name" class="form-control" name="middle_name">
+          </div>
+          <div class="mb-3">
+            <label for="last_name" class="form-label">Last Name:</label>
+            <input type="text" id="last_name" class="form-control" name="last_name" required>
+          </div>
+          <div class="mb-3">
+            <label for="age" class="form-label">Age:</label>
+            <input type="number" id="age" class="form-control" name="age">
+          </div>
+          <div class="mb-3">
+            <label for="contact_no" class="form-label">Contact Number:</label>
+            <input type="tel" id="contact_no" name="contact_number" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="address" class="form-label">Address:</label>
+            <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="email_add" class="form-label">Email Address:</label>
+            <textarea id="email_add" name="email_add" class="form-control"></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="lease_agreements" class="form-label">Lease Agreements:</label>
+            <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="business_permits" class="form-label">Business Permits:</label>
+            <input type="file" id="business_permits" name="business_permits" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="business_licenses" class="form-label">Business Licenses:</label>
+            <input type="file" id="business_licenses" name="business_licenses" class="form-control">
+          </div>
+          <div class="modal-footer">
+            <button type="submit" name="submit" id="submit" class="btn btn-info">Create Account</button>
+            <button type="button" class="btn btn-secondary" id="closeButton">Close</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="createVendorForm" action="vendorAccountCreate.php" method="POST" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="first_name" class="form-label">First Name:</label>
-                        <input type="text" id="first_name" class="form-control" name="first_name" required>
+                        <input type="text" id="first_name" class="form-control" name="first_name" value="<?php echo htmlspecialchars($vendor_data['first_name'] ?? ''); ?>">
                     </div>
                     <div class="mb-3">
                         <label for="middle_name" class="form-label">Middle Name:</label>
-                        <input type="text" id="middle_name" class="form-control" name="middle_name">
+                        <input type="text" id="middle_name" class="form-control" name="middle_name" value="<?php echo htmlspecialchars($vendor_data['middle_name'] ?? ''); ?>">
                     </div>
                     <div class="mb-3">
                         <label for="last_name" class="form-label">Last Name:</label>
-                        <input type="text" id="last_name" class="form-control" name="last_name" required>
+                        <input type="text" id="last_name" class="form-control" name="last_name" value="<?php echo htmlspecialchars($vendor_data['last_name'] ?? ''); ?>">
                     </div>
                     <div class="mb-3">
                         <label for="age" class="form-label">Age:</label>
-                        <input type="number" id="age" class="form-control" name="age">
+                        <input type="number" id="age" class="form-control" name="age" value="<?php echo htmlspecialchars($vendor_data['age'] ?? ''); ?>">
                     </div>
                     <div class="mb-3">
                         <label for="contact_no" class="form-label">Contact Number:</label>
-                        <input type="tel" id="contact_no" name="contact_number" class="form-control">
+                        <input type="tel" id="contact_no" name="contact_number" class="form-control" value="<?php echo htmlspecialchars($vendor_data['contact_no'] ?? ''); ?>">
                     </div>
                     <div class="mb-3">
                         <label for="address" class="form-label">Address:</label>
-                        <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
+                        <textarea id="address" name="address" class="form-control" style="height: 128px;"><?php echo htmlspecialchars($vendor_data['address'] ?? ''); ?></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="email_add" class="form-label">Email Address:</label>
-                        <textarea id="email_add" name="email_add" class="form-control"></textarea>
+                        <textarea id="email_add" name="email_add" class="form-control"><?php echo htmlspecialchars($vendor_data['email_add'] ?? ''); ?></textarea>
                     </div>
                     <div class="mb-3">
                         <label for="lease_agreements" class="form-label">Lease Agreements:</label>
@@ -423,7 +541,7 @@ $stmt1->close();
                         <input type="file" id="business_licenses" name="business_licenses" class="form-control">
                     </div>
                     <div class="modal-footer">
-                        <button type="submit" name="submit" id="submit" class="btn btn-info">Create Account</button>
+                        <button type="submit" name="submit" id="submit" class="btn btn-info">Edit</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                     </div>
                 </form>
@@ -433,86 +551,46 @@ $stmt1->close();
 </div>
 
 
-<!-- Modal -->
-<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <form id="createVendorForm" action="process_formVendor.php" method="POST" enctype="multipart/form-data">
-            <div class="mb-3">
-              <label for="first_name" class="form-label">First Name:</label>
-              <input type="text" id="first_name" class="form-control" name="first_name" required>
-            </div>
-            <div class="mb-3">
-              <label for="middle_name" class="form-label">Middle Name:</label>
-              <input type="text" id="middle_name" class="form-control" name="middle_name">
-            </div>
-            <div class="mb-3">
-              <label for="last_name" class="form-label">Last Name:</label>
-              <input type="text" id="last_name" class="form-control" name="last_name" required>
-            </div>
-            <div class="mb-3">
-              <label for="age" class="form-label">Age:</label>
-              <input type="number" id="age" class="form-control" name="age">
-            </div>
-            <div class="mb-3">
-              <label for="contact_no" class="form-label">Contact Number:</label>
-              <input type="tel" id="contact_no" name="contact_number" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label for="address" class="form-label">Address:</label>
-              <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="email_add" class="form-label">Email Address:</label>
-              <textarea id="email_add" name="email_add" class="form-control"></textarea>
-            </div>
-            <div class="mb-3">
-              <label for="lease_agreements" class="form-label">Lease Agreements:</label>
-              <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label for="business_permits" class="form-label">Business Permits:</label>
-              <input type="file" id="business_permits" name="business_permits" class="form-control">
-            </div>
-            <div class="mb-3">
-              <label for="business_licenses" class="form-label">Business Licenses:</label>
-              <input type="file" id="business_licenses" name="business_licenses" class="form-control">
-            </div>
-            <div class="modal-footer">
-              <button type="submit" name="submit" id="submit" class="btn btn-info">Create Vendor</button>
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="modal fade" id="fillApplicantModal" tabindex="-1" aria-labelledby="fillApplicantModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="fillApplicantModalLabel">Fill Lease Agreement </h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <div class="mb-3">
-                    <button id="frmPdfBtn" class="btn btn-info">Lease Agreements Form</button>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <script>
+document.addEventListener('DOMContentLoaded', function () {
+    $('#editProfileModal').on('show.bs.modal', function () {
+        // Fetch the data from editVendor.php
+        fetch('editVendor.php')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                // Check if data is returned and populate the form
+                if (data && Object.keys(data).length > 0) {
+                    populateForm(data);
+                } else {
+                    console.warn('No data found for the vendor.');
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching vendor data:', error);
+            });
+    });
+
+    function populateForm(data) {
+        // Populate the input fields
+        document.getElementById('first_name').value = data.first_name || '';
+        document.getElementById('middle_name').value = data.middle_name || '';
+        document.getElementById('last_name').value = data.last_name || '';
+        document.getElementById('age').value = data.age || '';
+        document.getElementById('contact_no').value = data.contact_no || '';
+        
+        // Populate the text areas
+        document.getElementById('address').value = data.address || '';
+        document.getElementById('email_add').value = data.email_add || '';
+    }
+});
+
+
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const today = new Date();
@@ -558,7 +636,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Redirect to the JotForm link
         window.open('https://form.jotform.com/242292954644060', '_blank');
     });
-</>
+</script>
 
 
   <!-- Bootstrap 5.3 scripts -->
@@ -579,7 +657,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <h6 class="card-subtitle mb-2 text-muted">
         Name: 
         <?php 
-        if ($vendor === null) {
+        if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
             echo "EMPTY"; 
         } else {
             echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); 
@@ -589,7 +667,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <p class="card-text">
         Username: 
         <?php 
-        if ($vendor === null) {
+        if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
             echo "EMPTY"; 
         } else {
             echo htmlspecialchars($vendor['username']); 
@@ -600,7 +678,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <p class="card-text">
         Stall No.: 
         <?php 
-        if ($vendor === null) {
+        if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
             echo "EMPTY"; 
         } else {
             echo htmlspecialchars($vendor['stall_no']); 
@@ -683,11 +761,11 @@ if (isset($_POST['submit'])) {
 
         try {
             // Retrieve the current password from the database
-            $stmt = $conn->prepare("SELECT password FROM vendors WHERE vendor_id = ?");
-            $stmt->bind_param("i", $vendor_id);
-            $stmt->execute();
-            $result = $stmt->get_result();
-            $user = $result->fetch_assoc();
+            $stmtV = $conn->prepare("SELECT password FROM vendors WHERE vendor_id = ?");
+            $stmtV->bind_param("i", $vendor_id);
+            $stmtV->execute();
+            $resultV = $stmtV->get_result();
+            $user = $resultV->fetch_assoc();
 
             if ($user && $current_password === $user['password']) {
                 // Update the password in the database
@@ -712,7 +790,7 @@ if (isset($_POST['submit'])) {
                 echo "<script>alert('Current password is incorrect.');</script>";
             }
 
-            $stmt->close();
+            $stmtV->close();
         } catch (Exception $e) {
             // Rollback the transaction in case of an exception
             $conn->rollback();
