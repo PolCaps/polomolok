@@ -3,8 +3,8 @@ session_name('admin_session');
 session_start();
 
 if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'ADMIN') {
-  header("Location: index.php");
-  exit();
+    header("Location: index.php");
+    exit();
 }
 // Get the vendor ID from the session
 $user_id = $_SESSION['id'];
@@ -17,14 +17,14 @@ $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 // Check the connection
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 // Fetch vendor information
 $sql = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
-  die("Prepare failed: " . $conn->error);
+    die("Prepare failed: " . $conn->error);
 }
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -33,7 +33,7 @@ $user = $result->fetch_assoc();
 
 // Check if vendor data is retrieved
 if (!$user) {
-  die("No User found with ID " . htmlspecialchars($user_id));
+    die("No User found with ID " . htmlspecialchars($user_id));
 }
 
 // Close the connection
@@ -44,7 +44,7 @@ $conn->close();
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
+<meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
@@ -63,18 +63,12 @@ $conn->close();
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-  <style>
-    .table-responsive {
-      max-height: 700px;
-      overflow-y: auto;
-    }
-  </style>
 </head>
 
-<div class="g-sidenav-show  bg-gray-100">
+<body class="g-sidenav-show  bg-gray-100">
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
     id="sidenav-main">
     <div class="sidenav-header">
@@ -370,64 +364,61 @@ $conn->close();
         });
       </script>
     </div>
-
-
 </div>
 </div>
-
-
 </div>
 </main>
-<div class="fixed-plugin">
-  <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" href="#">
-    <i class="fas fa-cog"></i> </a>
-  <div class="card shadow-lg">
-    <div class="card-header pb-0 pt-3">
-      <div class="float-start">
-        <h5 class="text-center">Username: <span
-            class="text-info"><?php echo htmlspecialchars($user['first_name']) ?></span> </h5>
-        <p>Role: <span class="text-info"><?php echo htmlspecialchars($user['user_type']) ?></span> </p>
-      </div>
-      <div class="float-end mt-4">
-        <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
-          <i class="fas fa-times"></i>
-        </button>
-      </div>
-    </div>
-    <hr class="horizontal dark my-1">
-    <div class="card-body pt-sm-3 pt-0">
-      <a class="btn bg-gradient-info w-85 text-white mx-4" href="Admin.php">Edit Profile</a>
-      <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
+  <div class="fixed-plugin">
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" href="#">
+      <i class="fas fa-cog"></i> </a>
+    <div class="card shadow-lg">
+      <div class="card-header pb-0 pt-3">
+        <div class="float-start">
+        <h5 class="card-text">Username: <span class="card-text text-info"><?php echo htmlspecialchars($user['username']); ?></span></h5>
+        <p class="card-text">Role: <span class="card-text text-info"><?php echo htmlspecialchars($user['user_type']); ?></span></p>
+       
+        </div>
+        <div class="float-end mt-4">
+          <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        </div>
       <hr class="horizontal dark my-1">
-      <div class="text-small">Fixed Navbar</div>
-      <div class="form-check form-switch ps-0">
-        <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+      <div class="card-body pt-sm-3 pt-0">
+        <a class="btn bg-gradient-info w-85 text-white mx-4" href="Admin.php">Edit Profile</a>
+        <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
+        <hr class="horizontal dark my-1">
+        <div class="text-small">Fixed Navbar</div>
+        <div class="form-check form-switch ps-0"> 
+          <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+        </div>
       </div>
     </div>
   </div>
-</div>
-
-<!--   Core JS Files   -->
-<script src="assets2/js/core/popper.min.js"></script>
-<script src="assets2/js/core/bootstrap.min.js"></script>
-<script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
-<script src="assets2/js/plugins/smooth-scrollbar.min.js"></script>
-<script src="assets2/js/plugins/chartjs.min.js"></script>
-<script>
-  var win = navigator.platform.indexOf('Win') > -1;
-  if (win && document.querySelector('#sidenav-scrollbar')) {
-    var options = {
-      damping: '0.5'
+  <!--   Core JS Files   -->
+  <script src="assets2/js/core/popper.min.js"></script>
+  <script src="assets2/js/core/bootstrap.min.js"></script>
+  <script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
+  <script src="assets2/js/plugins/smooth-scrollbar.min.js"></script>
+  <script src="assets2/js/plugins/chartjs.min.js"></script>
+  <script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+      var options = {
+        damping: '0.5'
+      }
+      Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
-    Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-  }
-</script>
-<!-- Github buttons -->
-<script async defer src="https://buttons.github.io/buttons.js"></script>
-<!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
-<script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </script>
+  <!-- Github buttons -->
+  <script async defer src="https://buttons.github.io/buttons.js"></script>
+  <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
+  <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
+
+  <link rel="stylesheet" href="loading.css">
+  <script src="loading.js" defer></script>
+  <div class="loader"></div>
 </body>
 
 </html>
