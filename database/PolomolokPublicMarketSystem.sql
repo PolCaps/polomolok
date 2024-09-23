@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 21, 2024 at 07:31 PM
+-- Generation Time: Sep 22, 2024 at 09:25 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -18,7 +18,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `polomolokdatabase`
+-- Database: `olomolok`
 --
 
 -- --------------------------------------------------------
@@ -553,7 +553,7 @@ CREATE TABLE `building_e` (
 --
 
 INSERT INTO `building_e` (`building_id`, `stall_no`, `building_floor`, `monthly_rentals`, `vendor_id`, `stall_status`) VALUES
-(1, 'E-01', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
+(1, 'E-01', 'Ground Floor', '3,900.00', 69, 'Occupied'),
 (2, 'E-02', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
 (3, 'E-03', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
 (4, 'E-04', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
@@ -1307,11 +1307,19 @@ INSERT INTO `building_j` (`building_id`, `stall_no`, `building_floor`, `monthly_
 CREATE TABLE `documents` (
   `document_id` int(11) NOT NULL,
   `vendor_id` bigint(20) NOT NULL,
-  `lease_agreements` longblob DEFAULT NULL,
-  `business_permits` longblob DEFAULT NULL,
-  `business_license` longblob DEFAULT NULL,
-  `other_supporting` longblob DEFAULT NULL
+  `lease_agreements` varchar(255) DEFAULT NULL,
+  `business_permits` varchar(255) DEFAULT NULL,
+  `business_license` varchar(255) DEFAULT NULL,
+  `other_supporting` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `documents`
+--
+
+INSERT INTO `documents` (`document_id`, `vendor_id`, `lease_agreements`, `business_permits`, `business_license`, `other_supporting`) VALUES
+(12, 69, 'datas//2024-09-22/cypher-cybersec.pdf', 'datas//2024-09-22/cypher_text.pdf', 'datas//2024-09-22/cypher_text.pdf', NULL),
+(13, 67, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1410,7 +1418,6 @@ CREATE TABLE `relocation_req` (
 
 INSERT INTO `relocation_req` (`relocation_id`, `vendor_id`, `message`, `date_sent`, `relocation_status`) VALUES
 (13, 55, 'pa transfer po.', '2024-08-18 13:29:34', 'Processing'),
-(14, 55, 'I am requesting a relocation', '2024-09-21 02:50:06', 'Accepted'),
 (15, 55, 'I am wanting to request a relocation because i have no maney\r\n', '2024-09-03 03:25:13', 'Processing'),
 (16, 55, 'I am wanting to request a relocation because i have no maneysajwndawdqwd\r\n', '2024-09-03 03:25:41', 'Processing'),
 (17, 55, 'Hello', '2024-09-03 03:29:22', 'Processing'),
@@ -1468,7 +1475,7 @@ CREATE TABLE `rent_application` (
 --
 
 INSERT INTO `rent_application` (`Approval`, `applicant_id`, `first_name`, `middle_name`, `last_name`, `contact_no`, `building_type`, `stall_no`, `age`, `email`, `address`, `rentapp_file`, `applied_date`) VALUES
-('APPROVED', 2028, 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 9510462062, 'Building A', 20, 56, 'reyanjansamontanes@gmail.com', 'Polotana Subdivision, West Drive.', 'rent_applications_file_dir/samontanes.pdf', '2024-09-02 14:07:41'),
+('APPROVED', 2028, 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 9510462062, 'Building A', 20, 56, 'reyanjansamontanes@gmail.com', 'Polotana Subdivision, West Drive.', 'rent_applications_file_dir/samontanes.pdf', '2024-09-21 17:44:37'),
 ('APPROVED', 2034, 'Test', 'te', 'TEs', 9834534534, 'Building A', 25, 0, 'teste@gmail.com', 'awd', 'rent_applications_file_dir/01_Seatwork_1_Sayre.pdf', '2024-09-07 10:10:04');
 
 -- --------------------------------------------------------
@@ -1500,7 +1507,6 @@ INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `middle_name`, 
 (11, 'rj', 'rj123', 'reyan', 'jan', 'samontanes', 43, 'polomolok', 'gmail.com', 3233252, 'ADMIN', 'adminProfile/10 by 10 orthogonal maze (1).png'),
 (30, 'adminMeedo', '123', 'MEEDO', 'MEEDO', 'MEEDO', 43, 'Polotana Subdivision, West Drive.', '@gmail.com', NULL, 'ADMIN', 'adminProfile/download.jfif'),
 (32, 'cashier', 'cash123', 'Montana', 'D.', 'Revilla', 21, 'Purok Dimansia', 'montana@gmail.com', 9938739511, 'CASHIER', NULL),
-(33, 'Longanisa', 'Talong', 'DocuMen', 'K.', 'Bambalolong', 44, 'Purok. Drimatia, Kalfungal', 'Documen@gmail.com', 9938757326, 'DOCUMENT_HANDLER', NULL),
 (34, 'cusman', 'degusman', 'Daniel', 'C.', 'Padilla', 28, 'Manila, Tondo South Cotabato', 'DanielPadilla@gmail.com', 9936256273, 'CUSTOMER_SERVICE', NULL),
 (35, 'staff', 'mymodule', 'jansamo', 'samo', 'samontanes', 21, 'Cannery Site', '@email.com', 9510462062, 'ADMIN', NULL),
 (40, 'services', 'serving123', 'My ', 'Servises', 'Meedo', 23, 'Gensan', '@gmail.com', 96493750847, 'CUSTOMER_SERVICE', NULL),
@@ -1514,7 +1520,7 @@ INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `middle_name`, 
 --
 
 CREATE TABLE `vendors` (
-  `Vendor Status` enum('ACTIVE','INACTIVE','ON PROCESS','ON HOLD','DEACTIVATED','ON TRANSFER') NOT NULL DEFAULT 'INACTIVE',
+  `VendorStatus` enum('ACTIVE','INACTIVE','ON_PROCESS','ON_HOLD','DEACTIVATED','ON_TRANSFER') NOT NULL DEFAULT 'ACTIVE',
   `vendor_id` bigint(20) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
@@ -1526,18 +1532,19 @@ CREATE TABLE `vendors` (
   `email_add` varchar(255) DEFAULT NULL,
   `contact_no` varchar(20) DEFAULT NULL,
   `started_date` varchar(255) DEFAULT NULL,
-  `end_date` varchar(255) DEFAULT NULL
+  `payment_due` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `vendors`
 --
 
-INSERT INTO `vendors` (`Vendor Status`, `vendor_id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `started_date`, `end_date`) VALUES
+INSERT INTO `vendors` (`VendorStatus`, `vendor_id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `started_date`, `payment_due`) VALUES
 ('ACTIVE', 55, 'jp', 'janpot21', 'John', 'P', 'Paras', 38, 'Poblacion, Polomolok', 'jp@gmail.com', '+639510462062', '2024-07-28', '2024-08-08'),
 ('INACTIVE', 66, 'meedocash', 'cah123', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-21', '2024-09-23'),
-('INACTIVE', 67, 'vendorsbuilding3', 'vendor123', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-21', '2024-09-21'),
-('INACTIVE', 68, 'vendorsbuildingfour', 'four1234', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-21', '2024-09-21');
+('INACTIVE', 67, 'vendorsbuilding3', 'vendor123', 'Vendor', 'in', 'buildingThree', 33, 'Cannery Site', 'dsfsafsdsafsdf', '9510462062', '2024-09-21', '2024-09-21'),
+('INACTIVE', 68, 'vendorsbuildingfour', 'four1234', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-21', '2024-09-21'),
+('ACTIVE', 69, 'vendorbuildinge', 'be123', 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 23, 'Polotana Subdivision, West Drive.', 'gdgdsf', '9510462062', '2024-08-27', 'MONTHLY');
 
 -- --------------------------------------------------------
 
@@ -1794,7 +1801,7 @@ ALTER TABLE `building_j`
 -- AUTO_INCREMENT for table `documents`
 --
 ALTER TABLE `documents`
-  MODIFY `document_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `document_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT for table `inquiry`
@@ -1836,13 +1843,13 @@ ALTER TABLE `rent_application`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=57;
 
 --
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=69;
+  MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `vendorsoa`
