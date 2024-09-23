@@ -1,5 +1,5 @@
 <?php
-session_name('staff_session');
+session_name('cashier_session');
 session_start();
 
 if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'STAFF') {
