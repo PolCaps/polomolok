@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitV'])) {
         $sql_building_update = "UPDATE $building_table SET vendor_id = ? WHERE stall_no = ?";
         $stmt_building_update = $conn->prepare($sql_building_update);
         if (!$stmt_building_update) {
-            echo "<script>alert('Error preparing statement: " . $conn->error . "'); window.location.href = 'AMvendor.php';</script>";
+            echo "<script>alert('Error preparing statement: " . $conn->error . "'); window.location.href = 'AMUser.php';</script>";
             exit;
         }
         $stmt_building_update->bind_param("is", $vendor_id, $stall_no);
@@ -95,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submitV'])) {
 
         // Debugging: Check the number of affected rows
         if ($stmt_building_update->affected_rows == 0) {
-            echo "<script>alert('No rows updated in the building table. Check the stall_no value.'); window.location.href = 'AMvendor.php';</script>";
+            echo "<script>alert('No rows updated in the building table. Check the stall_no value.'); window.location.href = 'AMUser.php';</script>";
             exit;
         }
 

@@ -836,7 +836,7 @@ session_start()
           <div class="col-xl-10">
             <div class="text-center">
               <h3>Interested In Owning a stall?</h3>
-              <p>Open the "Apply Application" to fill up application form!</p>
+              <p>Unlock your business potential and grab a stall at our bustling market and watch your dreams thrive!</p>
               <a class="cta-btn" data-bs-toggle="modal" data-bs-target="#vendorApplicationModal">Apply Application</a>
             </div>
           </div>
@@ -978,7 +978,9 @@ session_start()
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <p>Note: Fill the application, download and print the form then go to Polomolok public Market Office to validate your application!</p>
+            <p class="px-3 py-1 mt-2">Step 1: Fill the application by clicking on the rent application form below.</p>
+            <p class="px-3 py-1">Step 2: Download the filled rent application from and upload.</p>
+            <p class="px-3 py-1">Step 3: Go to Municipal Economic Enterprise and Devopment Office (MEEDO) to Validate & Pay your rent appplication.</p>
             <div class="modal-body">
               <div id="formDetails" class="collapse">
                 <form id="vendorApplicationForm" action="submit_application.php" method="POST"
@@ -1080,37 +1082,11 @@ session_start()
                   </div>
                 </form>
               </div>
-              <!-- Pay Rent Application Section -->
-              <div id="payRentDetails" class="collapse mt-4">
-                <div id="paymentAlert" class="alert d-none" role="alert"></div>
-                <form id="payRentForm" action="pay_rentApp.php" method="POST" enctype="multipart/form-data"
-                  class="needs-validation" novalidate>
-                  <div class="form-group">
-                    <label for="applicant_id">Applicant ID:</label>
-                    <input type="text" id="applicant_id" name="applicant_id" class="form-control" required>
-                    <div class="invalid-feedback">Please enter your Applicant ID.</div>
-                  </div>
-                  <div class="form-group  mt-3">
-                    <label for="OR_no">Official Reciept Number:</label>
-                    <input type="text" id="OR_no" name="OR_no" class="form-control" required>
-                    <div class="invalid-feedback">Please enter Official Reciept No.</div>
-                  </div>
-                  <div class="form-group mt-3">
-                    <label for="proof_of_payment">Proof of Payment (File/Image):</label>
-                    <input type="file" id="proof_of_payment" name="proof_of_payment" class="form-control" required>
-                    <div class="invalid-feedback">Please upload proof of payment.</div>
-                  </div>
-                  <button type="submit" class="btn btn-primary mt-4">Submit Proof of Payment</button>
-                </form>
-              </div>
             </div>
             <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
               <div id="alertContainer"></div>
               <button type="button" class="btn btn-info text-white" id="openLinkBtn">
                 Fill In the Rent Application Here
-              </button>
-              <button type="button" class="btn btn-success text-white" id="payRentBtn">
-                Pay Rent Application Here
               </button>
             </div>
           </div>
