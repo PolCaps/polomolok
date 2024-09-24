@@ -200,7 +200,7 @@ if ($resultA->num_rows > 0) {
         $tableRows .= '
         <tr>
             <td class="align-middle text-center text-sm">' . htmlspecialchars($rowA['username']) . '</td>
-            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['lease_agreement']) . '</a></td>
+            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['lease_agreements']) . '</a></td>
             <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['business_license']) . '</a></td>
             <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['business_permits']) . '</a></td>
             <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['other_supporting']) . '</a></td>

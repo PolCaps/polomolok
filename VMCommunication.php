@@ -28,16 +28,38 @@ include('database_config.php');
 
 
 // Fetch vendor information
-$sql = "SELECT v.*, a.*  
-FROM vendors v 
-JOIN building_a a ON v.vendor_id = a.vendor_id
-WHERE v.vendor_id = ?";
-
+$sql = "
+    SELECT v.*, b.* 
+    FROM vendors v 
+    JOIN (
+        SELECT * FROM building_a WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_b WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_c WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_d WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_e WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_f WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_g WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_h WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_i WHERE vendor_id = ?
+        UNION
+        SELECT * FROM building_j WHERE vendor_id = ?
+    ) b ON v.vendor_id = b.vendor_id
+";
+$values = array_fill(0, 10, $vendor_id);
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
     die("Prepare failed: " . $conn->error);
 }
-$stmt->bind_param("i", $vendor_id);
+$types = str_repeat('i', count($values));
+$stmt->bind_param($types, ...$values);
 $stmt->execute();
 $result = $stmt->get_result();
 $vendor = $result->fetch_assoc();

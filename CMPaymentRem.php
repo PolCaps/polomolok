@@ -2,7 +2,7 @@
 session_name('cashier_session');
 session_start();
 
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'STAFF') {
+if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'CASHIER') {
     header("Location: index.php");
     exit();
 }
