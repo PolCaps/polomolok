@@ -376,53 +376,55 @@ $result = $conn->query($sql);
             });
 
             if (selectedIds.length > 0) {
-                // Redirect to archive inquiries page with IDs as query string
-                window.location.href = `CSMarchivedinquiries.php.php?ids=${JSON.stringify(selectedIds)}`;
+                // Convert the selected IDs to a comma-separated string
+                const idString = selectedIds.join(',');
+                // Redirect to archive inquiries page with IDs as a query string
+                window.location.href = `CSMarchivedinquiries.php?ids=${idString}`;
             } else {
                 alert("Please select at least one inquiry to archive.");
             }
-            });
+        });
 
-            document.getElementById("deleteBtn").addEventListener("click", function () {
+        document.getElementById("deleteBtn").addEventListener("click", function () {
           const selectedIds = [];
           document.querySelectorAll('input.inquiry-checkbox:checked').forEach(checkbox => {
               selectedIds.push(checkbox.value);
           });
 
-            if (selectedIds.length > 0) {
-                if (confirm("Are you sure you want to delete the selected inquiries? This action cannot be undone.")) {
-                    // Send delete request using fetch
-                    fetch('delete_inquiries.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ ids: selectedIds })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            alert("Inquiries deleted successfully!");
-                            // Optionally reload the table to reflect changes
-                            location.reload();
-                        } else {
-                            alert("Error deleting inquiries. Please try again.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert("An error occurred while deleting inquiries.");
-                    });
-                }
-            } else {
-                alert("Please select at least one inquiry to delete.");
-            }
-        });
+          if (selectedIds.length > 0) {
+              if (confirm("Are you sure you want to delete the selected inquiries? This action cannot be undone.")) {
+                  // Send delete request using fetch
+                  fetch('delete_inquiries.php', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ ids: selectedIds })
+                  })
+                  .then(response => {
+                      if (!response.ok) {
+                          throw new Error('Network response was not ok');
+                      }
+                      return response.json();
+                  })
+                  .then(data => {
+                      if (data.success) {
+                          alert("Inquiries deleted successfully!");
+                          // Reload the table to reflect changes
+                          location.reload();
+                      } else {
+                          alert("Error deleting inquiries: " + data.message);
+                      }
+                  })
+                  .catch(error => {
+                      console.error('Error:', error);
+                      alert("An error occurred while deleting inquiries.");
+                  });
+              }
+          } else {
+            alert("Please select at least one inquiry to delete.");
+          }
+      });
     </script>
 </div>
         </div>
