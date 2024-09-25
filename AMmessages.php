@@ -151,7 +151,7 @@ $conn->close();
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="AMmessages.php">
+          <a class="nav-link active" href="AMmessages.php">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -202,7 +202,7 @@ $conn->close();
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Page Customization</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="HomepageEditor.php">
+          <a class="nav-link" href="HomepageEditor.php">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <img src="image/icons/icons8-browser-settings-48.png" alt="approveicon" width="18px" height="18px">
@@ -240,7 +240,7 @@ $conn->close();
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Admin</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modules</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Homepage Customization</h6>
+          <h6 class="font-weight-bolder mb-0">Messages</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -280,50 +280,6 @@ $conn->close();
                 <div class="card-body">
                   <h5 class="card-title">Status</h5>
 
-                  <?php
-
-                  if (isset($_SESSION['message'])) {
-                    $message = $_SESSION['message'];
-                    $message_type = $_SESSION['message_type'];
-                    unset($_SESSION['message']);
-                    unset($_SESSION['message_type']);
-                  }
-
-                  if (isset($message)) {
-                    ?>
-                    <div class="alert alert-<?php echo $message_type; ?> alert-dismissible fade show" role="alert">
-                      <?php echo $message; ?>
-                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <?php
-                  }
-                  ?>
-
-                  <form id="admin-form" action="update_data.php" method="POST">
-                    <div class="form-group">
-                      <label for="buildings">Buildings:</label>
-                      <input type="number" class="form-control" id="buildings" name="buildings">
-                    </div>
-                    <div class="form-group">
-                      <label for="stalls">Overall Stalls:</label>
-                      <input type="number" class="form-control" id="stalls" name="stalls">
-                    </div>
-                    <div class="form-group">
-                      <label for="vendors">Vendors:</label>
-                      <input type="number" class="form-control" id="vendors" name="vendors">
-                    </div>
-                    <div class="form-group">
-                      <label for="workers">Workers:</label>
-                      <input type="number" class="form-control" id="workers" name="workers">
-                    </div>
-
-                    <button type="submit" class="btn btn-primary">Update</button>
-
-                  </form>
-
-                </div>
               </div>
             </div>
           </div>
@@ -341,130 +297,9 @@ $conn->close();
                         <div class="card-body">
                             <h5 class="card-title">ANNOUNCEMENTS</h5>
 
-                            <?php
-include 'database_config.php';
-
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Fetch announcements from database
-$result = $conn->query("SELECT * FROM announcements");
-if ($result->num_rows > 0) {
-    echo '<table class="table table-hover">
-            <thead>
-                <tr>
-                    <th>Action</th>
-                    <th>Title</th>
-                    <th>Description</th>
-                    <th>Stall Number</th>
-                </tr>
-            </thead>
-            <tbody>';
-    while ($row = $result->fetch_assoc()) {
-        echo '<tr class="announcement-row" 
-              data-id="' . htmlspecialchars($row['id']) . '"
-              data-title="' . htmlspecialchars($row['title']) . '" 
-              data-description="' . htmlspecialchars($row['description']) . '" 
-              data-stall="' . htmlspecialchars($row['stall']) . '">
-                  <td>
-                      <button class="btn btn-danger btn-sm delete-btn" data-id="' . htmlspecialchars($row['id']) . '">DELETE</button>
-                  </td>
-                  <td>' . htmlspecialchars($row['title']) . '</td>
-                  <td>' . htmlspecialchars($row['description']) . '</td>
-                  <td>' . htmlspecialchars($row['stall']) . '</td>
-              </tr>';
-    }
-    echo '</tbody></table>';
-} else {
-  echo '<p style="font-size: 5em; font-weight: bold;">No announcements at this time.</p>';
-}
-?>
+                          
 
 
-                            <!-- Button to trigger Add Announcement Modal -->
-<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAnnouncementModal">
-    Add Announcement
-</button>
-
-<!-- Edit Announcement Modal -->
-<div class="modal fade" id="editAnnouncementModal" tabindex="-1" aria-labelledby="editAnnouncementModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editAnnouncementModalLabel">Edit Announcement</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="editAnnouncementForm" action="add_announcement.php" method="POST" enctype="multipart/form-data">
-                    <input type="hidden" id="editAnnouncementId" name="id">
-                    <div class="form-group">
-                        <label for="editTitle">Title:</label>
-                        <input type="text" class="form-control" id="editTitle" name="title" placeholder="Title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="editDescription">Description:</label>
-                        <textarea class="form-control" id="editDescription" name="description" placeholder="Description"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="editImage">Image:</label>
-                        <input type="file" class="form-control" id="editImage" name="image">
-                    </div>
-                    <div class="form-group">
-                        <label for="editBuilding">Building:</label>
-                        <input type="text" class="form-control" id="editBuilding" name="building" placeholder="Building">
-                    </div>
-                    <div class="form-group">
-                        <label for="editStall">Stall Number:</label>
-                        <input type="text" class="form-control" id="editStall" name="stall" placeholder="Stall Number">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Update</button>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Add Announcement Modal -->
-<div class="modal fade" id="addAnnouncementModal" tabindex="-1" aria-labelledby="addAnnouncementModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addAnnouncementModalLabel">Add Announcement</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="addAnnouncementForm" action="add_announcement.php" method="POST" enctype="multipart/form-data">
-                    <div class="form-group">
-                        <label for="addTitle">Title:</label>
-                        <input type="text" class="form-control" id="addTitle" name="title" placeholder="Title" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="addDescription">Description:</label>
-                        <textarea class="form-control" id="addDescription" name="description" placeholder="Description"></textarea>
-                    </div>
-                    <div class="form-group">
-                        <label for="addImage">Image:</label>
-                        <input type="file" class="form-control" id="addImage" name="image">
-                    </div>
-                    <div class="form-group">
-                        <label for="addBuilding">Building:</label>
-                        <input type="text" class="form-control" id="addBuilding" name="building" placeholder="Building">
-                    </div>
-                    <div class="form-group">
-                        <label for="addStall">Stall Number:</label>
-                        <input type="text" class="form-control" id="addStall" name="stall" placeholder="Stall Number">
-                    </div>
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </form>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            </div>
-        </div>
-    </div>
-</div>
 
 
                         </div>

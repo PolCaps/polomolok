@@ -391,6 +391,8 @@ if (isset($_GET['building'])) {
           <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#showexampleModal">
             Add New Vendor/User
           </button>
+        
+         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" id="deleteBtn">DELETE</button>
         </div>
 
         <body>
@@ -419,7 +421,34 @@ if (isset($_GET['building'])) {
             }
           </style>
 
-                
+<?php
+include("database_config.php");
+
+// Create connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// SQL query to fetch user details from the `users` table
+$sql = "SELECT id, username FROM users";
+$result = $conn->query($sql);
+
+// Initialize an array to hold user data
+$users = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $users[] = $row; // Add each user to the array
+    }
+} else {
+    echo "No users found.";
+}
+
+$conn->close(); // Close the database connection
+?>
+  
               <script>
                 $(document).ready(function() {
                     // Show the modal if there is a message
@@ -427,7 +456,91 @@ if (isset($_GET['building'])) {
                         $('#successModal').modal('show');
                     <?php endif; ?>
                 });
+
             </script>
+
+
+<!-- Modal for User Deletion -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="searchUser" class="form-label">Search User</label>
+                        <input type="text" class="form-control" id="searchUser" placeholder="Enter username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userDropdown" class="form-label">Select User</label>
+                        <select class="form-select" id="userDropdown">
+                            <option value="">Select a user</option>
+                            <?php foreach ($users as $user): ?>
+                                <option value="<?php echo $user['id']; ?>"><?php echo $user['username']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('searchUser');
+        const userDropdown = document.getElementById('userDropdown');
+
+        // Filter dropdown based on search input
+        searchInput.addEventListener('input', function () {
+            const searchTerm = searchInput.value.toLowerCase();
+            const options = userDropdown.querySelectorAll('option');
+            options.forEach(option => {
+                const isVisible = option.textContent.toLowerCase().includes(searchTerm);
+                option.style.display = isVisible ? 'block' : 'none';
+            });
+        });
+
+        // Handle delete confirmation
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
+            const selectedUserId = userDropdown.value;
+            if (selectedUserId) {
+                try {
+                    const response = await fetch('deleteUser.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ userId: selectedUserId }), // Send the selected user ID
+                    });
+                    
+                    const result = await response.json();
+                    if (result.success) {
+                        alert(`User with ID ${selectedUserId} has been deleted.`);
+                        window.location.href = 'AMUser.php';
+                        $('#deleteModal').modal('hide'); // Close the modal
+                        // Optionally refresh the page or dropdown if needed
+                    } else {
+                        alert(result.message); // Show any error message from deleteUser.php
+                    }
+                } catch (error) {
+                    console.error('Error deleting user:', error);
+                    alert('Failed to delete user. Please try again later.');
+                }
+            } else {
+                alert('Please select a user to delete.');
+            }
+        });
+    });
+    </script>
+
+
+
           <div class="modal fade" id="showexampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
