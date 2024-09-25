@@ -126,16 +126,16 @@ session_start()
           <li class="dropdown"><a href="#services"><span>Building Directory</span> <i
                 class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
-              <li><a href="BuildingDirectoryA.php">Building A</a></li>
-              <li><a href="DirectoryBuildingB.php">Building B</a></li>
-              <li><a href="DirectoryBuildingC.php">Building C</a></li>
-              <li><a href="DirectoryBuildingD.php">Building D</a></li>
-              <li><a href="DirectoryBuildingE.php">Building E</a></li>
-              <li><a href="DirectoryBuildingF.php">Building F</a></li>
-              <li><a href="DirectoryBuildingG.php">Building G</a></li>
-              <li><a href="DirectoryBuildingH.php">Building H</a></li>
-              <li><a href="DirectoryBuildingI.php">Building I</a></li>
-              <li><a href="DirectoryBuildingJ.php">Building J</a></li>
+              <li><a href="Wayfinding.php">Building A</a></li>
+              <li><a href="Wayfinding.php">Building B</a></li>
+              <li><a href="Wayfinding.php">Building C</a></li>
+              <li><a href="Wayfinding.php">Building D</a></li>
+              <li><a href="Wayfinding.php">Building E</a></li>
+              <li><a href="Wayfinding.php">Building F</a></li>
+              <li><a href="Wayfinding.php">Building G</a></li>
+              <li><a href="Wayfinding.php">Building H</a></li>
+              <li><a href="Wayfinding.php">Building I</a></li>
+              <li><a href="Wayfinding.php">Building J</a></li>
             </ul>
           </li>
           <li><a href="#call-to-action">Rent Stall</a></li>
@@ -644,7 +644,7 @@ session_start()
                 </svg>
                 <i class="bi bi-shop"></i>
               </div>
-              <a href="BuildingE.html" class="stretched-link">
+              <a href="https://app.mappedin.com/map/66f38d8142d0ac000b79d820?floor=m_f949f9430c226683" class="stretched-link">
                 <h3>Building A</h3>
               </a>
               <p>Polomolok Gymnasium, Offices, <br>and Commercial Stores</p>
@@ -779,7 +779,7 @@ session_start()
               </a>
               <p>Fruits, Dry Goods, Carenderias, <br>
                 and Retail Store</p>
-              <a href="service-details.html" class="stretched-link"></a>
+              <a href="https://app.mappedin.com/map/66f38d8142d0ac000b79d820?floor=m_f949f9430c226683" class="stretched-link"></a>
             </div>
           </div><!-- End Service Item -->
 

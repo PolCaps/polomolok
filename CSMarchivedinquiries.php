@@ -189,6 +189,94 @@ if ($start_date && $end_date) {
 
 $result = $conn->query($sql);
 ?>
+<?php
+// Include your database configuration file
+include('database_config.php');
+
+// Create a connection using mysqli
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Initialize a variable to hold alert messages
+$alertMessage = '';
+
+// Check if the 'ids' parameter is present in the URL
+if (isset($_GET['ids'])) {
+    // Get the comma-separated list of inquiry IDs
+    $ids = $_GET['ids'];
+
+    // Convert the string of IDs into an array
+    $inquiryIds = explode(',', $ids);
+
+    // Convert each ID to an integer (sanitize the input to prevent SQL injection)
+    $inquiryIds = array_map('intval', $inquiryIds);
+
+    // Convert the array back to a comma-separated string for the SQL query
+    $idString = implode(',', $inquiryIds);
+
+    // Step 1: Use INSERT IGNORE to avoid duplicates in the archived_inquiries table
+    $copyQuery = "INSERT IGNORE INTO archived_inquiries (inquiry_id, name, email_add, subject, message, sent_date)
+                  SELECT inq_id, name, email_add, subject, message, sent_date 
+                  FROM inquiry 
+                  WHERE inq_id IN ($idString)";
+
+    // Execute the copy query
+    if ($conn->query($copyQuery) === TRUE) {
+        // Step 2 (Optional): Delete the inquiries from the original table after copying
+        $deleteQuery = "DELETE FROM inquiry WHERE inq_id IN ($idString)";
+        
+        // Execute the delete query
+        if ($conn->query($deleteQuery) === TRUE) {
+            $toastMessage = "Inquiries archived successfully!";
+        } else {
+          $toastMessage = "Error deleting inquiries: " . $conn->error;
+        }
+    } else {
+      $toastMessage = "Error copying inquiries: " . $conn->error;
+    }
+} else {
+  $toastMessage = "";
+}
+
+// Close the connection
+$conn->close();
+?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<div id="alertMessage" class="alert alert-dismissible fade show" role="alert" style="display: none;">
+    <strong id="alertTitle"></strong> <span id="alertBody"></span>
+    <button type="button" class="btn-close" onclick="document.getElementById('alertMessage').style.display='none'"></button>
+</div>
+<div class="toast-container position-fixed top-0 end-0 p-3" id="toastNotif">
+        <?php if (!empty($toastMessage)): ?>
+            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="2000" id="toastNotif">
+                <div class="toast-header">
+                    <strong class="me-auto info">Notification</strong>
+                    <button type="button" class="btn-close bg-info" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    <?php echo $toastMessage; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+    <script>
+    // Function to auto-dismiss the toast after 2 seconds
+    $(document).ready(function() {
+        const toastElement = $('#toastNotif');
+        if (toastElement.length) {
+            toastElement.toast('show'); // Show the toast immediately
+            setTimeout(function() {
+                toastElement.toast('hide');
+            }, 2000); // Auto-dismiss after 2 seconds
+        }
+    });
+</script>
 
 <div class="row my-4">
     <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
@@ -423,7 +511,7 @@ $result = $conn->query($sql);
                   });
               }
           } else {
-              alert("Please select at least one inquiry to delete.");
+            alert("Please select at least one inquiry to delete.");
           }
       });
     </script>

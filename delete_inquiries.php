@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $idList = implode(',', array_map('intval', $ids));
 
         // Prepare the DELETE query
-        $sql = "DELETE FROM inquiry WHERE inquiry_id IN ($idList)";
+        $sql = "DELETE FROM inquiry WHERE inq_id IN ($idList)";
 
         if ($conn->query($sql) === TRUE) {
             echo json_encode(['success' => true]);
