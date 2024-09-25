@@ -347,32 +347,34 @@ if (isset($_GET['building'])) {
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Vendors:</p>
                     <h5 class="font-weight-bolder mb-0">
                     <?php
-                    // Database configuration
-                    // Include database configuration
-                    include('database_config.php');
+  include('database_config.php');
 
-                    // Create a connection
-                    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+  // Create a connection
+  $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-                    // Check the connection
-                    if ($conn->connect_error) {
-                        die("Connection failed: " . $conn->connect_error);
-                    }
+  // Check the connection
+  if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+  } 
 
-                    // SQL query to count the number of vendors
-                    $sql = "SELECT COUNT(*) as vendor_count FROM vendors";
-                    $result = $conn->query($sql);
+// SQL query to count the number of vendors
+$countQuery = "SELECT COUNT(*) as vendor_count FROM vendors";
+$countResult = $conn->query($countQuery);
 
-                    if ($result) {
-                        $row = $result->fetch_assoc();
-                        echo $row['vendor_count'];
-                    } else {
-                        echo "Error: " . $conn->error;
-                    }
+if ($countResult) {
+  $countRow = $countResult->fetch_assoc();
+  $vendorCount = "Total vendors: " . $countRow['vendor_count'] . "<br>";
+} else {
+  $vendorCount = "Error: " . $conn->error;
+}
 
-                    // Close the connection
-                    $conn->close();
-                    ?>
+// Echo the vendor count
+echo $vendorCount;
+
+// Close the connection
+$conn->close();
+  ?>
+
                     </h5>
                   </div>
                 </div>
@@ -414,365 +416,107 @@ if (isset($_GET['building'])) {
               flex: 1;
             }
           </style>
-          <div class="modal fade" id="showexampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Create New User</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <div class="container-fluid">
-                    <div class="row mb-3">
-                      <div class="col-md-12">
-                        <div class="accordion" id="accordionExample">
-                          <div class="accordion-item">
-                            <h2 class="accordion-header d-flex">
-                              <button class="accordion-button" type="button" id="headingAdminStaff"
-                                data-bs-toggle="collapse" data-bs-target="#collapseAdminStaff" aria-expanded="true"
-                                aria-controls="collapseAdminStaff">
-                                Admin/Staff
-                              </button>
-                              <button class="accordion-button collapsed" id="headingVendor" type="button"
-                                data-bs-toggle="collapse" data-bs-target="#collapseVendor" aria-expanded="false"
-                                aria-controls="collapseVendor">
-                                Vendor
-                              </button>
-                            </h2>
-                            <div id="collapseAdminStaff" class="accordion-collapse collapse show"
-                              aria-labelledby="headingAdminStaff" data-bs-parent="#accordionExample">
-                              <div class="accordion-body">
-                                <form id="createAdminStaffForm" action="process_formAdSta.php" method="POST"
-                                  enctype="multipart/form-data">
-                                  <div class="form-group mb-3">
-                                    <label for="account_type">Account Type:</label>
-                                    <select id="account_type" class="form-control" name="account_type" required>
-                                      <option value="Admin">Admin</option>
-                                      <option value="Staff">Staff</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select an account type.</div>
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="username">Username:</label>
-                                    <input type="text" id="username" class="form-control" name="username" required>
-                                    <div class="invalid-feedback">Please enter a username.</div>
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="password">Password:</label>
-                                    <div class="input-group">
-                                      <input type="password" id="password" class="form-control" name="password"
-                                        required>
-                                      <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true"
-                                        id="togglePasswordformAdminStaff"></i>
-                                    </div>
-                                    <script>
-                                      const togglePasswordAdminStaff = document.querySelector('#togglePasswordformAdminStaff');
-                                      const passwordAdminStaff = document.querySelector('#password');
-                                      togglePasswordAdminStaff.addEventListener('click', () => {
-                                        const type = passwordAdminStaff.getAttribute('type') === 'password' ? 'text' : 'password';
-                                        passwordAdminStaff.setAttribute('type', type);
-                                        togglePasswordAdminStaff.classList.toggle('bi-eye-fill');
-                                      });
-                                    </script>
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="first_name">First Name:</label>
-                                    <input type="text" id="first_name" class="form-control" name="first_name" required>
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="middle_name">Middle Name:</label>
-                                    <input type="text" id="middle_name" class="form-control" name="middle_name">
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="last_name">Last Name:</label>
-                                    <input type="text" id="last_name" class="form-control" name="last_name" required>
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="age">Age:</label>
-                                    <input type="number" id="age" class="form-control" name="age">
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="contact_no">Contact Number:</label>
-                                    <input type="text" id="contact_no" name="contact_no" class="form-control">
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="address">Address:</label>
-                                    <textarea id="address" name="address" class="form-control"
-                                      style="height: 128px;"></textarea>
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="email_add">Email Address:</label>
-                                    <textarea id="email_add" name="email_add" class="form-control"></textarea>
-                                  </div>
-                                  <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
-                                    <button type="submit" name="submit" id="submit" class="btn btn-info lg">CREATE
-                                      USER</button>
-                                    <button type="button" class="btn btn-secondary"
-                                      data-bs-dismiss="modal">Close</button>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
+            
 
-                          <div class="accordion-item">
-                            <div id="collapseVendor" class="accordion-collapse collapse" aria-labelledby="headingVendor"
-                              data-bs-parent="#accordionExample">
-                              <div class="accordion-body">
-                                <form id="createVendorForm" action="process_formVendor.php" method="POST"
-                                  enctype="multipart/form-data">
-                                  <div class="form-group mb-3">
-                                    <label for="account_type">Account Type:</label>
-                                    <select id="account_type" class="form-control" name="account_type" required>
-                                      <option value="Vendor">Vendor</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select an account type.</div>
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="username">Username:</label>
-                                    <input type="text" id="username" class="form-control" name="username" required>
-                                    <div class="invalid-feedback">Please enter a username.</div>
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="password">Password:</label>
-                                    <div class="input-group">
-                                      <input type="password" id="password" class="form-control" name="password"
-                                        required>
-                                      <i class="fas fa-eye px-2 py-3" type="button" aria-hidden="true"
-                                        id="togglePasswordformVendor"></i>
-                                    </div>
-                                    <script>
-                                      const togglePasswordVendor = document.querySelector('#togglePasswordformVendor');
-                                      const passwordVendor = document.querySelector('#password');
-                                      togglePasswordVendor.addEventListener('click', () => {
-                                        const type = passwordVendor.getAttribute('type') === 'password' ? 'text' : 'password';
-                                        passwordVendor.setAttribute('type', type);
-                                        togglePasswordVendor.classList.toggle('bi-eye-fill');
-                                      });
-                                    </script>
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="building_type">Buildings:</label>
-                                    <select id="building_type" name="building_type" class="form-control">
-                                      <option value="">Select Buildings</option>
-                                      <option value="building_a">Building A</option>
-                                      <option value="building_b">Building B</option>
-                                      <option value="building_c">Building C</option>
-                                      <option value="building_d">Building D</option>
-                                      <option value="building_e">Building E</option>
-                                      <option value="building_f">Building F</option>
-                                      <option value="building_g">Building G</option>
-                                      <option value="building_h">Building H</option>
-                                      <option value="building_i">Building I</option>
-                                      <option value="building_j">Building J</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select a building type.</div>
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="building_floor">Building Floor:</label>
-                                    <select id="building_floor" name="building_floor" class="form-control">
-                                      <option value="">Select Building Floor:</option>
-                                      <option value="">Select Floor</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select a building floor.</div>
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="stall_no">Stall Number:</label>
-                                    <select id="stall_no" name="stall_no" class="form-control">
-                                      <option value="">Select Stall</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select a stall number.</div>
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="monthly_rentals">Monthly Rentals:</label>
-                                    <input type="text" id="monthly_rentals" name="monthly_rentals" class="form-control">
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="started_date">Started Date:</label>
-                                    <input type="date" id="started_date" name="started_date" class="form-control">
-                                  </div>
-                                  <div class="form-group mb-3">
-                                    <label for="end_date">End Date:</label>
-                                    <input type="date" id="end_date" name="end_date" class="form-control">
-                                  </div>
-                                  <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
-                                    <button type="submit" name="submitV" id="submit" class="btn btn-info lg">Create
-                                      Vendor</button>
-                                    <button type="button" class="btn btn-secondary"
-                                      data-bs-dismiss="modal">Close</button>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+   <!-- New header for Update and Delete buttons -->
+<div class="header-buttons mb-4">
+  <div class="d-flex justify-content-start">
+    <button type="button" class="btn btn-primary mx-1" id="updateBtn">UPDATE</button>
+    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" id="deleteBtn">DELETE</button>
+  </div>
+</div>
 
-          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-          <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-          <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-
-          <script>
-
-            function checkBuildingSelected() {
-              var building = document.getElementById('building_type').value;
-              if (!building) {
-                alert('Please select a building first.');
-                document.getElementById('building_type').focus();
-                return false;
-              }
-              return true;
-            }
-
-
-            document.getElementById('account_type').addEventListener('change', function () {
-              var accountType = this.value;
-              var adminStaffAccordion = document.getElementById('collapseAdminStaff');
-              var vendorAccordion = document.getElementById('collapseVendor');
-
-              if (accountType === 'Admin' || accountType === 'Staff') {
-                adminStaffAccordion.classList.add('show');
-                vendorAccordion.classList.remove('show');
-              } else if (accountType === 'Vendor') {
-                adminStaffAccordion.classList.remove('show');
-                vendorAccordion.classList.add('show');
-              }
-            });
-
-
-            document.getElementById('building_type').addEventListener('change', function () {
-              var building = this.value;
-              var stallSelect = document.getElementById('stall_no');
-              var floorSelect = document.getElementById('building_floor');
-              var rent = document.getElementById('monthly_rentals');
-
-              stallSelect.innerHTML = '<option value="">Select Stall</option>';
-              floorSelect.innerHTML = '<option value="">Select Building Floor</option>';
-              rent.value = '';
-
-              if (building) {
-                $.ajax({
-                  url: window.location.href,
-                  type: 'GET',
-                  data: { building: building },
-                  success: function (data) {
-                    var stalls = JSON.parse(data);
-                    var floors = new Set();
-
-                    stalls.forEach(function (stall) {
-                      if (stall.stall_status === 'Vacant' && !stall.vendor_id) {
-                        var option = document.createElement('option');
-                        option.value = stall.stall_no;
-                        option.text = stall.stall_no;
-                        stallSelect.appendChild(option);
-
-                        floors.add(stall.building_floor);
-                      }
-                    });
-
-                    floors.forEach(function (floor) {
-                      var option = document.createElement('option');
-                      option.value = floor;
-                      option.text = floor;
-                      floorSelect.appendChild(option);
-                    });
-                  }
-                });
-              }
-            });
-
-            document.getElementById('stall_no').addEventListener('change', function () {
-              var stallNo = this.value;
-              var building = document.getElementById('building_type').value;
-              var rent = document.getElementById('monthly_rentals');
-
-              if (stallNo && building) {
-                $.ajax({
-                  url: window.location.href,
-                  type: 'GET',
-                  data: { building: building },
-                  success: function (data) {
-                    var stalls = JSON.parse(data);
-                    var selectedStall = stalls.find(stall => stall.stall_no === stallNo);
-
-                    if (selectedStall) {
-                      rent.value = selectedStall.monthly_rentals;
-                    } else {
-                      rent.value = '';
-                    }
-                  }
-                });
-              } else {
-                rent.value = '';
-              }
-            });
-
-            document.getElementById('building_floor').addEventListener('click', function () {
-              if (!checkBuildingSelected()) {
-                this.blur(); // Remove focus if building is not selected
-              }
-            });
-
-            document.getElementById('stall_no').addEventListener('click', function () {
-              if (!checkBuildingSelected()) {
-                this.blur(); // Remove focus if building is not selected
-              }
-            });
-
-            document.getElementById('monthly_rentals').addEventListener('click', function () {
-              if (!checkBuildingSelected()) {
-                this.blur(); // Remove focus if building is not selected
-              }
-            });
-
-            // $(document).ready(function () {
-            //   $('#submit').on('click', function (e) {
-            //     e.preventDefault(); // Prevent default form submission
-
-            //     var buildingType = $('#building_type').val();
-            //     var stallNo = $('#stall_no').val();
-            //     var monthlyRentals = $('#monthly_rentals').val();
-            //     var startedDate = $('#started_date').val();
-            //     var endDate = $('#end_date').val();
-
-            //     $.ajax({
-            //       url: 'process_formVendor.php', // The server-side script URL
-            //       type: 'POST',
-            //       data: {
-            //         building_type: buildingType,
-            //         stall_no: stallNo,
-            //         monthly_rentals: monthlyRentals,
-            //         started_date: startedDate,
-            //         end_date: endDate
-            //       },
-            //       success: function (response) {
-            //         var result = JSON.parse(response);
-            //         if (result.status === 'success') {
-            //           alert(result.message);
-            //         } else {
-            //           alert(result.message);
-            //         }
-            //       },
-            //       error: function () {
-            //         alert('An error occurred while processing the request.');
-            //       }
-            //     });
-            //   });
-            // });
-
-          </script>
+<!-- Delete Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="deleteModalLabel">Select Vendor to Delete</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div class="modal-body">
+        <!-- Search bar for vendor username -->
+        <div class="input-group mb-3">
+          <span class="input-group-text"><i class="fas fa-search"></i></span>
+          <input type="text" class="form-control" id="searchVendor" placeholder="Search Vendor Username">
+        </div>
+
+        <!-- Dropdown to select vendor -->
+        <div class="mb-3">
+          <label for="vendorDropdown" class="form-label">Or select from the list:</label>
+          <select class="form-select" id="vendorDropdown">
+              <option selected>Select Vendor</option>
+          </select>
+      </div>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Populate the dropdown with vendor usernames and IDs when the modal opens
+document.getElementById('deleteModal').addEventListener('show.bs.modal', function () {
+    fetch('populateDeleteVendor.php?action=get_vendors')
+        .then(response => response.json())
+        .then(data => {
+            const vendorDropdown = document.getElementById('vendorDropdown');
+            vendorDropdown.innerHTML = '<option selected>Select Vendor</option>'; // Reset dropdown
+            if (data.vendors && data.vendors.length > 0) {
+                data.vendors.forEach(function (vendor) {
+                    const option = document.createElement('option');
+                    option.value = vendor.vendor_id; // Use vendor_id as the value
+                    option.textContent = vendor.username; // Display the username
+                    vendorDropdown.appendChild(option);
+                });
+            } else {
+                alert(data.error || "No vendors found.");
+            }
+        });
+});
+
+document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+    var selectedVendorID = document.getElementById('vendorDropdown').value;
+
+    if (selectedVendorID && selectedVendorID !== 'Select Vendor username') {
+        if (confirm('Are you sure you want to delete this vendor?')) {
+            fetch('deleteVendor.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+                body: 'vendor_id=' + encodeURIComponent(selectedVendorID)
+            })
+            .then(response => response.text())  // Expecting a text response
+            .then(alertMsg => {
+                alert(alertMsg);  // Show the alert message from PHP
+                // Only reload if the deletion was successful
+                if (!alertMsg.includes('Error')) {
+                    window.location.href = 'AMvendor.php';  // Reload the page after alert
+                }
+            })
+            .catch(error => {
+                alert('Error communicating with server: ' + error.message);
+            });
+        }
+    } else {
+        alert('Please select a vendor to delete.');
+    }
+});
+</script>
+
+
 
       <div class="row my-4">
         <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
           <div class="card">
+
+
+            
             <div class="card-header pb-0">
               <div class="row">
                 <div class="col-lg-6 col-7">
@@ -878,7 +622,7 @@ if (isset($_GET['building'])) {
                       </tr>
                       <?php
                     }
-                    $conn->close();
+                  //  $conn->close();
                     ?>
                   </tbody>
                 </table>
