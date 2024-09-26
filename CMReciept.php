@@ -2,7 +2,7 @@
 session_name('cashier_session');
 session_start();
 
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'STAFF') {
+if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'CASHIER') {
     header("Location: index.php");
     exit();
 }
@@ -158,42 +158,63 @@ $conn->close();
         </div>
       </div>
     </nav>
-    <!-- Issue Reciept Modal ni sya-->
-      <div class="modal fade" id="issueRecieptModal" tabindex="-1" aria-labelledby="issueRecieptModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="issueRecieptModalLabel">Issue Receipt to Vendor</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="mb-3">
-                  <label for="vendorSelect" class="form-label">Select Vendor</label>
-                  <select id="vendorSelect" class="form-select">
-                    <!-- populate this select with a list of vendors -->
-                    <option value="">Select a vendor</option>
-                  
-                    <!-- ... -->
-                  </select>
-                </div>
-                <div class="mb-3">
-                  <label for="receiptFile" class="form-label">Attach Receipt File or Photo</label>
-                  <input type="file" id="receiptFile" class="form-control">
-                </div>
-                <div class="mb-3">
-                  <label for="receiptNotes" class="form-label">Notes (optional)</label>
-                  <textarea id="receiptNotes" class="form-control"></textarea>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="issueReceiptBtn">Generate Receipt</button>
-            </div>
-          </div>
-        </div>
+
+
+
+  <!-- Issue modal paras issueRre.php-->
+
+
+  
+<!-- Issue Receipt Modal -->
+<div class="modal fade" id="issueRecieptModal" tabindex="-1" aria-labelledby="issueRecieptModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="issueRecieptModalLabel">Issue Receipt to Vendor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div class="modal-body">
+        <!-- Form submission directly to issueRe.php -->
+        <form action="/PolomolokPublicMarketMeedo/Receipts/issueRe.php" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="vendorSelect" class="form-label">Select Vendor</label>
+            <select id="vendorSelect" name="vendorSelect" class="form-select" required>
+              <option value="">Select a vendor</option>
+              <!-- Options populated via JavaScript -->
+            </select>
+          </div>
+          <!-- Label to display selected vendor ID -->
+          <div class="mb-3">
+            <label for="vendorIdLabel" class="form-label">Vendor ID:</label>
+            <span id="vendor_id" class="form-text"></span> <!-- This will display the vendor ID -->
+          </div>
+
+          <div class="mb-3">
+            <label for="usernameDisplay" class="form-label">Username:</label>
+            <span id="usernameDisplay" class="form-text"></span>
+            <input type="hidden" id="usernameDisplay" name="username" value="">
+          </div>
+
+
+          <input type="hidden" id="vendor_id_input" name="vendor_id" value=""> <!-- Hidden input to store vendor ID -->
+          <div class="mb-3">
+            <label for="receiptFile" class="form-label">Attach Receipt File or Photo</label>
+            <input type="file" id="receiptFile" name="receiptFile" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="receiptNotes" class="form-label">Notes (optional)</label>
+            <textarea id="receiptNotes" name="receiptNotes" class="form-control"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" name="submit">Generate Receipt</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
     <!-- End Navbar -->
     <div class="container-fluid py-4">
@@ -216,9 +237,35 @@ if ($conn->connect_error) {
     exit;
 }
 
-$sqlV = "SELECT v.vendor_id, v.first_name, v.middle_name, v.last_name, r.receipt_id, r.receipt
-        FROM vendors v
-        LEFT JOIN receipts r ON v.vendor_id = r.vendor_id";
+$sqlV = "
+    SELECT v.vendor_id, v.username, v.first_name, v.middle_name, v.last_name, r.receipt_id, r.receipt, r.issued_date, 
+           GROUP_CONCAT(stalls.buildings) AS buildings
+    FROM vendors v
+    LEFT JOIN receipts r ON v.vendor_id = r.vendor_id
+    LEFT JOIN (
+        SELECT vendor_id, stall_no AS buildings FROM building_a
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_b
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_c
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_d
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_e
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_f
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_g
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_h
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_i
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_j
+    ) AS stalls ON v.vendor_id = stalls.vendor_id
+    GROUP BY v.vendor_id, r.receipt_id, r.receipt
+";
+
 
 $resultV = $conn->query($sqlV);
 
@@ -239,10 +286,6 @@ if ($resultV->num_rows > 0) {
 $conn->close();
 
 ?>
-
-
-
-
 
           <div class="card">
             <div class="card-header pb-0">
@@ -270,8 +313,8 @@ $conn->close();
                   <thead>
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Issued Date</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stall Number</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Issue Date</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt History</th>
                     </tr>
                   </thead>
@@ -287,11 +330,11 @@ $conn->close();
                 </td>
                 <td>
                     <div class="avatar-group mt-1">
-                        <h6 class="mb-1 text-sm"><?php echo $row['receipt_id']; ?></h6>
+                        <h6 class="mb-1 text-sm"><?php echo $row['buildings']; ?></h6>
                     </div>
                 </td>
                 <td class="align-middle text-center text-sm">
-                    <span class="text-xs font-weight-bold"><?php echo $row['vendor_id']; ?></span>
+                    <span class="text-xs font-weight-bold"><?php echo $row['issued_date']; ?></span>
                 </td>
                 <td class="align-middle text-center text-sm">
                     <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#openHistoryModal" data-receipts="<?php echo $row['receipt']; ?>">Show Receipts</button>
@@ -301,34 +344,53 @@ $conn->close();
     </tbody>
                 </table>
               </div>
+
+
+              
               <script>
-    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
-        button.addEventListener('click', function() {
-            const receiptsContent = document.getElementById('receiptsContent');
-            receiptsContent.innerHTML = this.getAttribute('data-receipts');
-        });
+document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
+    button.addEventListener('click', function() {
+        const receiptsContent = document.getElementById('receiptsContent');
+        receiptsContent.innerHTML = this.getAttribute('data-receipts');
     });
-    // Function to populate vendor select dropdown
-    function populateVendorSelect(vendors) {
-        const vendorSelect = document.getElementById('vendorSelect');
-        vendorSelect.innerHTML = '<option value="">Select a vendor</option>'; // Clear existing options
-        vendors.forEach(data => {
-            const option = document.createElement('option');
-            option.value = data.vendor_id;
-            option.text = data.first_name + ' ' + data.middle_name + ' ' + data.last_name + ' (Stall: ' + data.receipt_id + ')';
-            vendorSelect.appendChild(option);
-        });
-    }
+});
 
-    // Call the function to populate the vendor select dropdown
-    const vendors = <?php echo json_encode($dataV); ?>;
-    populateVendorSelect(vendors);
+// Function to populate vendor select dropdown
+function populateVendorSelect(vendors) {
+    const vendorSelect = document.getElementById('vendorSelect');
+    vendorSelect.innerHTML = '<option value="">Select a vendor</option>'; // Clear existing options
+    vendors.forEach(data => {
+        const option = document.createElement('option');
+        option.value = data.vendor_id; // This is the vendor_id
+        option.text = `${data.first_name} ${data.middle_name} ${data.last_name} (Stall: ${data.buildings})`;
+        option.dataset.username = data.username; // Add username as a data attribute
+        vendorSelect.appendChild(option);
+    });
+}
 
-    // // Wait for the DOM to be fully loaded before running the script
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     fetchData();
-    // });
+// Event listener for vendor selection change
+document.getElementById('vendorSelect').addEventListener('change', function() {
+    const vendorId = this.value; // Get the selected vendor ID
+    const selectedOption = this.options[this.selectedIndex]; // Get the selected option
+    const username = selectedOption.dataset.username; // Retrieve the username from data attribute
+
+    // Update the vendor ID display
+    document.getElementById('vendor_id').textContent = vendorId; // Update the label to show the vendor ID
+    document.getElementById('vendor_id_input').value = vendorId; // Set the hidden input value
+    
+    // Update the username display (assuming you have an element to display the username)
+    document.getElementById('usernameDisplay').textContent = username; // Update the username display
+});
+
+// Call the function to populate the vendor select dropdown
+const vendors = <?php echo json_encode($dataV); ?>;
+populateVendorSelect(vendors);
 </script>
+
+
+
+
+
 
 
 

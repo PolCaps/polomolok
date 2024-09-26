@@ -225,7 +225,7 @@ $sqlvendor = "
     SELECT 
         CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
         v.username AS username, 
-        v.end_date AS due_date, 
+        v.payment_due AS payment_dues, 
         a.monthly_rentals AS rent_due,
         v.vendor_id AS vendor_id
     FROM vendors v
@@ -268,7 +268,7 @@ if ($resultA->num_rows > 0) {
               <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['rent_due']) . '</span>
           </td>
           <td class="align-middle text-center text-sm">
-              <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['due_date']) . '</span>
+              <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['payment_dues']) . '</span>
           </td>
           <td class="align-middle text-center text-sm">
               <button type="button" class="btn btn-sm btn-primary my-1" onclick="openSendMessageModal(\'' . htmlspecialchars($rowA['name']) . '\', ' . htmlspecialchars($rowA['vendor_id']) . ')">
@@ -291,7 +291,7 @@ if ($resultA->num_rows > 0) {
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
-          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due Date</th>
+          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Due Status</th>
           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
         </tr>
       </thead>

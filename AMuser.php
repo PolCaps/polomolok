@@ -505,37 +505,53 @@ $conn->close(); // Close the database connection
                 option.style.display = isVisible ? 'block' : 'none';
             });
         });
-
-        // Handle delete confirmation
         document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
-            const selectedUserId = userDropdown.value;
-            if (selectedUserId) {
-                try {
-                    const response = await fetch('deleteUser.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ userId: selectedUserId }), // Send the selected user ID
-                    });
-                    
-                    const result = await response.json();
-                    if (result.success) {
-                        alert(`User with ID ${selectedUserId} has been deleted.`);
-                        window.location.href = 'AMUser.php';
-                        $('#deleteModal').modal('hide'); // Close the modal
-                        // Optionally refresh the page or dropdown if needed
-                    } else {
-                        alert(result.message); // Show any error message from deleteUser.php
-                    }
-                } catch (error) {
-                    console.error('Error deleting user:', error);
-                    alert('Failed to delete user. Please try again later.');
-                }
-            } else {
-                alert('Please select a user to delete.');
+    const userDropdown = document.getElementById('userDropdown');
+    const selectedUserId = userDropdown.value;
+    const selectedUserName = userDropdown.options[userDropdown.selectedIndex].text; // Get the selected user's name
+    
+    if (selectedUserId) {
+        try {
+            const response = await fetch('deleteUser.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: selectedUserId }), // Send the selected user ID
+            });
+
+            if (!response.ok) {
+                // If the response is not successful (e.g., 404, 500), handle it here
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-        });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Success message
+                alert(`Success: User ${selectedUserName} has been deleted.`);
+                window.location.href = 'AMUser.php';
+                $('#deleteModal').modal('hide'); // Close the modal
+                // Optionally refresh the page or dropdown if needed
+            } else {
+                // Handle failure based on the result from the PHP file
+                if (result.message) {
+                    alert(`Error: ${result.message}`);
+                } else {
+                    alert('Error: Unknown issue occurred while deleting the user.');
+                }
+            }
+        } catch (error) {
+            // Catch any other error (network issues, unexpected errors, etc.)
+            console.error('Error deleting user:', error);
+            alert(`Failed to delete user. Error: ${error.message}`);
+        }
+    } else {
+        alert('Please select a user to delete.');
+    }
+});
+
+
     });
     </script>
 
