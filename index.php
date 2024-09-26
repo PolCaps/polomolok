@@ -123,7 +123,7 @@ session_start()
         <ul>
           <li><a href="#hero" class="active">Home<br></a></li>
           <li><a href="#about">About</a></li>
-          <li class="dropdown"><a href="#services"><span>Building Directory</span> <i
+          <li class="dropdown"><a href="#services"><span>Wayfinding & Directory</span> <i
                 class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
               <li><a href="Wayfinding.php">Building A</a></li>
@@ -625,8 +625,8 @@ session_start()
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Market's Map</h2>
-        <p>Polomolok Public Market's Maps</p>
+        <h2>Explore the Market's Map</h2>
+        <p>Discover Your Way Around Polomolok Public Market with Interactive Directory and Wayfinding</p>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -812,12 +812,11 @@ session_start()
                 </svg>
                 <i class="bi bi-chat-square-text"></i>
               </div>
-              <a href="service-details.html" class="stretched-link">
+              <a href="https://app.mappedin.com/map/66f4e68d42d0ac000b79d85f?floor=m_c58eeda6171361abl" class="stretched-link">
                 <h3>Building J</h3>
               </a>
-              <p>Hic molestias ea quibusdam eos. Fugiat enim doloremque aut neque non et debitis iure. Corrupti
-                recusandae ducimus enim.</p>
-              <a href="service-details.html" class="stretched-link"></a>
+              <p>Details-addmore, eg: Ukayan</p>
+              <a href="https://app.mappedin.com/map/66f4e68d42d0ac000b79d85f?floor=m_c58eeda6171361abl" class="stretched-link"></a>
             </div>
           </div>
 
