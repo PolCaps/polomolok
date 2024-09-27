@@ -123,15 +123,15 @@ $conn->close();
           <div class="collapse" id="collapseMaps">
             <div class="right-aligned-links" style="text-align: right;">
               <a class="nav-link" href="ABuildingA.php">Building A</a>
-              <a class="nav-link" href="ABuildingB.html">Building B</a>
-              <a class="nav-link" href="ABuildingC.html">Building C</a>
-              <a class="nav-link" href="ABuildingD.html">Building D</a>
-              <a class="nav-link" href="ABuildingE.html">Building E</a>
-              <a class="nav-link" href="ABuildingF.html">Building F</a>
-              <a class="nav-link" href="ABuildingG.html">Building G</a>
-              <a class="nav-link" href="ABuildingH.html">Building H</a>
-              <a class="nav-link" href="ABuildingI.html">Building I</a>
-              <a class="nav-link" href="ABuildingJ.html">Building J</a>
+              <a class="nav-link" href="ABuildingB.php">Building B</a>
+              <a class="nav-link" href="ABuildingC.php">Building C</a>
+              <a class="nav-link" href="ABuildingD.php">Building D</a>
+              <a class="nav-link" href="ABuildingE.php">Building E</a>
+              <a class="nav-link" href="ABuildingF.php">Building F</a>
+              <a class="nav-link" href="ABuildingG.php">Building G</a>
+              <a class="nav-link" href="ABuildingH.php">Building H</a>
+              <a class="nav-link" href="ABuildingI.php">Building I</a>
+              <a class="nav-link" href="ABuildingJ.php">Building J</a>
             </div>
           </div>
         </li>
