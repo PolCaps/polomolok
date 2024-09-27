@@ -196,19 +196,21 @@ if ($resultA === false) {
 
 // Check if there are results
 if ($resultA->num_rows > 0) {
-    while($rowA = $resultA->fetch_assoc()) {
-        $tableRows .= '
-        <tr>
-            <td class="align-middle text-center text-sm">' . htmlspecialchars($rowA['username']) . '</td>
-            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['lease_agreements']) . '</a></td>
-            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['business_license']) . '</a></td>
-            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['business_permits']) . '</a></td>
-            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['other_supporting']) . '</a></td>
-        </tr>';
-    }
+  while ($rowA = $resultA->fetch_assoc()) {
+      $tableRows .= '
+      <tr>
+          <td class="align-middle text-center text-sm">' . htmlspecialchars($rowA['username']) . '</td>
+          <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['lease_agreements']) . '">View</span></td>
+          <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['business_license']) . '">View</span></td>
+          <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['business_permits']) . '">View</span></td>
+          <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['other_supporting']) . '">View</span></td>
+      </tr>';
+  }
 } else {
-    $tableRows = '<tr><td colspan="5" class="text-center">No records found</td></tr>';
+  $tableRows = '<tr><td colspan="5" class="text-center">No records found</td></tr>';
 }
+
+
 
 // Close connection
 $conn->close();
@@ -288,6 +290,28 @@ $conn->close();
       }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
+
+
+    // Wait until the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all clickable elements
+    const clickables = document.querySelectorAll('.clickable');
+    
+    // Add event listeners to all clickable elements
+    clickables.forEach(clickable => {
+        clickable.addEventListener('click', function() {
+            const documentUrl = this.getAttribute('data-doc');
+            
+            // Assuming that documentUrl is a valid URL, open it in a new tab
+            if (documentUrl) {
+                window.open(documentUrl, '_blank');
+            } else {
+                alert('Error: No documents!');
+            }
+        });
+    });
+});
+
   </script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>

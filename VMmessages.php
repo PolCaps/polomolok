@@ -2,21 +2,10 @@
 session_name('vendor_session');
 session_start();
 
-include('database_config.php');
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-
-
 if (!isset($_SESSION['vendor_id'])) {
-    header("Location: Vendor.php");
+    header("Location: index.php");
     exit();
 }
-
 
 // Get the vendor ID from the session
 $vendor_id = $_SESSION['vendor_id'];
@@ -25,7 +14,12 @@ $vendor_id = $_SESSION['vendor_id'];
 include('database_config.php');
 
 // Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
 
 // Fetch vendor information
 $sql = "
@@ -64,26 +58,95 @@ $stmt->execute();
 $result = $stmt->get_result();
 $vendor = $result->fetch_assoc();
 
-// Check if vendor data is retrieved
-if (!$vendor) {
-    die("No vendor found with ID " . htmlspecialchars($vendor_id));
+
+if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
+
+  echo "<script>
+   alert('No information in your account. You need to fill-up your account first!');
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+      var accountModal = new bootstrap.Modal(document.getElementById('accountModal'));
+      accountModal.show();
+
+      var form = document.getElementById('createVendorForm');
+      var modalElement = document.getElementById('accountModal'); // Reference the entire modal element
+
+      // Handle clicks outside the modal window (including the backdrop)
+      document.addEventListener('click', function(event) {
+          if (!modalElement.contains(event.target) && !form.checkValidity()) {
+              event.preventDefault(); // Prevent closing the modal
+              alert('Please fill out all required fields before closing.');
+          }
+      });
+
+      // Handle close button click
+      var closeButton = document.getElementById('closeButton');
+      closeButton.addEventListener('click', function() {
+          if (form.checkValidity()) {
+              accountModal.hide(); // Close the modal if the form is valid
+          } else {
+              alert('Please fill out all required fields before closing.');
+          }
+      });
+
+      // Disable accordion interaction (optional, adjust selector if needed)
+      var accordions = document.querySelectorAll('.accordion-header, .accordion-toggle');
+      accordions.forEach(function(accordion) {
+          accordion.style.pointerEvents = 'none';
+          accordion.style.opacity = '0.5';
+      });
+
+      // Prevent back navigation
+      window.history.pushState(null, null, window.location.href);
+      window.onpopstate = function() {
+          window.history.pushState(null, null, window.location.href);
+      };
+  });
+  </script>";
+} else {
+  echo "<script>
+          console.log('Vendor data available'); // Or handle vendor data as needed
+        </script>";
 }
 
-// // Fetch stalls associated with the vendor
-// $sql_stalls = "SELECT * FROM vendors WHERE vendor_id = ?";
-// $stmt_stalls = $conn->prepare($sql_stalls);
-// if ($stmt_stalls === false) {
-//     die("Prepare failed: " . $conn->error);
-// }
-// $stmt_stalls->bind_param("i", $vendor_id);
-// $stmt_stalls->execute();
-// $result_stalls = $stmt_stalls->get_result();
-// $stalls = $result_stalls->fetch_all(MYSQLI_ASSOC);
 
-// Close the connection
-$conn->close();
+
+$query = "SELECT started_date, payment_due FROM vendors WHERE vendor_id = ?";
+$stmt1 = $conn->prepare($query);
+$stmt1->bind_param('i', $vendor_id);
+$stmt1->execute();
+$stmt1->bind_result($started_date, $payment_due);
+$stmt1->fetch();
+$stmt1->close();
+
 ?>
 
+<script>
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const alertClass = "<?php echo isset($_SESSION['alert_class']) ? $_SESSION['alert_class'] : ''; ?>";
+        const alertMessage = "<?php echo isset($_SESSION['alert_message']) ? $_SESSION['alert_message'] : ''; ?>";
+
+        if (alertClass && alertMessage) {
+            // Display the alert using Achor
+            alert(alertMessage); // Replace this with your Achor alert function if you have one
+
+            // Clear session data after displaying the alert
+            <?php 
+                unset($_SESSION['alert_class']);
+                unset($_SESSION['alert_message']);
+            ?>
+        }
+    });
+
+
+
+
+    const startedDate = new Date("<?php echo $started_date; ?>");
+    const paymentDue = "<?php echo $payment_due; ?>";
+</script>
+    
 <!DOCTYPE html>
 <html lang="en">
 
@@ -93,7 +156,7 @@ $conn->close();
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Request Relocation
+    Vendor Dashboard
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -105,48 +168,19 @@ $conn->close();
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script>
-  $(document).ready(function() {
-    $('.expandable-image').on('click', function() {
-      var imgSrc = $(this).attr('src');
-      $('#expandedImage').attr('src', imgSrc);
-      $('#imageModal').modal('show');
-    });
-  });
-</script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+ 
 
-<script>
-    "use strict";
-    
-    !function() {
-      var t = window.driftt = window.drift = window.driftt || [];
-      if (!t.init) {
-        if (t.invoked) return void (window.console && console.error && console.error("Drift snippet included twice."));
-        t.invoked = !0, t.methods = [ "identify", "config", "track", "reset", "debug", "show", "ping", "page", "hide", "off", "on" ], 
-        t.factory = function(e) {
-          return function() {
-            var n = Array.prototype.slice.call(arguments);
-            return n.unshift(e), t.push(n), t;
-          };
-        }, t.methods.forEach(function(e) {
-          t[e] = t.factory(e);
-        }), t.load = function(t) {
-          var e = 3e5, n = Math.ceil(new Date() / e) * e, o = document.createElement("script");
-          o.type = "text/javascript", o.async = !0, o.crossorigin = "anonymous", o.src = "https://js.driftt.com/include/" + n + "/" + t + ".js";
-          var i = document.getElementsByTagName("script")[0];
-          i.parentNode.insertBefore(o, i);
-        };
-      }
-    }();
-    drift.SNIPPET_VERSION = '0.3.1';
-    drift.load('93ian234iumi');
-    </script>
+
+
 </head>
 
+
 <body class="g-sidenav-show  bg-gray-100">
+
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -161,8 +195,8 @@ $conn->close();
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link " href="Vendor.php">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+          <a class="nav-link" href="Vendor.php">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-primary text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-shop" viewBox="0 0 16 16">
                 <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
               </svg>
@@ -197,7 +231,7 @@ $conn->close();
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="VMDocuments.php">
+          <a class="nav-link " href="VMDocuments.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-person" viewBox="0 0 16 16">
                 <path d="M11 8a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
@@ -208,7 +242,7 @@ $conn->close();
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="VMRelocation.php">
+          <a class="nav-link  " href="VMRelocation.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-joystick" viewBox="0 0 16 16">
                 <path d="M10 2a2 2 0 0 1-1.5 1.937v5.087c.863.083 1.5.377 1.5.726 0 .414-.895.75-2 .75s-2-.336-2-.75c0-.35.637-.643 1.5-.726V3.937A2 2 0 1 1 10 2"/>
@@ -219,7 +253,7 @@ $conn->close();
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active active" href="VMRecieptHistory.php">
+          <a class="nav-link  " href="VMRecieptHistory.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-journal-text" viewBox="0 0 16 16">
                 <path d="M5 10.5a.5.5 0 0 1 .5-.5h2a.5.5 0 0 1 0 1h-2a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5m0-2a.5.5 0 0 1 .5-.5h5a.5.5 0 0 1 0 1h-5a.5.5 0 0 1-.5-.5"/>
@@ -227,11 +261,11 @@ $conn->close();
                 <path d="M1 5v-.5a.5.5 0 0 1 1 0V5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0V8h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1zm0 3v-.5a.5.5 0 0 1 1 0v.5h.5a.5.5 0 0 1 0 1h-2a.5.5 0 0 1 0-1z"/>
               </svg>
             </div>
-            <span class="nav-link-text ms-1">Receipt History</span>
+            <span class="nav-link-text ms-1">Reciept History</span>
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="VMmessages.php">
+          <a class="nav-link active" href="VMmessages.php">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -261,187 +295,213 @@ $conn->close();
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
           <img src="image/profile.jpg" alt="profile" style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; border-radius: 10px; margin-left: 40px;">
-          <h5 class="text-center"><?php echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); ?></h5>
-      
+          <h5 class="text-center">
+    <?php 
+    if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
+        echo "EMPTY"; 
+    } else {
+        echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); 
+    }
+    ?>
+</h5>
+
           <hr class="horizontal dark mt-0">
         </div>
       </div>
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <!-- Navbar -->
-        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
-          <div class="container-fluid py-1 px-3">
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Vendor</a></li>
-                <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
-              </ol>
-              <h6 class="font-weight-bolder mb-0">Reciept History</h6>
-            </nav>
-            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-              <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                <div class="input-group">
-                  <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                  <input type="text" class="form-control" placeholder="Search for...">
-                </div>
-              </div>
-              <ul class="navbar-nav  justify-content-end">
-                <li class="nav-item d-flex align-items-center">
-                  <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
-                    <i class="fa fa-user me-sm-1"></i>
-                    <span class="d-sm-inline d-none">Vendor</span>
-                  </a>
-                </li>
-                <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-                  <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-                    <div class="sidenav-toggler-inner">
-                      <i class="sidenav-toggler-line"></i>
-                      <i class="sidenav-toggler-line"></i>
-                      <i class="sidenav-toggler-line"></i>
-                    </div>
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Vendor</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
+          </ol>
+          <h6 class="font-weight-bolder mb-0">Dashboard</h6>
         </nav>
-        <!-- End Navbar -->
-        <div class="container-fluid py-4">
-
-          <div class="row my-4">
-            <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
-              <div class="card">
-              <div class="card-header pb-0">
-              <div class="row">
-              <h6 class="text-center"><span class="text-sm text-secondary">Vendor Name:</span> <?php echo $vendor['username']; ?></h6>
-              </div>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            <div class="input-group">
+              <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" placeholder="Search for...">
             </div>
-
-            
-                <div class="card-body px-0 pb-2">
-                  <div class="table-responsive">
-                    <table class="table align-items-center mb-0">
-                      <thead>
-                        <tr>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Digital Reciept</th>
-                          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Monthly Rentals</th>
-                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Stall No.</th>
-                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Date</th>
-                        </tr>
-                      </thead>
-                      <tbody id="dataTableBody">
-                        <tr>
-                          
-                          <td class="text-center">
-                            <img src="image/gcash.jpeg" alt="Image 1" width="50" height="50" class="expandable-image">
-                          </td>
-                          <td class="align-middle text-center text-sm"><?php echo $vendor['monthly_rentals']; ?></td>
-                          <td class="align-middle text-center text-sm"><?php echo $vendor['stall_no']; ?></td>
-
-                          <td class="align-middle text-center text-sm"><?php echo $vendor['started_date']; ?></td>
-
-                        </tr>
-                        <tr>
-                         
-                          <td class="text-center">
-                            <img src="image/gcash.jpeg" alt="Image 2" width="50" height="50" class="expandable-image">
-                          </td>
-                          <td class="align-middle text-center text-sm"><?php echo $vendor['monthly_rentals']; ?></td>
-                          <td class="align-middle text-center text-sm"><?php echo  $vendor['stall_no']; ?></td>
-
-                          <td class="align-middle text-center text-sm"><?php echo $vendor['started_date']; ?></td>
-                        </tr>
-                        <!-- Add more table rows here -->
-                      </tbody>
-
-                      <!-- Single modal -->
-                      <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel" aria-hidden="true">
-                        <div class="modal-dialog modal-lg border-0">
-                          <div class="modal-content">
-                            <div class="modal-header">  
-                              <h4 class="modal-title text-end" id="imageModalLabel">Digital Reciept</h4>
-                            </div>
-                            <div class="modal-body">
-                              <img src="" alt="Expanded Image" width="100%" height="auto" id="expandedImage">
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                     
-                    </table>
-                  </div>
+          </div>
+          <ul class="navbar-nav  justify-content-end">
+            <li class="nav-item d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
+                <i class="fa fa-user me-sm-1"></i>
+                <span class="d-sm-inline d-none">Vendor</span>
+              </a>
+            </li>
+            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
                 </div>
-              </div>
-            </div>
-          </div>
-        
+              </a>
+            </li>
+          </ul>
         </div>
-      </main>
-          <div class="fixed-plugin">
-          <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
-            <i class="fa fa-cog py-2"> </i>
-          </a>
-          <div class="card shadow-lg ">
-            <div class="card-header pb-0 pt-3 ">
-              <div class="float-start">
-              <h5 class="mt-3 mb-0"><?php echo htmlspecialchars($vendor['username']); ?></h5>
-              <p>Vendor</p>
-              </div>
-              <div class="float-end mt-4">
-                <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
-                  <i class="fa fa-close"></i>
-                </button>
-              </div>
-              <!-- End Toggle Button -->
-            </div>
-            <hr class="horizontal dark my-1">
-            <div class="card-body pt-sm-3 pt-0">
-              <a class="btn bg-gradient-info w-85 text-white mx-4" href="#">Edit Profile</a>
-              <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
-              <hr class="horizontal dark my-1">
-              <div class="text-small">Fixed Navbar</div>
-            <div class="form-check form-switch ps-0">
-              <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
-            </div>
-            <br>
-            <hr class="horizontal dark my-1">
-            <br>
-            <div class="text-small text-center text-info">Messages</div>
-            <br><br>
-            <div class="text-small text-center">No Message Yet!</div>
-            </div>
-        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
+   
 
-        <div class="fixed-plugin">
-          <a class="fixed-plugin-button text-dark position-fixed px-3 py-2 mx-6"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-            <i class="fa fa-wechat py-2"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"> </i>
-          </a>
-        </div>
+    <div class="container-fluid py-4">
+    <div class="row mt-4">
+        <div class="d-grid gap-2 d-md-block py-3 px-3">
+            <div class="card mb-3" style="max-width: 100%;">
+                <div class="row g-0">
+                    <div class="col-md-12">
+                        <div class="card-body">
+                            <h5 class="card-title">MESSAGES</h5>
+                            <p>Welcome, <?php echo htmlspecialchars($vendor['first_name']); ?>!</p>
 
-        <div class="offcanvas offcanvas-end max-width-300" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-          <div class="offcanvas-header">
-            <h5 class="offcanvas-title text-info" id="offcanvasRightLabel">Reminders/Messages</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-          </div>
-          <div class="offcanvas-body">
-          <hr class="horizontal dark my-1">
-          
-          <br>
-          <div class="text-small text-center text-info">Messages</div>
-          <br><br>
-          <div class="text-small text-center">No Message Yet!</div>
-          </div>
-          
+                            <div class="accordion" id="chatAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Open Chats
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#chatAccordion">
+            <div class="accordion-body">
+                <div id="message-box" style="max-height: 300px; overflow-y: auto; border: 1px solid #e0e0e0; padding: 10px; border-radius: 8px;">
+                    <!-- Messages will appear here -->
+                </div>
+                <form id="message-form" class="mt-3">
+                    <div class="input-group">
+                        <input type="text" id="message-input" class="form-control" placeholder="Type a message" required />
+                        <button type="submit" class="btn btn-primary ms-2">Send</button>
+                    </div>
+                </form>
+            </div>
         </div>
+    </div>
+</div>
+
+                            <script>
+                                const messageForm = document.getElementById('message-form');
+                                const messageInput = document.getElementById('message-input');
+                                const messageBox = document.getElementById('message-box');
+
+                                messageForm.addEventListener('submit', function (e) {
+                                    e.preventDefault();
+                                    const message = messageInput.value;
+
+                                    const messageElement = document.createElement('div');
+                                    messageElement.textContent = message;
+                                    messageBox.appendChild(messageElement);
+                                    messageInput.value = '';
+
+                                    fetch('http://localhost:3001/sendMessage', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({
+                                            message: message
+                                        }),
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                              
+                                        console.log(data);
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                                });
+                            </script>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+  </main>
+  <div class="fixed-plugin">
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
+      <i class="fa fa-cog py-2"> </i>
+    </a>
+    <div class="card shadow-lg ">
+      <div class="card-header pb-0 pt-3 ">
+        <div class="float-start">
+          <h5 class="mt-3 mb-0"><?php echo htmlspecialchars($vendor['username']); ?></h5>
+          <p>Vendor</p>
+        </div>
+        <div class="float-end mt-4">
+          <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
+            <i class="fa fa-close"></i>
+          </button>
+        </div>
+        <!-- End Toggle Button -->
+      </div>
+       <!-- Edit Profile Button -->
+  <div class="card-body pt-sm-3 pt-0">
+    <a class="btn bg-gradient-info w-85 text-white mx-4" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</a>
+    <a class="btn bg-gradient-info w-85 text-white mx-4" href="#" data-bs-toggle="modal" data-bs-target="#fillApplicantModal">Fill Lease Agreement</a>
+  
+    <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
+    <hr class="horizontal dark my-1">
+    <div class="text-small">Fixed Navbar</div>
+    <div class="form-check form-switch ps-0">
+      <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
+    </div>
+  </div>
+
+    
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+
+      <br>
+      <hr class="horizontal dark my-1">
+      <br>
+      <div class="text-small text-center text-info">Messages</div>
+      <br><br>
+      <div class="text-small text-center">No Message Yet!</div>
+      </div>
+  </div>
+
+  <div class="fixed-plugin">
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2 mx-6"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+      <i class="fa fa-wechat py-2"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"> </i>
+    </a>
+  </div>
+
+  <div class="offcanvas offcanvas-end max-width-300" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title text-info" id="offcanvasRightLabel">Reminders/Messages</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body">
+    <hr class="horizontal dark my-1">
+    
+    <br>
+    <div class="text-small text-center text-info">Messages</div>
+    <br><br>
+    <div class="text-small text-center">No Message Yet!</div>
+    </div>
+    
+  </div>
+
   <!--   Core JS Files   -->
+ 
   <script src="assets2/js/core/popper.min.js"></script>
   <script src="assets2/js/core/bootstrap.min.js"></script>
   <script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/smooth-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/chartjs.min.js"></script>
-  
-  
+
   <script>
     var win = navigator.platform.indexOf('Win') > -1;
     if (win && document.querySelector('#sidenav-scrollbar')) {
@@ -455,11 +515,7 @@ $conn->close();
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
-
-
-  <link rel="stylesheet" href="loading.css">
-  <script src="loading.js" defer></script>
-  <div class="loader"></div>
 </body>
+
 
 </html>
