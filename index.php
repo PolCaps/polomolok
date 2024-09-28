@@ -680,7 +680,7 @@ session_start()
                 </svg>
                 <i class="bi bi-easel"></i>
               </div>
-              <a href="service-details.html" class="stretched-link">
+              <a href="https://app.mappedin.com/map/66f7db4242d0ac000b79d8d7" class="stretched-link">
                 <h3>Building C</h3>
               </a>
               <p>Ut excepturi voluptatem nisi sed. Quidem fuga consequatur. Minus ea aut. Vel qui id voluptas adipisci
