@@ -202,18 +202,94 @@ if (!$user) {
         </nav>
         <!-- End Navbar -->
 
-        <div class="container-fluid py-4">
+
+        <?php
+// Include database configuration
+include('database_config.php');
+
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Query to get total payments from receipts for the current month
+$totalPaymentsQuery = "SELECT SUM(totalPay) AS totalPayments 
+                       FROM receipts 
+                       WHERE MONTH(issued_date) = MONTH(CURRENT_DATE()) 
+                       AND YEAR(issued_date) = YEAR(CURRENT_DATE())";
+$totalPaymentsResult = $conn->query($totalPaymentsQuery);
+if ($totalPaymentsResult) {
+    $totalPayments = $totalPaymentsResult->fetch_assoc();
+    $data['totalPayments'] = $totalPayments['totalPayments'];
+} else {
+    $data['totalPayments'] = null;
+}
+
+// Query to get inquiries for the current month
+$inquiriesQuery = "SELECT name, email_add AS email, subject, message, sent_date 
+                   FROM inquiry 
+                   WHERE MONTH(sent_date) = MONTH(CURRENT_DATE()) 
+                   AND YEAR(sent_date) = YEAR(CURRENT_DATE())";
+$inquiriesResult = $conn->query($inquiriesQuery);
+
+// Query to count rent applications for the current month
+$rentAppCountQuery = "SELECT COUNT(*) AS rentAppCount 
+                      FROM rentapp_payment 
+                      WHERE MONTH(payment_date) = MONTH(CURRENT_DATE()) 
+                      AND YEAR(payment_date) = YEAR(CURRENT_DATE())";
+$rentAppCountResult = $conn->query($rentAppCountQuery);
+if ($rentAppCountResult) {
+    $rentAppCount = $rentAppCountResult->fetch_assoc();
+    $data['rentAppCount'] = $rentAppCount['rentAppCount'];
+} else {
+    $data['rentAppCount'] = null;
+}
+
+// Query to count active vendors
+$activeVendorsQuery = "SELECT COUNT(*) AS activeVendorsCount 
+                       FROM vendors 
+                       WHERE Vendor_Status = 'ACTIVE'";
+$activeVendorsResult = $conn->query($activeVendorsQuery);
+if ($activeVendorsResult) {
+    $activeVendorsCount = $activeVendorsResult->fetch_assoc();
+    $data['activeVendorsCount'] = $activeVendorsCount['activeVendorsCount'];
+} else {
+    $data['activeVendorsCount'] = null;
+}
+
+// Close the connection
+$conn->close();
+?>
+
+
+
+<div class="container-fluid py-4">
     <div class="row my-4">
+
+         <!-- Active Vendors Count Card -->
+         <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <h6>Active Vendors (This Month)</h6>
+                </div>
+                <div class="card-body">
+                    <span id="activeVendorsCount"><?php echo htmlspecialchars($data['activeVendorsCount']); ?></span>
+                </div>
+            </div>
+        </div>
+
+        
         <!-- Vendor Payments Card -->
         <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
             <div class="card">
-                <div class="card-header pb-0">
-                    <h6>Total Payments from Vendors (This Month)</h6>
+            <div class="card-header pb-0">
+                    <h6>Total Vendors Payments (This Month)</h6>
                 </div>
                 <div class="card-body">
-                    <table id="vendorPaymentsTable" class="table">
-                        <!-- DataTable will be populated here -->
-                    </table>
+                    <span id="totalPay"><?php echo htmlspecialchars($data['totalPayments']); ?></span>
                 </div>
             </div>
         </div>
@@ -226,7 +302,32 @@ if (!$user) {
                 </div>
                 <div class="card-body">
                     <table id="inquiryTable" class="table">
-                        <!-- DataTable will be populated here -->
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Subject</th>
+                                <th>Message</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <?php if ($inquiriesResult && $inquiriesResult->num_rows > 0): ?>
+                            <?php while ($inquiry = $inquiriesResult->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?php echo htmlspecialchars($inquiry['name']); ?></td>
+                                    <td><?php echo htmlspecialchars($inquiry['email']); ?></td>
+                                    <td><?php echo htmlspecialchars($inquiry['subject']); ?></td>
+                                    <td><?php echo htmlspecialchars($inquiry['message']); ?></td>
+                                    <td><?php echo htmlspecialchars($inquiry['sent_date']); ?></td>
+                                </tr>
+                            <?php endwhile; ?>
+                        <?php else: ?>
+                            <tr>
+                                <td colspan="5" class="text-center">No inquiries found for this month.</td>
+                            </tr>
+                        <?php endif; ?>
+                    </tbody>
                     </table>
                 </div>
             </div>
@@ -239,23 +340,55 @@ if (!$user) {
                     <h6>Rent Applications (This Month)</h6>
                 </div>
                 <div class="card-body">
-                    <span id="rentAppCount"></span>
+                    <span id="rentAppCount"><?php echo htmlspecialchars($data['rentAppCount']); ?></span>
                 </div>
             </div>
         </div>
 
-        <!-- Active Vendors Count Card -->
-        <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
-            <div class="card">
-                <div class="card-header pb-0">
-                    <h6>Active Vendors (This Month)</h6>
-                </div>
-                <div class="card-body">
-                    <span id="activeVendorsCount"></span>
-                </div>
-            </div>
-        </div>
+       
+
     </div>
+</div>
+
+<!-- DataTables and jQuery -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
+
+<script>
+$(document).ready(function() {
+    // Fetch the data using AJAX from the PHP script
+    $.ajax({
+        url: 'your_php_script.php', // Change to the correct PHP file location
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            // Populate Vendor Payments Table
+            $('#vendorPaymentsTable tbody').html('<tr><td>' + (data.totalPayments || 'No data') + '</td></tr>');
+
+            // Populate Inquiry Table
+            let inquiryRows = '';
+            data.inquiries.forEach(function(inquiry) {
+                inquiryRows += '<tr><td>' + inquiry.name + '</td><td>' + inquiry.email + '</td><td>' + inquiry.subject + '</td><td>' + inquiry.message + '</td><td>' + inquiry.sent_date + '</td></tr>';
+            });
+            $('#inquiryTable tbody').html(inquiryRows);
+
+            // Populate Rent Applications Count
+            $('#rentAppCount').text(data.rentAppCount || 'No data');
+
+            // Populate Active Vendors Count
+            $('#activeVendorsCount').text(data.activeVendorsCount || 'No data');
+        },
+        error: function() {
+            alert('Error fetching data.');
+        }
+    });
+
+    // Initialize DataTables
+    $('#vendorPaymentsTable').DataTable();
+    $('#inquiryTable').DataTable();
+});
+</script>
 
     <!-- Button to Generate PDF Report -->
     <div class="row">

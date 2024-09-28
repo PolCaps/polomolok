@@ -263,23 +263,24 @@ if (!$user) {
 
 // Fetch vendor details for display
 $sqlvendor = "
-    SELECT 
-        CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
-        v.username AS username, 
-        v.payment_due AS payment_dues, 
-        a.monthly_rentals AS rent_due,
-        v.vendor_id AS vendor_id
-    FROM vendors v
-    JOIN building_a a ON v.vendor_id = a.vendor_id
-    LEFT JOIN building_b b ON v.vendor_id = b.vendor_id
-    LEFT JOIN building_c c ON v.vendor_id = c.vendor_id
-    LEFT JOIN building_d d ON v.vendor_id = d.vendor_id
-    LEFT JOIN building_e e ON v.vendor_id = e.vendor_id
-    LEFT JOIN building_f f ON v.vendor_id = f.vendor_id
-    LEFT JOIN building_g g ON v.vendor_id = g.vendor_id
-    LEFT JOIN building_h h ON v.vendor_id = h.vendor_id
-    LEFT JOIN building_i i ON v.vendor_id = i.vendor_id
-    LEFT JOIN building_j j ON v.vendor_id = j.vendor_id
+  SELECT 
+    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+    v.username AS username, 
+    v.payment_due AS payment_dues, 
+    COALESCE(a.monthly_rentals, b.monthly_rentals, c.monthly_rentals, d.monthly_rentals, e.monthly_rentals, 
+             f.monthly_rentals, g.monthly_rentals, h.monthly_rentals, i.monthly_rentals, j.monthly_rentals) AS rent_due,
+    v.vendor_id AS vendor_id
+FROM vendors v
+LEFT JOIN building_a a ON v.vendor_id = a.vendor_id
+LEFT JOIN building_b b ON v.vendor_id = b.vendor_id
+LEFT JOIN building_c c ON v.vendor_id = c.vendor_id
+LEFT JOIN building_d d ON v.vendor_id = d.vendor_id
+LEFT JOIN building_e e ON v.vendor_id = e.vendor_id
+LEFT JOIN building_f f ON v.vendor_id = f.vendor_id
+LEFT JOIN building_g g ON v.vendor_id = g.vendor_id
+LEFT JOIN building_h h ON v.vendor_id = h.vendor_id
+LEFT JOIN building_i i ON v.vendor_id = i.vendor_id
+LEFT JOIN building_j j ON v.vendor_id = j.vendor_id
 ";
 
 $resultA = $conn->query($sqlvendor);
