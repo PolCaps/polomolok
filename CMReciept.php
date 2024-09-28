@@ -2,7 +2,7 @@
 session_name('cashier_session');
 session_start();
 
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'STAFF') {
+if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'CASHIER') {
     header("Location: index.php");
     exit();
 }
@@ -87,6 +87,47 @@ $conn->close();
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMaps"
+            aria-expanded="false" aria-controls="collapseMaps">
+            <div
+              class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-pin-map-fill" viewBox="0 0 16 16">
+                <title>office</title>
+                <path fill-rule="evenodd"
+                  d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z" />
+                <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z" />
+              </svg>
+            </div>
+            <span class="nav-link-text ms-1">Maps</span>
+          </a>
+          <div class="collapse" id="collapseMaps">
+            <div class="right-aligned-links" style="text-align: right;">
+              <a class="nav-link" href="ABuildingA.php">Building A</a>
+              <a class="nav-link" href="ABuildingB.php">Building B</a>
+              <a class="nav-link" href="ABuildingC.php">Building C</a>
+              <a class="nav-link" href="ABuildingD.php">Building D</a>
+              <a class="nav-link" href="ABuildingE.php">Building E</a>
+              <a class="nav-link" href="ABuildingF.php">Building F</a>
+              <a class="nav-link" href="ABuildingG.php">Building G</a>
+              <a class="nav-link" href="ABuildingH.php">Building H</a>
+              <a class="nav-link" href="ABuildingI.php">Building I</a>
+              <a class="nav-link" href="ABuildingJ.php">Building J</a>
+            </div>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="CMReports.php">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-richtext" viewBox="0 0 16 16">
+              <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+              <path d="M4.5 12.5A.5.5 0 0 1 5 12h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5m0-2A.5.5 0 0 1 5 10h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5m1.639-3.708 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V8.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V8s1.54-1.274 1.639-1.208M6.25 6a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5"/>
+            </svg>
+          </div>
+          <span class="nav-link-text ms-1">Monthly Reports</span>
+        </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link active " href="CMReciept.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
@@ -142,7 +183,7 @@ $conn->close();
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Staff</span>
+                <span class="d-sm-inline d-none">Cashier</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -158,42 +199,67 @@ $conn->close();
         </div>
       </div>
     </nav>
-    <!-- Issue Reciept Modal ni sya-->
-      <div class="modal fade" id="issueRecieptModal" tabindex="-1" aria-labelledby="issueRecieptModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="issueRecieptModalLabel">Issue Receipt to Vendor</h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-              <form>
-                <div class="mb-3">
-                  <label for="vendorSelect" class="form-label">Select Vendor</label>
-                  <select id="vendorSelect" class="form-select">
-                    <!-- populate this select with a list of vendors -->
-                    <option value="">Select a vendor</option>
-                  
-                    <!-- ... -->
-                  </select>
-                </div>
-                <div class="mb-3">
-                  <label for="receiptFile" class="form-label">Attach Receipt File or Photo</label>
-                  <input type="file" id="receiptFile" class="form-control">
-                </div>
-                <div class="mb-3">
-                  <label for="receiptNotes" class="form-label">Notes (optional)</label>
-                  <textarea id="receiptNotes" class="form-control"></textarea>
-                </div>
-              </form>
-            </div>
-            <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-              <button type="button" class="btn btn-primary" id="issueReceiptBtn">Generate Receipt</button>
-            </div>
-          </div>
-        </div>
+
+
+
+  <!-- Issue modal paras issueRre.php-->
+
+
+  
+<!-- Issue Receipt Modal -->
+<div class="modal fade" id="issueRecieptModal" tabindex="-1" aria-labelledby="issueRecieptModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="issueRecieptModalLabel">Issue Receipt to Vendor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
+      <div class="modal-body">
+        <!-- Form submission directly to issueRe.php -->
+        <form action="/PolomolokPublicMarketMeedo/Receipts/issueRe.php" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="vendorSelect" class="form-label">Select Vendor</label>
+            <select id="vendorSelect" name="vendorSelect" class="form-select" required>
+              <option value="">Select a vendor</option>
+              <!-- Options populated via JavaScript -->
+            </select>
+          </div>
+          <!-- Label to display selected vendor ID -->
+          <div class="mb-3">
+            <label for="vendorIdLabel" class="form-label">Vendor ID:</label>
+            <span id="vendor_id" class="form-text"></span> <!-- This will display the vendor ID -->
+          </div>
+
+          <div class="mb-3">
+            <label for="usernameDisplay" class="form-label">Username:</label>
+            <span id="usernameDisplay" class="form-text"></span>
+            <input type="hidden" id="usernameDisplay" name="username" value="">
+          </div>
+
+
+          <input type="hidden" id="vendor_id_input" name="vendor_id" value=""> <!-- Hidden input to store vendor ID -->
+          <div class="mb-3">
+            <label for="receiptFile" class="form-label">Attach Receipt File or Photo</label>
+            <input type="file" id="receiptFile" name="receiptFile" class="form-control" required>
+          </div>
+          <div class="mb-3">
+            <label for="totalPayment" class="form-label">Total Payments</label>
+            <textarea id="totalPayment" name="totalPayment" class="form-control" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="receiptNotes" class="form-label">Notes (optional)</label>
+            <textarea id="receiptNotes" name="receiptNotes" class="form-control"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary" name="submit">Generate Receipt</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
 
     <!-- End Navbar -->
     <div class="container-fluid py-4">
@@ -216,9 +282,37 @@ if ($conn->connect_error) {
     exit;
 }
 
-$sqlV = "SELECT v.vendor_id, v.first_name, v.middle_name, v.last_name, r.receipt_id, r.receipt
-        FROM vendors v
-        LEFT JOIN receipts r ON v.vendor_id = r.vendor_id";
+$sqlV = "
+    SELECT v.vendor_id, v.username, v.first_name, v.middle_name, v.last_name, 
+           GROUP_CONCAT(DISTINCT r.receipt SEPARATOR ', ') AS receipts, 
+           v.payment_due AS due_dates, 
+           stalls.buildings
+    FROM vendors v
+    JOIN (
+        SELECT vendor_id, stall_no AS buildings FROM building_a
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_b
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_c
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_d
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_e
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_f
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_g
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_h
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_i
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_j
+    ) AS stalls ON v.vendor_id = stalls.vendor_id
+    LEFT JOIN receipts r ON v.vendor_id = r.vendor_id
+    GROUP BY v.vendor_id, stalls.buildings
+";
+
 
 $resultV = $conn->query($sqlV);
 
@@ -239,10 +333,6 @@ if ($resultV->num_rows > 0) {
 $conn->close();
 
 ?>
-
-
-
-
 
           <div class="card">
             <div class="card-header pb-0">
@@ -270,65 +360,184 @@ $conn->close();
                   <thead>
                     <tr>
                       <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Issued Date</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall #</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stall Number</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Issue Date</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt History</th>
                     </tr>
                   </thead>
                   <tbody id="dataTableBody">
-        <?php foreach ($dataV as $row) { ?>
-            <tr>
-                <td>
-                    <div class="d-flex px-3 py-1">
-                        <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm"><?php echo $row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']; ?></h6>
-                        </div>
+    <?php foreach ($dataV as $row) { ?>
+        <tr>
+            <td>
+                <div class="d-flex px-3 py-1">
+                    <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm"><?php echo $row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']; ?></h6>
                     </div>
-                </td>
-                <td>
-                    <div class="avatar-group mt-1">
-                        <h6 class="mb-1 text-sm"><?php echo $row['receipt_id']; ?></h6>
-                    </div>
-                </td>
-                <td class="align-middle text-center text-sm">
-                    <span class="text-xs font-weight-bold"><?php echo $row['vendor_id']; ?></span>
-                </td>
-                <td class="align-middle text-center text-sm">
-                    <button type="button" class="btn btn-sm btn-primary my-1" data-bs-toggle="modal" data-bs-target="#openHistoryModal" data-receipts="<?php echo $row['receipt']; ?>">Show Receipts</button>
-                </td>
-            </tr>
-        <?php } ?>
-    </tbody>
+                </div>
+            </td>
+            <td>
+                <div class="avatar-group mt-1">
+                    <h6 class="mb-1 text-sm"><?php echo $row['buildings']; ?></h6>
+                </div>
+            </td>
+            <td class="align-middle text-center text-sm">
+                <span class="text-xs font-weight-bold"><?php echo $row['due_dates']; ?></span>
+            </td>
+            <td class="align-middle text-center text-sm">
+                <button 
+                    type="button" 
+                    class="btn btn-sm btn-primary my-1" 
+                    data-bs-toggle="modal" 
+                    data-bs-target="#openHistoryModal" 
+                    data-receipts="<?php echo $row['receipts']; ?>" 
+                    data-vendor-id="<?php echo $row['vendor_id']; ?>"
+                >
+                  Show Receipts
+                </button>
+            </td>
+        </tr>
+    <?php } ?>
+</tbody>
                 </table>
               </div>
-              <script>
-    document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
-        button.addEventListener('click', function() {
-            const receiptsContent = document.getElementById('receiptsContent');
-            receiptsContent.innerHTML = this.getAttribute('data-receipts');
-        });
-    });
-    // Function to populate vendor select dropdown
-    function populateVendorSelect(vendors) {
-        const vendorSelect = document.getElementById('vendorSelect');
-        vendorSelect.innerHTML = '<option value="">Select a vendor</option>'; // Clear existing options
-        vendors.forEach(data => {
-            const option = document.createElement('option');
-            option.value = data.vendor_id;
-            option.text = data.first_name + ' ' + data.middle_name + ' ' + data.last_name + ' (Stall: ' + data.receipt_id + ')';
-            vendorSelect.appendChild(option);
-        });
+<!-- Modal for receipt history -->
+<div class="modal fade" id="openHistoryModal" tabindex="-1" aria-labelledby="openHistoryModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="openHistoryModalLabel">Receipt History</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Table to display receipt history -->
+        <table class="table align-items-center mb-0">
+          <thead>
+            <tr>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor ID</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt ID</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
+              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">File</th>
+            </tr>
+          </thead>
+          <tbody id="receiptHistoryBody">
+            <!-- Data will be populated here using JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// Function to fetch receipt history data
+function fetchReceiptHistory(vendorId) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', '/PolomolokPublicMarketMeedo/Receipts/get_receipts.php?vendor_id=' + vendorId, true); // Add vendor_id to the query
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      var response = JSON.parse(xhr.responseText);
+
+      if (response.data && response.data.receipts.length > 0) {
+        displayReceiptHistory(response.data.receipts);
+      } else {
+        alert('No receipt data found for this vendor.');
+      }
+    } else {
+      console.error('Request failed with status ' + xhr.status);
+      alert('Failed to load receipt data. Please try again later.');
     }
+  };
+  xhr.onerror = function() {
+    console.error('Network error occurred');
+    alert('A network error occurred. Please check your connection.');
+  };
+  xhr.send();
+}
 
-    // Call the function to populate the vendor select dropdown
-    const vendors = <?php echo json_encode($dataV); ?>;
-    populateVendorSelect(vendors);
+// Function to display receipt history data in the modal
+function displayReceiptHistory(data) {
+  var tbody = document.getElementById('receiptHistoryBody');
+  var html = '';
 
-    // // Wait for the DOM to be fully loaded before running the script
-    // document.addEventListener('DOMContentLoaded', function () {
-    //     fetchData();
-    // });
+  data.forEach(function(row) {
+    html += '<tr>';
+    html += '  <td>' + row.vendor_id + '</td>'; // Correct key for vendor_id
+    html += '  <td>' + row.receiptsNum + '</td>'; // Correct key for receipt_id
+    html += '  <td>' + row.Dates + '</td>'; // Correct key for date (issued_date in PHP)
+    html += '  <td>';
+    if (row.receipts_history) { // Assuming 'receipts_history' is the file URL
+      html += '    <a href="' + row.receipts_history + '" target="_blank">View File</a>';
+    } else {
+      html += '    No File Available';
+    }
+    html += '  </td>';
+    html += '</tr>';
+  });
+
+  tbody.innerHTML = html;
+}
+
+// Add event listener to the button to open the modal
+document.addEventListener('DOMContentLoaded', function() {
+  var buttons = document.querySelectorAll('[data-bs-target="#openHistoryModal"]');
+  buttons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      var vendorId = button.getAttribute('data-vendor-id'); // Fetch vendor_id from button
+      // var receiptId = button.getAttribute('data-receipts'); // Fetch receipt_id from button
+      fetchReceiptHistory(vendorId); // Pass both vendor_id and receipt_id
+    });
+  });
+});
 </script>
+
+              
+              <script>
+document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
+    button.addEventListener('click', function() {
+        const receiptsContent = document.getElementById('receiptsContent');
+        receiptsContent.innerHTML = this.getAttribute('data-receipts');
+    });
+});
+
+// Function to populate vendor select dropdown
+function populateVendorSelect(vendors) {
+    const vendorSelect = document.getElementById('vendorSelect');
+    vendorSelect.innerHTML = '<option value="">Select a vendor</option>'; // Clear existing options
+    vendors.forEach(data => {
+        const option = document.createElement('option');
+        option.value = data.vendor_id; // This is the vendor_id
+        option.text = `${data.first_name} ${data.middle_name} ${data.last_name} (Stall: ${data.buildings})`;
+        option.dataset.username = data.username; // Add username as a data attribute
+        vendorSelect.appendChild(option);
+    });
+}
+
+// Event listener for vendor selection change
+document.getElementById('vendorSelect').addEventListener('change', function() {
+    const vendorId = this.value; // Get the selected vendor ID
+    const selectedOption = this.options[this.selectedIndex]; // Get the selected option
+    const username = selectedOption.dataset.username; // Retrieve the username from data attribute
+
+    // Update the vendor ID display
+    document.getElementById('vendor_id').textContent = vendorId; // Update the label to show the vendor ID
+    document.getElementById('vendor_id_input').value = vendorId; // Set the hidden input value
+    
+    // Update the username display (assuming you have an element to display the username)
+    document.getElementById('usernameDisplay').textContent = username; // Update the username display
+});
+
+// Call the function to populate the vendor select dropdown
+const vendors = <?php echo json_encode($dataV); ?>;
+populateVendorSelect(vendors);
+</script>
+
+
+
+
+
 
 
 
@@ -507,91 +716,6 @@ $conn->close();
       </div>
       
     
-<!-- Modal for receipt history -->
-<div class="modal fade" id="openHistoryModal" tabindex="-1" aria-labelledby="openHistoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="openHistoryModalLabel">Receipt History</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Table to display receipt history -->
-        <table class="table align-items-center mb-0">
-          <thead>
-            <tr>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt ID</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">File</th>
-            </tr>
-          </thead>
-          <tbody id="receiptHistoryBody">
-
-            <!-- Data will be populated here using JavaScript -->
-         
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-      
-  
-<script>
-  // Function to fetch receipt history data
-  function fetchReceiptHistory(receiptId) {
-    var xhr = new XMLHttpRequest();
-    xhr.open('GET', 'get_receipt_history.php?receipt_id=' + receiptId, true);
-    xhr.onload = function() {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        var data = JSON.parse(xhr.responseText);
-        displayReceiptHistory(data);
-      } else {
-        console.error('Request failed with status ' + xhr.status);
-      }
-    };
-    xhr.onerror = function() {
-      console.error('Network error occurred');
-    };
-    xhr.send();
-  }
-
-  // Function to display receipt history data in the modal
-  function displayReceiptHistory(data) {
-    var tbody = document.getElementById('receiptHistoryBody');
-    var html = '';
-    
-    data.forEach(function(row) {
-      html += '<tr>';
-      html += '  <td>' + row.date + '</td>';
-      html += '  <td>' + row.receipt_id + '</td>';
-      html += '  <td>';
-      if (row.file_url) {
-        html += '    <a href="' + row.file_url + '" target="_blank">View File</a>';
-      } else {
-        html += '    No File Available';
-      }
-      html += '  </td>';
-      html += '</tr>';
-    });
-    
-    tbody.innerHTML = html;
-  }
-
-  // Add event listener to the button to open the modal
-  document.addEventListener('DOMContentLoaded', function() {
-    var buttons = document.querySelectorAll('[data-bs-target="#openHistoryModal"]');
-    buttons.forEach(function(button) {
-      button.addEventListener('click', function() {
-        var receiptId = button.getAttribute('data-receipt-id');
-        fetchReceiptHistory(receiptId);
-      });
-    });
-  });
-</script>
 
 
     </div>

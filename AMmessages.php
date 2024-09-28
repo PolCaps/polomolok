@@ -3,11 +3,11 @@ session_name('admin_session');
 session_start();
 
 if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'ADMIN') {
-  header("Location: index.php");
-  exit();
+    header("Location: index.php");
+    exit();
 }
 
-// Get the vendor ID from the session
+// Get the user ID from the session
 $user_id = $_SESSION['id'];
 
 // Include database configuration
@@ -18,28 +18,69 @@ $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 // Check the connection
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch vendor information
+// Fetch user information
 $sql = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
-  die("Prepare failed: " . $conn->error);
+    die("Prepare failed: " . $conn->error);
 }
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $user = $result->fetch_assoc();
 
-// Check if vendor data is retrieved
 if (!$user) {
-  die("No User found with ID " . htmlspecialchars($user_id));
+    die("No User found with ID " . htmlspecialchars($user_id));
 }
 
-// Close the connection
+// // cURL to send request to Node.js server
+// $nodeServerUrl = 'http://localhost:3001/authenticate'; // Change this if your server is on a different host
+// $ch = curl_init($nodeServerUrl);
+
+// // Ensure to access the username from the $user associative array correctly
+// $data = json_encode([
+//     'username' => $user['username'], // Corrected from $user('username') to $user['username']
+//     'secret' => $user['username']
+// ]);
+
+// curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+// curl_setopt($ch, CURLOPT_HTTPHEADER, [
+//     'Content-Type: application/json',
+//     'Content-Length: ' . strlen($data)
+// ]);
+// curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+
+// // Execute cURL
+// $response = curl_exec($ch);
+
+// if (curl_errno($ch)) {
+//     echo 'cURL error: ' . curl_error($ch);
+//     exit();
+// }
+
+// curl_close($ch);
+
+// // Decode JSON response
+// $responseData = json_decode($response, true);
+
+// // Check if the authentication was successful
+// if ($responseData && isset($responseData['secret'])) {
+//     // User authenticated, load chat UI or perform other actions
+//     echo "User authenticated, loading chat...";
+//     // Add your messaging UI logic here
+// } else {
+//     // Handle failed authentication (show error message)
+//     echo "Authentication failed. Please try again.";
+//     exit();
+// }
+
+// Close the database connection
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -270,23 +311,8 @@ $conn->close();
       </div>
     </nav>
     <!-- End Navbar -->
-    <div class="container-fluid py-4">
-      <div class="row mt-4">
-        <div class="d-grid gap-2 d-md-block py-3 px-3">
 
-          <div class="card mb-3" style="max-width: 400px;">
-            <div class="row g-0">
-              <div class="col-md-12">
-                <div class="card-body">
-                  <h5 class="card-title">Status</h5>
-
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
+  
 
     <div class="container-fluid py-4">
     <div class="row mt-4">
@@ -295,12 +321,65 @@ $conn->close();
                 <div class="row g-0">
                     <div class="col-md-12">
                         <div class="card-body">
-                            <h5 class="card-title">ANNOUNCEMENTS</h5>
+                            <h5 class="card-title">MESSAGES</h5>
+                            <p>Welcome, <?php echo htmlspecialchars($user['first_name']); ?>!</p>
 
-                          
+                            <div class="accordion" id="chatAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                Open Chats
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#chatAccordion">
+            <div class="accordion-body">
+                <div id="message-box" style="max-height: 300px; overflow-y: auto; border: 1px solid #e0e0e0; padding: 10px; border-radius: 8px;">
+                    <!-- Messages will appear here -->
+                </div>
+                <form id="message-form" class="mt-3">
+                    <div class="input-group">
+                        <input type="text" id="message-input" class="form-control" placeholder="Type a message" required />
+                        <button type="submit" class="btn btn-primary ms-2">Send</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
+                            <script>
+                                const messageForm = document.getElementById('message-form');
+                                const messageInput = document.getElementById('message-input');
+                                const messageBox = document.getElementById('message-box');
 
+                                messageForm.addEventListener('submit', function (e) {
+                                    e.preventDefault();
+                                    const message = messageInput.value;
 
+                                    const messageElement = document.createElement('div');
+                                    messageElement.textContent = message;
+                                    messageBox.appendChild(messageElement);
+                                    messageInput.value = '';
+
+                                    fetch('http://localhost:3001/sendMessage', {
+                                        method: 'POST',
+                                        headers: {
+                                            'Content-Type': 'application/json',
+                                        },
+                                        body: JSON.stringify({
+                                            message: message
+                                        }),
+                                    })
+                                    .then(response => response.json())
+                                    .then(data => {
+                              
+                                        console.log(data);
+                                    })
+                                    .catch(error => {
+                                        console.error('Error:', error);
+                                    });
+                                });
+                            </script>
 
                         </div>
                     </div>
@@ -310,63 +389,8 @@ $conn->close();
     </div>
 </div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // JavaScript to handle row click event for Edit Announcement
-        document.querySelectorAll('.announcement-row').forEach(row => {
-            row.addEventListener('click', function () {
-                var id = this.getAttribute('data-id');
-                var title = this.getAttribute('data-title');
-                var description = this.getAttribute('data-description');
-                var stall = this.getAttribute('data-stall');
-                var building = this.getAttribute('data-building'); // Ensure this attribute is set in the table rows
 
-                // Populate form fields in the edit modal
-                document.getElementById('editAnnouncementId').value = id;
-                document.getElementById('editTitle').value = title;
-                document.getElementById('editDescription').value = description;
-                document.getElementById('editBuilding').value = building;
-                document.getElementById('editStall').value = stall;
 
-                // Show the edit modal
-                var editModal = new bootstrap.Modal(document.getElementById('editAnnouncementModal'));
-                editModal.show();
-            });
-        });
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-        // Handle DELETE button click
-        document.querySelectorAll('.delete-btn').forEach(button => {
-            button.addEventListener('click', function () {
-                var id = this.getAttribute('data-id');
-
-                if (confirm('Are you sure you want to delete this announcement?')) {
-                    // Send DELETE request
-                    fetch('delAnnounce.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: new URLSearchParams({
-                            'id': id
-                        })
-                    })
-                    .then(response => response.text())
-                    .then(result => {
-                        if (result === 'success') {
-                            // Remove the row from the table
-                            this.closest('tr').remove();
-                        } else {
-                            alert('Error deleting announcement');
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-                }
-            });
-        });
-    });
-</script>
 
   </main>
   <div class="fixed-plugin">

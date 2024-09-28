@@ -47,24 +47,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
     // Validate and handle file uploads
 $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
 $fileErrors = [];
-
-function validate_and_handle_file($fileKey, $targetDir, $allowedTypes, &$fileErrors) {
+function validate_and_handle_file($fileKey, $targetDir, $allowedTypes) {
     if (isset($_FILES[$fileKey]) && $_FILES[$fileKey]['error'] === UPLOAD_ERR_OK) {
+        // Check if the file type is allowed
         if (!in_array($_FILES[$fileKey]['type'], $allowedTypes)) {
-            $fileErrors[] = "Invalid file type for $fileKey.";
-            return null;
+            // Send an alert if the file type is invalid
+            echo "<script>alert('Invalid file type for $fileKey.'); window.location.href = 'Vendor.php';</script>";
+            exit; // Stop further execution
         }
 
+        // Define the target file path
         $targetFile = $targetDir . basename($_FILES[$fileKey]["name"]);
+        
+        // Attempt to move the uploaded file
         if (move_uploaded_file($_FILES[$fileKey]["tmp_name"], $targetFile)) {
-            return $targetFile;
+            return $targetFile; // Return the target file path if successful
         } else {
-            $fileErrors[] = "Error moving $fileKey file to destination.";
-            return null;
+            // Send an alert if there's an error moving the file
+            echo "<script>alert('Error moving $fileKey file to destination.'); window.location.href = 'Vendor.php';</script>";
+            exit; // Stop further execution
         }
+    } else {
+        // Optionally handle cases where no file was uploaded
+        return null; // Return null if the file isn't uploaded
     }
-    return null; // Return null if the file isn't uploaded
 }
+
 
 $leaseAgreementsDest = validate_and_handle_file('lease_agreements', $targetDir, $allowedTypes, $fileErrors);
 $businessPermitsDest = validate_and_handle_file('business_permits', $targetDir, $allowedTypes, $fileErrors);

@@ -16,7 +16,7 @@ $userId = $data['userId'] ?? null;
 if ($userId) {
     // Prepare the SQL statement to prevent SQL injection
     $stmt = $conn->prepare("DELETE FROM users WHERE id = ?");
-    $stmt->bind_param("s", $userId); // Use "s" for string; adjust if necessary based on your data type
+    $stmt->bind_param("i", $userId); // Use "s" for string; adjust if necessary based on your data type
 
     if ($stmt->execute()) {
         if ($stmt->affected_rows > 0) {

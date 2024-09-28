@@ -90,6 +90,47 @@ $conn->close();
           </a>
         </li>
         <li class="nav-item">
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMaps"
+            aria-expanded="false" aria-controls="collapseMaps">
+            <div
+              class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-pin-map-fill" viewBox="0 0 16 16">
+                <title>office</title>
+                <path fill-rule="evenodd"
+                  d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z" />
+                <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z" />
+              </svg>
+            </div>
+            <span class="nav-link-text ms-1">Maps</span>
+          </a>
+          <div class="collapse" id="collapseMaps">
+            <div class="right-aligned-links" style="text-align: right;">
+              <a class="nav-link" href="ABuildingA.php">Building A</a>
+              <a class="nav-link" href="ABuildingB.php">Building B</a>
+              <a class="nav-link" href="ABuildingC.php">Building C</a>
+              <a class="nav-link" href="ABuildingD.php">Building D</a>
+              <a class="nav-link" href="ABuildingE.php">Building E</a>
+              <a class="nav-link" href="ABuildingF.php">Building F</a>
+              <a class="nav-link" href="ABuildingG.php">Building G</a>
+              <a class="nav-link" href="ABuildingH.php">Building H</a>
+              <a class="nav-link" href="ABuildingI.php">Building I</a>
+              <a class="nav-link" href="ABuildingJ.php">Building J</a>
+            </div>
+          </div>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="CMReports.php">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-richtext" viewBox="0 0 16 16">
+              <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+              <path d="M4.5 12.5A.5.5 0 0 1 5 12h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5m0-2A.5.5 0 0 1 5 10h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5m1.639-3.708 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V8.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V8s1.54-1.274 1.639-1.208M6.25 6a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5"/>
+            </svg>
+          </div>
+          <span class="nav-link-text ms-1">Monthly Reports</span>
+        </a>
+        </li>
+        <li class="nav-item">
           <a class="nav-link " href="CMReciept.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
