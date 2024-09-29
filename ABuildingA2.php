@@ -2754,7 +2754,7 @@ $user_id = $_SESSION['id'];
       var stallNo = tooltipTriggerEl.getAttribute('data-stall-no'); // Get stall_no from data attribute
 
       // Fetch the stall status and occupant via AJAX
-      fetch('fetch_stall_status.php?stall_no=' + stallNo)
+      fetch('fetch_stall_statusA.php?stall_no=' + stallNo)
         .then(response => response.json()) // Parse JSON response
         .then(data => {
           // Update the title attribute with both the stall status and occupant
