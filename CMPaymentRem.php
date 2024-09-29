@@ -361,7 +361,7 @@ if ($resultA->num_rows > 0) {
           </div>
           <div class="mb-3">
             <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
-            <input type="text" class="form-control" id="remaining-balance" name="remaining-balance" required>
+            <input type="number" class="form-control" id="remaining-balance" name="remaining-balance" step="0.01" min="0" required>
           </div>
           <div class="mb-3">
             <label for="monthly-rentals" class="col-form-label">Monthly Rentals:</label>
@@ -369,11 +369,11 @@ if ($resultA->num_rows > 0) {
           </div>
           <div class="mb-3">
             <label for="miscellaneous-fees" class="col-form-label">Miscellaneous Fees (optional):</label>
-            <input type="text" class="form-control" id="miscellaneous-fees" name="miscellaneous-fees">
+            <input type="number" class="form-control" id="miscellaneous-fees" name="miscellaneous-fees" step="0.01" min="0" >
           </div>
           <div class="mb-3">
             <label for="other-fees" class="col-form-label">Other Fees (optional):</label>
-            <input type="text" class="form-control" id="other-fees" name="other-fees">
+            <input type="number" class="form-control" id="other-fees" name="other-fees" step="0.01" min="0" >
           </div>
           <input type="hidden" id="vendor-id" name="vendor-id">
           <button type="submit" id="submit" class="btn btn-primary">Generate Invoice</button>
@@ -389,6 +389,26 @@ if ($resultA->num_rows > 0) {
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // Format the input as currency
+  function formatCurrencyInput(input) {
+    let value = parseFloat(input.value.replace(/,/g, ''));
+    if (!isNaN(value)) {
+      input.value = value.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits: 2 });
+    }
+  }
+
+  // Attach input event to format currency
+  document.querySelectorAll('.currency-input').forEach(input => {
+    input.addEventListener('input', function() {
+      formatCurrencyInput(this);
+    });
+
+    // Optional: Format when the input loses focus
+    input.addEventListener('blur', function() {
+      formatCurrencyInput(this);
+    });
+  });
+
   // Function to open the modal and set vendor details
   function openSendMessageModal(vendorName, vendorId) {
     document.getElementById('vendor-name').value = vendorName;
@@ -431,9 +451,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        // Display a popup with the PDF download link
         alert('Invoice generated successfully!');
-        // Optionally, you can open the PDF directly
         window.open(data.file, '_blank');
       } else {
         alert('Error: ' + data.message);
@@ -442,7 +460,6 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(error => console.error('Error:', error));
   });
 
-  // Ensure openSendMessageModal is available for use
   window.openSendMessageModal = openSendMessageModal;
 });
 </script>

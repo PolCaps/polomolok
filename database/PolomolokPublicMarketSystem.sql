@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 26, 2024 at 11:21 AM
+-- Generation Time: Sep 29, 2024 at 06:22 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.0.30
 
@@ -182,7 +182,7 @@ CREATE TABLE `building_b` (
 --
 
 INSERT INTO `building_b` (`building_id`, `stall_no`, `building_floor`, `monthly_rentals`, `vendor_id`, `stall_status`) VALUES
-(1, 'B-01', 'Ground Floor', '2,025.00', NULL, 'Vacant'),
+(1, 'B-01', 'Ground Floor', '2,025.00', 82, 'Occupied'),
 (2, 'B-02', 'Ground Floor', '2,025.00', NULL, 'Vacant'),
 (3, 'B-03', 'Ground Floor', '2,025.00', NULL, 'Vacant'),
 (4, 'B-04', 'Ground Floor', '2,025.00', NULL, 'Vacant'),
@@ -1320,7 +1320,8 @@ CREATE TABLE `documents` (
 INSERT INTO `documents` (`document_id`, `vendor_id`, `lease_agreements`, `business_permits`, `business_license`, `other_supporting`) VALUES
 (8, 71, NULL, 'datas//2024-09-23/cypher-cybersec.pdf', NULL, NULL),
 (9, 73, NULL, 'datas//2024-09-23/cypher_text.pdf', NULL, NULL),
-(10, 80, NULL, NULL, NULL, NULL);
+(10, 80, 'datas//2024-09-27/Screenshot_20240921-135454.png', 'datas//2024-09-27/Screenshot_20240921-135454.png', 'datas//2024-09-27/Screenshot_20240921-135454.png', NULL),
+(11, 82, 'datas//2024-09-28/images.jpeg', 'datas//2024-09-28/images.jpeg', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1389,6 +1390,7 @@ CREATE TABLE `receipts` (
   `receipt_id` int(11) NOT NULL,
   `vendor_id` bigint(20) NOT NULL,
   `receipt` varchar(255) DEFAULT NULL,
+  `totalPay` varchar(255) NOT NULL,
   `notes` text DEFAULT NULL,
   `issued_date` varchar(255) DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -1397,8 +1399,12 @@ CREATE TABLE `receipts` (
 -- Dumping data for table `receipts`
 --
 
-INSERT INTO `receipts` (`receipt_id`, `vendor_id`, `receipt`, `notes`, `issued_date`) VALUES
-(7, 80, 'Receipts/file/80/tpSamontanes.pdf', '', '2024-09-26 17:07:32');
+INSERT INTO `receipts` (`receipt_id`, `vendor_id`, `receipt`, `totalPay`, `notes`, `issued_date`) VALUES
+(7, 80, 'Receipts/file/80/IMG_20240423_0001.pdf', '1200,00', 'new file', '2024-09-26 17:07:32'),
+(8, 80, 'Receipts/file/80/hehe.jpg', '1200,00', '', '2024-09-28 04:53:01'),
+(9, 80, 'Receipts/file/80/rjsignature.png', '9802,00', '', '2024-09-28 04:54:10'),
+(10, 80, 'Receipts/file/80/attendance_system.pdf', '5,000,00', 'hello', '2024-09-28 06:07:50'),
+(11, 80, 'Receipts/file/80/R-removebg.png', '3,000,00', '', '2024-09-28 06:14:55');
 
 -- --------------------------------------------------------
 
@@ -1423,7 +1429,8 @@ INSERT INTO `relocation_req` (`relocation_id`, `vendor_id`, `message`, `date_sen
 (11, 57, 'naa pay pwesto?', '2024-09-07 07:24:10', 'Accepted'),
 (12, 61, 'request relocation', '2024-09-07 07:24:40', 'Declined'),
 (13, 55, 'pa transfer po.', '2024-08-18 13:29:34', 'Processing'),
-(14, 73, 'req', '2024-09-23 08:37:45', 'Processing');
+(14, 73, 'req', '2024-09-23 08:37:45', 'Processing'),
+(15, 82, 'Pa request rello', '2024-09-28 04:30:43', 'Processing');
 
 -- --------------------------------------------------------
 
@@ -1478,7 +1485,7 @@ CREATE TABLE `rent_application` (
 --
 
 INSERT INTO `rent_application` (`Approval`, `applicant_id`, `first_name`, `middle_name`, `last_name`, `contact_no`, `building_type`, `stall_no`, `age`, `email`, `address`, `rentapp_file`, `applied_date`) VALUES
-('PENDING', 2028, 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 9510462062, 'Building A', 20, 56, 'reyanjansamontanes@gmail.com', 'Polotana Subdivision, West Drive.', 'rent_applications_file_dir/samontanes.pdf', '2024-09-07 07:22:30'),
+('PROCESSING', 2028, 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 9510462062, 'Building A', 20, 56, 'reyanjansamontanes@gmail.com', 'Polotana Subdivision, West Drive.', 'rent_applications_file_dir/samontanes.pdf', '2024-09-28 04:17:19'),
 ('PENDING', 2031, 'Duke', 'B', 'Shelby', 934793849, 'Building E', 87, 45, 'duke@gmail.com', 'Bermingham', 'rent_applications_file_dir/Building-A-2nd-Floor.pdf', '2024-07-29 00:39:22'),
 ('PROCESSING', 2032, 'Ivy ', 'Grace ', 'Laurente', 9510462062, 'Building A', 89, 45, 'ivy@gmail.com', 'Cannery Site', 'rent_applications_file_dir/rentAppMeedo.pdf', '2024-07-29 05:18:46'),
 ('APPROVED', 2033, 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 9510462062, 'Building A', 20, 54, 'reyanjansamontanes@gmail.com', 'Polotana Subdivision, West Drive.', 'rent_applications_file_dir/5974879027155300046-Polomolok-Public-Market-Rent-Application-Form.pdf', '2024-07-29 08:13:10');
@@ -1509,12 +1516,12 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `user_type`, `picture_profile`) VALUES
-(11, 'rj', 'rj123', 'reyan', 'jan', 'samontanes', 43, 'polomolok', 'gmail.com', 3233252, 'ADMIN', 'adminProfile/Screenshot_20240921-135454.png'),
+(11, 'rj', 'rj123', 'reyan', 'jan', 'samontanes', 43, 'polomolok', 'gmail.com', 3233252, 'ADMIN', 'adminProfile/FB_IMG_1602662112047.jpg'),
 (86, 'cashier', 'cash123', 'Montana', 'D.', 'Revilla', 21, 'Purok Dimansia', 'montana@gmail.com', 9938739511, 'CASHIER', NULL),
 (87, 'Longanisa', 'Talong', 'DocuMen', 'K.', 'Bambalolong', 44, 'Purok. Drimatia, Kalfungal', 'Documen@gmail.com', 9938757326, 'DOCUMENT_HANDLER', NULL),
 (152, 'King', 'pj123', 'King', 'Theous', 'The_third', 23, 'Dunglorian,', '@gmail.com', 98746439272, 'CUSTOMER_SERVICE', NULL),
-(155, '', '', '', '', '', 0, '', '', 0, 'ADMIN', NULL),
-(156, 'services', 'serving123', 'services', 'Meedo', 'ServicesStaff', 23, 'Polotana Subdivision, West Drive.', 'Q@gmail', 9510462062, 'CUSTOMER_SERVICE', NULL);
+(156, 'services', 'serving123', 'services', 'Meedo', 'ServicesStaff', 23, 'Polotana Subdivision, West Drive.', 'Q@gmail', 9510462062, 'DOCUMENT_HANDLER', NULL),
+(165, '', '', '', '', '', 0, '', '', 0, 'ADMIN', NULL);
 
 -- --------------------------------------------------------
 
@@ -1543,7 +1550,8 @@ CREATE TABLE `vendors` (
 --
 
 INSERT INTO `vendors` (`Vendor_Status`, `vendor_id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `started_date`, `payment_due`) VALUES
-('ACTIVE', 80, 'vendor1', 'vendor12345', 'Vendows', 'Middle', 'Gelatine', 25, 'Buhangin, Davao city', '@gmail.com', '96565656232', '2024-09-26', 'MONTHLY');
+('ACTIVE', 80, 'vendor1', 'vendor12345', 'Vendows', 'Middle', 'Gelatine', 25, 'Gensan', '@gensan.com', '99386846655568', '2024-09-26', 'MONTHLY'),
+('ACTIVE', 82, 'vendorbuildinge', 'be123', 'Vendor', 'in', 'BuildingE', 65, 'gensan', '@gmail.com', '92198364908', '2024-09-28', 'MONTHLY');
 
 -- --------------------------------------------------------
 
@@ -1572,7 +1580,8 @@ INSERT INTO `vendorsoa` (`id`, `vendor_id`, `username`, `remaining_balance`, `mo
 (5, 55, 'jp', '1566', '3060', '700', '666', '5992', '2024-09-01', 'invoice/invoice_jp.pdf'),
 (6, 56, 'james', '4500', '5400', '0', '0', '9900', '2024-09-01', 'invoice/invoice_james_2024-09-01.pdf'),
 (7, 57, 'meedo', '5400', '5400', '0', '0', '10800', '2024-09-01', 'invoice/invoice_meedo_2024-09-01.pdf'),
-(8, 80, 'vendor1', '1566', '3060', '0', '0', '4626', '2024-09-26', 'invoice/invoice_vendor1_2024-09-26.pdf');
+(8, 80, 'vendor1', '1000', '3060', '0', '0', '4060', '2024-09-29', 'invoice/invoice_vendor1_2024-09-29.pdf'),
+(9, 82, 'vendorbuildinge', '1300', '2025', '1200', '0', '4525', '2024-09-29', 'invoice/invoice_vendorbuildinge_2024-09-29.pdf');
 
 --
 -- Indexes for dumped tables
@@ -1801,7 +1810,7 @@ ALTER TABLE `building_j`
 -- AUTO_INCREMENT for table `documents`
 --
 ALTER TABLE `documents`
-  MODIFY `document_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `document_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `inquiry`
@@ -1825,13 +1834,13 @@ ALTER TABLE `pagebuilder_table`
 -- AUTO_INCREMENT for table `receipts`
 --
 ALTER TABLE `receipts`
-  MODIFY `receipt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `receipt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 --
 -- AUTO_INCREMENT for table `relocation_req`
 --
 ALTER TABLE `relocation_req`
-  MODIFY `relocation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `relocation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `rentapp_payment`
@@ -1849,19 +1858,19 @@ ALTER TABLE `rent_application`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=169;
 
 --
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
+  MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- AUTO_INCREMENT for table `vendorsoa`
 --
 ALTER TABLE `vendorsoa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Constraints for dumped tables

@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // API Key and other constants
     $apiKey = 'sk_2akVMMzyVTB5wlYV8Bjli2lWg1od59Ac';
     $from = "MEEDO / POLOMOLOK PUBLIC MARKET";
-    $logo = "image/picmeedo.jpg";
+    $logo = "../image/picmeedo.jpg";
     $date = date("Y-m-d"); // Current date
     $remainingBalance = floatval(str_replace(',', '', $_POST['remaining-balance'])); // Convert to float
     $miscellaneousFees = floatval(str_replace(',', '', $_POST['miscellaneous-fees'])) ?: 0; // Convert to float
@@ -84,13 +84,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         "items[0][name]" => "Monthly Rental",
         "items[0][quantity]" => 1,
         "items[0][unit_cost]" => $monthly_rent,
-        "items[1][name]" => "Miscellaneous Fee",
+        "items[1][name]" => "Balance",
         "items[1][quantity]" => 1,
-        "items[1][unit_cost]" => $miscellaneousFees,
-        "items[2][name]" => "Other Fee",
+        "items[1][unit_cost]" => $remainingBalance,
+        "items[2][name]" => "Miscellaneous Fee",
         "items[2][quantity]" => 1,
-        "items[2][unit_cost]" => $otherFees,
-        "total" => $monthly_rent + $miscellaneousFees + $otherFees + $remainingBalance // Compute total
+        "items[2][unit_cost]" => $miscellaneousFees,
+        "items[3][name]" => "Other Fee",
+        "items[3][quantity]" => 1,
+        "items[3][unit_cost]" => $otherFees,
+        "total" => $monthly_rent + $miscellaneousFees + $otherFees + $remainingBalance
     );
 
     // Initialize cURL session
