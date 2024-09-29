@@ -36,7 +36,7 @@ $user_id = $_SESSION['id'];
       $pathId = $_POST['pathId'];
   
       $sql = "SELECT a.stall_no, a.stall_status AS status, username
-      FROM building_b a
+      FROM building_c a
       JOIN vendors v on a.vendor_id = v.vendor_id
       WHERE stall_no = ?";
       $stmt = $conn->prepare($sql);
@@ -338,8 +338,9 @@ $user_id = $_SESSION['id'];
 
                         // SQL query to count vacant stalls from stall 1 to 68
                         $sql = "SELECT COUNT(*) as total_vacant 
-                                FROM building_b 
-                                WHERE stall_status = 'Occupied'";
+                                FROM building_c 
+                                WHERE stall_status = 'Occupied'
+                                AND building_id BETWEEN 1 AND 69";
 
                         $result = $conn->query($sql);
 
@@ -352,7 +353,8 @@ $user_id = $_SESSION['id'];
                             echo "No vacant stalls found.";
                         }
 
-                        $sql = "SELECT stall_no FROM building_b WHERE stall_status = 'Occupied'";
+                        $sql = "SELECT stall_no FROM building_c WHERE stall_status = 'Occupied'
+                        AND building_id BETWEEN 70 AND 119";
                         $result = $conn->query($sql);
 
                         $occupied_stalls = [];
@@ -444,8 +446,9 @@ $user_id = $_SESSION['id'];
 
                         // SQL query to count vacant stalls from stall 1 to 68
                         $sql = "SELECT COUNT(*) as total_vacant 
-                                FROM building_b 
-                                WHERE stall_status = 'Vacant'";
+                                FROM building_c 
+                                WHERE stall_status = 'Vacant'
+                                AND building_id BETWEEN 1 AND 69";
 
                         $result = $conn->query($sql);
 
@@ -460,8 +463,9 @@ $user_id = $_SESSION['id'];
 
                         // SQL query to get all vacant stalls
                       $queryGet = "SELECT stall_no 
-                      FROM building_b 
-                      WHERE stall_status = 'Vacant'";
+                      FROM building_c 
+                      WHERE stall_status = 'Vacant'
+                      AND building_id BETWEEN 1 AND 69";
 
                       $resultnya = $conn->query($queryGet);
 
@@ -520,7 +524,7 @@ $user_id = $_SESSION['id'];
                   
                       // SQL query to count vacant stalls
                       $sql = "SELECT COUNT(*) as total_stalls
-                              FROM building_b";
+                              FROM building_c";
                       $result = $conn->query($sql);
 
                       // Check if query was successful
@@ -567,7 +571,7 @@ $user_id = $_SESSION['id'];
                   
                       // SQL query to count vacant stalls
                       $sql = "SELECT COUNT(*) as total_stalls
-                              FROM building_b ";
+                              FROM building_c ";
                       $result = $conn->query($sql);
 
                       // Check if query was successful
@@ -792,7 +796,7 @@ $user_id = $_SESSION['id'];
               </p>  
             </div>
             
-
+            
             <!-- insert svg here -->
             <!-- insert svg here -->
             <!-- insert svg here -->
@@ -804,7 +808,7 @@ $user_id = $_SESSION['id'];
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
 
     tooltipTriggerList.forEach(function (tooltipTriggerEl) {
-      var stallNo = tooltipTriggerEl.getAttribute('data-stall-no'); // Get stall_no from data attribute
+      var stallNo = tooltipTriggerEl.getAttribute('data-stall-no');
 
       // Fetch the stall status and occupant via AJAX
       fetch('fetch_stall_statusB.php?stall_no=' + stallNo)

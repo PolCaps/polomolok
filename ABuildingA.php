@@ -571,7 +571,8 @@ $user_id = $_SESSION['id'];
                   
                       // SQL query to count vacant stalls
                       $sql = "SELECT COUNT(*) as total_stalls
-                              FROM building_a ";
+                              FROM building_a 
+                              WHERE building_id BETWEEN 1 AND 95";
                       $result = $conn->query($sql);
 
                       // Check if query was successful
@@ -613,10 +614,10 @@ $user_id = $_SESSION['id'];
                 <nav aria-label="Page navigation example">
                   <ul class="pagination mb-0">
                     <p class="mt-1 px-3 text-info">Floors</p>
-                    <li class="page-item mx-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Ground Floor">
+                    <li class="page-item mx-1" data-bs-toggle="tooltip-info" data-bs-placement="top" data-bs-title="Ground Floor">
                       <a class="page-link" href="ABuildingA.php">1</a>
                     </li>
-                    <li class="page-item mx-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Second Floor">
+                    <li class="page-item mx-1" data-bs-toggle="tooltip-info" data-bs-placement="top" data-bs-title="Second Floor">
                       <a class="page-link" href="ABuildingA2.php">2</a>
                     </li>
                   </ul>
