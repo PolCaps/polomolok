@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 21, 2024 at 10:58 AM
+-- Generation Time: Sep 29, 2024 at 05:54 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,31 +44,7 @@ CREATE TABLE `announcements` (
 INSERT INTO `announcements` (`id`, `title`, `description`, `image_path`, `building`, `stall`, `created_at`) VALUES
 (7, 'Notice Of Stall Vacancy', 'Stall Vacant in progress of meedo.', 'announcements/notice.jpg', 'Building A', 'A-07', '2024-08-31 08:53:48'),
 (8, 'Notice of Vacancy', 'Vacant', 'announcements/notice.jpg', 'Building J', 'J-76', '2024-09-01 10:40:19'),
-(9, 'Notice Of Vacancy', 'vacant corner', 'announcements/notice.jpg', 'Building c', 'C-45', '2024-09-01 11:05:38'),
-(11, 'Notice Of Missing Person', 'Tall Dark Short Hair', 'announcements/IMG_20220226_195004.jpg', 'Name:', 'REYAN JAN SAMONTANES', '2024-09-01 11:25:14');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `archived_inquiries`
---
-
-CREATE TABLE `archived_inquiries` (
-  `inquiry_id` int(11) NOT NULL,
-  `name` varchar(255) NOT NULL,
-  `email_add` varchar(255) NOT NULL,
-  `subject` varchar(255) NOT NULL,
-  `message` text NOT NULL,
-  `sent_date` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `archived_inquiries`
---
-
-INSERT INTO `archived_inquiries` (`inquiry_id`, `name`, `email_add`, `subject`, `message`, `sent_date`) VALUES
-(24, 'kimberly Ayugyugon', 'kim@gmail.com', 'Vendors Approval', 'Sending Approvals', '2024-07-29 11:48:29'),
-(30, 'Prince', 'princejasy@gmai.com', 'Inquiry', 'May Rentable stall po ba kayo?', '2024-09-02 21:45:18');
+(9, 'Notice Of Vacancy', 'vacant corner', 'announcements/notice.jpg', 'Building c', 'C-45', '2024-09-01 11:05:38');
 
 -- --------------------------------------------------------
 
@@ -90,14 +66,14 @@ CREATE TABLE `building_a` (
 --
 
 INSERT INTO `building_a` (`building_id`, `stall_no`, `building_floor`, `monthly_rentals`, `vendor_id`, `stall_status`) VALUES
-(1, 'A-01', 'Ground Floor', '3,060.00', 55, 'Occupied'),
-(2, 'A-02', 'Ground Floor', '5,400.00', 56, 'Occupied'),
-(3, 'A-03', 'Ground Floor', '5,400.00', 57, 'Occupied'),
-(4, 'A-04', 'Ground Floor', '5,400.00', 58, 'Occupied'),
-(5, 'A-05', 'Ground Floor', '5,400.00', 59, 'Occupied'),
-(6, 'A-06', 'Ground Floor', '3,060.00', 60, 'Occupied'),
-(7, 'A-07', 'Ground Floor', '2,345.00', 61, 'Occupied'),
-(8, 'A-08', 'Ground Floor', '2,345.00', 62, 'Occupied'),
+(1, 'A-01', 'Ground Floor', '3,060.00', 0, 'Vacant'),
+(2, 'A-02', 'Ground Floor', '5,400.00', NULL, 'Occupied'),
+(3, 'A-03', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(4, 'A-04', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(5, 'A-05', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
+(6, 'A-06', 'Ground Floor', '3,060.00', NULL, 'Occupied'),
+(7, 'A-07', 'Ground Floor', '2,345.00', NULL, 'Vacant'),
+(8, 'A-08', 'Ground Floor', '2,345.00', NULL, 'Vacant'),
 (9, 'A-09', 'Ground Floor', '5,265.00', NULL, 'Vacant'),
 (10, 'A-10', 'Ground Floor', '3,968.00', NULL, 'Vacant'),
 (11, 'A-11', 'Ground Floor', '2,345.00', NULL, 'Vacant'),
@@ -206,7 +182,7 @@ CREATE TABLE `building_b` (
 --
 
 INSERT INTO `building_b` (`building_id`, `stall_no`, `building_floor`, `monthly_rentals`, `vendor_id`, `stall_status`) VALUES
-(1, 'B-01', 'Ground Floor', '2,025.00', 64, 'Occupied'),
+(1, 'B-01', 'Ground Floor', '2,025.00', 66, 'Occupied'),
 (2, 'B-02', 'Ground Floor', '2,025.00', NULL, 'Vacant'),
 (3, 'B-03', 'Ground Floor', '2,025.00', NULL, 'Vacant'),
 (4, 'B-04', 'Ground Floor', '2,025.00', NULL, 'Vacant'),
@@ -367,7 +343,7 @@ CREATE TABLE `building_c` (
 --
 
 INSERT INTO `building_c` (`building_id`, `stall_no`, `building_floor`, `monthly_rentals`, `vendor_id`, `stall_status`) VALUES
-(1, 'C-01', 'Ground Floor', '6,750.00', NULL, 'Vacant'),
+(1, 'C-01', 'Ground Floor', '6,750.00', 67, 'Occupied'),
 (2, 'C-02', 'Ground Floor', '6,750.00', NULL, 'Vacant'),
 (3, 'C-03', 'Ground Floor', '6,750.00', NULL, 'Vacant'),
 (4, 'C-04', 'Ground Floor', '6,750.00', NULL, 'Vacant'),
@@ -510,7 +486,7 @@ CREATE TABLE `building_d` (
 --
 
 INSERT INTO `building_d` (`building_id`, `stall_no`, `building_floor`, `monthly_rentals`, `vendor_id`, `stall_status`) VALUES
-(1, 'D-01', 'Ground Floor', '2,475.00', NULL, 'Vacant'),
+(1, 'D-01', 'Ground Floor', '2,475.00', 68, 'Occupied'),
 (2, 'D-02', 'Ground Floor', '2,475.00', NULL, 'Vacant'),
 (3, 'D-03', 'Ground Floor', '2,475.00', NULL, 'Vacant'),
 (4, 'D-04', 'Ground Floor', '2,475.00', NULL, 'Vacant'),
@@ -542,7 +518,7 @@ INSERT INTO `building_d` (`building_id`, `stall_no`, `building_floor`, `monthly_
 (30, 'D-30', 'Ground Floor', '4,200.00', NULL, 'Vacant'),
 (31, 'D-31', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
 (32, 'D-32', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
-(33, 'D-33', 'Ground Floor', '3,900.00', 65, 'Occupied'),
+(33, 'D-33', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
 (34, 'D-34', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
 (35, 'D-35', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
 (36, 'D-36', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
@@ -577,7 +553,7 @@ CREATE TABLE `building_e` (
 --
 
 INSERT INTO `building_e` (`building_id`, `stall_no`, `building_floor`, `monthly_rentals`, `vendor_id`, `stall_status`) VALUES
-(1, 'E-01', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
+(1, 'E-01', 'Ground Floor', '3,900.00', 69, 'Occupied'),
 (2, 'E-02', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
 (3, 'E-03', 'Ground Floor', '3,900.00', NULL, 'Vacant'),
 (4, 'E-04', 'Ground Floor', '5,400.00', NULL, 'Vacant'),
@@ -1331,11 +1307,19 @@ INSERT INTO `building_j` (`building_id`, `stall_no`, `building_floor`, `monthly_
 CREATE TABLE `documents` (
   `document_id` int(11) NOT NULL,
   `vendor_id` bigint(20) NOT NULL,
-  `lease_agreements` longblob DEFAULT NULL,
-  `business_permits` longblob DEFAULT NULL,
-  `business_license` longblob DEFAULT NULL,
-  `other_supporting` longblob DEFAULT NULL
+  `lease_agreements` varchar(255) DEFAULT NULL,
+  `business_permits` varchar(255) DEFAULT NULL,
+  `business_license` varchar(255) DEFAULT NULL,
+  `other_supporting` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `documents`
+--
+
+INSERT INTO `documents` (`document_id`, `vendor_id`, `lease_agreements`, `business_permits`, `business_license`, `other_supporting`) VALUES
+(12, 69, 'datas//2024-09-22/cypher-cybersec.pdf', 'datas//2024-09-22/cypher_text.pdf', 'datas//2024-09-22/cypher_text.pdf', NULL),
+(13, 67, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1357,7 +1341,14 @@ CREATE TABLE `inquiry` (
 --
 
 INSERT INTO `inquiry` (`inq_id`, `name`, `email_add`, `subject`, `message`, `sent_date`) VALUES
-(33, 'MannyPakiyaw', 'Manny@outlook.com', 'Sparring Partner', 'I want to punch someone', '2024-09-21 07:04:28');
+(22, 'Jaime Kabulan', 'jaime@gmail.com', 'cooperator', 'rental Occupations', '2024-07-29 03:46:42'),
+(23, 'John Kranzinsky', 'john@gmail.com', 'Owning Stalls', 'I want to own stalls can you contact me?', '2024-07-29 03:47:36'),
+(24, 'kimberly Ayugyugon', 'kim@gmail.com', 'Vendors Approval', 'Sending Approvals', '2024-07-29 03:48:29'),
+(25, 'Teresa Saragosa', 'teresa@gmail.com', 'Transfer', 'Pwede mag transfer stalls?', '2024-07-29 03:49:29'),
+(26, 'Saybil Pudadera', 'saybil@gmail.com', 'List of Permits', 'Unsay mga permits kaylangan ani?', '2024-07-29 03:50:39'),
+(27, 'Jhay Mark Tubig', 'Jhay@gmail.com', 'Cost of relocation', 'Naka bayad nako sa relocation.', '2024-07-29 03:52:07'),
+(29, 'Cryzzy Uy', 'Uy@gmail.com', 'Karnehan', 'Available pa pwesto sa karnehan?', '2024-07-29 03:54:23'),
+(30, 'Prince', 'princejasy@gmai.com', 'Inquiry', 'May Rentable stall po ba kayo?', '2024-09-02 13:45:18');
 
 -- --------------------------------------------------------
 
@@ -1427,7 +1418,6 @@ CREATE TABLE `relocation_req` (
 
 INSERT INTO `relocation_req` (`relocation_id`, `vendor_id`, `message`, `date_sent`, `relocation_status`) VALUES
 (13, 55, 'pa transfer po.', '2024-08-18 13:29:34', 'Processing'),
-(14, 55, 'I am requesting a relocation', '2024-09-21 02:50:06', 'Accepted'),
 (15, 55, 'I am wanting to request a relocation because i have no maney\r\n', '2024-09-03 03:25:13', 'Processing'),
 (16, 55, 'I am wanting to request a relocation because i have no maneysajwndawdqwd\r\n', '2024-09-03 03:25:41', 'Processing'),
 (17, 55, 'Hello', '2024-09-03 03:29:22', 'Processing'),
@@ -1456,9 +1446,6 @@ CREATE TABLE `rentapp_payment` (
 
 INSERT INTO `rentapp_payment` (`rentpayment_id`, `OR_no`, `proof_of_payment`, `applicant_id`, `payment_status`, `verify_status`, `payment_date`) VALUES
 (17, '786556t', 'payment_proofs/rent_application/434407561_318504671251414_8738135139194585822_n.jpg', 2028, 'Paid', 'Verified', '2024-07-27 23:25:49'),
-(19, '203084858', 'payment_proofs/rent_application/gcash.jpeg', 2030, 'Paid', 'Unconfirmed', '2024-07-29 00:32:13'),
-(20, '3252236546', 'payment_proofs/rent_application/gcash.jpeg', 2031, 'Paid', 'Verified', '2024-07-29 00:34:44'),
-(21, '9y7534hyf5378', 'payment_proofs/rent_application/gcash.jpeg', 2032, 'Paid', 'Verified', '2024-07-29 05:20:02'),
 (24, '39475hbefs', 'payment_proofs/rent_application/img20240818_23394173.jpg', 2034, 'Paid', 'Verified', '2024-09-07 10:13:29');
 
 -- --------------------------------------------------------
@@ -1488,10 +1475,7 @@ CREATE TABLE `rent_application` (
 --
 
 INSERT INTO `rent_application` (`Approval`, `applicant_id`, `first_name`, `middle_name`, `last_name`, `contact_no`, `building_type`, `stall_no`, `age`, `email`, `address`, `rentapp_file`, `applied_date`) VALUES
-('APPROVED', 2028, 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 9510462062, 'Building A', 20, 56, 'reyanjansamontanes@gmail.com', 'Polotana Subdivision, West Drive.', 'rent_applications_file_dir/samontanes.pdf', '2024-09-02 14:07:41'),
-('PROCESSING', 2030, 'May', 'Bel', 'Beleigne', 94536723456, 'Building A', 78, 56, 'may@gmail.com', 'Gensan', 'rent_applications_file_dir/samontanes.pdf', '2024-09-21 03:44:38'),
-('APPROVED', 2031, 'Duke', 'B', 'Shelby', 934793849, 'Building E', 87, 45, 'duke@gmail.com', 'Bermingham', 'rent_applications_file_dir/Building-A-2nd-Floor.pdf', '2024-09-02 14:08:49'),
-('PENDING', 2032, 'Ivy ', 'Grace ', 'Laurente', 9510462062, 'Building A', 89, 45, 'ivy@gmail.com', 'Cannery Site', 'rent_applications_file_dir/rentAppMeedo.pdf', '2024-09-02 14:10:41'),
+('APPROVED', 2028, 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 9510462062, 'Building A', 20, 56, 'reyanjansamontanes@gmail.com', 'Polotana Subdivision, West Drive.', 'rent_applications_file_dir/samontanes.pdf', '2024-09-21 17:44:37'),
 ('APPROVED', 2034, 'Test', 'te', 'TEs', 9834534534, 'Building A', 25, 0, 'teste@gmail.com', 'awd', 'rent_applications_file_dir/01_Seatwork_1_Sayre.pdf', '2024-09-07 10:10:04');
 
 -- --------------------------------------------------------
@@ -1520,13 +1504,16 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `user_type`, `picture_profile`) VALUES
-(11, 'rj', 'rj', 'reyan', 'jan', 'samontanes', 43, 'polomolok', 'gmail.com', 3233252, 'ADMIN', 'adminProfile/10 by 10 orthogonal maze (1).png'),
-(28, 'June', 'june123', 'June', 'vene', 'veneracion', 38, 'Polotana Subdivision, West Drive.', 'ggmeil@gmail.com', 9510462062, '', NULL),
+(11, 'rj', 'rj123', 'reyan', 'jan', 'samontanes', 43, 'polomolok', 'gmail.com', 3233252, 'ADMIN', 'adminProfile/logo.jpg'),
 (30, 'adminMeedo', '123', 'MEEDO', 'MEEDO', 'MEEDO', 43, 'Polotana Subdivision, West Drive.', '@gmail.com', NULL, 'ADMIN', 'adminProfile/download.jfif'),
-(31, 'Staf2024', 'Staff2024', 'MeedoStaff', 'S', 'StaffngMeedo', 74, 'sayre residence purok darussalam bawing', 'meedstaff232@gmail.com', 9213812312, '', NULL),
-(32, 'cashier', 'cashiercheck', 'Montana', 'D.', 'Revilla', 21, 'Purok Dimansia', 'montana@gmail.com', 9938739511, 'CASHIER', NULL),
-(33, 'Longanisa', 'Talong', 'DocuMen', 'K.', 'Bambalolong', 44, 'Purok. Drimatia, Kalfungal', 'Documen@gmail.com', 9938757326, 'DOCUMENT_HANDLER', NULL),
-(34, 'cusman', 'degusman', 'Daniel', 'C.', 'Padilla', 28, 'Manila, Tondo South Cotabato', 'DanielPadilla@gmail.com', 9936256273, 'CUSTOMER_SERVICE', NULL);
+(32, 'cashier', 'cash123', 'Montana', 'D.', 'Revilla', 21, 'Purok Dimansia', 'montana@gmail.com', 9938739511, 'CASHIER', NULL),
+(34, 'cusman', 'degusman', 'Daniel', 'C.', 'Padilla', 28, 'Manila, Tondo South Cotabato', 'DanielPadilla@gmail.com', 9936256273, 'CUSTOMER_SERVICE', NULL),
+(35, 'staff', 'mymodule', 'jansamo', 'samo', 'samontanes', 21, 'Cannery Site', '@email.com', 9510462062, 'ADMIN', NULL),
+(40, 'services', 'serving123', 'My ', 'Servises', 'Meedo', 23, 'Gensan', '@gmail.com', 96493750847, 'CUSTOMER_SERVICE', NULL),
+(43, 'meedocash', 'cah123', 'Caher', 'hera', 'Cahera', 23, 'Polotana Subdivision, West Drive.', 'gmail.com', 9510462062, 'CASHIER', NULL),
+(50, '', '', '', '', '', 0, '', '', 0, 'ADMIN', NULL),
+(0, '', '', '', '', '', 0, '', '', 0, 'ADMIN', NULL),
+(0, '', '', '', '', '', 0, '', '', 0, 'ADMIN', NULL);
 
 -- --------------------------------------------------------
 
@@ -1535,7 +1522,7 @@ INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `middle_name`, 
 --
 
 CREATE TABLE `vendors` (
-  `Vendor Status` enum('ACTIVE','INACTIVE','ON PROCESS','ON HOLD','DEACTIVATED','ON TRANSFER') NOT NULL DEFAULT 'INACTIVE',
+  `VendorStatus` enum('ACTIVE','INACTIVE','ON_PROCESS','ON_HOLD','DEACTIVATED','ON_TRANSFER') NOT NULL DEFAULT 'ACTIVE',
   `vendor_id` bigint(20) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
@@ -1547,24 +1534,8 @@ CREATE TABLE `vendors` (
   `email_add` varchar(255) DEFAULT NULL,
   `contact_no` varchar(20) DEFAULT NULL,
   `started_date` varchar(255) DEFAULT NULL,
-  `end_date` varchar(255) DEFAULT NULL
+  `payment_due` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Dumping data for table `vendors`
---
-
-INSERT INTO `vendors` (`Vendor Status`, `vendor_id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `started_date`, `end_date`) VALUES
-('INACTIVE', 55, 'jp', '21jp', 'John', 'P', 'Paras', 38, 'Poblacion, Polomolok', 'jp@gmail.com', '+639510462062', '2024-07-28', '2024-08-08'),
-('INACTIVE', 56, 'james', 'james321', 'James', 'T', 'Kauray', 54, 'Cannery Site', NULL, '+639945817565', '2024-07-28', '2025-01-08'),
-('INACTIVE', 57, 'meedo', '21meedo', 'John', 'De', 'Baptist', NULL, NULL, NULL, NULL, '2024-07-28', '2024-10-15'),
-('INACTIVE', 58, 'cre', '21cre', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-07-28', '2024-11-07'),
-('INACTIVE', 59, 'King', 'pj123', '', NULL, NULL, NULL, NULL, NULL, NULL, '2023-12-21', '2024-11-07'),
-('INACTIVE', 60, 'mads', 'mads123', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-07-29', '2024-07-29'),
-('INACTIVE', 61, 'vendors', 'vendor123', '', NULL, NULL, NULL, NULL, NULL, NULL, '2022-11-24', '2023-10-13'),
-('INACTIVE', 62, 'June', 'june123', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-07-29', '2024-08-29'),
-('INACTIVE', 64, 'polcapts', '9504', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-10', '2024-09-02'),
-('INACTIVE', 65, 'Vendor21', 'vendor2024', 'Vend', 'D', 'Or', 99, 'POlomolokHAWD', 'POlomolokHAWD@gmai.com', '123123123', '2024-09-07', '2024-09-20');
 
 -- --------------------------------------------------------
 
@@ -1605,317 +1576,11 @@ ALTER TABLE `announcements`
   ADD PRIMARY KEY (`id`);
 
 --
--- Indexes for table `archived_inquiries`
---
-ALTER TABLE `archived_inquiries`
-  ADD PRIMARY KEY (`inquiry_id`);
-
---
 -- Indexes for table `building_a`
 --
 ALTER TABLE `building_a`
   ADD PRIMARY KEY (`building_id`),
   ADD KEY `vendor_id` (`vendor_id`);
-
---
--- Indexes for table `building_b`
---
-ALTER TABLE `building_b`
-  ADD PRIMARY KEY (`building_id`),
-  ADD KEY `vendor_id` (`vendor_id`);
-
---
--- Indexes for table `building_c`
---
-ALTER TABLE `building_c`
-  ADD PRIMARY KEY (`building_id`),
-  ADD KEY `vendor_id` (`vendor_id`);
-
---
--- Indexes for table `building_d`
---
-ALTER TABLE `building_d`
-  ADD PRIMARY KEY (`building_id`),
-  ADD KEY `vendor_id` (`vendor_id`);
-
---
--- Indexes for table `building_e`
---
-ALTER TABLE `building_e`
-  ADD PRIMARY KEY (`building_id`),
-  ADD KEY `vendor_id` (`vendor_id`);
-
---
--- Indexes for table `building_f`
---
-ALTER TABLE `building_f`
-  ADD PRIMARY KEY (`building_id`),
-  ADD KEY `vendor_id` (`vendor_id`);
-
---
--- Indexes for table `building_g`
---
-ALTER TABLE `building_g`
-  ADD PRIMARY KEY (`building_id`),
-  ADD KEY `vendor_id` (`vendor_id`);
-
---
--- Indexes for table `building_h`
---
-ALTER TABLE `building_h`
-  ADD PRIMARY KEY (`building_id`),
-  ADD KEY `vendor_id` (`vendor_id`);
-
---
--- Indexes for table `building_i`
---
-ALTER TABLE `building_i`
-  ADD PRIMARY KEY (`building_id`),
-  ADD KEY `vendor_id` (`vendor_id`);
-
---
--- Indexes for table `building_j`
---
-ALTER TABLE `building_j`
-  ADD PRIMARY KEY (`building_id`),
-  ADD KEY `vendor_id` (`vendor_id`);
-
---
--- Indexes for table `documents`
---
-ALTER TABLE `documents`
-  ADD PRIMARY KEY (`document_id`),
-  ADD KEY `vendor_id` (`vendor_id`);
-
---
--- Indexes for table `inquiry`
---
-ALTER TABLE `inquiry`
-  ADD PRIMARY KEY (`inq_id`);
-
---
--- Indexes for table `message`
---
-ALTER TABLE `message`
-  ADD PRIMARY KEY (`message_id`),
-  ADD KEY `vendor_id` (`vendor_id`,`id`);
-
---
--- Indexes for table `pagebuilder_table`
---
-ALTER TABLE `pagebuilder_table`
-  ADD PRIMARY KEY (`stats_id`);
-
---
--- Indexes for table `receipts`
---
-ALTER TABLE `receipts`
-  ADD PRIMARY KEY (`receipt_id`),
-  ADD KEY `vendor_id` (`vendor_id`);
-
---
--- Indexes for table `relocation_req`
---
-ALTER TABLE `relocation_req`
-  ADD PRIMARY KEY (`relocation_id`);
-
---
--- Indexes for table `rentapp_payment`
---
-ALTER TABLE `rentapp_payment`
-  ADD PRIMARY KEY (`rentpayment_id`),
-  ADD KEY `fk_applicant_id` (`applicant_id`);
-
---
--- Indexes for table `rent_application`
---
-ALTER TABLE `rent_application`
-  ADD PRIMARY KEY (`applicant_id`),
-  ADD KEY `applicant_id` (`applicant_id`);
-
---
--- Indexes for table `users`
---
-ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `username` (`username`);
-
---
--- Indexes for table `vendors`
---
-ALTER TABLE `vendors`
-  ADD PRIMARY KEY (`vendor_id`);
-
---
--- Indexes for table `vendorsoa`
---
-ALTER TABLE `vendorsoa`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `vendor_id` (`vendor_id`);
-
---
--- AUTO_INCREMENT for dumped tables
---
-
---
--- AUTO_INCREMENT for table `announcements`
---
-ALTER TABLE `announcements`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
-
---
--- AUTO_INCREMENT for table `archived_inquiries`
---
-ALTER TABLE `archived_inquiries`
-  MODIFY `inquiry_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
-
---
--- AUTO_INCREMENT for table `building_a`
---
-ALTER TABLE `building_a`
-  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=168;
-
---
--- AUTO_INCREMENT for table `building_b`
---
-ALTER TABLE `building_b`
-  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
-
---
--- AUTO_INCREMENT for table `building_c`
---
-ALTER TABLE `building_c`
-  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=125;
-
---
--- AUTO_INCREMENT for table `building_d`
---
-ALTER TABLE `building_d`
-  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=47;
-
---
--- AUTO_INCREMENT for table `building_e`
---
-ALTER TABLE `building_e`
-  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=170;
-
---
--- AUTO_INCREMENT for table `building_f`
---
-ALTER TABLE `building_f`
-  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=59;
-
---
--- AUTO_INCREMENT for table `building_g`
---
-ALTER TABLE `building_g`
-  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=139;
-
---
--- AUTO_INCREMENT for table `building_h`
---
-ALTER TABLE `building_h`
-  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=79;
-
---
--- AUTO_INCREMENT for table `building_i`
---
-ALTER TABLE `building_i`
-  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=81;
-
---
--- AUTO_INCREMENT for table `building_j`
---
-ALTER TABLE `building_j`
-  MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
-
---
--- AUTO_INCREMENT for table `documents`
---
-ALTER TABLE `documents`
-  MODIFY `document_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT for table `inquiry`
---
-ALTER TABLE `inquiry`
-  MODIFY `inq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
-
---
--- AUTO_INCREMENT for table `message`
---
-ALTER TABLE `message`
-  MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT for table `pagebuilder_table`
---
-ALTER TABLE `pagebuilder_table`
-  MODIFY `stats_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT for table `relocation_req`
---
-ALTER TABLE `relocation_req`
-  MODIFY `relocation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
-
---
--- AUTO_INCREMENT for table `rentapp_payment`
---
-ALTER TABLE `rentapp_payment`
-  MODIFY `rentpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
-
---
--- AUTO_INCREMENT for table `rent_application`
---
-ALTER TABLE `rent_application`
-  MODIFY `applicant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2035;
-
---
--- AUTO_INCREMENT for table `users`
---
-ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
-
---
--- AUTO_INCREMENT for table `vendors`
---
-ALTER TABLE `vendors`
-  MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=66;
-
---
--- AUTO_INCREMENT for table `vendorsoa`
---
-ALTER TABLE `vendorsoa`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- Constraints for dumped tables
---
-
---
--- Constraints for table `building_a`
---
-ALTER TABLE `building_a`
-  ADD CONSTRAINT `fk_vendor_id` FOREIGN KEY (`vendor_id`) REFERENCES `vendors` (`vendor_id`);
-
---
--- Constraints for table `receipts`
---
-ALTER TABLE `receipts`
-  ADD CONSTRAINT `receipts_ibfk_1` FOREIGN KEY (`vendor_id`) REFERENCES `vendors` (`vendor_id`);
-
---
--- Constraints for table `rentapp_payment`
---
-ALTER TABLE `rentapp_payment`
-  ADD CONSTRAINT `fk_applicant_id` FOREIGN KEY (`applicant_id`) REFERENCES `rent_application` (`applicant_id`);
-
---
--- Constraints for table `vendorsoa`
---
-ALTER TABLE `vendorsoa`
-  ADD CONSTRAINT `vendorsoa_ibfk_1` FOREIGN KEY (`vendor_id`) REFERENCES `vendors` (`vendor_id`) ON DELETE CASCADE ON UPDATE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
