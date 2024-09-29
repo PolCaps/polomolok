@@ -794,7 +794,7 @@ $user_id = $_SESSION['id'];
               <h6>Building A</h6>
               <p class="text-sm">
                 <i class="fa fa-building-o fa-lg text-warning"></i>
-                <span class="font-weight-bold">Building A</span>
+                <span class="font-weight-bold">Description: </span>
               </p>  
             </div>
             

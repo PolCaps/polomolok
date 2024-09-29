@@ -340,7 +340,7 @@ $user_id = $_SESSION['id'];
                         $sql = "SELECT COUNT(*) as total_vacant 
                                 FROM building_a 
                                 WHERE stall_status = 'Occupied' 
-                                AND stall_no BETWEEN 'A-01' AND 'A-68'";
+                                AND stall_no BETWEEN 'A-69' AND 'A-94'";
 
                         $result = $conn->query($sql);
 
@@ -348,13 +348,13 @@ $user_id = $_SESSION['id'];
                         if ($result->num_rows > 0) {
                             // Fetch result
                             $row = $result->fetch_assoc();
-                            echo "First Floor: " . $row['total_vacant'];
+                            echo "Second Floor: " . $row['total_vacant'];
                         } else {
                             echo "No vacant stalls found.";
                         }
 
                         $sql = "SELECT stall_no FROM building_a WHERE stall_status = 'Occupied' 
-                        AND stall_no BETWEEN 'A-01' AND 'A-68'";
+                        AND stall_no BETWEEN 'A-68' AND 'A-94'";
                         $result = $conn->query($sql);
 
                         $occupied_stalls = [];
@@ -448,7 +448,7 @@ $user_id = $_SESSION['id'];
                         $sql = "SELECT COUNT(*) as total_vacant 
                                 FROM building_a 
                                 WHERE stall_status = 'Vacant' 
-                                AND stall_no BETWEEN 'A-01' AND 'A-68'";
+                                AND stall_no BETWEEN 'A-69' AND 'A-94'";
 
                         $result = $conn->query($sql);
 
@@ -456,7 +456,7 @@ $user_id = $_SESSION['id'];
                         if ($result->num_rows > 0) {
                             // Fetch result
                             $row = $result->fetch_assoc();
-                            echo "First Floor: " . $row['total_vacant'];
+                            echo "Second Floor: " . $row['total_vacant'];
                         } else {
                             echo "No vacant stalls found.";
                         }
@@ -465,7 +465,7 @@ $user_id = $_SESSION['id'];
                       $queryGet = "SELECT stall_no 
                       FROM building_a 
                       WHERE stall_status = 'Vacant' 
-                      AND stall_no BETWEEN 'A-01' AND 'A-68'";
+                      AND stall_no BETWEEN 'A-68' AND 'A-94'";
 
                       $resultnya = $conn->query($queryGet);
 
@@ -525,14 +525,14 @@ $user_id = $_SESSION['id'];
                       // SQL query to count vacant stalls
                       $sql = "SELECT COUNT(*) as total_stalls
                               FROM building_a 
-                              WHERE stall_no BETWEEN 'A-01' AND 'A-67'";
+                              WHERE stall_no BETWEEN 'A-01' AND 'A-94'";
                       $result = $conn->query($sql);
 
                       // Check if query was successful
                       if ($result->num_rows > 0) {
                           // Fetch result
                           $row = $result->fetch_assoc();
-                          echo "First Floor: " . $row['total_stalls'];
+                          echo "Second Floor: " . $row['total_stalls'];
                       } else {
                           echo "No stalls found.";
                       }
@@ -573,7 +573,7 @@ $user_id = $_SESSION['id'];
                       // SQL query to count vacant stalls
                       $sql = "SELECT COUNT(*) as total_stalls
                               FROM building_a 
-                              WHERE stall_no BETWEEN 'A-01' AND 'A-94'";
+                              WHERE stall_no BETWEEN 'A-01' AND 'A-93'";
                       $result = $conn->query($sql);
 
                       // Check if query was successful
@@ -794,7 +794,7 @@ $user_id = $_SESSION['id'];
               <h6>Building A</h6>
               <p class="text-sm">
                 <i class="fa fa-building-o fa-lg text-warning"></i>
-                <span class="font-weight-bold">Building A</span>
+                <span class="font-weight-bold">Description: </span>
               </p>  
             </div>
             
