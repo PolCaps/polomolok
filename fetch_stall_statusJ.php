@@ -13,10 +13,10 @@ if (isset($_GET['stall_no'])) {
 
     // Modify the SQL query to include first_name, middle_name, and last_name
     $stmt = $conn->prepare("
-        SELECT building_a.stall_status, vendors.first_name, vendors.middle_name, vendors.last_name
-        FROM building_a
-        LEFT JOIN vendors ON building_a.vendor_id = vendors.vendor_id
-        WHERE building_a.stall_no = ?
+        SELECT building_j.stall_status, vendors.first_name, vendors.middle_name, vendors.last_name
+        FROM building_j
+        LEFT JOIN vendors ON building_j.vendor_id = vendors.vendor_id
+        WHERE building_j.stall_no = ?
     ");
     $stmt->bind_param("s", $stall_no);
     $stmt->execute();
