@@ -340,7 +340,7 @@ $user_id = $_SESSION['id'];
                         $sql = "SELECT COUNT(*) as total_vacant 
                                 FROM building_a 
                                 WHERE stall_status = 'Occupied' 
-                                AND building_id BETWEEN 71 AND 97";
+                                AND stall_no BETWEEN 'A-01' AND 'A-68'";
 
                         $result = $conn->query($sql);
 
@@ -348,12 +348,13 @@ $user_id = $_SESSION['id'];
                         if ($result->num_rows > 0) {
                             // Fetch result
                             $row = $result->fetch_assoc();
-                            echo "Second Floor: " . $row['total_vacant'];
+                            echo "First Floor: " . $row['total_vacant'];
                         } else {
                             echo "No vacant stalls found.";
                         }
 
-                        $sql = "SELECT stall_no FROM building_a WHERE stall_status = 'Occupied' AND building_id BETWEEN 71 AND 97";
+                        $sql = "SELECT stall_no FROM building_a WHERE stall_status = 'Occupied' 
+                        AND stall_no BETWEEN 'A-01' AND 'A-68'";
                         $result = $conn->query($sql);
 
                         $occupied_stalls = [];
@@ -447,7 +448,7 @@ $user_id = $_SESSION['id'];
                         $sql = "SELECT COUNT(*) as total_vacant 
                                 FROM building_a 
                                 WHERE stall_status = 'Vacant' 
-                                AND building_id BETWEEN 71 AND 97";
+                                AND stall_no BETWEEN 'A-01' AND 'A-68'";
 
                         $result = $conn->query($sql);
 
@@ -455,7 +456,7 @@ $user_id = $_SESSION['id'];
                         if ($result->num_rows > 0) {
                             // Fetch result
                             $row = $result->fetch_assoc();
-                            echo "Second Floor: " . $row['total_vacant'];
+                            echo "First Floor: " . $row['total_vacant'];
                         } else {
                             echo "No vacant stalls found.";
                         }
@@ -464,7 +465,7 @@ $user_id = $_SESSION['id'];
                       $queryGet = "SELECT stall_no 
                       FROM building_a 
                       WHERE stall_status = 'Vacant' 
-                      AND building_id BETWEEN 71 AND 97";
+                      AND stall_no BETWEEN 'A-01' AND 'A-68'";
 
                       $resultnya = $conn->query($queryGet);
 
@@ -524,14 +525,14 @@ $user_id = $_SESSION['id'];
                       // SQL query to count vacant stalls
                       $sql = "SELECT COUNT(*) as total_stalls
                               FROM building_a 
-                              WHERE building_id BETWEEN 71 AND 97";
+                              WHERE stall_no BETWEEN 'A-01' AND 'A-67'";
                       $result = $conn->query($sql);
 
                       // Check if query was successful
                       if ($result->num_rows > 0) {
                           // Fetch result
                           $row = $result->fetch_assoc();
-                          echo "Second Floor: " . $row['total_stalls'];
+                          echo "First Floor: " . $row['total_stalls'];
                       } else {
                           echo "No stalls found.";
                       }
@@ -572,7 +573,7 @@ $user_id = $_SESSION['id'];
                       // SQL query to count vacant stalls
                       $sql = "SELECT COUNT(*) as total_stalls
                               FROM building_a 
-                              WHERE building_id BETWEEN 1 AND 95";
+                              WHERE stall_no BETWEEN 'A-01' AND 'A-94'";
                       $result = $conn->query($sql);
 
                       // Check if query was successful
@@ -2650,75 +2651,196 @@ $user_id = $_SESSION['id'];
    </g>
   </g>
  </g>
- <g id="layer27">
+
+ <a id="A-94" data-stall-no="A-94" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer27">
   <path id="path16516" d="m222.55 144.52 1.4452 102.61s115.61 10.116 121.39 2.8903c5.7806-7.2258 2.8903-104.05 2.8903-104.05z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer26">
+</a>
+
+ <a id="A-93" data-stall-no="A-93" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer26">
   <path id="path16515" d="m56.361 21.677 2.8903 119.95s169.08 8.6709 169.08 2.8903-2.8903-128.62-2.8903-128.62z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer25">
+
+</a>
+ 
+
+ <a id="A-92" data-stall-no="A-92" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer25">
   <path id="path16514" d="m62.142 145.96c-8.6709 41.91-2.8903 111.28-2.8903 111.28l115.61 1.4452 1.4452-117.06z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer24">
+
+</a>
+
+ 
+ <a id="A-91" data-stall-no="A-91" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer24">
   <path id="path16513" d="m63.587 260.13-2.8903 106.94s118.5 5.7806 118.5-1.4452c0-7.2258-1.4452-106.94-1.4452-106.94z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer23">
+</a>
+
+
+ <a id="A-90" data-stall-no="A-90" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer23">
   <path id="path16512" d="m59.251 375.74 4.3355 111.28 105.5 1.4452 5.7806-111.28z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer22">
+</a>
+ 
+
+ <a id="A-89" data-stall-no="A-89" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer22">
   <path id="path16511" d="m62.142 491.35-1.4452 115.61 119.95-2.8903-1.4452-118.5z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer21">
+</a>
+
+
+ <a id="A-88" data-stall-no="A-88" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer21">
   <path id="path16510" d="m59.251 724.02v114.17l124.28-1.4452 2.8903-118.5z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer20">
+</a>
+ 
+
+ <a id="A-87" data-stall-no="A-87" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer20">
   <path id="path16509" d="m62.142 838.19v117.06l118.5-2.8903v-115.61z" style="opacity:0;stroke-width:2.7693"/>
  </g>
+</a>
+
+
+ <a id="A-86" data-stall-no="A-86" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
  <g id="layer19">
   <path id="path16508" d="m59.251 956.69-4.3355 108.39 125.73 5.7806v-117.06z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer18">
+</a>
+ 
+ <a id="A-85" data-stall-no="A-85" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer18">
   <path id="path16507" d="m53.471 1062.2 4.3355 124.28 117.06-1.4452 2.8903-124.28z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer17">
+</a>
+ 
+
+ <a id="A-84" data-stall-no="A-84" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer17">
   <path id="path16506" d="m60.697 1190.8-1.4452 111.28 115.61 1.4452 5.7806-119.95z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer16">
+</a>
+
+
+ <a id="A-83" data-stall-no="A-83" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer16">
   <path id="path16505" d="m776.05 137.29-1.4452 114.17s127.17 10.116 127.17 2.8903-1.4452-115.61-1.4452-115.61z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer15">
+</a>
+ 
+ 
+ <a id="A-82" data-stall-no="A-82" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer15">
   <path id="path16504" d="m900.33 26.013-1.4452 115.61s157.52 5.7806 160.41 0c2.8904-5.7806 1.4452-119.95 1.4452-119.95z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer14">
+</a>
+
+
+ <a id="A-81" data-stall-no="A-81" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer14">
   <path id="path16503" d="m939.35 135.84-2.8903 118.5 132.95 4.3355-1.4451-119.95z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer13">
+</a>
+ 
+
+ <a id="A-80" data-stall-no="A-80" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer13">
   <path id="path16502" d="m940.8 260.13c-2.8903 78.038-1.4452 115.61-1.4452 115.61l125.73-2.8903-1.4452-119.95z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer12">
+</a>
+
+
+ <a id="A-79" data-stall-no="A-79" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer12">
   <path id="path16501" d="m936.46 372.85v109.83l135.84 8.6709-8.6709-125.73z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer11">
+</a>
+
+ 
+
+ <a id="A-78" data-stall-no="A-78" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer11">
   <path id="path16500" d="m939.35 488.46s-11.561 118.5-2.8903 118.5 130.06-2.8903 130.06-2.8903l-4.3354-118.5z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer10">
+</a>
+
+
+ <a id="A-77" data-stall-no="A-77" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer10">
   <path id="path16499" d="m939.35 722.58-1.4452 112.72 127.17 1.4452-1.4452-115.61z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer9">
+
+</a>
+
+ 
+ <a id="A-76" data-stall-no="A-76" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer9">
   <path id="path16498" d="m939.35 833.85 2.8903 119.95h119.95l-4.3355-119.95z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer8">
+</a>
+
+
+ <a id="A-75" data-stall-no="A-75" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer8">
   <path id="path16497" d="m939.35 949.47v119.95h119.95v-121.39z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer7">
+</a>
+
+
+ <a id="A-74" data-stall-no="A-74" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer7">
   <path id="path16496" d="m942.24 1066.5v119.95l127.17-4.3355-1.4451-118.5z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer6">
+
+</a>
+ 
+
+
+ <a id="A-73" data-stall-no="A-73" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer6">
   <path id="path16495" d="m940.8 1187.9v106.94l122.84 2.8903v-112.72z" style="opacity:0;stroke-width:2.7693"/>
  </g>
- <g id="layer5">
+
+</a>
+ 
+
+ 
+ <a id="A-72" data-stall-no="A-72" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
+   data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
+   <g id="layer5">
   <path id="path16494" d="m776.05 1274.6-4.3355 124.28 130.06-7.2258-7.2258-115.61z" style="opacity:0;stroke-width:2.7693"/>
  </g>
+
+</a>
 
  <a id="A-71" data-stall-no="A-71" data-bs-toggle="tooltip" type="button" class="btn btn-secondary"
    data-bs-placement="top" data-bs-custom-class="custom-tooltip" title="">
@@ -2744,9 +2866,7 @@ $user_id = $_SESSION['id'];
  </g>
 </a>
 </svg>
-
-
-
+            
 <script>
   document.addEventListener('DOMContentLoaded', function () {
     var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));

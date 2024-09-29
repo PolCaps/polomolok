@@ -340,7 +340,7 @@ $user_id = $_SESSION['id'];
                         $sql = "SELECT COUNT(*) as total_vacant 
                                 FROM building_a 
                                 WHERE stall_status = 'Occupied' 
-                                AND building_id BETWEEN 1 AND 69";
+                                AND stall_no BETWEEN 'A-01' AND 'A-68'";
 
                         $result = $conn->query($sql);
 
@@ -353,7 +353,8 @@ $user_id = $_SESSION['id'];
                             echo "No vacant stalls found.";
                         }
 
-                        $sql = "SELECT stall_no FROM building_a WHERE stall_status = 'Occupied' AND building_id BETWEEN 1 AND 69";
+                        $sql = "SELECT stall_no FROM building_a WHERE stall_status = 'Occupied' 
+                        AND stall_no BETWEEN 'A-01' AND 'A-68'";
                         $result = $conn->query($sql);
 
                         $occupied_stalls = [];
@@ -447,7 +448,7 @@ $user_id = $_SESSION['id'];
                         $sql = "SELECT COUNT(*) as total_vacant 
                                 FROM building_a 
                                 WHERE stall_status = 'Vacant' 
-                                AND building_id BETWEEN 1 AND 69";
+                                AND stall_no BETWEEN 'A-01' AND 'A-68'";
 
                         $result = $conn->query($sql);
 
@@ -464,7 +465,7 @@ $user_id = $_SESSION['id'];
                       $queryGet = "SELECT stall_no 
                       FROM building_a 
                       WHERE stall_status = 'Vacant' 
-                      AND building_id BETWEEN 1 AND 69";
+                      AND stall_no BETWEEN 'A-01' AND 'A-68'";
 
                       $resultnya = $conn->query($queryGet);
 
@@ -524,7 +525,7 @@ $user_id = $_SESSION['id'];
                       // SQL query to count vacant stalls
                       $sql = "SELECT COUNT(*) as total_stalls
                               FROM building_a 
-                              WHERE building_id BETWEEN 1 AND 69";
+                              WHERE stall_no BETWEEN 'A-01' AND 'A-67'";
                       $result = $conn->query($sql);
 
                       // Check if query was successful
@@ -572,7 +573,7 @@ $user_id = $_SESSION['id'];
                       // SQL query to count vacant stalls
                       $sql = "SELECT COUNT(*) as total_stalls
                               FROM building_a 
-                              WHERE building_id BETWEEN 1 AND 95";
+                              WHERE stall_no BETWEEN 'A-01' AND 'A-94'";
                       $result = $conn->query($sql);
 
                       // Check if query was successful
