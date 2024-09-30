@@ -339,80 +339,208 @@ $conn->close();
       </div>
     </nav>
     <!-- End Navbar -->
-    <div class="container-fluid py-4">
+    <?php
+// Include database configuration
+include('database_config.php');
 
-      <div class="row my-4">
-        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
-          <div class="card">
-            <div class="card-header pb-0">
-              <div class="row">
-                <h6 class="text-center"><span class="text-sm text-secondary">Vendor Name:</span>
-                  <?php echo $vendor['username']; ?></h6>
-              </div>
-            </div>
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-            <div class="card-body px-0 pb-2">
-              <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                        Digital Receipt</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                        Monthly Rentals</th>
-                      <th
-                        class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                        Stall No.</th>
-                      <th
-                        class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                        Date</th>
-                    </tr>
-                  </thead>
-                  <tbody id="dataTableBody">
-                    <tr>
-                      <td class="text-center">
-                        <a href="<?php echo htmlspecialchars($vendor['receiptsImg']); ?>" target="_blank"
-                          class="view-receipt">
-                          View Receipt
-                        </a>
-                      </td>
+// Check for connection errors
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
 
-                      <td class="align-middle text-center text-sm">
-                        <?php echo htmlspecialchars($vendor['monthly_rentals']); ?>
-                      </td>
-                      <td class="align-middle text-center text-sm"><?php echo htmlspecialchars($vendor['stall_no']); ?>
-                      </td>
-                      <td class="align-middle text-center text-sm">
-                        <?php echo htmlspecialchars($vendor['started_date']); ?>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+// Fetch vendor information with LEFT JOIN
+$sql = "
+  SELECT v.vendor_id, v.first_name, v.middle_name, v.last_name, r.receipt AS receiptsImg, 
+         v.payment_due AS due_dates,
+         COALESCE(a.monthly_rentals, b.monthly_rentals, c.monthly_rentals, d.monthly_rentals, 
+                  e.monthly_rentals, f.monthly_rentals, g.monthly_rentals, h.monthly_rentals, 
+                  i.monthly_rentals, j.monthly_rentals) AS monthly_rentals, 
+         COALESCE(a.stall_no, b.stall_no, c.stall_no, d.stall_no, 
+                  e.stall_no, f.stall_no, g.stall_no, h.stall_no, 
+                  i.stall_no, j.stall_no) AS stall_no,
+         v.started_date
+  FROM vendors v
+  LEFT JOIN building_a a ON v.vendor_id = a.vendor_id
+  LEFT JOIN building_b b ON v.vendor_id = b.vendor_id
+  LEFT JOIN building_c c ON v.vendor_id = c.vendor_id
+  LEFT JOIN building_d d ON v.vendor_id = d.vendor_id
+  LEFT JOIN building_e e ON v.vendor_id = e.vendor_id
+  LEFT JOIN building_f f ON v.vendor_id = f.vendor_id
+  LEFT JOIN building_g g ON v.vendor_id = g.vendor_id
+  LEFT JOIN building_h h ON v.vendor_id = h.vendor_id
+  LEFT JOIN building_i i ON v.vendor_id = i.vendor_id
+  LEFT JOIN building_j j ON v.vendor_id = j.vendor_id
+  LEFT JOIN receipts r ON v.vendor_id = r.vendor_id
+  WHERE v.vendor_id = ?
+";
 
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $vendor_id);
+$stmt->execute();
+$result = $stmt->get_result();
 
-            <!-- Single modal -->
-            <div class="modal fade" id="imageModal" tabindex="-1" role="dialog" aria-labelledby="imageModalLabel"
-              aria-hidden="true">
-              <div class="modal-dialog modal-lg border-0">
-                <div class="modal-content">
-                  <div class="modal-header">
-                    <h4 class="modal-title text-end" id="imageModalLabel">Digital Reciept</h4>
-                  </div>
-                  <div class="modal-body">
-                    <img src="" alt="Expanded Image" width="100%" height="auto" id="expandedImage">
-                  </div>
-                </div>
-              </div>
-            </div>
+if ($result->num_rows > 0) {
+  $v = $result->fetch_assoc();
+} else {
+  die("No vendor found.");
+}
 
+$conn->close();
+?>
+
+<div class="container-fluid py-4">
+  <div class="row my-4">
+    <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
+      <div class="card">
+        <div class="card-header pb-0">
+          <div class="row">
+            <h6 class="text-center">
+              <span class="text-sm text-secondary">Vendor Name:</span>
+              <?php echo htmlspecialchars($v['first_name']) . ' ' . htmlspecialchars($v['middle_name']) . ' ' . htmlspecialchars($v['last_name']); ?>
+            </h6>
+          </div>
+        </div>
+
+        <div class="card-body px-0 pb-2">
+          <div class="table-responsive">
+            <table class="table align-items-center mb-0">
+              <thead>
+                <tr>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
+                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stall Number</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dues</th>
+                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt History</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <div class="d-flex px-3 py-1">
+                      <div class="d-flex flex-column justify-content-center">
+                        <h6 class="mb-0 text-sm"><?php echo htmlspecialchars($v['first_name']) . ' ' . htmlspecialchars($v['middle_name']) . ' ' . htmlspecialchars($v['last_name']); ?></h6>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="avatar-group mt-1">
+                      <h6 class="mb-1 text-sm"><?php echo htmlspecialchars($v['stall_no']); ?></h6>
+                    </div>
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    <span class="text-xs font-weight-bold"><?php echo htmlspecialchars($v['due_dates']); ?></span>
+                  </td>
+                  <td class="align-middle text-center text-sm">
+                    <button 
+                      type="button" 
+                      class="btn btn-sm btn-primary my-1" 
+                      data-bs-toggle="modal" 
+                      data-bs-target="#openHistoryModal" 
+                      data-vendor-id="<?php echo htmlspecialchars($v['vendor_id']); ?>"
+                    >
+                      Show Receipts
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
             </table>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Modal for receipt history -->
+  <div class="modal fade" id="openHistoryModal" tabindex="-1" aria-labelledby="openHistoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="openHistoryModalLabel">Receipt History</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <table class="table align-items-center mb-0">
+            <thead>
+              <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor ID</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt Number</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">File</th>
+              </tr>
+            </thead>
+            <tbody id="receiptHistoryBody">
+              <!-- Data populated by JavaScript -->
+            </tbody>
+          </table>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
+
+<script>
+// Fetch receipt history
+function fetchReceiptHistory(vendorId) {
+  var xhr = new XMLHttpRequest();
+  xhr.open('GET', 'Receipts\get_receipts.php?vendor_id=' + vendorId, true);
+  xhr.onload = function() {
+    if (xhr.status >= 200 && xhr.status < 300) {
+      var response = JSON.parse(xhr.responseText);
+      if (response.data && response.data.receipts.length > 0) {
+        displayReceiptHistory(response.data.receipts);
+      } else {
+        alert('No receipt data found for this vendor.');
+      }
+    } else {
+      console.error('Request failed with status ' + xhr.status);
+      alert('Failed to load receipt data. Please try again later.');
+    }
+  };
+  xhr.onerror = function() {
+    console.error('Network error occurred');
+    alert('A network error occurred. Please check your connection.');
+  };
+  xhr.send();
+}
+
+// Display receipt history in modal
+function displayReceiptHistory(data) {
+  var tbody = document.getElementById('receiptHistoryBody');
+  var html = '';
+  data.forEach(function(row) {
+    html += '<tr>';
+    html += '<td>' + row.vendor_id + '</td>';
+    html += '<td>' + row.receiptsNum + '</td>';
+    html += '<td>' + row.Dates + '</td>';
+    html += '<td>';
+    if (row.receipts_history) {
+      html += '<a href="' + row.receipts_history + '" target="_blank">View File</a>';
+    } else {
+      html += 'No File Available';
+    }
+    html += '</td>';
+    html += '</tr>';
+  });
+  tbody.innerHTML = html;
+}
+
+// Bind modal button clicks
+document.addEventListener('DOMContentLoaded', function() {
+  var buttons = document.querySelectorAll('[data-bs-target="#openHistoryModal"]');
+  buttons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      var vendorId = button.getAttribute('data-vendor-id');
+      fetchReceiptHistory(vendorId);
+    });
+  });
+});
+</script>
+
 
     </div>
   </main>
