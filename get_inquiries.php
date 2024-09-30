@@ -10,7 +10,9 @@ if ($conn->connect_error) {
 }
 
 // Prepare SQL statement with placeholders
-$sql = "SELECT inq_id, name, email_add, subject, message, sent_date FROM inquiry";
+$sql = "SELECT inq_id, name, email_add, subject, message, sent_date FROM inquiry
+ORDER BY sent_date DESC
+";
 $params = [];
 $types = '';
 
