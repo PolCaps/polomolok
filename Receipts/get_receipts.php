@@ -31,7 +31,7 @@ if (isset($_GET['vendor_id'])) {
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             // Assuming 'r.receipt' contains only the file name like 'receipt.pdf'
-            $row['receipts_history'] = '/PolomolokPublicMarketMeedo/Receipts/' . $row['receipts_history'];
+            $row['receipts_history'] = 'Receipts/' . $row['receipts_history'];
             $data['receipts'][] = $row;
         }
         

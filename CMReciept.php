@@ -216,7 +216,7 @@ $conn->close();
       </div>
       <div class="modal-body">
         <!-- Form submission directly to issueRe.php -->
-        <form action="/PolomolokPublicMarketMeedo/Receipts/issueRe.php" method="POST" enctype="multipart/form-data">
+        <form action="Receipts/issueRe.php" method="POST" enctype="multipart/form-data">
           <div class="mb-3">
             <label for="vendorSelect" class="form-label">Select Vendor</label>
             <select id="vendorSelect" name="vendorSelect" class="form-select" required>
@@ -435,7 +435,7 @@ $conn->close();
 // Function to fetch receipt history data
 function fetchReceiptHistory(vendorId) {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', '/PolomolokPublicMarketMeedo/Receipts/get_receipts.php?vendor_id=' + vendorId, true); // Add vendor_id to the query
+  xhr.open('GET', 'Receipts/get_receipts.php?vendor_id=' + vendorId, true); // Add vendor_id to the query
   xhr.onload = function() {
     if (xhr.status >= 200 && xhr.status < 300) {
       var response = JSON.parse(xhr.responseText);

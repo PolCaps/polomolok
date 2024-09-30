@@ -266,89 +266,89 @@ $conn->close();
 
 
 
+<!-- End Navbar -->
 <div class="container-fluid py-4">
-    <div class="row my-4">
+      <div class="row">
+      <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Expected Total Payments from Vendors (This Month)</p>
+                    <h5 class="font-weight-bolder mb-0">
+                    <span id="totalPay"><?php echo htmlspecialchars($data['totalPayments']); ?></span>
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-2 text-end">
+                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
+                  <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
 
-         <!-- Active Vendors Count Card -->
-         <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
-            <div class="card">
-                <div class="card-header pb-0">
-                    <h6>Active Vendors (This Month)</h6>
+                  </div>
                 </div>
-                <div class="card-body">
-                    <span id="activeVendorsCount"><?php echo htmlspecialchars($data['activeVendorsCount']); ?></span>
-                </div>
+              </div>
             </div>
+          </div>
         </div>
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Active Vendors this month</p>
+                    <h5 class="font-weight-bolder mb-0">
+                    <span id="activeVendorsCount"><?php echo htmlspecialchars($data['activeVendorsCount']); ?></span>
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
+                  <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Rent Applications (This Month)</p>
+                    <h5 class="font-weight-bolder mb-0">
+                    <span id="rentAppCount"><?php echo htmlspecialchars($data['rentAppCount']); ?></span>
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
+                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
 
         
-        <!-- Vendor Payments Card -->
-        <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
-            <div class="card">
-            <div class="card-header pb-0">
-                    <h6>Total Vendors Payments (This Month)</h6>
-                </div>
-                <div class="card-body">
-                    <span id="totalPay"><?php echo htmlspecialchars($data['totalPayments']); ?></span>
-                </div>
-            </div>
+        
+
+      </div><!-- row -->
+         <br>
+         <br>
+        <div class="col-lg-12 text-start">
+            <button id="generateReportBtn" class="btn btn-primary">Generate PDF Report</button>
         </div>
 
-        <!-- Inquiry Card -->
-        <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
-            <div class="card">
-                <div class="card-header pb-0">
-                    <h6>Inquiries (This Month)</h6>
-                </div>
-                <div class="card-body">
-                    <table id="inquiryTable" class="table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Subject</th>
-                                <th>Message</th>
-                                <th>Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        <?php if ($inquiriesResult && $inquiriesResult->num_rows > 0): ?>
-                            <?php while ($inquiry = $inquiriesResult->fetch_assoc()): ?>
-                                <tr>
-                                    <td><?php echo htmlspecialchars($inquiry['name']); ?></td>
-                                    <td><?php echo htmlspecialchars($inquiry['email']); ?></td>
-                                    <td><?php echo htmlspecialchars($inquiry['subject']); ?></td>
-                                    <td><?php echo htmlspecialchars($inquiry['message']); ?></td>
-                                    <td><?php echo htmlspecialchars($inquiry['sent_date']); ?></td>
-                                </tr>
-                            <?php endwhile; ?>
-                        <?php else: ?>
-                            <tr>
-                                <td colspan="5" class="text-center">No inquiries found for this month.</td>
-                            </tr>
-                        <?php endif; ?>
-                    </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
 
-        <!-- Rent Application Count Card -->
-        <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
-            <div class="card">
-                <div class="card-header pb-0">
-                    <h6>Rent Applications (This Month)</h6>
-                </div>
-                <div class="card-body">
-                    <span id="rentAppCount"><?php echo htmlspecialchars($data['rentAppCount']); ?></span>
-                </div>
-            </div>
-        </div>
-
-       
 
     </div>
-</div>
 
 <!-- DataTables and jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -390,13 +390,7 @@ $(document).ready(function() {
 });
 </script>
 
-    <!-- Button to Generate PDF Report -->
-    <div class="row">
-        <div class="col-lg-12 text-center">
-            <button id="generateReportBtn" class="btn btn-primary">Generate PDF Report</button>
-        </div>
-    </div>
-</div>
+
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
@@ -437,9 +431,6 @@ $(document).ready(function() {
         });
     });
 </script>
-
-
-
     </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
