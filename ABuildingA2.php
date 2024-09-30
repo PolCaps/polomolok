@@ -525,7 +525,7 @@ $user_id = $_SESSION['id'];
                       // SQL query to count vacant stalls
                       $sql = "SELECT COUNT(*) as total_stalls
                               FROM building_a 
-                              WHERE stall_no BETWEEN 'A-01' AND 'A-94'";
+                              WHERE stall_no BETWEEN 'A-68' AND 'A-93'";
                       $result = $conn->query($sql);
 
                       // Check if query was successful
