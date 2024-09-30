@@ -299,7 +299,8 @@ if ($conn->connect_error) {
 $start_date = isset($_POST['start_date']) ? $_POST['start_date'] : '';
 $end_date = isset($_POST['end_date']) ? $_POST['end_date'] : '';
 
-$sql = "SELECT name, email_add, subject, message, sent_date FROM inquiry";
+$sql = "SELECT inq_id, name, email_add, subject, message, sent_date FROM inquiry
+ORDER BY inq_id DESC";
 
 if ($start_date && $end_date) {
     $sql .= " WHERE sent_date BETWEEN '$start_date' AND '$end_date'";
