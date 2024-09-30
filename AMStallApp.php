@@ -379,7 +379,7 @@ $conn->close();
 
                   <div class="input-group mx-3">
                     <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                    <input type="text" id="searchInput" class="form-control" placeholder="Search for...">
+                    <input type="text" ixd="searchInput" class="form-control" placeholder="Search for...">
                   </div>
                   
 
