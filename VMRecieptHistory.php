@@ -88,6 +88,8 @@ $conn->close();
 <!DOCTYPE html>
 <html lang="en">
 
+  
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -482,6 +484,17 @@ $conn->close();
     </div>
   </div>
 </div>
+
+<!-- dri rasa nav-item v.vendor_id, v.first_name, v.middle_name, v.last_name, r.receipt AS receiptsImg, 
+ 
+         v.payment_due AS due_dates,
+         COALESCE(a.monthly_rentals, b.monthly_rentals, c.monthly_rentals, d.monthly_rentals, 
+                  e.monthly_rentals, f.monthly_rentals, g.monthly_rentals, h.monthly_rentals, 
+                  i.monthly_rentals, j.monthly_rentals) AS monthly_rentals, 
+         COALESCE(a.stall_no, b.stall_no, c.stall_no, d.stall_no, 
+                  e.stall_no, f.stall_no, g.stall_no, h.stall_no, 
+                  i.stall_no, j.stall_no) AS stall_no,
+         v.started_date -->
 
 <script>
 // Fetch receipt history
