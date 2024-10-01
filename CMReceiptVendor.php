@@ -536,11 +536,11 @@ function displayReceiptHistory(data) {
 
   data.forEach(function(row) {
     html += '<tr>';
-    html += '  <td>' + row.vendor_id + '</td>'; // Correct key for vendor_id
-    html += '  <td>' + row.receiptsNum + '</td>'; // Correct key for receipt_id
-    html += '  <td>' + row.Dates + '</td>'; // Correct key for date (issued_date in PHP)
+    html += '  <td>' + row.vendor_id + '</td>';
+    html += '  <td>' + row.receiptsNum + '</td>';
+    html += '  <td>' + row.Dates + '</td>';
     html += '  <td>';
-    if (row.receipts_history) { // Assuming 'receipts_history' is the file URL
+    if (row.receipts_history) {
       html += '    <a href="' + row.receipts_history + '" target="_blank">View File</a>';
     } else {
       html += '    No File Available';

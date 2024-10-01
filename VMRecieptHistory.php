@@ -1,22 +1,13 @@
 <?php
+// Start the session with the specific session name
 session_name('vendor_session');
 session_start();
 
-include('database_config.php');
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
-
-
-
+// Check if vendor_id exists in the session
 if (!isset($_SESSION['vendor_id'])) {
   header("Location: Vendor.php");
   exit();
 }
-
 
 // Get the vendor ID from the session
 $vendor_id = $_SESSION['vendor_id'];
@@ -32,9 +23,9 @@ if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch vendor information
+// SQL query with placeholders (removed r.receipt AS receiptsImg)
 $sql = "
-  SELECT v.*, r.receipt AS receiptsImg, 
+  SELECT v.*, 
          v.payment_due AS due_dates,
          buildings.monthly_rentals, 
          buildings.stall_no
@@ -60,30 +51,46 @@ $sql = "
       UNION ALL
       SELECT vendor_id, monthly_rentals, stall_no FROM building_j
   ) AS buildings ON v.vendor_id = buildings.vendor_id
-  JOIN receipts r ON v.vendor_id = r.vendor_id
+  WHERE v.vendor_id = ?
 ";
 
-$result = $conn->query($sql);
+// Prepare the SQL statement
+$stmt = $conn->prepare($sql);
 
-// Check if the query executed successfully
-if ($result === false) {
-  die("Query failed: " . $conn->error);
+// Check if preparation was successful
+if ($stmt === false) {
+  die("Error preparing query: " . $conn->error);
 }
+
+// Bind the vendor_id parameter to the SQL query
+$stmt->bind_param("i", $vendor_id);
+
+// Execute the statement
+if (!$stmt->execute()) {
+  die("Error executing query: " . $stmt->error);
+}
+
+// Get the result
+$result = $stmt->get_result();
 
 // Check if data is retrieved
 if ($result->num_rows > 0) {
   $vendor = $result->fetch_assoc();
 } else {
-  die("No vendor found.");
+  // Output an alert message with a redirect to the Vendor.php page
+  echo "<script>
+    alert('No vendor found.');
+    window.location.href = 'Vendor.php';
+  </script>";
+  exit();
 }
 
-// $receiptUrl = htmlspecialchars($vendor['receiptsImg']); // Make sure this path is correct
-// echo "<a href='$receiptUrl' class='view-receipt' data-toggle='modal' data-target='#imageModal'>View Receipt</a>";
-
-
+// Close the statement and connection
+$stmt->close();
 $conn->close();
-
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -305,56 +312,99 @@ $conn->close();
     </nav>
     <!-- End Navbar -->
     <?php
-// Include database configuration
-include('database_config.php');
 
-// Create a connection
+// Check if session is not started, then start the session
+if (session_status() === PHP_SESSION_NONE) {
+    session_name('vendor_session');
+    session_start();
+}
+
+// Ensure the vendor_id is present in the session
+if (!isset($_SESSION['vendor_id'])) {
+    echo "Error: Vendor ID not set in the session.";
+    exit;
+}
+
+// Assign the vendor_id from session to the variable
+$vendor_id = $_SESSION['vendor_id'];
+
+include("database_config.php");
+
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check for connection errors
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+    echo "Connection failed: " . $conn->connect_error;
+    exit;
 }
 
-// Fetch vendor information with LEFT JOIN
-$sql = "
-  SELECT v.vendor_id, v.first_name, v.middle_name, v.last_name, r.receipt AS receiptsImg, 
-         v.payment_due AS due_dates,
-         COALESCE(a.monthly_rentals, b.monthly_rentals, c.monthly_rentals, d.monthly_rentals, 
-                  e.monthly_rentals, f.monthly_rentals, g.monthly_rentals, h.monthly_rentals, 
-                  i.monthly_rentals, j.monthly_rentals) AS monthly_rentals, 
-         COALESCE(a.stall_no, b.stall_no, c.stall_no, d.stall_no, 
-                  e.stall_no, f.stall_no, g.stall_no, h.stall_no, 
-                  i.stall_no, j.stall_no) AS stall_no,
-         v.started_date
-  FROM vendors v
-  LEFT JOIN building_a a ON v.vendor_id = a.vendor_id
-  LEFT JOIN building_b b ON v.vendor_id = b.vendor_id
-  LEFT JOIN building_c c ON v.vendor_id = c.vendor_id
-  LEFT JOIN building_d d ON v.vendor_id = d.vendor_id
-  LEFT JOIN building_e e ON v.vendor_id = e.vendor_id
-  LEFT JOIN building_f f ON v.vendor_id = f.vendor_id
-  LEFT JOIN building_g g ON v.vendor_id = g.vendor_id
-  LEFT JOIN building_h h ON v.vendor_id = h.vendor_id
-  LEFT JOIN building_i i ON v.vendor_id = i.vendor_id
-  LEFT JOIN building_j j ON v.vendor_id = j.vendor_id
-  LEFT JOIN receipts r ON v.vendor_id = r.vendor_id
-  WHERE v.vendor_id = ?
+// SQL query with a placeholder for vendor_id
+$sqlV = "
+    SELECT v.vendor_id, v.username, v.first_name, v.middle_name, v.last_name, 
+           GROUP_CONCAT(DISTINCT r.receipt SEPARATOR ', ') AS receipts, 
+           v.payment_due AS due_dates, 
+           stalls.buildings
+    FROM vendors v
+    JOIN (
+        SELECT vendor_id, stall_no AS buildings FROM building_a
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_b
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_c
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_d
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_e
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_f
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_g
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_h
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_i
+        UNION ALL
+        SELECT vendor_id, stall_no FROM building_j
+    ) AS stalls ON v.vendor_id = stalls.vendor_id
+    LEFT JOIN receipts r ON v.vendor_id = r.vendor_id
+    WHERE v.vendor_id = ?
+    GROUP BY v.vendor_id, stalls.buildings
 ";
 
-$stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $vendor_id);
-$stmt->execute();
-$result = $stmt->get_result();
-
-if ($result->num_rows > 0) {
-  $v = $result->fetch_assoc();
-} else {
-  die("No vendor found.");
+// Prepare the SQL statement
+$stmt = $conn->prepare($sqlV);
+if ($stmt === false) {
+    echo "Error preparing query: " . $conn->error;
+    exit;
 }
 
+// Bind the vendor_id parameter from the session
+$stmt->bind_param("i", $vendor_id);
+
+// Execute the statement
+if (!$stmt->execute()) {
+    echo "Error executing query: " . $stmt->error;
+    exit;
+}
+
+// Get the result
+$resultV = $stmt->get_result();
+
+$dataV = [];
+if ($resultV->num_rows > 0) {
+    while ($row = $resultV->fetch_assoc()) {
+        $dataV[] = $row;
+    }
+} else {
+    $dataV = [];
+}
+
+// Close the statement and connection
+$stmt->close();
 $conn->close();
+
 ?>
+
+
 
 <div class="container-fluid py-4">
   <div class="row my-4">
@@ -364,54 +414,58 @@ $conn->close();
           <div class="row">
             <h6 class="text-center">
               <span class="text-sm text-secondary">Vendor Name:</span>
-              <?php echo htmlspecialchars($v['first_name']) . ' ' . htmlspecialchars($v['middle_name']) . ' ' . htmlspecialchars($v['last_name']); ?>
+              <?php echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']);  ?>
             </h6>
           </div>
         </div>
 
         <div class="card-body px-0 pb-2">
-          <div class="table-responsive">
-            <table class="table align-items-center mb-0">
-              <thead>
-                <tr>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
-                  <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stall Number</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dues</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt History</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>
-                    <div class="d-flex px-3 py-1">
-                      <div class="d-flex flex-column justify-content-center">
-                        <h6 class="mb-0 text-sm"><?php echo htmlspecialchars($v['first_name']) . ' ' . htmlspecialchars($v['middle_name']) . ' ' . htmlspecialchars($v['last_name']); ?></h6>
-                      </div>
+              <div class="table-responsive">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stall Number</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dues</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt History</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dataTableBody">
+    <?php foreach ($dataV as $row) { ?>
+        <tr>
+            <td>
+                <div class="d-flex px-3 py-1">
+                    <div class="d-flex flex-column justify-content-center">
+                        <h6 class="text-xs font-weight-bold text-center"><?php echo $row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']; ?></h6>
                     </div>
-                  </td>
-                  <td>
-                    <div class="avatar-group mt-1">
-                      <h6 class="mb-1 text-sm"><?php echo htmlspecialchars($v['stall_no']); ?></h6>
-                    </div>
-                  </td>
-                  <td class="align-middle text-center text-sm">
-                    <span class="text-xs font-weight-bold"><?php echo htmlspecialchars($v['due_dates']); ?></span>
-                  </td>
-                  <td class="align-middle text-center text-sm">
-                    <button 
-                      type="button" 
-                      class="btn btn-sm btn-primary my-1" 
-                      data-bs-toggle="modal" 
-                      data-bs-target="#openHistoryModal" 
-                      data-vendor-id="<?php echo htmlspecialchars($v['vendor_id']); ?>"
-                    >
-                      Show Receipts
-                    </button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+                </div>
+            </td>
+            <td>
+                <div class="avatar-group mt-1">
+                    <h6 class="text-xs font-weight-bold text-start mx-4"><?php echo $row['buildings']; ?></h6>
+                </div>
+            </td>
+            <td class="align-middle text-center text-sm">
+                <span class="text-xxs font-weight-bold text-center"><?php echo $row['due_dates']; ?></span>
+            </td>
+            <td class="avatar-group mt-1 align-middle text-center text-sm">
+    <button 
+        type="button" 
+        class="btn btn-xxs btn-primary my-1" 
+        data-bs-toggle="modal" 
+        data-bs-target="#openHistoryModal" 
+        data-receipts="<?php echo htmlspecialchars($row['receipts']); ?>" 
+        data-vendor-id="<?php echo $row['vendor_id']; ?>"
+    >
+        Show Receipts
+    </button>
+</td>
+
+        </tr>
+    <?php } ?>
+</tbody>
+                </table>
+              </div>
         </div>
       </div>
     </div>
@@ -430,7 +484,7 @@ $conn->close();
             <thead>
               <tr>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor ID</th>
-                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt Number</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt ID</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
                 <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">File</th>
               </tr>
@@ -447,30 +501,20 @@ $conn->close();
     </div>
   </div>
 </div>
-
-<!-- dri rasa nav-item v.vendor_id, v.first_name, v.middle_name, v.last_name, r.receipt AS receiptsImg, 
- 
-         v.payment_due AS due_dates,
-         COALESCE(a.monthly_rentals, b.monthly_rentals, c.monthly_rentals, d.monthly_rentals, 
-                  e.monthly_rentals, f.monthly_rentals, g.monthly_rentals, h.monthly_rentals, 
-                  i.monthly_rentals, j.monthly_rentals) AS monthly_rentals, 
-         COALESCE(a.stall_no, b.stall_no, c.stall_no, d.stall_no, 
-                  e.stall_no, f.stall_no, g.stall_no, h.stall_no, 
-                  i.stall_no, j.stall_no) AS stall_no,
-         v.started_date -->
-
 <script>
-// Fetch receipt history
+// Fetch receipt history based on vendor ID
 function fetchReceiptHistory(vendorId) {
   var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'Receipts\get_receipts.php?vendor_id=' + vendorId, true);
+  xhr.open('GET', 'Receipts/get_receipts.php?vendor_id=' + vendorId, true); // Correct path for fetching receipts
   xhr.onload = function() {
     if (xhr.status >= 200 && xhr.status < 300) {
       var response = JSON.parse(xhr.responseText);
-      if (response.data && response.data.receipts.length > 0) {
-        displayReceiptHistory(response.data.receipts);
+
+      console.log(response);
+      if (response.data && response.data.receipts && response.data.receipts.length > 0) {
+        displayReceiptHistory(response.data.receipts); // Ensure this matches your response structure
       } else {
-        alert('No receipt data found for this vendor.');
+        document.getElementById('receiptHistoryBody').innerHTML = '<tr><td colspan="4" class="text-center">No receipt data found for this vendor.</td></tr>';
       }
     } else {
       console.error('Request failed with status ' + xhr.status);
@@ -488,6 +532,7 @@ function fetchReceiptHistory(vendorId) {
 function displayReceiptHistory(data) {
   var tbody = document.getElementById('receiptHistoryBody');
   var html = '';
+
   data.forEach(function(row) {
     html += '<tr>';
     html += '<td>' + row.vendor_id + '</td>';
@@ -511,11 +556,19 @@ document.addEventListener('DOMContentLoaded', function() {
   buttons.forEach(function(button) {
     button.addEventListener('click', function() {
       var vendorId = button.getAttribute('data-vendor-id');
-      fetchReceiptHistory(vendorId);
+      if (vendorId) {
+        console.log("Fetching receipts for vendor: " + vendorId); // Add this log for debugging
+        fetchReceiptHistory(vendorId);
+      } else {
+        alert('Vendor ID not available');
+      }
     });
   });
 });
+
 </script>
+
+
 
 
     </div>
