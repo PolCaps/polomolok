@@ -48,7 +48,7 @@ $conn->close();
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Staff Dashboard
+    Customer Service
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -130,7 +130,7 @@ $conn->close();
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Staff</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Customer Service</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modules</li>
           </ol>
           <h6 class="font-weight-bolder mb-0">Dashboard</h6>
@@ -146,7 +146,7 @@ $conn->close();
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Staff</span>
+                <span class="d-sm-inline d-none">Customer Service</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
