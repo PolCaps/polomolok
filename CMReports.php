@@ -43,7 +43,7 @@ if (!$user) {
 <!DOCTYPE html>
 <html lang="en">
 
-<head>
+<d>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
@@ -61,6 +61,19 @@ if (!$user) {
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
+
+
+
+  <!-- dri sa ni -->
+       <!-- Include jQuery -->
+       <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+  <!-- Include html2canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    
+    <!-- Include jsPDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -294,7 +307,12 @@ $conn->close();
 <!-- End Navbar -->
 <div class="container-fluid py-4">
       <div class="row">
+
+
+
       <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+
+
           <div class="card">
             <div class="card-body p-3">
               <div class="row">
@@ -302,20 +320,21 @@ $conn->close();
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Expected Total Payments from Vendors (This Month)</p>
                     <h5 class="font-weight-bolder mb-0">
-                    <span id="totalPay"><?php echo htmlspecialchars($data['totalPayments']); ?></span>
+                   <span id="totalPay"><?php echo htmlspecialchars(number_format($data['totalPayments'], 2, '.', ',')); ?></span>
                     </h5>
                   </div>
                 </div>
                 <div class="col-2 text-end">
                   <div class="icon icon-shape bg-info shadow text-center border-radius-md">
                   <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-
                   </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
           <div class="card">
             <div class="card-body p-3">
@@ -367,9 +386,32 @@ $conn->close();
       </div><!-- row -->
          <br>
          <br>
-        <div class="col-lg-12 text-start">
-            <button id="generateReportBtn" class="btn btn-primary">Generate PDF Report</button>
-        </div>
+       <!-- Button to Open the Modal -->
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reportModal">
+  Generate Report
+</button>
+
+<!-- Modal Structure -->
+<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reportModalLabel">Generate Monthly Report</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span>&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>Do you want to generate and send the monthly report?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-primary" id="generateReportBtn">Generate Report</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 
 
@@ -382,80 +424,76 @@ $conn->close();
 
 <script>
 $(document).ready(function() {
-    // Fetch the data using AJAX from the PHP script
-    $.ajax({
-        url: 'your_php_script.php', // Change to the correct PHP file location
-        type: 'GET',
-        dataType: 'json',
-        success: function(data) {
-            // Populate Vendor Payments Table
-            $('#vendorPaymentsTable tbody').html('<tr><td>' + (data.totalPayments || 'No data') + '</td></tr>');
+  document.getElementById("generateReportBtn").addEventListener("click", function() {
+    // Check if html2canvas is defined
+    if (typeof html2canvas !== 'undefined') {
+      // Capture the content of the page
+      html2canvas(document.querySelector(".container-fluid")).then(canvas => {
+        const { jsPDF } = window.jspdf;
+        let pdf = new jsPDF("p", "pt", "a4");
 
-            // Populate Inquiry Table
-            let inquiryRows = '';
-            data.inquiries.forEach(function(inquiry) {
-                inquiryRows += '<tr><td>' + inquiry.name + '</td><td>' + inquiry.email + '</td><td>' + inquiry.subject + '</td><td>' + inquiry.message + '</td><td>' + inquiry.sent_date + '</td></tr>';
-            });
-            $('#inquiryTable tbody').html(inquiryRows);
+        const imgData = canvas.toDataURL("image/png");
+        const imgWidth = pdf.internal.pageSize.getWidth();
+        const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
-            // Populate Rent Applications Count
-            $('#rentAppCount').text(data.rentAppCount || 'No data');
+        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
 
-            // Populate Active Vendors Count
-            $('#activeVendorsCount').text(data.activeVendorsCount || 'No data');
-        },
-        error: function() {
-            alert('Error fetching data.');
-        }
-    });
+        // Generate Base64 string of the PDF
+        const pdfBase64 = pdf.output('datauristring');
 
-    // Initialize DataTables
-    $('#vendorPaymentsTable').DataTable();
-    $('#inquiryTable').DataTable();
+        // Prepare form data to send to the server
+        const formData = new FormData();
+        formData.append('pdf', pdfBase64);
+
+        // Send the Base64 PDF via POST to the server
+        fetch('monthlyReports.php', {
+          method: 'POST',
+          body: formData
+        }).then(response => response.text())
+          .then(result => {
+            console.log('PDF sent to server:', result);
+            alert('Report generated and sent successfully!');
+          }).catch(error => {
+            alert('Error sending PDF: ' + error);
+          });
+
+        // Make the API request for generating PDF
+        fetch("https://us1.pdfgeneratorapi.com/api/v4/documents/generate", {
+          method: "POST",
+          headers: {
+            "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI2YjJjODljODU2ZjgzMThkN2ZiNjNiYTBiMzQ4MzYxMjBiNGZiNjU4MjM3NjM5MzM4Y2JlZTQxNTk1NjZmNWQ4Iiwic3ViIjoicmV5YW5qYW5zYW1vbnRhbmVzQGdtYWlsLmNvbSIsImV4cCI6MTcyNzc4NjI0NH0.kDpfxqhYs4wEv0zccATGvxLwariOZ4l8tTSDUeOuIl8",
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            template: {
+              id: '1216508',
+              data: {}
+            },
+            format: 'pdf',
+            output: 'url',
+            name: 'MONTHLY REPORTS'
+          })
+        })
+        .then(response => response.json())
+        .then(data => {
+          console.log('API response:', data);
+        })
+        .catch(error => {
+          console.error('Error generating PDF via API:', error);
+        });
+
+      }).catch(error => {
+        alert('Error capturing the page: ' + error);
+      });
+    } else {
+      alert('html2canvas is not defined. Please check if the library is loaded correctly.');
+    }
+  });
 });
 </script>
 
 
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
-<script>
-    document.getElementById("generateReportBtn").addEventListener("click", function() {
-        // Capture the content of the page
-        html2canvas(document.querySelector(".container-fluid")).then(canvas => {
-            // Initialize jsPDF
-            const { jsPDF } = window.jspdf;
-            let pdf = new jsPDF("p", "pt", "a4");
-
-            // Add the screenshot from the canvas
-            const imgData = canvas.toDataURL("image/png");
-            const imgWidth = pdf.internal.pageSize.getWidth();
-            const imgHeight = (canvas.height * imgWidth) / canvas.width;
-            
-            pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-
-            // Save the PDF or send it to the server
-            pdf.save("Monthly_Report.pdf");
-
-            // To automatically send the PDF to server (monthly_reports.php)
-            // Convert PDF to Base64 to send as a string to server
-            const pdfBlob = pdf.output('blob');
-            const formData = new FormData();
-            formData.append('pdf', pdfBlob, 'Monthly_Report.pdf');
-
-            // Send the PDF via AJAX to the server
-            fetch('monthly_reports.php', {
-                method: 'POST',
-                body: formData
-            }).then(response => response.text())
-              .then(result => {
-                  console.log('PDF sent to server:', result);
-              }).catch(error => {
-                  console.error('Error sending PDF:', error);
-              });
-        });
-    });
-</script>
     </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
