@@ -48,7 +48,7 @@ $conn->close();
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Inquiries
+    Cashier
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -232,9 +232,14 @@ $conn->close();
               <div class="card-body">
                 <h5 class="card-title text-lg text-info mb-3 text-start mx-2">Staff Profile</h5>
                 <div class="row">
-                  <div class="col-md-4">
-                    <img src="image/profile.jpg" class="img-fluid rounded-circle" alt="Admin Profile Picture">
-                  </div>
+                <div class="col-md-4">
+                  <?php
+                  // Check if the user has a profile picture set; if not, use a default image
+                  $profilePicture = !empty($user['picture_profile']) ? $user['picture_profile'] : 'image/profile.jpg';
+                  ?>
+                  <img src="<?php echo htmlspecialchars($profilePicture); ?>" class="img-fluid rounded-circle"
+                    alt="Admin Profile Picture" style="width: 100px; height: 100px; object-fit: cover;">
+                </div>
                   <div class="col-md-8 my-3">
                   <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?></h6>
                     <p class="card-text">Username: <?php echo htmlspecialchars($user['username']); ?></p>
@@ -246,9 +251,10 @@ $conn->close();
                   <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                     Change Password
                   </button>
-                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Change Profile Picture
-                  </button>
+                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Change Profile Picture
+                </button>
                 </div>
                 <div class="accordion" id="profile-accordion">
                   <div class="accordion-item">
@@ -359,18 +365,53 @@ if (empty($current_password) || empty($new_password)) {
                     </div>
                   </div>
                   <div class="accordion-item">
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#profile-accordion">
-                      <div class="accordion-body">
-                        <form>
-                          <div class="mb-3">
-                            <label for="profile-picture" class="form-label">Profile Picture</label>
-                            <input type="file" class="form-control" id="profile-picture" accept="image/*">
-                          </div>
-                          <button type="submit" class="btn btn-primary">Update Profile Picture</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+            data-bs-parent="#profile-accordion">
+            <div class="accordion-body">
+              <form id="uploadForm" action="cashierPicUpload.php" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                  <label for="profile-picture" class="form-label">Profile Picture</label>
+                  <input type="file" class="form-control" id="profile-picture" name="profile-picture" required>
+                </div>
+                <?php
+
+                // Get the user ID from the session
+                $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
+
+                // Check if user_id is available and set it in the hidden input
+                if ($user_id !== null) {
+                  echo '<input type="hidden" name="id" id="id" value="' . htmlspecialchars($user_id) . '">';
+                } else {
+                  echo '<p>Error: User ID is not set in the session.</p>';
+                }
+                ?>
+                <button type="submit" class="btn btn-primary">Update Profile Picture</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+          $(document).ready(function () {
+            $('#uploadForm').on('submit', function (e) {
+              e.preventDefault(); // Prevent default form submission
+
+              var formData = new FormData(this); // Create FormData object with form data
+
+              $.ajax({
+                url: $(this).attr('action'), // URL to send the request to
+                type: 'POST', // Request method
+                data: formData, // Form data
+                contentType: false, // Prevent setting Content-Type header
+                processData: false, // Prevent jQuery from processing data
+                success: function (response) {
+                  alert(response); // Display response as an alert, regardless of success or error
+                }
+              });
+            });
+          });
+        </script>
                 </div>
               </div>
             </div>
