@@ -308,64 +308,94 @@ $conn->close();
           </div>
         </div>
         <div class="card-body px-0 pb-2">
-          <div class="table-responsive">
-            <table class="table align-items-center mb-0">
-              <thead>
+    <div class="table-responsive">
+        <table class="table align-items-center mb-0">
+            <thead>
                 <tr>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant
-                    ID</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant
-                    Name</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date
-                    Submitted</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Rent
-                    Application File</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact
-                    Number</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email
-                    Address</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Address
-                  </th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant Name</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact No.</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email Address</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Status</th>
                 </tr>
-              </thead>
-              <tbody id="dataTableBodyReceipt">
-              </tbody>
-            </table>
-          </div>
-        </div>
+            </thead>
+            <tbody id="dataTableBodyReceipt">
+                <?php
+                // Establish a connection to the database
+                include 'database_config.php'; // Include the database connection
 
-      </div>
+                // Create a new MySQLi connection
+                $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-      <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    fetch('populate_rentapp_paymentFiltered.php')
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          const tableBody = document.getElementById('dataTableBodyReceipt');
-          tableBody.innerHTML = ''; // Clear existing rows
-          data.data.forEach(item => {
-            const row = document.createElement('tr');
+                // Check connection
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
 
-            row.innerHTML = `
-              <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div></td>
-              <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_name}</h6></div></td>
-              <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.date_submitted}</h6></div></td>
-              <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center"><a href="${item.rent_app_file}" target="_blank">View File</a></h6></div></td>
-              <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.contact_number}</h6></div></td>
-              <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.email_address}</h6></div></td>
-              <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.address}</h6></div></td>
-            `;
+                // Query to join the two tables and get the desired columns
+                $query = "
+                  SELECT 
+                    ra.applicant_id, 
+                    ra.first_name, 
+                    ra.middle_name, 
+                    ra.last_name, 
+                    ra.contact_no, 
+                    ra.email, 
+                    rp.payment_status
+                  FROM 
+                    rent_application ra
+                    INNER JOIN rentapp_payment rp ON ra.applicant_id = rp.applicant_id
+                  WHERE 
+                    rp.payment_status = 'Paid'
+                ";
 
-            tableBody.appendChild(row);
-          });
-        } else {
-          console.error('Failed to fetch data:', data.message);
-        }
-      })
-      .catch(error => console.error('Error:', error));
-  });
-</script>
+                // Execute the query
+                $result = mysqli_query($conn, $query);
+
+                // Check if the query was successful
+                if (!$result) {
+                    die("Query failed: " . mysqli_error($conn));
+                }
+
+                // Fetch the results as an associative array and populate the table body
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>
+                            <td class='text-center'>
+                                <div class='avatar-group mt-1'>
+                                    <h6 class='text-xs text-center'>{$row['applicant_id']}</h6>
+                                </div>
+                            </td>
+                            <td class='text-center'>
+                                <div class='avatar-group mt-1'>
+                                    <h6 class='text-xs text-center'>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</h6>
+                                </div>
+                            </td>
+                            <td class='text-center'>
+                                <div class='avatar-group mt-1'>
+                                    <h6 class='text-xs text-center'>{$row['contact_no']}</h6>
+                                </div>
+                            </td>
+                            <td class='text-center'>
+                                <div class='avatar-group mt-1'>
+                                    <h6 class='text-xs text-center'>{$row['email']}</h6>
+                                </div>
+                            </td>
+                            <td class='text-center'>
+                                <div class='avatar-group mt-1'>
+                                    <h6 class='text-xs text-center'>{$row['payment_status']}</h6>
+                                </div>
+                            </td>
+                        </tr>";
+                }
+
+                // Close the connection
+                mysqli_close($conn);
+                ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
 
     </div>
     </div>

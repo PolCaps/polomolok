@@ -1104,20 +1104,6 @@ document.getElementById('openLinkBtn').addEventListener('click', function () {
   window.open('https://form.jotform.com/242034145550042', '_blank');
 });
 
-// Function to handle the opening of the pay rent section
-document.getElementById('payRentBtn').addEventListener('click', function () {
-  var formDetails = document.getElementById('formDetails');
-  if (formDetails) {
-    var bsCollapseForm = new bootstrap.Collapse(formDetails, { toggle: false });
-    bsCollapseForm.hide();
-  }
-
-  var payRentDetails = document.getElementById('payRentDetails');
-  if (payRentDetails) {
-    var bsCollapsePayRent = new bootstrap.Collapse(payRentDetails, { toggle: false });
-    bsCollapsePayRent.show();
-  }
-});
 
 // Function to handle vendor application form submission
 document.getElementById('vendorApplicationForm').addEventListener('submit', function (event) {
@@ -1158,47 +1144,6 @@ document.getElementById('vendorApplicationForm').addEventListener('submit', func
       submissionAlert.classList.remove('d-none', 'alert-success');
       submissionAlert.classList.add('alert-danger');
       submissionAlert.innerText = 'An unexpected error occurred.';
-    });
-});
-
-// Function to handle pay rent form submission
-document.getElementById('payRentForm').addEventListener('submit', function (event) {
-  event.preventDefault();
-  var form = this;
-  if (form.checkValidity() === false) {
-    event.stopPropagation();
-    form.classList.add('was-validated');
-    return;
-  }
-
-  var formData = new FormData(form);
-  fetch(form.action, {
-    method: form.method,
-    body: formData
-  })
-    .then(response => response.json())
-    .then(data => {
-      var paymentAlert = document.getElementById('paymentAlert');
-      if (data.success) {
-        paymentAlert.classList.remove('d-none', 'alert-danger');
-        paymentAlert.classList.add('alert-success');
-        paymentAlert.innerText = 'Payment submitted successfully!';
-
-        setTimeout(() => {
-          form.reset(); // Clear the form fields
-          form.classList.remove('was-validated'); // Remove validation classes
-        }, 1000); // Clear the form and hide the alert after 2 seconds
-      } else {
-        paymentAlert.classList.remove('d-none', 'alert-success');
-        paymentAlert.classList.add('alert-danger');
-        paymentAlert.innerText = 'Failed to submit payment. Please try again.';
-      }
-    })
-    .catch(error => {
-      var paymentAlert = document.getElementById('paymentAlert');
-      paymentAlert.classList.remove('d-none', 'alert-success');
-      paymentAlert.classList.add('alert-danger');
-      paymentAlert.innerText = 'An error occurred. Please try again.';
     });
 });
 

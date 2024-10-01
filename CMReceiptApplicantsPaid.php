@@ -150,23 +150,39 @@ if (!$user) {
             </div>
           </div>
         </li>
-         <li class="nav-item">
-          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReceipt"
-            aria-expanded="false" aria-controls="collapseReceipt">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
-                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
-              </svg>
-            </div>
-            <span class="nav-link-text ms-1">Receipts</span>
-          </a>
-          <div class="collapse" id="collapseReceipt">
-            <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="CMReceiptVendor.php">Vendors</a>
-              <a class="nav-link" href="CMReceiptApplicants.php">Rent Stall Applicants</a>
-            </div>
-          </div>
-        </li>
+        <li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReceipt"
+    aria-expanded="false" aria-controls="collapseReceipt">
+    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+      </svg>
+    </div>
+    <span class="nav-link-text ms-1">Receipts</span>
+  </a>
+  <div class="collapse" id="collapseReceipt">
+    <div class="right-aligned-links" style="text-align: right;">
+      <a class="nav-link" href="CMReceiptVendor.php">Vendors</a>
+      
+      <!-- Dropdown for Rent Stall Applicants -->
+      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseStallApp"
+         aria-expanded="false" aria-controls="collapseStallApp">
+        Rent Stall Applicants
+      </a>
+      <div class="collapse" id="collapseStallApp">
+        <ul class="nav flex-column ms-3"> <!-- Added 'ms-3' for margin on the left -->
+          <li class="nav-item">
+            <a class="nav-link" href="CMReceiptApplicantsPaid.php">Paid</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="CMReceiptApplicantsUnpaid.php">Unpaid</a>
+          </li>
+        </ul>
+      </div>
+      
+    </div>
+  </div>
+</li>
         <li class="nav-item">
           <a class="nav-link" href="CMReports.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -249,35 +265,10 @@ if (!$user) {
     <div class="container-fluid py-4">
        
         <div class="container-fluid py-4">
-  <div class="row mt-4">
-          <!-- Modal for viewing and updating payment details -->
-          <div class="modal fade" id="paymentDetailsModal" tabindex="-1" aria-labelledby="paymentDetailsModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="paymentDetailsModalLabel">Payment Details</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                <div id="modalAlert" class="alert d-none" role="alert"></div>
-                  <form id="paymentDetailsForm">
-                    <div class="mb-3">
-                      <label for="modalApplicantId" class="form-label">Applicant ID</label>
-                      <input type="text" class="form-control" id="modalApplicantId" readonly>
-                    </div>
-                    <div class="mb-3">
-                      <label for="modalVerifyStatus" class="form-label">Verify Status</label>
-                      <select id="modalVerifyStatus" class="form-select">
-                        <option value="Unconfirmed">Unconfirmed</option>
-                        <option value="Verified">Verified</option>
-                      </select>
-                    </div>
-                    <button type="button" class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
-                  </form>
-                </div>
-              </div>
-            </div>
-          </div>
+        <div class="row mt-4">
+
+
+
           <div class="card mt-6">
             <div class="card-header pb-0">
               <div class="row">
@@ -316,10 +307,10 @@ if (!$user) {
                   <thead>
                     <tr>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant ID</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Official Reciept No.</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Proof Of Payment</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Full Name</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Status</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Verify Status</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Proof Of Payment</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Official Reciept No.</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Date</th>
                     </tr>
                   </thead>
@@ -333,7 +324,7 @@ if (!$user) {
 
           <script>
             document.addEventListener('DOMContentLoaded', function() {
-                fetch('populate_rentapp_payment.php')
+                fetch('populate_rentapp_paymentPaid.php')
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
@@ -344,10 +335,12 @@ if (!$user) {
                                 
                                 row.innerHTML = `
                                     <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.OR_no}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center"><a href="${item.proof_of_payment}" target="_blank">View Proof</a></h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">
+                                      ${item.first_name} ${item.middle_name ? item.middle_name + ' ' : ''}${item.last_name}
+                                    </h6></div></td>
                                     <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.payment_status || 'N/A'}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.verify_status}</h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center"><a href="${item.proof_of_payment}" target="_blank">View File</a></h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.OR_no}</h6></div></td>
                                     <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.payment_date || 'N/A'}</h6></div></td>
                                 `;
                                 
@@ -362,72 +355,6 @@ if (!$user) {
           </script>
            <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
            <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
-           <script>
-            document.addEventListener('DOMContentLoaded', function() {
-            // Handle table row click
-            document.getElementById('dataTableBodyReceipt').addEventListener('click', function(event) {
-                if (event.target.closest('tr')) {
-                    const row = event.target.closest('tr');
-                    const cells = row.getElementsByTagName('td');
-                    
-                    // Extract data from the row
-                    const applicantId = cells[0].textContent.trim();
-                    const verifyStatus = cells[4].textContent.trim();
-
-                    // Populate the modal with row data
-                    document.getElementById('modalApplicantId').value = applicantId;
-                    document.getElementById('modalVerifyStatus').value = verifyStatus;
-
-                    // Show the modal
-                    new bootstrap.Modal(document.getElementById('paymentDetailsModal')).show();
-                }
-            });
-
-            // Handle save changes button click
-            document.getElementById('saveChangesBtn').addEventListener('click', function() {
-                const applicantId = document.getElementById('modalApplicantId').value.trim();
-                const verifyStatus = document.getElementById('modalVerifyStatus').value.trim();
-
-                if (!applicantId || !verifyStatus) {
-                    showAlert('alert-danger', 'Applicant ID and Verify Status are required.');
-                    return;
-                }
-
-                // Send an AJAX request to update verify_status
-                fetch('verify_payment.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ applicant_id: applicantId, verify_status: verifyStatus })
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showAlert('alert-success', 'Status Verified!');
-                        setTimeout(() => {
-                            // Optionally refresh the page or hide the modal
-                            window.location.reload(); // Refresh page
-                            // Alternatively, hide the modal
-                            // new bootstrap.Modal(document.getElementById('paymentDetailsModal')).hide();
-                        }, 1000);
-                    } else {
-                        showAlert('alert-danger', 'Failed to Verify Status: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    showAlert('alert-danger', 'An error occurred. Please try again.');
-                    console.error('Error:', error);
-                });
-            });
-
-            // Function to show alert message
-            function showAlert(type, message) {
-                const alertDiv = document.getElementById('modalAlert');
-                alertDiv.className = `alert ${type}`;
-                alertDiv.textContent = message;
-                alertDiv.classList.remove('d-none');
-            }
-        });
-           </script>
 
         </div>
 

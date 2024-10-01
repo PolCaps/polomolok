@@ -35,7 +35,7 @@ if (isset($_FILES['file_upload']) && $_FILES['file_upload']['error'] == UPLOAD_E
 
     // Move the uploaded file to the desired directory
     if (move_uploaded_file($file_tmp_name, $file_path)) {
-        // Prepare and bind
+        // Prepare and bind for the rent_application table
         $stmt = $conn->prepare("INSERT INTO rent_application (first_name, middle_name, last_name, contact_no, age, email, building_type, stall_no, address, rentapp_file) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
         if ($stmt === false) {
@@ -48,11 +48,30 @@ if (isset($_FILES['file_upload']) && $_FILES['file_upload']['error'] == UPLOAD_E
 
         if ($stmt->execute()) {
             $applicant_id = $stmt->insert_id; // Get the last inserted ID
-            echo json_encode([
-                'success' => true,
-                'message' => "Success! ",
-                'applicant_id' => $applicant_id
-            ]);
+
+            // Insert into the rentapp_payment table
+            $stmt_payment = $conn->prepare("INSERT INTO rentapp_payment (applicant_id, first_name, middle_name, last_name) VALUES (?, ?, ?, ?)");
+            
+            if ($stmt_payment === false) {
+                die(json_encode(['success' => false, 'message' => "Prepare failed for payment: " . $conn->error]));
+            }
+            
+            if (!$stmt_payment->bind_param("isss", $applicant_id, $first_name, $middle_name, $last_name)) {
+                die(json_encode(['success' => false, 'message' => "Bind param failed for payment: " . $stmt_payment->error]));
+            }
+
+            if ($stmt_payment->execute()) {
+                echo json_encode([
+                    'success' => true,
+                    'message' => "Success! Data inserted into both tables.",
+                    'applicant_id' => $applicant_id
+                ]);
+            } else {
+                echo json_encode(['success' => false, 'message' => "Execute failed for payment: " . $stmt_payment->error]);
+            }
+
+            $stmt_payment->close();
+
         } else {
             echo json_encode(['success' => false, 'message' => "Execute failed: " . $stmt->error]);
         }

@@ -8,10 +8,9 @@ if ($conn->connect_error) {
     die(json_encode(['success' => false, 'message' => "Connection failed: " . $conn->connect_error]));
 }
 
-// Update the SQL query to filter by payment_status = 'Paid'
-$sql = "SELECT applicant_id, OR_no, proof_of_payment, payment_status, verify_status, payment_date 
+$sql = "SELECT applicant_id, first_name, middle_name, last_name, payment_status, proof_of_payment, OR_no, payment_date 
         FROM rentapp_payment 
-        WHERE payment_status = 'Paid'";
+        WHERE payment_status = 'Unpaid'";
 $result = $conn->query($sql);
 
 $data = [];

@@ -261,147 +261,75 @@ if (!$user) {
         </div>
       </div>
     </nav>
-    
     <!-- End Navbar -->
     <div class="container-fluid py-4">
        
-       <div class="container-fluid py-4">
- <div class="row mt-4">
-          
-  <!-- Issue Receipt Modal -->
-<div class="modal fade" id="issueRecieptModal" tabindex="-1" aria-labelledby="issueRecieptModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
+        <div class="container-fluid py-4">
+  <div class="row mt-4">
+          <!-- Modal for viewing and updating payment details -->
+          <div class="modal fade" id="paymentDetailsModal" tabindex="-1" aria-labelledby="paymentDetailsLabel" aria-hidden="true">
+  <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="issueRecieptModalLabel">Issue Receipt to Vendor</h5>
+        <h5 class="modal-title" id="paymentDetailsLabel">Payment Details</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <!-- Form submission directly to issueRe.php -->
-        <form action="Receipts/issueRe.php" method="POST" enctype="multipart/form-data">
+        <form id="paymentDetailsForm">
+          <!-- Applicant ID -->
           <div class="mb-3">
-            <label for="vendorSelect" class="form-label">Select Vendor</label>
-            <select id="vendorSelect" name="vendorSelect" class="form-select" required>
-              <option value="">Select a vendor</option>
-              <!-- Options populated via JavaScript -->
+            <label for="modalApplicantId" class="form-label">Applicant's ID</label>
+            <input type="text" class="form-control" id="modalApplicantId" readonly>
+          </div>
+
+          <!-- Full Name (First, Middle, Last) -->
+          <div class="mb-3">
+            <label for="modalFirstName" class="form-label">Full Name</label>
+            <input type="text" class="form-control" id="modalFirstName" readonly>
+          </div>
+
+          <!-- Payment Status -->
+          <div class="mb-3">
+            <label for="modalPaymentStatus" class="form-label">Payment Status</label>
+            <select id="modalPaymentStatus" class="form-select">
+              <option value="Unpaid">Unpaid</option>
+              <option value="Paid">Paid</option>
             </select>
           </div>
-          <!-- Label to display selected vendor ID -->
+
+          <!-- Proof of Payment -->
           <div class="mb-3">
-            <label for="vendorIdLabel" class="form-label">Vendor ID:</label>
-            <span id="vendor_id" class="form-text"></span> <!-- This will display the vendor ID -->
+            <label for="modalProofOfPayment" class="form-label">Proof of Payment</label>
+            <input type="file" class="form-control" id="modalProofOfPayment">
           </div>
 
+          <!-- OR Number -->
           <div class="mb-3">
-            <label for="usernameDisplay" class="form-label">Username:</label>
-            <span id="usernameDisplay" class="form-text"></span>
-            <input type="hidden" id="usernameDisplay" name="username" value="">
+            <label for="modalORNumber" class="form-label">OR Number</label>
+            <input type="text" class="form-control" id="modalORNumber">
           </div>
 
+          <!-- Payment Date -->
+          <div class="mb-3">
+            <label for="modalPaymentDate" class="form-label">Payment Date</label>
+            <input type="date" class="form-control" id="modalPaymentDate">
+          </div>
 
-          <input type="hidden" id="vendor_id_input" name="vendor_id" value=""> <!-- Hidden input to store vendor ID -->
-          <div class="mb-3">
-            <label for="receiptFile" class="form-label">Attach Receipt File or Photo</label>
-            <input type="file" id="receiptFile" name="receiptFile" class="form-control" required>
-          </div>
-          <div class="mb-3">
-            <label for="totalPayment" class="form-label">Total Payments</label>
-            <textarea id="totalPayment" name="totalPayment" class="form-control" required></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="receiptNotes" class="form-label">Notes (optional)</label>
-            <textarea id="receiptNotes" name="receiptNotes" class="form-control"></textarea>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary" name="submit">Generate Receipt</button>
-          </div>
+          <!-- Save Button -->
+          <button type="button" class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
         </form>
       </div>
     </div>
   </div>
 </div>
-
-        
-<div class="d-grid gap-2 d-md-block px-3">
-          <p class="text-title">Actions</p>
-          <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#issueRecieptModal">
-            Issue Receipt
-          </button>
-        </div>
-
-        <?php
-
-include("database_config.php");
-
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-if ($conn->connect_error) {
-    echo "Connection failed: " . $conn->connect_error;
-    exit;
-}
-
-$sqlV = "
-    SELECT v.vendor_id, v.username, v.first_name, v.middle_name, v.last_name, 
-           GROUP_CONCAT(DISTINCT r.receipt SEPARATOR ', ') AS receipts, 
-           v.payment_due AS due_dates, 
-           stalls.buildings
-    FROM vendors v
-    JOIN (
-        SELECT vendor_id, stall_no AS buildings FROM building_a
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_b
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_c
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_d
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_e
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_f
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_g
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_h
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_i
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_j
-    ) AS stalls ON v.vendor_id = stalls.vendor_id
-    LEFT JOIN receipts r ON v.vendor_id = r.vendor_id
-    GROUP BY v.vendor_id, stalls.buildings
-";
-
-
-$resultV = $conn->query($sqlV);
-
-if ($resultV === false) {
-    echo "Error executing query: " . $conn->error;
-    exit;
-}
-
-$dataV = [];
-if ($resultV->num_rows > 0) {
-    while ($row = $resultV->fetch_assoc()) {
-        $dataV[] = $row;
-    }
-} else {
-    $dataV = [];
-}
-
-$conn->close();
-
-?>
-          
-
-          <div class="card">
+          <div class="card mt-6">
             <div class="card-header pb-0">
               <div class="row">
                 <div class="col-lg-6 col-7">
-                  <h6>Vendors</h6>
+                  <h6>Rent Applicants</h6>
                   <p class="text-sm mb-0">
                     <i class="fa fa-user-circle text-warning" aria-hidden="true"></i>
-                    <span class="font-weight-bold ms-1">List of Vendors</span> 
+                    <span class="font-weight-bold ms-1">List of Rental Applicants Payment and Status</span> 
                   </p>
                 </div>
                 <div class="col-lg-6 col-5 my-auto text-end">
@@ -413,7 +341,7 @@ $conn->close();
                       <script>
                         document.getElementById('searchInput').addEventListener('keyup', function() {
                             var filter = this.value.toLowerCase();
-                            var rows = document.querySelectorAll('#dataTableBody tr');
+                            var rows = document.querySelectorAll('#dataTableBodyReceipt tr');
 
                             rows.forEach(function(row) {
                                 var text = row.textContent.toLowerCase();
@@ -431,194 +359,139 @@ $conn->close();
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Name</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Stall Number</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dues</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt History</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant ID</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Full Name</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Status</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Proof Of Payment</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Official Reciept No.</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Date</th>
                     </tr>
                   </thead>
-                  <tbody id="dataTableBody">
-    <?php foreach ($dataV as $row) { ?>
-        <tr>
-            <td>
-                <div class="d-flex px-3 py-1">
-                    <div class="d-flex flex-column justify-content-center">
-                        <h6 class="text-xs font-weight-bold text-center"><?php echo $row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name']; ?></h6>
-                    </div>
-                </div>
-            </td>
-            <td>
-                <div class="avatar-group mt-1">
-                    <h6 class="text-xs font-weight-bold text-start mx-4"><?php echo $row['buildings']; ?></h6>
-                </div>
-            </td>
-            <td class="align-middle text-center text-sm">
-                <span class="text-xxs font-weight-bold text-center"><?php echo $row['due_dates']; ?></span>
-            </td>
-            <td class="avatar-group mt-1 align-middle text-center text-sm">
-                <button 
-                    type="button" 
-                    class="btn btn-xxs btn-primary my-1" 
-                    data-bs-toggle="modal" 
-                    data-bs-target="#openHistoryModal" 
-                    data-receipts="<?php echo $row['receipts']; ?>" 
-                    data-vendor-id="<?php echo $row['vendor_id']; ?>"
-                >
-                  Show Receipts
-                </button>
-            </td>
-        </tr>
-    <?php } ?>
-</tbody>
+                  <tbody id="dataTableBodyReceipt">
+                  
+                </tbody>
                 </table>
               </div>
-<!-- Modal for receipt history -->
-<div class="modal fade" id="openHistoryModal" tabindex="-1" aria-labelledby="openHistoryModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="openHistoryModalLabel">Receipt History</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Table to display receipt history -->
-        <table class="table align-items-center mb-0">
-          <thead>
-            <tr>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor ID</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt ID</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">File</th>
-            </tr>
-          </thead>
-          <tbody id="receiptHistoryBody">
-            <!-- Data will be populated here using JavaScript -->
-          </tbody>
-        </table>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<script>
-// Function to fetch receipt history data
-function fetchReceiptHistory(vendorId) {
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', 'Receipts/get_receipts.php?vendor_id=' + vendorId, true); // Add vendor_id to the query
-  xhr.onload = function() {
-    if (xhr.status >= 200 && xhr.status < 300) {
-      var response = JSON.parse(xhr.responseText);
-
-      if (response.data && response.data.receipts.length > 0) {
-        displayReceiptHistory(response.data.receipts);
-      } else {
-        alert('No receipt data found for this vendor.');
-      }
-    } else {
-      console.error('Request failed with status ' + xhr.status);
-      alert('Failed to load receipt data. Please try again later.');
-    }
-  };
-  xhr.onerror = function() {
-    console.error('Network error occurred');
-    alert('A network error occurred. Please check your connection.');
-  };
-  xhr.send();
-}
-
-// Function to display receipt history data in the modal
-function displayReceiptHistory(data) {
-  var tbody = document.getElementById('receiptHistoryBody');
-  var html = '';
-
-  data.forEach(function(row) {
-    html += '<tr>';
-    html += '  <td>' + row.vendor_id + '</td>'; // Correct key for vendor_id
-    html += '  <td>' + row.receiptsNum + '</td>'; // Correct key for receipt_id
-    html += '  <td>' + row.Dates + '</td>'; // Correct key for date (issued_date in PHP)
-    html += '  <td>';
-    if (row.receipts_history) { // Assuming 'receipts_history' is the file URL
-      html += '    <a href="' + row.receipts_history + '" target="_blank">View File</a>';
-    } else {
-      html += '    No File Available';
-    }
-    html += '  </td>';
-    html += '</tr>';
-  });
-
-  tbody.innerHTML = html;
-}
-
-// Add event listener to the button to open the modal
-document.addEventListener('DOMContentLoaded', function() {
-  var buttons = document.querySelectorAll('[data-bs-target="#openHistoryModal"]');
-  buttons.forEach(function(button) {
-    button.addEventListener('click', function() {
-      var vendorId = button.getAttribute('data-vendor-id'); // Fetch vendor_id from button
-      // var receiptId = button.getAttribute('data-receipts'); // Fetch receipt_id from button
-      fetchReceiptHistory(vendorId); // Pass both vendor_id and receipt_id
-    });
-  });
-});
-</script>
-
-              
-              <script>
-document.querySelectorAll('[data-bs-toggle="modal"]').forEach(button => {
-    button.addEventListener('click', function() {
-        const receiptsContent = document.getElementById('receiptsContent');
-        receiptsContent.innerHTML = this.getAttribute('data-receipts');
-    });
-});
-
-// Function to populate vendor select dropdown
-function populateVendorSelect(vendors) {
-    const vendorSelect = document.getElementById('vendorSelect');
-    vendorSelect.innerHTML = '<option value="">Select a vendor</option>'; // Clear existing options
-    vendors.forEach(data => {
-        const option = document.createElement('option');
-        option.value = data.vendor_id; // This is the vendor_id
-        option.text = `${data.first_name} ${data.middle_name} ${data.last_name} (Stall: ${data.buildings})`;
-        option.dataset.username = data.username; // Add username as a data attribute
-        vendorSelect.appendChild(option);
-    });
-}
-
-// Event listener for vendor selection change
-document.getElementById('vendorSelect').addEventListener('change', function() {
-    const vendorId = this.value; // Get the selected vendor ID
-    const selectedOption = this.options[this.selectedIndex]; // Get the selected option
-    const username = selectedOption.dataset.username; // Retrieve the username from data attribute
-
-    // Update the vendor ID display
-    document.getElementById('vendor_id').textContent = vendorId; // Update the label to show the vendor ID
-    document.getElementById('vendor_id_input').value = vendorId; // Set the hidden input value
-    
-    // Update the username display (assuming you have an element to display the username)
-    document.getElementById('usernameDisplay').textContent = username; // Update the username display
-});
-
-// Call the function to populate the vendor select dropdown
-const vendors = <?php echo json_encode($dataV); ?>;
-populateVendorSelect(vendors);
-</script>
-
-
-
-
-
-
-
-
-
             </div>
           </div>
-          
+
+          <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                fetch('populate_rentapp_paymentUnpaid.php')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const tableBody = document.getElementById('dataTableBodyReceipt');
+                            tableBody.innerHTML = ''; // Clear existing rows
+                            data.data.forEach(item => {
+                                const row = document.createElement('tr');
+                                
+                                row.innerHTML = `
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">
+                                      ${item.first_name} ${item.middle_name ? item.middle_name + ' ' : ''}${item.last_name}
+                                    </h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.payment_status || 'N/A'}</h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.proof_of_payment}</h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.OR_no}</h6></div></td>
+                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.payment_date || 'N/A'}</h6></div></td>
+                                `;
+                                
+                                tableBody.appendChild(row);
+                            });
+                        } else {
+                            console.error('Failed to fetch data:', data.message);
+                        }
+                    })
+                    .catch(error => console.error('Error:', error));
+            });
+          </script>
+           <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+           <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+           <script>
+           document.addEventListener('DOMContentLoaded', function () {
+            // Handle table row click to populate the modal
+            document.getElementById('dataTableBodyReceipt').addEventListener('click', function (event) {
+                if (event.target.closest('tr')) {
+                    const row = event.target.closest('tr');
+                    const cells = row.getElementsByTagName('td');
+
+                    // Extract data from the row
+                    const applicantId = cells[0].textContent.trim();
+                    const fullName = cells[1].textContent.trim(); // Assuming first name is in cell[1]
+                    const paymentStatus = cells[2].textContent.trim(); // Assuming verify status is in cell[4]
+
+                    // Populate modal fields
+                    document.getElementById('modalApplicantId').value = applicantId;
+                    document.getElementById('modalFirstName').value = fullName;
+                    document.getElementById('modalPaymentStatus').value = paymentStatus;
+
+                    // Show the modal
+                    new bootstrap.Modal(document.getElementById('paymentDetailsModal')).show();
+                }
+            });
+
+            // Handle form submission and file upload
+            document.getElementById('saveChangesBtn').addEventListener('click', function () {
+                const applicantId = document.getElementById('modalApplicantId').value.trim();
+                const paymentStatus = document.getElementById('modalPaymentStatus').value;
+                const proofOfPayment = document.getElementById('modalProofOfPayment').files[0]; // File input
+                const ORNumber = document.getElementById('modalORNumber').value.trim();
+                const paymentDate = document.getElementById('modalPaymentDate').value;
+
+                // Validate required fields
+                if (!applicantId || !paymentStatus) {
+                    showAlert('alert-danger', 'Applicant ID and Payment Status are required.');
+                    return;
+                }
+
+                // Create FormData object to send file and form data
+                const formData = new FormData();
+                formData.append('applicant_id', applicantId);
+                formData.append('payment_status', paymentStatus);
+                if (proofOfPayment) {
+                    formData.append('proof_of_payment', proofOfPayment);
+                }
+                formData.append('OR_no', ORNumber);
+                formData.append('payment_date', paymentDate);
+
+                // Send the AJAX request
+                fetch('verify_payment.php', {
+                    method: 'POST',
+                    body: formData // FormData handles multipart/form-data automatically
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showAlert('alert-success', 'Payment details updated successfully.');
+                        setTimeout(() => {
+                            window.location.reload(); // Refresh the page after successful submission
+                        }, 1000);
+                    } else {
+                        showAlert('alert-danger', 'Failed to update payment details: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    showAlert('alert-danger', 'An error occurred. Please try again.');
+                    console.error('Error:', error);
+                });
+            });
+
+            // Show alerts
+            function showAlert(type, message) {
+                const alertDiv = document.getElementById('modalAlert');
+                alertDiv.className = `alert ${type}`;
+                alertDiv.textContent = message;
+                alertDiv.classList.remove('d-none');
+                setTimeout(() => {
+                    alertDiv.classList.add('d-none');
+                }, 3000);
+            }
+        });
+
+           </script>
+
         </div>
-        <div>
 
 </div>
 </div>

@@ -117,23 +117,39 @@ if (!$user) {
             </div>
           </div>
         </li>
-         <li class="nav-item">
-          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReceipt"
-            aria-expanded="false" aria-controls="collapseReceipt">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
-                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
-              </svg>
-            </div>
-            <span class="nav-link-text ms-1">Receipts</span>
-          </a>
-          <div class="collapse" id="collapseReceipt">
-            <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="CMReceiptVendor.php">Vendors</a>
-              <a class="nav-link" href="CMReceiptApplicants.php">Rent Stall Applicants</a>
-            </div>
-          </div>
-        </li>
+        <li class="nav-item">
+  <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReceipt"
+    aria-expanded="false" aria-controls="collapseReceipt">
+    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+      </svg>
+    </div>
+    <span class="nav-link-text ms-1">Receipts</span>
+  </a>
+  <div class="collapse" id="collapseReceipt">
+    <div class="right-aligned-links" style="text-align: right;">
+      <a class="nav-link" href="CMReceiptVendor.php">Vendors</a>
+      
+      <!-- Dropdown for Rent Stall Applicants -->
+      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseStallApp"
+         aria-expanded="false" aria-controls="collapseStallApp">
+        Rent Stall Applicants
+      </a>
+      <div class="collapse" id="collapseStallApp">
+        <ul class="nav flex-column ms-3"> <!-- Added 'ms-3' for margin on the left -->
+          <li class="nav-item">
+            <a class="nav-link" href="CMReceiptApplicantsPaid.php">Paid</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="CMReceiptApplicantsUnpaid.php">Unpaid</a>
+          </li>
+        </ul>
+      </div>
+      
+    </div>
+  </div>
+</li>
         <li class="nav-item">
           <a class="nav-link" href="CMReports.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
