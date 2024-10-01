@@ -313,13 +313,9 @@ $conn->close();
               <thead>
                 <tr>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant
-                    ID</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant
                     Name</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date
                     Submitted</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Rent
-                    Application File</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact
                     Number</th>
                   <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email
@@ -338,7 +334,7 @@ $conn->close();
 
       <script>
   document.addEventListener('DOMContentLoaded', function () {
-    fetch('populate_rentapp_paymentFiltered.php')
+    fetch('applicantRentals.php')
       .then(response => response.json())
       .then(data => {
         if (data.success) {
@@ -348,7 +344,7 @@ $conn->close();
             const row = document.createElement('tr');
 
             row.innerHTML = `
-              <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div></td>
+
               <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_name}</h6></div></td>
               <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.date_submitted}</h6></div></td>
               <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center"><a href="${item.rent_app_file}" target="_blank">View File</a></h6></div></td>
