@@ -1,12 +1,12 @@
 <?php
-session_name('admin_session');
+session_name('cashier_session');
 session_start();
 
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'ADMIN') {
-  header("Location: index.php");
-  exit();
+if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'CASHIER') {
+    header("Location: index.php");
+    exit();
 }
-// Get the vendor ID from the session
+
 $user_id = $_SESSION['id'];
 
 // Include database configuration
@@ -17,14 +17,14 @@ $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 // Check the connection
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
 }
 
 // Fetch vendor information
 $sql = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
-  die("Prepare failed: " . $conn->error);
+    die("Prepare failed: " . $conn->error);
 }
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -33,33 +33,12 @@ $user = $result->fetch_assoc();
 
 // Check if vendor data is retrieved
 if (!$user) {
-  die("No User found with ID " . htmlspecialchars($user_id));
+    die("No User found with ID " . htmlspecialchars($user_id));
 }
 
-// Handle AJAX request
-if (isset($_GET['building'])) {
-  $building = $_GET['building'];
 
-  $valid_buildings = ['building_a', 'building_b', 'building_c', 'building_d', 'building_e', 'building_f', 'building_g', 'building_h', 'building_i', 'building_j'];
-
-  if (in_array($building, $valid_buildings)) {
-    $sql = "SELECT vendor_id, stall_status, stall_no, building_floor, monthly_rentals FROM $building";
-    $result = $conn->query($sql);
-
-    $stalls = [];
-    while ($row = $result->fetch_assoc()) {
-      $stalls[] = $row;
-    }
-
-    echo json_encode($stalls);
-  } else {
-    echo json_encode([]);
-  }
-
-  $conn->close();
-  exit;
-}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">

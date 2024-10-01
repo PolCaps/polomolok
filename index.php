@@ -665,8 +665,7 @@ session_start()
               <a href="service-details.html" class="stretched-link">
                 <h3>Building B</h3>
               </a>
-              <p>Ut autem aut autem non a. Sint sint sit facilis nam iusto sint. Libero corrupti neque eum hic non ut
-                nesciunt dolorem.</p>
+              <p>Thrift Store, Tailoring, Salon, Gadgets, and Printing</p>
             </div>
           </div><!-- End Service Item -->
 
@@ -683,8 +682,7 @@ session_start()
               <a href="https://app.mappedin.com/map/66f7db4242d0ac000b79d8d7" class="stretched-link">
                 <h3>Building C</h3>
               </a>
-              <p>Ut excepturi voluptatem nisi sed. Quidem fuga consequatur. Minus ea aut. Vel qui id voluptas adipisci
-                eos earum corrupti.</p>
+              <p>Commercial and Offices building</p>
             </div>
           </div><!-- End Service Item -->
 
@@ -701,8 +699,7 @@ session_start()
               <a href="service-details.html" class="stretched-link">
                 <h3>Building D</h3>
               </a>
-              <p>Non et temporibus minus omnis sed dolor esse consequatur. Cupiditate sed error ea fuga sit provident
-                adipisci neque.</p>
+              <p>Barbershop, Printing Shop, Center, etc... </p>
               <a href="service-details.html" class="stretched-link"></a>
             </div>
           </div><!-- End Service Item -->
@@ -720,8 +717,7 @@ session_start()
               <a href="service-details.html" class="stretched-link">
                 <h3>Building E</h3>
               </a>
-              <p>Cumque et suscipit saepe. Est maiores autem enim facilis ut aut ipsam corporis aut. Sed animi at autem
-                alias eius labore.</p>
+              <p>Bakeshop, Retail goods, and convenience store.</p>
               <a href="service-details.html" class="stretched-link"></a>
             </div>
           </div><!-- End Service Item -->
@@ -739,8 +735,7 @@ session_start()
               <a href="service-details.html" class="stretched-link">
                 <h3>Building F</h3>
               </a>
-              <p>Hic molestias ea quibusdam eos. Fugiat enim doloremque aut neque non et debitis iure. Corrupti
-                recusandae ducimus enim.</p>
+              <p>Meats and Hotdogs</p>
               <a href="service-details.html" class="stretched-link"></a>
             </div>
           </div><!-- End Service Item -->
@@ -796,8 +791,7 @@ session_start()
               <a href="service-details.html" class="stretched-link">
                 <h3>Building I</h3>
               </a>
-              <p>Hic molestias ea quibusdam eos. Fugiat enim doloremque aut neque non et debitis iure. Corrupti
-                recusandae ducimus enim.</p>
+              <p>Vegetables</p>
               <a href="service-details.html" class="stretched-link"></a>
             </div>
           </div>
@@ -890,7 +884,7 @@ session_start()
               <i class="bi bi-envelope flex-shrink-0"></i>
               <div>
                 <h3>Email Us</h3>
-                <p>info@example.com</p>
+                <p>https://web.facebook.com/profile.php?id=100084174512254&_rdc=1&_rdr</p>
               </div>
             </div><!-- End Info Item -->
 
@@ -1094,135 +1088,120 @@ session_start()
 
       <script>
         // Function to handle the opening of the link and collapsing/expanding sections
-        document.getElementById('openLinkBtn').addEventListener('click', function () {
-          // Collapse the other section
-          var payRentDetails = document.getElementById('payRentDetails');
-          if (payRentDetails) {
-            var bsCollapsePayRent = new bootstrap.Collapse(payRentDetails, {
-              toggle: false
-            });
-            bsCollapsePayRent.hide();
-          }
+document.getElementById('openLinkBtn').addEventListener('click', function () {
+  var payRentDetails = document.getElementById('payRentDetails');
+  if (payRentDetails) {
+    var bsCollapsePayRent = new bootstrap.Collapse(payRentDetails, { toggle: false });
+    bsCollapsePayRent.hide();
+  }
 
-          // Expand the current section
-          var formDetails = document.getElementById('formDetails');
-          if (formDetails) {
-            var bsCollapseForm = new bootstrap.Collapse(formDetails, {
-              toggle: false
-            });
-            bsCollapseForm.show();
-          }
+  var formDetails = document.getElementById('formDetails');
+  if (formDetails) {
+    var bsCollapseForm = new bootstrap.Collapse(formDetails, { toggle: false });
+    bsCollapseForm.show();
+  }
 
-          // Open the link in a new tab
-          window.open('https://form.jotform.com/242034145550042', '_blank');
-        });
+  window.open('https://form.jotform.com/242034145550042', '_blank');
+});
 
-        // Function to handle the opening of the pay rent section
-        document.getElementById('payRentBtn').addEventListener('click', function () {
-          // Collapse the other section
-          var formDetails = document.getElementById('formDetails');
-          if (formDetails) {
-            var bsCollapseForm = new bootstrap.Collapse(formDetails, {
-              toggle: false
-            });
-            bsCollapseForm.hide();
-          }
+// Function to handle the opening of the pay rent section
+document.getElementById('payRentBtn').addEventListener('click', function () {
+  var formDetails = document.getElementById('formDetails');
+  if (formDetails) {
+    var bsCollapseForm = new bootstrap.Collapse(formDetails, { toggle: false });
+    bsCollapseForm.hide();
+  }
 
-          // Expand the current section
-          var payRentDetails = document.getElementById('payRentDetails');
-          if (payRentDetails) {
-            var bsCollapsePayRent = new bootstrap.Collapse(payRentDetails, {
-              toggle: false
-            });
-            bsCollapsePayRent.show();
-          }
-        });
+  var payRentDetails = document.getElementById('payRentDetails');
+  if (payRentDetails) {
+    var bsCollapsePayRent = new bootstrap.Collapse(payRentDetails, { toggle: false });
+    bsCollapsePayRent.show();
+  }
+});
 
-        // Function to handle vendor application form submission
-        document.getElementById('vendorApplicationForm').addEventListener('submit', function (event) {
-          event.preventDefault(); // Prevent default form submission
+// Function to handle vendor application form submission
+document.getElementById('vendorApplicationForm').addEventListener('submit', function (event) {
+  event.preventDefault(); // Prevent default form submission
 
-          var form = this;
-          if (!form.checkValidity()) {
-            form.classList.add('was-validated');
-            return; // Stop if form is not valid
-          }
+  var form = this;
+  if (!form.checkValidity()) {
+    form.classList.add('was-validated');
+    return; // Stop if form is not valid
+  }
 
-          var formData = new FormData(form);
-          fetch(form.action, {
-            method: form.method,
-            body: formData
-          })
-            .then(response => response.json())
-            .then(data => {
-              var submissionAlert = document.getElementById('submissionAlert');
-              if (data.success) {
-                submissionAlert.classList.remove('d-none', 'alert-danger');
-                submissionAlert.classList.add('alert-success');
-                submissionAlert.innerText = `${data.message} Your Applicant ID is: ${data.applicant_id}, please save this for future reference.`;
+  var formData = new FormData(form);
+  fetch(form.action, {
+    method: form.method,
+    body: formData
+  })
+    .then(response => response.json())
+    .then(data => {
+      var submissionAlert = document.getElementById('submissionAlert');
+      if (data.success) {
+        submissionAlert.classList.remove('d-none', 'alert-danger');
+        submissionAlert.classList.add('alert-success');
+        submissionAlert.innerText = `${data.message}`;
 
-                // Optionally display the applicant ID in a separate element
-                document.getElementById('applicant_id_display').innerText = `Your Applicant ID: ${data.applicant_id}, please save this for future reference.`;
+        setTimeout(() => {
+          form.reset(); // Clear the form fields
+          form.classList.remove('was-validated'); // Remove validation classes
+        }, 1000); // Clear the form and hide the alert after 2 seconds
+      } else {
+        submissionAlert.classList.remove('d-none', 'alert-success');
+        submissionAlert.classList.add('alert-danger');
+        submissionAlert.innerText = data.message;
+      }
+      submissionAlert.classList.remove('d-none');
+    })
+    .catch(error => {
+      var submissionAlert = document.getElementById('submissionAlert');
+      submissionAlert.classList.remove('d-none', 'alert-success');
+      submissionAlert.classList.add('alert-danger');
+      submissionAlert.innerText = 'An unexpected error occurred.';
+    });
+});
 
-                setTimeout(() => {
-                  form.reset(); // Clear the form fields
-                  form.classList.remove('was-validated'); // Remove validation classes
-                }, 1000); // Clear the form and hide the alert after 2 seconds
-              } else {
-                submissionAlert.classList.remove('d-none', 'alert-success');
-                submissionAlert.classList.add('alert-danger');
-                submissionAlert.innerText = data.message;
-              }
-              submissionAlert.classList.remove('d-none');
-            })
-            .catch(error => {
-              var submissionAlert = document.getElementById('submissionAlert');
-              submissionAlert.classList.remove('d-none', 'alert-success');
-              submissionAlert.classList.add('alert-danger');
-              submissionAlert.innerText = 'An unexpected error occurred.';
-            });
-        });
+// Function to handle pay rent form submission
+document.getElementById('payRentForm').addEventListener('submit', function (event) {
+  event.preventDefault();
+  var form = this;
+  if (form.checkValidity() === false) {
+    event.stopPropagation();
+    form.classList.add('was-validated');
+    return;
+  }
 
-        // Function to handle pay rent form submission
-        document.getElementById('payRentForm').addEventListener('submit', function (event) {
-          event.preventDefault();
-          var form = this;
-          if (form.checkValidity() === false) {
-            event.stopPropagation();
-            form.classList.add('was-validated');
-            return;
-          }
+  var formData = new FormData(form);
+  fetch(form.action, {
+    method: form.method,
+    body: formData
+  })
+    .then(response => response.json())
+    .then(data => {
+      var paymentAlert = document.getElementById('paymentAlert');
+      if (data.success) {
+        paymentAlert.classList.remove('d-none', 'alert-danger');
+        paymentAlert.classList.add('alert-success');
+        paymentAlert.innerText = 'Payment submitted successfully!';
 
-          var formData = new FormData(form);
-          fetch(form.action, {
-            method: form.method,
-            body: formData
-          })
-            .then(response => response.json())
-            .then(data => {
-              var paymentAlert = document.getElementById('paymentAlert');
-              if (data.success) {
-                paymentAlert.classList.remove('d-none', 'alert-danger');
-                paymentAlert.classList.add('alert-success');
-                paymentAlert.innerText = 'Payment submitted successfully!';
+        setTimeout(() => {
+          form.reset(); // Clear the form fields
+          form.classList.remove('was-validated'); // Remove validation classes
+        }, 1000); // Clear the form and hide the alert after 2 seconds
+      } else {
+        paymentAlert.classList.remove('d-none', 'alert-success');
+        paymentAlert.classList.add('alert-danger');
+        paymentAlert.innerText = 'Failed to submit payment. Please try again.';
+      }
+    })
+    .catch(error => {
+      var paymentAlert = document.getElementById('paymentAlert');
+      paymentAlert.classList.remove('d-none', 'alert-success');
+      paymentAlert.classList.add('alert-danger');
+      paymentAlert.innerText = 'An error occurred. Please try again.';
+    });
+});
 
-                setTimeout(() => {
-                  form.reset(); // Clear the form fields
-                  form.classList.remove('was-validated'); // Remove validation classes
-                }, 1000); // Clear the form and hide the alert after 2 seconds
-              } else {
-                paymentAlert.classList.remove('d-none', 'alert-success');
-                paymentAlert.classList.add('alert-danger');
-                paymentAlert.innerText = 'Failed to submit payment. Please try again.';
-              }
-            })
-            .catch(error => {
-              var paymentAlert = document.getElementById('paymentAlert');
-              paymentAlert.classList.remove('d-none', 'alert-success');
-              paymentAlert.classList.add('alert-danger');
-              paymentAlert.innerText = 'An error occurred. Please try again.';
-            });
-        });
       </script>
       <div id="alertContainer"></div>
 
@@ -1248,10 +1227,9 @@ session_start()
           </a>
           <p>Follow us on social media account:</p>
           <div class="social-links d-flex ">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
+           
             <a href="https://www.facebook.com/profile.php?id=100084174512254"><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
+            
           </div>
         </div>
 

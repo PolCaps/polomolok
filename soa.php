@@ -51,7 +51,7 @@ if ($result->num_rows > 0) {
          ob_end_clean();
     }
 } else {
-    echo json_encode(['success' => false, 'message' => 'No record found for the given vendor ID.']);
+    echo json_encode(['success' => false, 'message' => 'No current record found.']);
 }
 
 $stmt->close();
