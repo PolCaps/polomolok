@@ -378,8 +378,20 @@ $conn->close();
                 </div>
 
                   <div class="input-group mx-3">
-                    <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                    <input type="text" ixd="searchInput" class="form-control" placeholder="Search for...">
+                  <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                      <input type="text" class="form-control px-1" id="searchInput" placeholder="Search for...">
+
+                      <script>
+                        document.getElementById('searchInput').addEventListener('keyup', function() {
+                            var filter = this.value.toLowerCase();
+                            var rows = document.querySelectorAll('#table-body tr');
+
+                            rows.forEach(function(row) {
+                                var text = row.textContent.toLowerCase();
+                                row.style.display = text.includes(filter) ? '' : 'none';
+                            });
+                        });
+                        </script>
                   </div>
                   
 
