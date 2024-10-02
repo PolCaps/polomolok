@@ -193,8 +193,8 @@ if (isset($_GET['building'])) {
           </a>
           <div class="collapse" id="collapseAccounts">
             <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="AMUser.php">Users</a>
-              <a class="nav-link" href="AMVendor.php">Vendors</a>
+              <a class="nav-link" href="AMuser.php">Users</a>
+              <a class="nav-link" href="AMvendor.php">Vendors</a>
             </div>
           </div>
         </li>
@@ -494,10 +494,9 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', function (
             .then(response => response.text())  // Expecting a text response
             .then(alertMsg => {
                 alert(alertMsg);  // Show the alert message from PHP
-                 window.location.href = 'AMvendor.php';
                 // Only reload if the deletion was successful
                 if (!alertMsg.includes('Error')) {
-                    window.location.href = 'AMvendor.php';
+                    window.location.href = 'AMvendor.php';  // Reload the page after alert
                 }
             })
             .catch(error => {
