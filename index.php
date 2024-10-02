@@ -884,7 +884,7 @@ session_start()
               <i class="bi bi-envelope flex-shrink-0"></i>
               <div>
                 <h3>Email Us</h3>
-                <p>https://web.facebook.com/profile.php?id=100084174512254&_rdc=1&_rdr</p>
+                <p>admin@polomolokpublicmarket.com</p>
               </div>
             </div><!-- End Info Item -->
 
