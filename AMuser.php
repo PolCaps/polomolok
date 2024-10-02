@@ -34,6 +34,10 @@ $user = $result->fetch_assoc();
 // Check if vendor data is retrieved
 if (!$user) {
   die("No User found with ID " . htmlspecialchars($user_id));
+} else {
+  if (!isset($user['first_name']) || !isset($user['user_type'])) {
+    die("User information is incomplete for ID " . htmlspecialchars($user_id));
+  }
 }
 
 // Handle AJAX request
@@ -193,8 +197,8 @@ if (isset($_GET['building'])) {
           </a>
           <div class="collapse" id="collapseAccounts">
             <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="AMUser.php">Users</a>
-              <a class="nav-link" href="AMVendor.php">Vendors</a>
+              <a class="nav-link" href="AMuser.php">Users</a>
+              <a class="nav-link" href="AMvendor.php">Vendors</a>
             </div>
           </div>
         </li>
@@ -1039,7 +1043,7 @@ document.getElementById('monthly_rentals').addEventListener('click', function ()
                     </tr>
                     <?php
                   }
-                  $conn->close();
+              
               ?>
                   </tbody>
                 </table>
@@ -1054,15 +1058,55 @@ document.getElementById('monthly_rentals').addEventListener('click', function ()
     </div>
   </main>
   <div class="fixed-plugin">
+
+  <?php
+
+// Get the user ID from the session
+$user_id = $_SESSION['id'];
+
+// Include database configuration
+include('database_config.php');
+
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch user information
+$sql = "SELECT * FROM users WHERE id = ?";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+  die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$usertype = $result->fetch_assoc();
+
+// Check if user data is retrieved
+if (!$usertype) {
+  die("No User found with ID " . htmlspecialchars($user_id));
+} else {
+  if (!isset($usertype['first_name']) || !isset($usertype['user_type'])) {
+    die("User information is incomplete for ID " . htmlspecialchars($user_id));
+  }
+}
+
+$conn->close();
+?>
+
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" href="#">
       <i class="fas fa-cog"></i> </a>
     <div class="card shadow-lg">
       <div class="card-header pb-0 pt-3">
         <div class="float-start">
 
-          <h5 class="text-center">Username: <span
-              class="text-info"><?php echo htmlspecialchars($user['first_name']) ?></span> </h5>
-          <p>Role: <span class="text-info"><?php echo htmlspecialchars($user['user_type']) ?></span> </p>
+        <h5 class="text-center">Username: <span class="text-info"><?php echo htmlspecialchars($usertype['first_name'] ?? 'Unknown') ?></span></h5>
+<p>Role: <span class="text-info"><?php echo htmlspecialchars($usertype['user_type'] ?? 'Unknown') ?></span></p>
+
         </div>
         <div class="float-end mt-4">
           <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">

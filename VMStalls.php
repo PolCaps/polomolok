@@ -3,9 +3,10 @@ session_name('vendor_session');
 session_start();
 
 if (!isset($_SESSION['vendor_id'])) {
-    header("Location: index.php");
-    exit();
+  header("Location: index.php");
+  exit();
 }
+
 
 // Get the vendor ID from the session
 $vendor_id = $_SESSION['vendor_id'];
@@ -18,134 +19,27 @@ $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 // Check the connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  die("Connection failed: " . $conn->connect_error);
 }
 
 // Fetch vendor information
-$sql = "
-    SELECT v.*, b.* 
-    FROM vendors v 
-    JOIN (
-        SELECT * FROM building_a WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_b WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_c WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_d WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_e WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_f WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_g WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_h WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_i WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_j WHERE vendor_id = ?
-    ) b ON v.vendor_id = b.vendor_id
-";
-$values = array_fill(0, 10, $vendor_id);
+$sql = "SELECT * FROM vendors WHERE vendor_id = ?";
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
+  die("Prepare failed: " . $conn->error);
 }
-$types = str_repeat('i', count($values));
-$stmt->bind_param($types, ...$values);
+$stmt->bind_param("i", $vendor_id);
 $stmt->execute();
 $result = $stmt->get_result();
 $vendor = $result->fetch_assoc();
 
-
-if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
-
-  echo "<script>
-   alert('No information in your account. You need to fill-up your account first!');
-
-
-  document.addEventListener('DOMContentLoaded', function() {
-      var accountModal = new bootstrap.Modal(document.getElementById('accountModal'));
-      accountModal.show();
-
-      var form = document.getElementById('createVendorForm');
-      var modalElement = document.getElementById('accountModal'); // Reference the entire modal element
-
-      // Handle clicks outside the modal window (including the backdrop)
-      document.addEventListener('click', function(event) {
-          if (!modalElement.contains(event.target) && !form.checkValidity()) {
-              event.preventDefault(); // Prevent closing the modal
-              alert('Please fill out all required fields before closing.');
-          }
-      });
-
-      // Handle close button click
-      var closeButton = document.getElementById('closeButton');
-      closeButton.addEventListener('click', function() {
-          if (form.checkValidity()) {
-              accountModal.hide(); // Close the modal if the form is valid
-          } else {
-              alert('Please fill out all required fields before closing.');
-          }
-      });
-
-      // Disable accordion interaction (optional, adjust selector if needed)
-      var accordions = document.querySelectorAll('.accordion-header, .accordion-toggle');
-      accordions.forEach(function(accordion) {
-          accordion.style.pointerEvents = 'none';
-          accordion.style.opacity = '0.5';
-      });
-
-      // Prevent back navigation
-      window.history.pushState(null, null, window.location.href);
-      window.onpopstate = function() {
-          window.history.pushState(null, null, window.location.href);
-      };
-  });
-  </script>";
-} else {
-  echo "<script>
-          console.log('Vendor data available'); // Or handle vendor data as needed
-        </script>";
+// Check if vendor data is retrieved
+if (!$vendor) {
+  die("No vendor found with ID " . htmlspecialchars($vendor_id));
 }
-
-
-
-$query = "SELECT started_date, payment_due FROM vendors WHERE vendor_id = ?";
-$stmt1 = $conn->prepare($query);
-$stmt1->bind_param('i', $vendor_id);
-$stmt1->execute();
-$stmt1->bind_result($started_date, $payment_due);
-$stmt1->fetch();
-$stmt1->close();
-
+// Close the connection
+$conn->close();
 ?>
-
-<script>
-
-    document.addEventListener('DOMContentLoaded', function() {
-        const alertClass = "<?php echo isset($_SESSION['alert_class']) ? $_SESSION['alert_class'] : ''; ?>";
-        const alertMessage = "<?php echo isset($_SESSION['alert_message']) ? $_SESSION['alert_message'] : ''; ?>";
-
-        if (alertClass && alertMessage) {
-            // Display the alert using Achor
-            alert(alertMessage); // Replace this with your Achor alert function if you have one
-
-            // Clear session data after displaying the alert
-            <?php 
-                unset($_SESSION['alert_class']);
-                unset($_SESSION['alert_message']);
-            ?>
-        }
-    });
-
-
-
-
-    const startedDate = new Date("<?php echo $started_date; ?>");
-    const paymentDue = "<?php echo $payment_due; ?>";
-</script>
     
 <!DOCTYPE html>
 <html lang="en">
@@ -174,7 +68,13 @@ $stmt1->close();
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
  
 
-
+<!-- ayaw sa tanggal try rani nko for data table sheets -->
+ <!-- DataTables CSS -->
+ <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
 
 </head>
 
@@ -334,218 +234,7 @@ $stmt1->close();
       </div>
     </nav>
     <!-- End Navbar -->
-    <div class="container-fluid py-4">
-      
-     
 
-  <!-- Modal Structure -->
-<div class="modal fade" id="accountModal" tabindex="-1" aria-labelledby="accountModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="accountModalLabel">Fill in Your Account Information</h5>
-      </div>
-      <div class="modal-body">
-        <form id="createVendorForm" action="vendorAccountCreate.php" method="POST" enctype="multipart/form-data">
-          <div class="mb-3">
-            <label for="first_name" class="form-label">First Name:</label>
-            <input type="text" id="first_name" class="form-control" name="first_name" required>
-          </div>
-          <div class="mb-3">
-            <label for="middle_name" class="form-label">Middle Name:</label>
-            <input type="text" id="middle_name" class="form-control" name="middle_name">
-          </div>
-          <div class="mb-3">
-            <label for="last_name" class="form-label">Last Name:</label>
-            <input type="text" id="last_name" class="form-control" name="last_name" required>
-          </div>
-          <div class="mb-3">
-            <label for="age" class="form-label">Age:</label>
-            <input type="number" id="age" class="form-control" name="age">
-          </div>
-          <div class="mb-3">
-            <label for="contact_no" class="form-label">Contact Number:</label>
-            <input type="tel" id="contact_no" name="contact_number" class="form-control">
-          </div>
-          <div class="mb-3">
-            <label for="address" class="form-label">Address:</label>
-            <textarea id="address" name="address" class="form-control" style="height: 128px;" required></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="email_add" class="form-label">Email Address:</label>
-            <textarea id="email_add" name="email_add" class="form-control"></textarea>
-          </div>
-          <div class="mb-3">
-            <label for="lease_agreements" class="form-label">Lease Agreements:</label>
-            <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
-          </div>
-          <div class="mb-3">
-            <label for="business_permits" class="form-label">Business Permits:</label>
-            <input type="file" id="business_permits" name="business_permits" class="form-control">
-          </div>
-          <div class="mb-3">
-            <label for="business_licenses" class="form-label">Business Licenses:</label>
-            <input type="file" id="business_licenses" name="business_licenses" class="form-control">
-          </div>
-          <div class="modal-footer">
-            <button type="submit" name="submit" id="submit" class="btn btn-info">Create Account</button>
-            <button type="button" class="btn btn-secondary" id="closeButton">Close</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-
-
-
-<!-- Modal -->
-<div class="modal fade" id="editProfileModal" tabindex="-1" aria-labelledby="editProfileModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="editProfileModalLabel">Edit Profile</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="createVendorForm" action="vendorAccountCreate.php" method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="first_name" class="form-label">First Name:</label>
-                        <input type="text" id="first_name" class="form-control" name="first_name" value="<?php echo htmlspecialchars($vendor_data['first_name'] ?? ''); ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="middle_name" class="form-label">Middle Name:</label>
-                        <input type="text" id="middle_name" class="form-control" name="middle_name" value="<?php echo htmlspecialchars($vendor_data['middle_name'] ?? ''); ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="last_name" class="form-label">Last Name:</label>
-                        <input type="text" id="last_name" class="form-control" name="last_name" value="<?php echo htmlspecialchars($vendor_data['last_name'] ?? ''); ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="age" class="form-label">Age:</label>
-                        <input type="number" id="age" class="form-control" name="age" value="<?php echo htmlspecialchars($vendor_data['age'] ?? ''); ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="contact_no" class="form-label">Contact Number:</label>
-                        <input type="tel" id="contact_no" name="contact_number" class="form-control" value="<?php echo htmlspecialchars($vendor_data['contact_no'] ?? ''); ?>">
-                    </div>
-                    <div class="mb-3">
-                        <label for="address" class="form-label">Address:</label>
-                        <textarea id="address" name="address" class="form-control" style="height: 128px;"><?php echo htmlspecialchars($vendor_data['address'] ?? ''); ?></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email_add" class="form-label">Email Address:</label>
-                        <textarea id="email_add" name="email_add" class="form-control"><?php echo htmlspecialchars($vendor_data['email_add'] ?? ''); ?></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="lease_agreements" class="form-label">Lease Agreements:</label>
-                        <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label for="business_permits" class="form-label">Business Permits:</label>
-                        <input type="file" id="business_permits" name="business_permits" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label for="business_licenses" class="form-label">Business Licenses:</label>
-                        <input type="file" id="business_licenses" name="business_licenses" class="form-control">
-                    </div>
-                    <div class="modal-footer">
-                        <button type="submit" name="submit" id="submit" class="btn btn-info">Edit</button>
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    $('#editProfileModal').on('show.bs.modal', function () {
-        // Fetch the data from editVendor.php
-        fetch('editVendor.php')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                // Check if data is returned and populate the form
-                if (data && Object.keys(data).length > 0) {
-                    populateForm(data);
-                } else {
-                    console.warn('No data found for the vendor.');
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching vendor data:', error);
-            });
-    });
-
-    function populateForm(data) {
-        // Populate the input fields
-        document.getElementById('first_name').value = data.first_name || '';
-        document.getElementById('middle_name').value = data.middle_name || '';
-        document.getElementById('last_name').value = data.last_name || '';
-        document.getElementById('age').value = data.age || '';
-        document.getElementById('contact_no').value = data.contact_no || '';
-        
-        // Populate the text areas
-        document.getElementById('address').value = data.address || '';
-        document.getElementById('email_add').value = data.email_add || '';
-    }
-});
-
-
-
-
-document.addEventListener('DOMContentLoaded', function() {
-    const today = new Date();
-    let reminderDate;
-
-    if (paymentDue === 'MONTHLY') {
-        reminderDate = new Date(startedDate.setMonth(startedDate.getMonth() + 1));
-    } else if (paymentDue === 'QUARTERLY') {
-        reminderDate = new Date(startedDate.setMonth(startedDate.getMonth() + 3));
-    } else if (paymentDue === 'YEARLY') {
-        reminderDate = new Date(startedDate.setFullYear(startedDate.getFullYear() + 1));
-    }
-
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    const formattedDate = reminderDate.toLocaleDateString(undefined, options);
-
-    if (reminderDate <= today) {
-        // Trigger toast reminder for vendor
-        showToast('Your next payment is due on: ' + formattedDate);
-    }
-
-    // Function to show toast message
-    function showToast(message) {
-        const toastHTML = `
-            <div class="toast" style="position: absolute; top: 0; right: 0;" data-delay="5000">
-                <div class="toast-header">
-                    <strong class="mr-auto">Payment Reminder</strong>
-                    <small>Just now</small>
-                    <button type="button" class="ml-2 mb-1 close" data-dismiss="toast">&times;</button>
-                </div>
-                <div class="toast-body">
-                    ${message}
-                </div>
-            </div>
-        `;
-        document.body.insertAdjacentHTML('beforeend', toastHTML);
-        $('.toast').toast('show');
-    }
-});
-
-
-    document.getElementById('frmPdfBtn').addEventListener('click', function() {
-        // Redirect to the JotForm link
-        window.open('https://form.jotform.com/242292954644060', '_blank');
-    });
-</script>
 
 
   <!-- Bootstrap 5.3 scripts -->
@@ -553,243 +242,184 @@ document.addEventListener('DOMContentLoaded', function() {
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
   <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
-      <div class="row mt-4">
-          <div class="col-lg-5 mb-lg-4 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title text-lg text-info mb-3 text-start mx-2">Vendor Profile</h5>
-                <div class="row">
-                  <div class="col-md-4">
-                    <img src="image/profile.jpg" class="img-fluid rounded-circle" alt="Admin Profile Picture">
-                  </div>
-                  <div class="col-md-8 my-3">
-    <h6 class="card-subtitle mb-2 text-muted">
-        Name: 
-        <?php 
-        if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
-            echo "EMPTY"; 
-        } else {
-            echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); 
-        }
-        ?>
-    </h6>
-    <p class="card-text">
-        Username: 
-        <?php 
-        if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
-            echo "EMPTY"; 
-        } else {
-            echo htmlspecialchars($vendor['username']); 
-        }
-        ?>
-    </p>
-    <p class="card-text">Role: Vendor</p>
-    <p class="card-text">
-        Stall No.: 
-        <?php 
-        if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
-            echo "EMPTY"; 
-        } else {
-            echo htmlspecialchars($vendor['stall_no']); 
-        }
-        ?>
-    </p>
-</div>
 
-                </div>
-                <hr class="horizontal dark my-3">
-                <div class="d-flex my-4 mx-5">
-                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Change Password
-                  </button>
-                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Change Profile Picture
-                  </button>
-                </div>
-                <div class="accordion" id="profile-accordion">
-                  <div class="accordion-item">
-                    <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#profile-accordion">
-                      <div class="accordion-body">
-                      
+  <?php
 
-                      <form action="" method="POST">
-    <div class="mb-3">
-        <label for="current_password" class="form-label">Current Password:</label>
-        <input type="password" id="current_password" name="current_password" class="form-control" required>
-    </div>
-    <div class="mb-3">
-        <label for="new_password" class="form-label">New Password:</label>
-        <input type="password" id="new_password" name="new_password" class="form-control" required>
-    </div>
-    <?php
-
-    // Check if the session is already started
-if (session_status() === PHP_SESSION_NONE) {
-  session_start();
-}
+// Get the vendor ID from the session
+$vendor_id = $_SESSION['vendor_id'];
 
 // Include database configuration
 include('database_config.php');
 
-// Create a new MySQLi connection
+// Create a connection
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check the connection
+// Check for connection errors
 if ($conn->connect_error) {
-  die("Database connection failed: " . $conn->connect_error);
+  die("Connection failed: " . $conn->connect_error);
 }
 
-// Enable error reporting for debugging
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+$sqlVacantStalls = "
+  SELECT stall_no, monthly_rentals, 'Building A' AS building FROM building_a WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT stall_no, monthly_rentals, 'Building B' AS building FROM building_b WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT stall_no, monthly_rentals, 'Building C' AS building FROM building_c WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT stall_no, monthly_rentals, 'Building D' AS building FROM building_d WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT stall_no, monthly_rentals, 'Building E' AS building FROM building_e WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT stall_no, monthly_rentals, 'Building F' AS building FROM building_f WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT stall_no, monthly_rentals, 'Building G' AS building FROM building_g WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT stall_no, monthly_rentals, 'Building H' AS building FROM building_h WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT stall_no, monthly_rentals, 'Building I' AS building FROM building_i WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT stall_no, monthly_rentals, 'Building J' AS building FROM building_j WHERE stall_status = 'Vacant'
+  ORDER BY building, stall_no
+";
 
-// Initialize feedback message
-$feedback_message = "";
-    // Check if the form is submitted
-if (isset($_POST['submit'])) {
-    // Check if vendor_id is set in session
-    if (!isset($_SESSION['vendor_id'])) {
-        echo "<script>alert('User not logged in.');</script>";
-        exit;
+$resultVacantStalls = $conn->query($sqlVacantStalls);
+
+// Create a building array to hold stall numbers for each building
+$buildings = [
+    'Building A' => [], 'Building B' => [], 'Building C' => [], 'Building D' => [], 
+    'Building E' => [], 'Building F' => [], 'Building G' => [], 'Building H' => [], 
+    'Building I' => [], 'Building J' => []
+];
+
+// Populate the stalls for each building
+if ($resultVacantStalls->num_rows > 0) {
+    while ($row = $resultVacantStalls->fetch_assoc()) {
+        $buildings[$row['building']][] = $row['stall_no'];
     }
+}
 
-    // Assuming vendor ID is stored in the session
-    $vendor_id = $_SESSION['vendor_id'];
+?>
+   <div class="row mt-1">
+    <div class="col-lg-12 mb-lg-4 mb-4">
+        <div class="card">
+            <div class="card-body p-1">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Search Bar -->
+                        <label for="searchInput">Search:</label>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search by Stall No or Rent">
 
-    // Get form inputs
-    $current_password = $_POST['current_password'];
-    $new_password = $_POST['new_password'];
+                        <!-- Dropdown to select buildings -->
+                        <label for="buildingFilter">Filter by Building:</label>
+                        <select id="buildingFilter" class="form-select">
+                            <option value="">All Buildings</option>
+                            <option value="Building A">Building A</option>
+                            <option value="Building B">Building B</option>
+                            <option value="Building C">Building C</option>
+                            <option value="Building D">Building D</option>
+                            <option value="Building E">Building E</option>
+                            <option value="Building F">Building F</option>
+                            <option value="Building G">Building G</option>
+                            <option value="Building H">Building H</option>
+                            <option value="Building I">Building I</option>
+                            <option value="Building J">Building J</option>
+                        </select>
 
-    // Validate inputs
-    if (empty($current_password) || empty($new_password)) {
-        echo "<script>alert('Please fill in both fields.');</script>";
-    } else {
-        // Start a transaction
-        $conn->begin_transaction();
+                        <!-- Button to apply filters -->
+                        <button id="filterBtn" class="btn btn-primary mt-2">Apply Filters</button>
 
-        try {
-            // Retrieve the current password from the database
-            $stmtV = $conn->prepare("SELECT password FROM vendors WHERE vendor_id = ?");
-            $stmtV->bind_param("i", $vendor_id);
-            $stmtV->execute();
-            $resultV = $stmtV->get_result();
-            $user = $resultV->fetch_assoc();
-
-            if ($user && $current_password === $user['password']) {
-                // Update the password in the database
-                $update_stmt = $conn->prepare("UPDATE vendors SET password = ? WHERE vendor_id = ?");
-                $update_stmt->bind_param("si", $new_password, $vendor_id);
-                $update_stmt->execute();
-
-                if ($update_stmt->affected_rows > 0) {
-                    // Commit the transaction if everything is successful
-                    $conn->commit();
-                    echo "<script>alert('Password changed successfully.');</script>";
-                } else {
-                    // Rollback the transaction if update fails
-                    $conn->rollback();
-                    echo "<script>alert('Failed to change the password.');</script>";
-                }
-                
-                $update_stmt->close();
-            } else {
-                // Rollback the transaction if the current password is incorrect
-                $conn->rollback();
-                echo "<script>alert('Current password is incorrect.');</script>";
-            }
-
-            $stmtV->close();
-        } catch (Exception $e) {
-            // Rollback the transaction in case of an exception
-            $conn->rollback();
-            echo "<script>alert('An error occurred: " . htmlspecialchars($e->getMessage()) . "');</script>";
-        }
-    }
-
-    // Close the connection
-   // $conn->close();
-    }
-    ?>
-    
-    <button type="submit" name="submit" class="btn btn-primary">Change Password</button>
-</form>
-
-                      </div>
+                        <!-- Vacant Stalls Table -->
+                        <table id="vacantStallsTable" class="table table-bordered text-center" style="width:100%">
+                            <thead>
+                                <tr>
+                                    <?php foreach ($buildings as $building => $stalls): ?>
+                                        <th><?php echo $building; ?></th>
+                                    <?php endforeach; ?>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <?php foreach ($buildings as $building => $stalls): ?>
+                                        <td>
+                                            <?php foreach ($stalls as $stall_no): ?>
+                                                <div><?php echo $stall_no; ?></div>
+                                            <?php endforeach; ?>
+                                        </td>
+                                    <?php endforeach; ?>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
-                  </div>
-                  <div class="accordion-item">
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#profile-accordion">
-                      <div class="accordion-body">
-                        <form>
-                          <div class="mb-3">
-                            <label for="profile-picture" class="form-label">Profile Picture</label>
-                            <input type="file" class="form-control" id="profile-picture" accept="image/*">
-                          </div>
-                          <button type="submit" class="btn btn-primary">Update Profile Picture</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-
-
-      <div class="row mt-4">
-        <div class="col-lg-7 mb-lg-0 mb-4">
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-lg-6">
-                  <div class="d-flex flex-column h-100">
-                  
-                    <h5 class="font-weight-bolder">Polomolok Pubic Market</h5>
-                    <p class="mb-5">OF ALL the places that I could have explored at my hometown, Polomolok, South Cotabato.</p>
-                    <a class="text-body text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="javascript:;">
-                      Read More
-                      <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
-                    </a>
-                  </div>
-                </div>
-                <div class="col-lg-5 ms-auto text-center mt-5 mt-lg-0">
-                  <div class="bg-gradient-primary border-radius-lg h-100">
-                    <img src="assets2/img/shapes/waves-white.svg" class="position-absolute h-100 w-50 top-0 d-lg-block d-none" alt="waves">
-                    <div class="position-relative d-flex align-items-center justify-content-center h-100">
-                      
-                      <!-- IMG HERE OR-->
-
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-lg-5">
-          <div class="card h-100 p-3">
-            <div class="overflow-hidden position-relative border-radius-lg bg-cover h-100" style="background-image: url('image/polpol.jpg');">
-              <span class="mask bg-gradient-dark"></span>
-              <div class="card-body position-relative z-index-1 d-flex flex-column h-100 p-3">
-                <h5 class="text-white font-weight-bolder mb-4 pt-2">Rehabilitation Of The Polomolok Public Market</h5>
-                <p class="text-white">On behalf of the Municipality, Mayor Honey L. Matti...</p>
-                <a class="text-white text-sm font-weight-bold mb-0 icon-move-right mt-auto" href="javascript:;">
-                  Read More
-                  <i class="fas fa-arrow-right text-sm ms-1" aria-hidden="true"></i>
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      
-
-
-
-      
     </div>
+</div>
+
+
+    <!-- DataTable initialization with AJAX filter and search -->
+    <script>
+    $(document).ready(function() {
+        // Initialize DataTable
+        var table = $('#vacantStallsTable').DataTable({
+            "paging": true,
+            "ordering": false
+        });
+
+        // Function to filter stalls using AJAX
+        function applyFilters() {
+            var searchValue = $('#searchInput').val();
+            var selectedBuilding = $('#buildingFilter').val();
+
+            $.ajax({
+                url: 'buildingFilterOut.php', // PHP script to handle the filtering
+                type: 'POST',
+                data: {
+                    buildingFilter: selectedBuilding,
+                    searchValue: searchValue
+                },
+                dataType: 'json',
+                success: function(response) {
+                    // Clear existing table rows
+                    table.clear();
+
+                    // Add filtered data to the table
+                    response.forEach(function(stall) {
+                        table.row.add([
+                            stall.stall_no,
+                            stall.building,
+                            parseFloat(stall.monthly_rentals).toFixed(2) // Format to 2 decimal places
+                        ]).draw();
+                    });
+                }
+            });
+        }
+
+       // Apply filters when the button is clicked
+$('#filterBtn').on('click', function() {
+    applyFilters();
+    window.location.reload(); // Refresh the window when the button is clicked
+});
+
+// Automatically apply filters when a building is selected from the dropdown
+$('#buildingFilter').on('change', function() {
+    applyFilters();
+    window.location.reload(); // Refresh the window when the button is clicked
+});
+
+// Search bar input triggers filtering
+$('#searchInput').on('keyup', function() {
+    applyFilters();
+    window.location.reload(); // Refresh the window when the button is clicked
+});
+    });
+    </script>
+      
+
+
+
+      
+  
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">

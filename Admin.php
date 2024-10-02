@@ -150,8 +150,8 @@ $conn->close();
           </a>
           <div class="collapse" id="collapseAccounts">
             <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="AMUser.php">Users</a>
-              <a class="nav-link" href="AMVendor.php">Vendors</a>
+            <a class="nav-link" href="AMuser.php">Users</a>
+            <a class="nav-link" href="AMvendor.php">Vendors</a>
             </div>
           </div>
         </li>
