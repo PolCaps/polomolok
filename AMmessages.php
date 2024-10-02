@@ -179,7 +179,8 @@ $conn->close();
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="AMvendor.php">
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseAccounts"
+            aria-expanded="false" aria-controls="collapseAccounts">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000"
@@ -188,8 +189,14 @@ $conn->close();
                   d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z" />
               </svg>
             </div>
-            <span class="nav-link-text ms-1">Vendors/Users</span>
+            <span class="nav-link-text ms-1">Accounts</span>
           </a>
+          <div class="collapse" id="collapseAccounts">
+            <div class="right-aligned-links" style="text-align: right;">
+            <a class="nav-link" href="AMuser.php">Users</a>
+            <a class="nav-link" href="AMvendor.php">Vendors</a>
+            </div>
+          </div>
         </li>
         <li class="nav-item">
           <a class="nav-link active" href="AMmessages.php">
