@@ -229,23 +229,39 @@ $conn->close();
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Vendor and Stall Approval</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link  " href="AMVendorApproval.php">
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseVendorApproval"
+            aria-expanded="false" aria-controls="collapseVendorApproval">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <img src="image/icons/icons8-approve-48.png" alt="approveicon" width="18px" height="18px">
             </div>
             <span class="nav-link-text ms-1">Vendor Approval</span>
           </a>
+          <div class="collapse" id="collapseVendorApproval">
+            <div class="right-aligned-links" style="text-align: right;">
+              <a class="nav-link" href="AMStallApp.php">Stall Applicants</a>
+              <a class="nav-link" href="AMReadydraw.php">Ready for Drawlots</a>
+            </div>
+          </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="AMRelocationRequest.php">
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRelRequest"
+            aria-expanded="false" aria-controls="collapseRelRequest">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <img src="image/icons/icons8-kiosk-on-wheels-48.png" alt="relocationimg" width="18px" height="18px">
             </div>
             <span class="nav-link-text ms-1">Relocation Request</span>
           </a>
+          <div class="collapse" id="collapseRelRequest">
+            <div class="right-aligned-links" style="text-align: right;">
+              <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
+              <a class="nav-link" href="AMRelReqProcessing.php">Processing</a>
+              <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
+            </div>
+          </div>
         </li>
+      
         <li class="nav-item mt-3">
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Page Customization</h6>
         </li>

@@ -494,9 +494,10 @@ document.getElementById('confirmDeleteBtn').addEventListener('click', function (
             .then(response => response.text())  // Expecting a text response
             .then(alertMsg => {
                 alert(alertMsg);  // Show the alert message from PHP
+                 window.location.href = 'AMvendor.php';
                 // Only reload if the deletion was successful
                 if (!alertMsg.includes('Error')) {
-                    window.location.href = 'AMvendor.php';  // Reload the page after alert
+                    window.location.href = 'AMvendor.php';
                 }
             })
             .catch(error => {
