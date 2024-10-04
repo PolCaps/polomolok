@@ -1,7 +1,7 @@
 <?php
-session_start(); // Start the session to access session variables
 
-// Include database configuration
+include('Sessions/Admin.php');
+
 include('database_config.php');
 
 // Create a connection

@@ -1,43 +1,5 @@
 <?php
-session_name('customerservice_session');
-session_start();
-
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'CUSTOMER_SERVICE') {
-    header("Location: index.php");
-    exit();
-}
-
-$user_id = $_SESSION['id'];
-
-// Include database configuration
-include('database_config.php');
-
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Fetch vendor information
-$sql = "SELECT * FROM users WHERE id = ?";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
-}
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-// Check if vendor data is retrieved
-if (!$user) {
-    die("No User found with ID " . htmlspecialchars($user_id));
-}
-
-// Close the connection
-$conn->close();
+include('Sessions/CustomerService.php');
 ?>
 
 

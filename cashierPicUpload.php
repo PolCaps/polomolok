@@ -1,5 +1,5 @@
 <?php
-session_start(); // Start the session to access session variables
+include('Sessions/Cashier.php');
 
 // Include database configuration
 include('database_config.php');

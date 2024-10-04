@@ -1,16 +1,6 @@
 <?php
 // Start the session with the specific session name
-session_name('vendor_session');
-session_start();
-
-// Check if vendor_id exists in the session
-if (!isset($_SESSION['vendor_id'])) {
-  header("Location: Vendor.php");
-  exit();
-}
-
-// Get the vendor ID from the session
-$vendor_id = $_SESSION['vendor_id'];
+include('Sessions/Vendor.php');
 
 // Include database configuration
 include('database_config.php');

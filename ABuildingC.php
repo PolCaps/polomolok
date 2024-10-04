@@ -1,15 +1,8 @@
 <?php
-session_name('admin_session');
-session_start();
+include('Sessions/Admin.php');
 
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'ADMIN') {
-    header("Location: index.php");
-    exit();
-}
-// Get the vendor ID from the session
-$user_id = $_SESSION['id'];
-
-    include("database_config.php");
+// Include database configuration
+include('database_config.php');
     $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
     if ($conn->connect_error) {
         throw new Exception("Connection failed: " . $conn->connect_error);
