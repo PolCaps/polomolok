@@ -1,7 +1,7 @@
 <?php
-session_name('vendor_session');
-session_start();
+include('Sessions/Vendor.php');
 
+// Include database configuration
 include('database_config.php');
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 

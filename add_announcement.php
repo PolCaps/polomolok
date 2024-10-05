@@ -1,5 +1,7 @@
 <!-- save_announcement.php -->
 <?php
+
+include('Sessions/Admin.php');
 include 'database_config.php';
 
 // Create a new MySQLi connection

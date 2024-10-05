@@ -1,14 +1,5 @@
 <?php
-session_name('vendor_session');
-session_start();
-
-if (!isset($_SESSION['vendor_id'])) {
-    header("Location: index.php");
-    exit();
-}
-
-// Get the vendor ID from the session
-$vendor_id = $_SESSION['vendor_id'];
+include('Sessions/Vendor.php');
 
 // Include database configuration
 include('database_config.php');

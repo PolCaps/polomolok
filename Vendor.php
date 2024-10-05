@@ -1,14 +1,5 @@
 <?php
-session_name('vendor_session');
-session_start();
-
-if (!isset($_SESSION['vendor_id'])) {
-    header("Location: index.php");
-    exit();
-}
-
-// Get the vendor ID from the session
-$vendor_id = $_SESSION['vendor_id'];
+include('Sessions/Vendor.php');
 
 // Include database configuration
 include('database_config.php');
@@ -16,112 +7,77 @@ include('database_config.php');
 // Create a connection
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check the connection
+// Check for connection errors
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch vendor information
+// SQL query with placeholders (removed r.receipt AS receiptsImg)
 $sql = "
-    SELECT v.*, b.* 
-    FROM vendors v 
-    JOIN (
-        SELECT * FROM building_a WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_b WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_c WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_d WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_e WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_f WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_g WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_h WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_i WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_j WHERE vendor_id = ?
-    ) b ON v.vendor_id = b.vendor_id
+  SELECT v.*, 
+         v.payment_due AS due_dates,
+         buildings.monthly_rentals, 
+         buildings.stall_no
+  FROM vendors v
+  JOIN (
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_a
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_b
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_c
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_d
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_e
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_f
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_g
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_h
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_i
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_j
+  ) AS buildings ON v.vendor_id = buildings.vendor_id
+  WHERE v.vendor_id = ?
 ";
-$values = array_fill(0, 10, $vendor_id);
+
+// Prepare the SQL statement
 $stmt = $conn->prepare($sql);
+
+// Check if preparation was successful
 if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
+  die("Error preparing query: " . $conn->error);
 }
-$types = str_repeat('i', count($values));
-$stmt->bind_param($types, ...$values);
-$stmt->execute();
+
+// Bind the vendor_id parameter to the SQL query
+$stmt->bind_param("i", $vendor_id);
+
+// Execute the statement
+if (!$stmt->execute()) {
+  die("Error executing query: " . $stmt->error);
+}
+
+// Get the result
 $result = $stmt->get_result();
-$vendor = $result->fetch_assoc();
 
-
-if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
-
-  echo "<script>
-   alert('No information in your account. You need to fill-up your account first!');
-
-
-  document.addEventListener('DOMContentLoaded', function() {
-      var accountModal = new bootstrap.Modal(document.getElementById('accountModal'));
-      accountModal.show();
-
-      var form = document.getElementById('createVendorForm');
-      var modalElement = document.getElementById('accountModal'); // Reference the entire modal element
-
-      // Handle clicks outside the modal window (including the backdrop)
-      document.addEventListener('click', function(event) {
-          if (!modalElement.contains(event.target) && !form.checkValidity()) {
-              event.preventDefault(); // Prevent closing the modal
-              alert('Please fill out all required fields before closing.');
-          }
-      });
-
-      // Handle close button click
-      var closeButton = document.getElementById('closeButton');
-      closeButton.addEventListener('click', function() {
-          if (form.checkValidity()) {
-              accountModal.hide(); // Close the modal if the form is valid
-          } else {
-              alert('Please fill out all required fields before closing.');
-          }
-      });
-
-      // Disable accordion interaction (optional, adjust selector if needed)
-      var accordions = document.querySelectorAll('.accordion-header, .accordion-toggle');
-      accordions.forEach(function(accordion) {
-          accordion.style.pointerEvents = 'none';
-          accordion.style.opacity = '0.5';
-      });
-
-      // Prevent back navigation
-      window.history.pushState(null, null, window.location.href);
-      window.onpopstate = function() {
-          window.history.pushState(null, null, window.location.href);
-      };
-  });
-  </script>";
+// Check if data is retrieved
+if ($result->num_rows > 0) {
+  $vendor = $result->fetch_assoc();
 } else {
+  // Output an alert message with a redirect to the Vendor.php page
   echo "<script>
-          console.log('Vendor data available'); // Or handle vendor data as needed
-        </script>";
+    alert('No vendor found.');
+    window.location.href = 'Vendor.php';
+  </script>";
+  exit();
 }
 
-
-
-$query = "SELECT started_date, payment_due FROM vendors WHERE vendor_id = ?";
-$stmt1 = $conn->prepare($query);
-$stmt1->bind_param('i', $vendor_id);
-$stmt1->execute();
-$stmt1->bind_result($started_date, $payment_due);
-$stmt1->fetch();
-$stmt1->close();
-
+// Close the statement and connection
+$stmt->close();
+$conn->close();
 ?>
-
 <script>
 
     document.addEventListener('DOMContentLoaded', function() {
