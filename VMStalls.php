@@ -260,45 +260,64 @@ if ($conn->connect_error) {
 }
 
 $sqlVacantStalls = "
-  SELECT stall_no, monthly_rentals, 'Building A' AS building FROM building_a WHERE stall_status = 'Vacant'
+  SELECT 'Building A' AS building, COUNT(*) AS vacant_count FROM building_a WHERE stall_status = 'Vacant'
   UNION ALL
-  SELECT stall_no, monthly_rentals, 'Building B' AS building FROM building_b WHERE stall_status = 'Vacant'
+  SELECT 'Building B' AS building, COUNT(*) AS vacant_count FROM building_b WHERE stall_status = 'Vacant'
   UNION ALL
-  SELECT stall_no, monthly_rentals, 'Building C' AS building FROM building_c WHERE stall_status = 'Vacant'
+  SELECT 'Building C' AS building, COUNT(*) AS vacant_count FROM building_c WHERE stall_status = 'Vacant'
   UNION ALL
-  SELECT stall_no, monthly_rentals, 'Building D' AS building FROM building_d WHERE stall_status = 'Vacant'
+  SELECT 'Building D' AS building, COUNT(*) AS vacant_count FROM building_d WHERE stall_status = 'Vacant'
   UNION ALL
-  SELECT stall_no, monthly_rentals, 'Building E' AS building FROM building_e WHERE stall_status = 'Vacant'
+  SELECT 'Building E' AS building, COUNT(*) AS vacant_count FROM building_e WHERE stall_status = 'Vacant'
   UNION ALL
-  SELECT stall_no, monthly_rentals, 'Building F' AS building FROM building_f WHERE stall_status = 'Vacant'
+  SELECT 'Building F' AS building, COUNT(*) AS vacant_count FROM building_f WHERE stall_status = 'Vacant'
   UNION ALL
-  SELECT stall_no, monthly_rentals, 'Building G' AS building FROM building_g WHERE stall_status = 'Vacant'
+  SELECT 'Building G' AS building, COUNT(*) AS vacant_count FROM building_g WHERE stall_status = 'Vacant'
   UNION ALL
-  SELECT stall_no, monthly_rentals, 'Building H' AS building FROM building_h WHERE stall_status = 'Vacant'
+  SELECT 'Building H' AS building, COUNT(*) AS vacant_count FROM building_h WHERE stall_status = 'Vacant'
   UNION ALL
-  SELECT stall_no, monthly_rentals, 'Building I' AS building FROM building_i WHERE stall_status = 'Vacant'
+  SELECT 'Building I' AS building, COUNT(*) AS vacant_count FROM building_i WHERE stall_status = 'Vacant'
   UNION ALL
-  SELECT stall_no, monthly_rentals, 'Building J' AS building FROM building_j WHERE stall_status = 'Vacant'
-  ORDER BY building, stall_no
+  SELECT 'Building J' AS building, COUNT(*) AS vacant_count FROM building_j WHERE stall_status = 'Vacant'
+  ORDER BY building
 ";
+
 
 $resultVacantStalls = $conn->query($sqlVacantStalls);
 
-// Create a building array to hold stall numbers for each building
+// Create an array to store vacant stall counts for each building
 $buildings = [
-    'Building A' => [], 'Building B' => [], 'Building C' => [], 'Building D' => [], 
-    'Building E' => [], 'Building F' => [], 'Building G' => [], 'Building H' => [], 
-    'Building I' => [], 'Building J' => []
+    'Building A' => 0, 'Building B' => 0, 'Building C' => 0, 'Building D' => 0, 
+    'Building E' => 0, 'Building F' => 0, 'Building G' => 0, 'Building H' => 0, 
+    'Building I' => 0, 'Building J' => 0
 ];
 
-// Populate the stalls for each building
+// Populate the vacant stall counts for each building
 if ($resultVacantStalls->num_rows > 0) {
     while ($row = $resultVacantStalls->fetch_assoc()) {
-        $buildings[$row['building']][] = $row['stall_no'];
+        $buildings[$row['building']] = $row['vacant_count'];
     }
 }
 
 ?>
+ <!-- Display the table with vacant counts for each building -->
+<table>
+  <thead>
+    <tr>
+      <?php foreach ($buildings as $building => $count): ?>
+        <th><?php echo $building; ?></th>
+      <?php endforeach; ?>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <?php foreach ($buildings as $building => $count): ?>
+        <td><?php echo $count; ?></td>
+      <?php endforeach; ?>
+    </tr>
+  </tbody>
+</table>
+
    <div class="row mt-1">
     <div class="col-lg-12 mb-lg-4 mb-4">
         <div class="card">
@@ -307,7 +326,7 @@ if ($resultVacantStalls->num_rows > 0) {
                     <div class="col-lg-12">
                         <!-- Search Bar -->
                         <label for="searchInput">Search:</label>
-                        <input type="text" id="searchInput" class="form-control" placeholder="Search by Stall No or Rent">
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search by Building">
 
                         <!-- Dropdown to select buildings -->
                         <label for="buildingFilter">Filter by Building:</label>
@@ -328,27 +347,10 @@ if ($resultVacantStalls->num_rows > 0) {
                         <!-- Button to apply filters -->
                         <button id="filterBtn" class="btn btn-primary mt-2">Apply Filters</button>
 
-                        <!-- Vacant Stalls Table -->
-                        <table id="vacantStallsTable" class="table table-bordered text-center" style="width:100%">
-                            <thead>
-                                <tr>
-                                    <?php foreach ($buildings as $building => $stalls): ?>
-                                        <th><?php echo $building; ?></th>
-                                    <?php endforeach; ?>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <?php foreach ($buildings as $building => $stalls): ?>
-                                        <td>
-                                            <?php foreach ($stalls as $stall_no): ?>
-                                                <div><?php echo $stall_no; ?></div>
-                                            <?php endforeach; ?>
-                                        </td>
-                                    <?php endforeach; ?>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <!-- Display for vacant stalls count -->
+                        <div id="vacantCounts" class="mt-4">
+                            <!-- Counts will be populated here -->
+                        </div>
                     </div>
                 </div>
             </div>
@@ -356,64 +358,60 @@ if ($resultVacantStalls->num_rows > 0) {
     </div>
 </div>
 
+<!-- JavaScript for handling the display of vacant counts -->
+<script>
+$(document).ready(function() {
+    // Function to filter stalls using AJAX
+    function applyFilters() {
+        var searchValue = $('#searchInput').val().toLowerCase();
+        var selectedBuilding = $('#buildingFilter').val();
 
-    <!-- DataTable initialization with AJAX filter and search -->
-    <script>
-    $(document).ready(function() {
-        // Initialize DataTable
-        var table = $('#vacantStallsTable').DataTable({
-            "paging": true,
-            "ordering": false
-        });
+        $.ajax({
+            url: 'buildingFilterOut.php', // PHP script to handle the filtering
+            type: 'POST',
+            data: {
+                buildingFilter: selectedBuilding,
+                searchValue: searchValue
+            },
+            dataType: 'json',
+            success: function(response) {
+                // Clear the current count display
+                $('#vacantCounts').empty();
 
-        // Function to filter stalls using AJAX
-        function applyFilters() {
-            var searchValue = $('#searchInput').val();
-            var selectedBuilding = $('#buildingFilter').val();
-
-            $.ajax({
-                url: 'buildingFilterOut.php', // PHP script to handle the filtering
-                type: 'POST',
-                data: {
-                    buildingFilter: selectedBuilding,
-                    searchValue: searchValue
-                },
-                dataType: 'json',
-                success: function(response) {
-                    // Clear existing table rows
-                    table.clear();
-
-                    // Add filtered data to the table
-                    response.forEach(function(stall) {
-                        table.row.add([
-                            stall.stall_no,
-                            stall.building,
-                            parseFloat(stall.monthly_rentals).toFixed(2) // Format to 2 decimal places
-                        ]).draw();
+                // If there is filtered data, display counts
+                if (response.length > 0) {
+                    response.forEach(function(building) {
+                        $('#vacantCounts').append(
+                            `<div class="alert alert-info">
+                                <strong>${building.name}</strong> has 
+                                <strong>${building.vacant_count}</strong> vacant stalls.
+                            </div>`
+                        );
                     });
+                } else {
+                    $('#vacantCounts').append('<div class="alert alert-warning">No vacant stalls found.</div>');
                 }
-            });
-        }
+            }
+        });
+    }
 
-       // Apply filters when the button is clicked
-$('#filterBtn').on('click', function() {
-    applyFilters();
-    window.location.reload(); // Refresh the window when the button is clicked
-});
-
-// Automatically apply filters when a building is selected from the dropdown
-$('#buildingFilter').on('change', function() {
-    applyFilters();
-    window.location.reload(); // Refresh the window when the button is clicked
-});
-
-// Search bar input triggers filtering
-$('#searchInput').on('keyup', function() {
-    applyFilters();
-    window.location.reload(); // Refresh the window when the button is clicked
-});
+    // Apply filters when the button is clicked
+    $('#filterBtn').on('click', function() {
+        applyFilters();
     });
-    </script>
+
+    // Automatically apply filters when a building is selected from the dropdown
+    $('#buildingFilter').on('change', function() {
+        applyFilters();
+    });
+
+    // Search bar input triggers filtering
+    $('#searchInput').on('keyup', function() {
+        applyFilters();
+    });
+});
+</script>
+
       
 
 
