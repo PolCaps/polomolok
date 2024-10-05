@@ -186,234 +186,229 @@ $conn->close();
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-        <!-- Navbar -->
-        <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
-          <div class="container-fluid py-1 px-3">
-            <nav aria-label="breadcrumb">
-              <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-                <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Vendor</a></li>
-                <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
-              </ol>
-              <h6 class="font-weight-bolder mb-0">Request Relocation</h6>
-            </nav>
-            <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
-              <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                <div class="input-group">
-                  <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                  <input type="text" class="form-control" placeholder="Search for...">
-                </div>
-              </div>
-              <ul class="navbar-nav  justify-content-end">
-                <li class="nav-item d-flex align-items-center">
-                  <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
-                    <i class="fa fa-user me-sm-1"></i>
-                    <span class="d-sm-inline d-none">Vendor</span>
-                  </a>
-                </li>
-                <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
-                  <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
-                    <div class="sidenav-toggler-inner">
-                      <i class="sidenav-toggler-line"></i>
-                      <i class="sidenav-toggler-line"></i>
-                      <i class="sidenav-toggler-line"></i>
-                    </div>
-                  </a>
-                </li>
-              </ul>
+    <!-- Navbar -->
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Vendor</a></li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Dashboard</li>
+          </ol>
+          <h6 class="font-weight-bolder mb-0">Dashboard</h6>
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
+          <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+            <div class="input-group">
+              <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+              <input type="text" class="form-control" placeholder="Search for...">
             </div>
           </div>
-        </nav>
-        <!-- End Navbar -->
-        <div class="container-fluid py-4">
+          <ul class="navbar-nav  justify-content-end">
+            <li class="nav-item d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
+                <i class="fa fa-user me-sm-1"></i>
+                <span class="d-sm-inline d-none">Vendor</span>
+              </a>
+            </li>
+            <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
+              <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
+                <div class="sidenav-toggler-inner">
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                  <i class="sidenav-toggler-line"></i>
+                </div>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- End Navbar -->
 
-        <div class="row my-4">
-        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
-          <div class="card">
-            <div class="card-header pb-0">
-              <div class="row">
-                <div class="col-lg-6 col-7">
-                  <h6 class="mx-2 my-2">Available Stalls</h6>
-                </div>
-                <div class="col-lg-3 col-8 my-auto text-end d-flex">
-                <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                    <div class="input-group">
-                        <span class="input-group-text text-body">
-                            <i class="fas fa-search" aria-hidden="true"></i>
-                        </span>
-                        <input type="text" class="form-control px-1" id="searchInput" placeholder="Search for...">
-                    </div>
-                </div>
-                <!-- Price Range Dropdown -->
-            <div class="col-lg-4 col-12 mt-3 text-end d-flex">
-                <div class="dropdown">
-                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="priceFilterDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        Filter by Price Range
-                    </button>
-                    <div class="dropdown-menu p-3">
-                        <div class="input-group">
-                            <input type="number" class="form-control px-1 text-center" id="minPrice" placeholder="From (range)" style="width: 120px;">
-                            <br>
-                            <input type="number" class="form-control px-1 text-center " id="maxPrice" placeholder="To (range)" style="width: 120px;">
-                        </div>
-                        <div class="mt-2">
-                            <button class="btn btn-primary" id="applyFilter">Apply</button>
-                            <button class="btn btn-secondary" id="clearFilter">Clear</button>
+
+
+  <!-- Bootstrap 5.3 scripts -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+
+  <?php
+
+// Get the vendor ID from the session
+$vendor_id = $_SESSION['vendor_id'];
+
+// Include database configuration
+include('database_config.php');
+
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check for connection errors
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+$sqlVacantStalls = "
+  SELECT 'Building A' AS building, COUNT(*) AS vacant_count FROM building_a WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT 'Building B' AS building, COUNT(*) AS vacant_count FROM building_b WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT 'Building C' AS building, COUNT(*) AS vacant_count FROM building_c WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT 'Building D' AS building, COUNT(*) AS vacant_count FROM building_d WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT 'Building E' AS building, COUNT(*) AS vacant_count FROM building_e WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT 'Building F' AS building, COUNT(*) AS vacant_count FROM building_f WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT 'Building G' AS building, COUNT(*) AS vacant_count FROM building_g WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT 'Building H' AS building, COUNT(*) AS vacant_count FROM building_h WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT 'Building I' AS building, COUNT(*) AS vacant_count FROM building_i WHERE stall_status = 'Vacant'
+  UNION ALL
+  SELECT 'Building J' AS building, COUNT(*) AS vacant_count FROM building_j WHERE stall_status = 'Vacant'
+  ORDER BY building
+";
+
+
+$resultVacantStalls = $conn->query($sqlVacantStalls);
+
+// Create an array to store vacant stall counts for each building
+$buildings = [
+    'Building A' => 0, 'Building B' => 0, 'Building C' => 0, 'Building D' => 0, 
+    'Building E' => 0, 'Building F' => 0, 'Building G' => 0, 'Building H' => 0, 
+    'Building I' => 0, 'Building J' => 0
+];
+
+// Populate the vacant stall counts for each building
+if ($resultVacantStalls->num_rows > 0) {
+    while ($row = $resultVacantStalls->fetch_assoc()) {
+        $buildings[$row['building']] = $row['vacant_count'];
+    }
+}
+
+?>
+ <!-- Display the table with vacant counts for each building -->
+<table>
+  <thead>
+    <tr>
+      <?php foreach ($buildings as $building => $count): ?>
+        <th><?php echo $building; ?></th>
+      <?php endforeach; ?>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <?php foreach ($buildings as $building => $count): ?>
+        <td><?php echo $count; ?></td>
+      <?php endforeach; ?>
+    </tr>
+  </tbody>
+</table>
+
+   <div class="row mt-1">
+    <div class="col-lg-12 mb-lg-4 mb-4">
+        <div class="card">
+            <div class="card-body p-1">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <!-- Search Bar -->
+                        <label for="searchInput">Search:</label>
+                        <input type="text" id="searchInput" class="form-control" placeholder="Search by Building">
+
+                        <!-- Dropdown to select buildings -->
+                        <label for="buildingFilter">Filter by Building:</label>
+                        <select id="buildingFilter" class="form-select">
+                            <option value="">All Buildings</option>
+                            <option value="Building A">Building A</option>
+                            <option value="Building B">Building B</option>
+                            <option value="Building C">Building C</option>
+                            <option value="Building D">Building D</option>
+                            <option value="Building E">Building E</option>
+                            <option value="Building F">Building F</option>
+                            <option value="Building G">Building G</option>
+                            <option value="Building H">Building H</option>
+                            <option value="Building I">Building I</option>
+                            <option value="Building J">Building J</option>
+                        </select>
+
+                        <!-- Button to apply filters -->
+                        <button id="filterBtn" class="btn btn-primary mt-2">Apply Filters</button>
+
+                        <!-- Display for vacant stalls count -->
+                        <div id="vacantCounts" class="mt-4">
+                            <!-- Counts will be populated here -->
                         </div>
                     </div>
                 </div>
             </div>
-            </div>
+        </div>
+    </div>
+</div>
 
-            <script>
-    document.getElementById('searchInput').addEventListener('keyup', filterTable);
-    document.getElementById('applyFilter').addEventListener('click', filterTable);
-    document.getElementById('clearFilter').addEventListener('click', clearFilter);
+<!-- JavaScript for handling the display of vacant counts -->
+<script>
+$(document).ready(function() {
+    // Function to filter stalls using AJAX
+    function applyFilters() {
+        var searchValue = $('#searchInput').val().toLowerCase();
+        var selectedBuilding = $('#buildingFilter').val();
 
-    function filterTable() {
-        var filter = document.getElementById('searchInput').value.toLowerCase();
-        var minPrice = parseFloat(document.getElementById('minPrice').value) || 0;
-        var maxPrice = parseFloat(document.getElementById('maxPrice').value) || Infinity;
-        var rows = document.querySelectorAll('#dataTableBody tr');
+        $.ajax({
+            url: 'buildingFilterOut.php', // PHP script to handle the filtering
+            type: 'POST',
+            data: {
+                buildingFilter: selectedBuilding,
+                searchValue: searchValue
+            },
+            dataType: 'json',
+            success: function(response) {
+                // Clear the current count display
+                $('#vacantCounts').empty();
 
-        rows.forEach(function(row) {
-            // Ensure cells[3] refers to Monthly Rentals column
-            var rentalText = row.cells[3] ? row.cells[3].textContent.replace(/,/g, '') : ''; // Check if the cell exists and remove commas
-            var rental = parseFloat(rentalText) || 0; // Parse as float
-
-            // Check if row matches both the text filter and price range
-            var text = row.textContent.toLowerCase();
-            var matchesFilter = text.includes(filter);
-            var matchesPriceRange = rental >= minPrice && rental <= maxPrice;
-
-            // Display the row if it matches both conditions
-            if (matchesFilter && matchesPriceRange) {
-                row.style.display = '';
-            } else {
-                row.style.display = 'none';
+                // If there is filtered data, display counts
+                if (response.length > 0) {
+                    response.forEach(function(building) {
+                        $('#vacantCounts').append(
+                            `<div class="alert alert-info">
+                                <strong>${building.name}</strong> has 
+                                <strong>${building.vacant_count}</strong> vacant stalls.
+                            </div>`
+                        );
+                    });
+                } else {
+                    $('#vacantCounts').append('<div class="alert alert-warning">No vacant stalls found.</div>');
+                }
             }
         });
     }
 
-    function clearFilter() {
-        document.getElementById('minPrice').value = '';
-        document.getElementById('maxPrice').value = '';
-        document.getElementById('searchInput').value = '';
-        filterTable();  // Reapply filter with cleared values
-    }
+    // Apply filters when the button is clicked
+    $('#filterBtn').on('click', function() {
+        applyFilters();
+    });
+
+    // Automatically apply filters when a building is selected from the dropdown
+    $('#buildingFilter').on('change', function() {
+        applyFilters();
+    });
+
+    // Search bar input triggers filtering
+    $('#searchInput').on('keyup', function() {
+        applyFilters();
+    });
+});
 </script>
-              </div>
-            </div>
 
-            <div class="card-body px-0 pb-2">
-    <div class="table-responsive max-height-400 overflow-auto">
-        <table class="table align-items-center mb-0">
-            <thead>
-                <tr>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Buildings</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Available Stalls</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Building Level</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Monthly Rentals</th>
-                </tr>
-            </thead>
-            <tbody id="dataTableBody">
-                <?php
-                // Database connection
-                include('database_config.php');
+      
 
-                // Create a connection
-                $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-                
-                if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                }
 
-                // SQL Query to fetch the data
-                $sql = "
-                    SELECT 'Building A' AS building, stall_no, building_floor, monthly_rentals
-                    FROM building_a
-                    WHERE stall_status = 'Vacant'
 
-                    UNION ALL
-
-                    SELECT 'Building B', stall_no, building_floor, monthly_rentals
-                    FROM building_b
-                    WHERE stall_status = 'Vacant'
-
-                    UNION ALL
-
-                    SELECT 'Building C', stall_no, building_floor, monthly_rentals
-                    FROM building_c
-                    WHERE stall_status = 'Vacant'
-
-                    UNION ALL
-
-                    SELECT 'Building D', stall_no, building_floor, monthly_rentals
-                    FROM building_d
-                    WHERE stall_status = 'Vacant'
-
-                    UNION ALL
-
-                    SELECT 'Building E', stall_no, building_floor, monthly_rentals
-                    FROM building_e
-                    WHERE stall_status = 'Vacant'
-
-                    UNION ALL
-
-                    SELECT 'Building F', stall_no, building_floor, monthly_rentals
-                    FROM building_f
-                    WHERE stall_status = 'Vacant'
-
-                    UNION ALL
-
-                    SELECT 'Building G', stall_no, building_floor, monthly_rentals
-                    FROM building_g
-                    WHERE stall_status = 'Vacant'
-
-                    UNION ALL
-
-                    SELECT 'Building H', stall_no, building_floor, monthly_rentals
-                    FROM building_h
-                    WHERE stall_status = 'Vacant'
-
-                    UNION ALL
-
-                    SELECT 'Building I', stall_no, building_floor, monthly_rentals
-                    FROM building_i
-                    WHERE stall_status = 'Vacant'
-
-                    UNION ALL
-
-                    SELECT 'Building J', stall_no, building_floor, monthly_rentals
-                    FROM building_j
-                    WHERE stall_status = 'Vacant'
-                ";
-
-                $result = $conn->query($sql);
-                // Check if there are results and output them
-                if ($result->num_rows > 0) {
-                    // Output data for each row
-                    while($row = $result->fetch_assoc()) {
-                        echo "<tr>";
-                        echo "<td class='text-center text-sm text-bold'>" . $row['building'] . "</td>";
-                        echo "<td class='text-center text-sm text-bold'>" . $row['stall_no'] . "</td>";
-                        echo "<td class='text-center text-sm text-bold'>" . $row['building_floor'] . "</td>";
-                        echo "<td class='text-center text-sm text-bold'>" . $row['monthly_rentals'] . "</td>";
-                        echo "</tr>";
-                    }
-                } else {
-                    echo "<tr><td colspan='4' class='text-center'>No Vacant Stalls Available</td></tr>";
-                }
-
-                // Close the connection
-                $conn->close();
-                ?>
-            </tbody>
-        </table>
-    </div>
-</div>
-        </div>
-        
-      </main>
+      
+  
+  </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
       <i class="fa fa-cog py-2"> </i>
