@@ -504,7 +504,7 @@ function fetchReceiptHistory(vendorId) {
       if (response.data && response.data.receipts && response.data.receipts.length > 0) {
         displayReceiptHistory(response.data.receipts); // Ensure this matches your response structure
       } else {
-        document.getElementById('receiptHistoryBody').innerHTML = '<tr><td colspan="4" class="text-center">No receipt data found for this vendor.</td></tr>';
+        document.getElementById('receiptHistoryBody').innerHTML = '<tr><td colspan="4" class="text-center">No receipt found</td></tr>';
       }
     } else {
       console.error('Request failed with status ' + xhr.status);

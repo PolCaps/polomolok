@@ -367,53 +367,161 @@ $conn->close();
                 white-space: nowrap; /* Prevent text from wrapping to the next line */
             }
             </style>
-            <div class="card-body px-5 pb-2">
+            <div class="card-body px-3 pb-2">
     <div class="table-responsive">
-        <!-- Search and Delete Dropdown -->
-        <div class="d-flex justify-content-between mb-3">
-            <button class="btn btn-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Search User
-            </button>
-            <ul class="dropdown-menu">
-                <li>
-                    <form id="searchForm" class="px-4 py-2">
-                        <div class="mb-3">
-                            <label for="searchUsername" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="searchUsername" placeholder="Enter username">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Search</button>
-                    </form>
-                </li>
-            </ul>
-           
-        </div>
-
         <table class="table align-items-center mb-0">
             <thead>
                 <tr>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Vendor ID</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation ID</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Status</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Vendor ID</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Current Stall</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Reason</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Status</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Request Date</th>
                 </tr>
             </thead>
-            <tbody id="dataTableBody">
-            </tbody>
+            <tbody id="dataTableBody"></tbody>
         </table>
+    </div>
+</div>
+            
+<script>
+        document.addEventListener('DOMContentLoaded', function () {
+                fetch('fetch_RelReqProcessing.php')
+                    .then(response => {
+                        if (!response.ok) throw new Error('Network response was not ok');
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Fetched Data:', data); // Log fetched data for debugging
 
+                        const tableBody = document.getElementById('dataTableBody');
+                        tableBody.innerHTML = ''; // Clear existing content
 
-        <script>
+                        if (data.length > 0) {
+                            data.forEach(item => {
+                                const row = document.createElement('tr');
+                                row.innerHTML = `
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.vendor_id}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.current_stall}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.fn} ${item.ln}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.reason.substring(0, 50)}...</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.approval_status}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.request_date}</td>`;
+                                tableBody.appendChild(row);
+                            });
+                        } else {
+                            const row = document.createElement('tr');
+                            row.innerHTML = "<td colspan='6' class='text-center text-xs font-weight-bold mb-0'>No Relocation Requests</td>";
+                            tableBody.appendChild(row);
+                        }
+                    })
+                    .catch(error => console.error('Error fetching data:', error));
+            });
+            </script>
+
+<!-- Modernized Bootstrap Modal -->
+<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-white text-info">
+                <h5 class="modal-title" id="messageModalLabel">Relocation Request</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Vendor and Relocation Information -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="modalVendorID" class="form-label text-muted">Vendor ID</label>
+                            <p class="form-control-plaintext" id="modalVendorID">Loading...</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="modalcurrentStall" class="form-label text-muted">Current Stall No.</label>
+                            <p class="form-control-plaintext" id="modalcurrentStall">Loading...</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="modalName" class="form-label text-muted">Vendor Name</label>
+                            <p class="form-control-plaintext" id="modalName">Loading...</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="modalRequestDate" class="form-label text-muted">Request Date</label>
+                            <p class="form-control-plaintext" id="modalRequestDate">Loading...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message Section -->
+                <div class="form-group mb-4">
+                    <label for="messageContent" class="form-label text-muted">Message</label>
+                    <textarea class="form-control" id="messageContent" rows="4" readonly></textarea>
+                </div>
+
+                <!-- Relocation Status Dropdown -->
+                <div class="form-group mb-4">
+                    <label for="relocationStatus" class="form-label text-muted">Relocation Status</label>
+                    <select class="form-select" id="relocationStatus">
+                        <option value="Pending">Pending</option>
+                        <option value="Accepted">Accepted</option>
+                        <option value="Rejected">Rejected</option>
+                    </select>
+                </div>
+
+                <!-- Accordion for Relocation Details (conditionally shown) -->
+                <div class="accordion mb-4" id="relocationAccordion" style="display: none;">
+                    <div class="accordion-item">
+                        
+                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#relocationAccordion">
+                            <div class="accordion-body">
+                                <!-- Relocation Form -->
+                                <form id="relocationForm">
+                                    <div class="row g-3">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="newLocation" class="form-label">Relocate to:</label>
+                                                <select class="form-select" id="newLocation" required>
+                                                    <option value="">Select Stall</option>
+                                                    <option value="Building A">A-02</option>
+                                                    <option value="Building B">A-03</option>
+                                                    <option value="Building C">A-04</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="relocationDate" class="form-label">Relocation Date</label>
+                                                <input type="date" class="form-control" id="relocationDate" required>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-end mt-3">
+                                        <button type="submit" class="btn btn-success">Submit Relocation</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save Changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript to handle click event and populate modal -->
+<script>
     document.addEventListener('DOMContentLoaded', function () {
         fetch('fetch_RelReqProcessing.php')
-        .then(response => {
-            if (!response.ok) {
-                throw new Error('Network response was not ok');
-            }
-            return response.json();
-        })
+        .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('dataTableBody');
             tableBody.innerHTML = ''; // Clear existing content
@@ -421,68 +529,43 @@ $conn->close();
             if (data.length > 0) {
                 data.forEach(item => {
                     const row = document.createElement('tr');
-
                     row.innerHTML = `
-                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.fn + ' ' + item.ln)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.vendor_id)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0 data-id'>${escapeHtml(item.relocation_id)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.message)}'>${escapeHtml(item.message.substring(0, 50))}...</td>
-                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.date_sent)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0'>
-                            <select class='form-select relocation-status' data-statusid='${escapeHtml(item.relocation_id)}'>
-                                <option value='Processing' ${item.relocation_status === 'Processing' ? 'selected' : ''}>Processing</option>
-                                <option value='Accepted' ${item.relocation_status === 'Accepted' ? 'selected' : ''}>Accepted</option>
-                                <option value='Declined' ${item.relocation_status === 'Declined' ? 'selected' : ''}>Declined</option>
-                            </select>
-                        </td>
-                        <td class='text-center text-xs font-weight-bold mb-0'><button data-id='${escapeHtml(item.relocation_id)}' class="btn btn-danger btnDel">Delete</button></td>
-                    `;
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.vendor_id}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.current_stall}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.fn} ${item.ln}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.reason.substring(0, 50)}...</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.approval_status}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.request_date}</td>`;
+
+                    // Add click event to open the modal with the corresponding details
+                    row.addEventListener('click', function () {
+                        const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+
+                        // Populate modal with the full details from the clicked row
+                        document.getElementById('modalVendorID').textContent = item.vendor_id;
+                        document.getElementById('modalcurrentStall').textContent = item.current_stall;
+                        document.getElementById('modalName').textContent = item.fn + ' ' + item.ln;
+                        document.getElementById('messageContent').value = item.reason;
+                        document.getElementById('modalRequestDate').textContent = item.request_date;
+                        document.getElementById('relocationStatus').value = item.approval_status;
+
+                        // Toggle accordion visibility based on relocation status
+                        const relocationAccordion = document.getElementById('relocationAccordion');
+                        if (item.relocation_status === 'Accepted') {
+                            relocationAccordion.style.display = 'block';
+                        } else {
+                            relocationAccordion.style.display = 'none';
+                        }
+
+                        // Show the modal
+                        messageModal.show();
+                    });
 
                     tableBody.appendChild(row);
                 });
-
-                // Add event listener to delete buttons
-                document.querySelectorAll('.btnDel').forEach(button => {
-                    button.addEventListener('click', function () {
-                        const id = this.getAttribute('data-id');
-                        deleteRow(id);
-                    });
-                });
-
-                // Add event listener to status dropdowns
-                document.querySelectorAll('.relocation-status').forEach(dropdown => {
-                    dropdown.addEventListener('change', function () {
-                        const relocationId = this.getAttribute('data-statusid');
-                        const newStatus = this.value;
-
-                        fetch('updateRelStatus.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            },
-                            body: new URLSearchParams({
-                                'id': relocationId,
-                                'status': newStatus
-                            })
-                        })
-                        .then(response => response.text())
-                        .then(result => {
-                            console.log(result);
-                            if (result === 'Status updated successfully.') {
-                              window.location.reload();
-                                alert('Status updated.');
-                            } else {
-                              window.location.reload();
-                                alert('Error updating status.');
-                            }
-                        })
-                        .catch(error => console.error('Error:', error));
-                    });
-                });
-
             } else {
                 const row = document.createElement('tr');
-                row.innerHTML = "<td colspan='7' class='text-center text-xs font-weight-bold mb-0'>No inquiries found</td>";
+                row.innerHTML = "<td colspan='6' class='text-center text-xs font-weight-bold mb-0'>No Pending Relocation Request</td>";
                 tableBody.appendChild(row);
             }
         })
@@ -501,97 +584,15 @@ $conn->close();
         return text.replace(/[&<>"']/g, function (m) { return map[m]; });
     }
 
-    // Delete row function
-    function deleteRow(id) {
-        fetch('deleteRel.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({ 'relocation_id': id })
-        })
-        .then(response => response.text())
-        .then(result => {
-            alert(result);
-            location.reload(); // Reload page to see changes
-        })
-        .catch(error => console.error('Error deleting record:', error));
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-    // Handle search form submission
-    document.getElementById('searchForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const username = document.getElementById('searchUsername').value;
-        if (username) {
-            // Fetch and display results based on username
-            fetch('searchRel.php?username=' + encodeURIComponent(username))
-                .then(response => response.json())
-                .then(data => {
-                    const tbody = document.getElementById('dataTableBody');
-                    tbody.innerHTML = ''; // Clear current table rows
-
-                    data.forEach(row => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(row.name)}</td>
-                            <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(row.email_add)}</td>
-                            <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(row.subject)}</td>
-                            <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(row.message)}'>${escapeHtml(row.message.substr(0, 50))}...</td>
-                            <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(row.sent_date)}</td>
-                            <td class='text-center text-xs font-weight-bold mb-0'><input type='checkbox' class='delete-checkbox' data-id='${escapeHtml(row.relocation_id)}'></td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-
-                    // Add event listeners to new elements
-                    addEventListeners();
-                })
-                .catch(error => console.error('Error searching for user:', error));
+    // Relocation Status Change Logic
+    document.getElementById('relocationStatus').addEventListener('change', function () {
+        const relocationAccordion = document.getElementById('relocationAccordion');
+        if (this.value === 'Accepted') {
+            relocationAccordion.style.display = 'block';
+        } else {
+            relocationAccordion.style.display = 'none';
         }
     });
-});
-
-
-        function escapeHtml(text) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, m => map[m]);
-}
-    </script>
-    </div>
-</div>
-
-<!-- Bootstrap Modal -->
-          <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="messageModalLabel">Message Details</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                          <p id="messageContent"></p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-        <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const messageModal = document.getElementById('messageModal');
-            messageModal.addEventListener('show.bs.modal', (event) => {
-                const button = event.relatedTarget; // Button that triggered the modal
-                const message = button.getAttribute('data-message'); // Extract info from data-* attributes
-                const modalBody = messageModal.querySelector('.modal-body #messageContent');
-                modalBody.textContent = message; // Update the modal's content.
-            });
-        });
-
 </script>
 
   </main>

@@ -13,11 +13,13 @@ if ($conn->connect_error) {
 
 // Get data from POST request
 $vendor_id = $_POST['vendor_id'];
-$message = $_POST['message'];
+$reason = $_POST['message'];
+$current_stall = $_POST['currentStall'];
 
 // Prepare and bind
-$stmt = $conn->prepare("INSERT INTO relocation_req (vendor_id, message) VALUES (?, ?)");
-$stmt->bind_param("is", $vendor_id, $message);
+$stmt = $conn->prepare("INSERT INTO relocation_req (vendor_id, reason, current_stall) VALUES (?, ?, ?)");
+
+$stmt->bind_param("iss", $vendor_id, $reason, $current_stall);
 
 // Execute the statement
 if ($stmt->execute()) {

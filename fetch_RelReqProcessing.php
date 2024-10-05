@@ -10,16 +10,27 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT r.relocation_id, v.first_name AS fn, v.last_name AS ln, r.message, r.date_sent, r.relocation_status, v.vendor_id
-        FROM relocation_req r
-        LEFT JOIN vendors v ON r.vendor_id = v.vendor_id
-        WHERE r.relocation_status = 'Processing'
-        ORDER BY r.date_sent DESC";
+// Assuming there's a stalls table that contains stall_no linked to vendors
+$sql = "
+    SELECT r.request_id, 
+           v.vendor_id,
+           r.current_stall,
+           v.first_name AS fn, 
+           v.last_name AS ln, 
+           r.reason, 
+           r.approval_status,
+           r.request_date
+    FROM relocation_req r
+    LEFT JOIN vendors v ON r.vendor_id = v.vendor_id
+    WHERE r.approval_status = 'Pending'
+    ORDER BY r.request_date DESC"; 
+ 
 
 // Execute the query
 $result = $conn->query($sql);
 
 // Check for query execution errors
+// Check if the query returns any results
 if ($result === false) {
     echo "Error executing query: " . $conn->error;
 } else if ($result->num_rows > 0) {
@@ -32,5 +43,6 @@ if ($result === false) {
     echo json_encode([]); // Return empty array if no results
 }
 
+// Close the connection
 $conn->close();
 ?>

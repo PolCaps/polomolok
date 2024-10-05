@@ -270,14 +270,52 @@ $conn->close();
               <div class="table-responsive max-height-400 overflow-auto">
               <table class="table align-items-center mb-0"> 
                 <thead> 
-                  <tr> 
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Message</th> 
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 text-center">Relocation Request Status</th> 
-                  </tr> 
+                <tr>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Vendor ID</th>
+
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Reason</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Status</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Stall</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Request Date</th>
+                </tr>
                 </thead> 
                 <tbody id="dataTableBody">
                   <tr>
-                  <?php include 'fetch_relocation_request.php'; ?>
+                  <?php
+                  include('database_config.php');
+
+                  $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+                  if ($conn->connect_error) {
+                      die("Connection failed: " . $conn->connect_error);
+                  }
+                  $vendor_id = $vendor['vendor_id'];
+
+                  $sql = "SELECT current_stall, relocated_stall, reason, approval_status, request_date FROM relocation_req WHERE vendor_id = ?";
+                  $stmt = $conn->prepare($sql);
+                  $stmt->bind_param("i", $vendor_id);
+                  $stmt->execute();
+                  $result = $stmt->get_result();
+
+                  // Display data
+                  while ($row = $result->fetch_assoc()) {
+                    echo "<tr>";
+                    echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($vendor_id) . "</td>"; // Vendor ID
+                    
+                    $relocated_stall = !empty($row['relocated_stall']) ? htmlspecialchars($row['relocated_stall']) : "Relocation Pending";
+                    $message = trim($row['reason']);
+                    $trimmedMessage = strlen($message) > 20 ? substr($message, 0, 20) . '...' : $message;
+                    echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($trimmedMessage) . "</td>";
+                    echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($row['approval_status']) . "</td>";
+                    echo "<td class='text-xs font-weight-bold text-center'>" . $relocated_stall . "</td>"; 
+                    echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($row['request_date']) . "</td>";
+                    echo "</tr>";
+                }
+
+                  // Close connections
+                  $stmt->close();
+                  $conn->close();
+                  ?>
                      </tr>
                 </tbody>
             </table>
@@ -315,7 +353,67 @@ $conn->close();
     </div>
   </div>
 </div>
+<?php 
+include('database_config.php');
 
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+$vendor_id = $vendor['vendor_id']; // Assume this is set earlier in your script
+$current_stall = ""; // Initialize variable for current stall
+
+// Prepare the SQL query
+$sql = "
+    SELECT 'building_a' AS building, stall_no FROM building_a WHERE vendor_id = ?
+    UNION ALL
+    SELECT 'building_b' AS building, stall_no FROM building_b WHERE vendor_id = ?
+    UNION ALL
+    SELECT 'building_c' AS building, stall_no FROM building_c WHERE vendor_id = ?
+    UNION ALL
+    SELECT 'building_d' AS building, stall_no FROM building_d WHERE vendor_id = ?
+    UNION ALL
+    SELECT 'building_e' AS building, stall_no FROM building_e WHERE vendor_id = ?
+    UNION ALL
+    SELECT 'building_f' AS building, stall_no FROM building_f WHERE vendor_id = ?
+    UNION ALL
+    SELECT 'building_g' AS building, stall_no FROM building_g WHERE vendor_id = ?
+    UNION ALL
+    SELECT 'building_h' AS building, stall_no FROM building_h WHERE vendor_id = ?
+    UNION ALL
+    SELECT 'building_i' AS building, stall_no FROM building_i WHERE vendor_id = ?
+    UNION ALL
+    SELECT 'building_j' AS building, stall_no FROM building_j WHERE vendor_id = ?;
+";
+
+// Prepare the statement
+$stmt = $conn->prepare($sql);
+
+// Bind the parameters
+$stmt->bind_param("iiiiiiiiii", $vendor_id, $vendor_id, $vendor_id, $vendor_id, $vendor_id, $vendor_id, $vendor_id, $vendor_id, $vendor_id, $vendor_id);
+
+// Execute the statement
+$stmt->execute();
+$result = $stmt->get_result();
+
+// Fetch the stall number
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $current_stall = htmlspecialchars($row['stall_no']); // Store the stall number
+        
+    }
+} else {
+    echo "No stall found for vendor ID: " . htmlspecialchars($vendor_id);
+}
+
+// Close connections
+$stmt->close();
+$conn->close();
+?>
 <!-- Modal for Relocation Request -->
 <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -325,20 +423,24 @@ $conn->close();
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form action="insert_relocation_req.php" method="post">
-          <div class="mb-3">
+      <form action="insert_relocation_req.php" method="post">
+        <div class="mb-3">
             <label for="vendorId" class="form-label">Vendor Id</label>
-            <input class="form-control" type="text" id="vendorId" name="vendor_id" value="<?php echo htmlspecialchars($vendor['vendor_id']); ?>" aria-label="Disabled input example" readonly>
-          </div>
-          <div class="mb-3">
+            <input class="form-control" type="text" id="vendorId" name="vendor_id" value="<?php echo htmlspecialchars($vendor_id); ?>" aria-label="Disabled input example" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="currentStall" class="form-label">Current Stall</label>
+            <input class="form-control" type="text" id="currentStall" name="currentStall" value="<?php echo htmlspecialchars($current_stall); ?>" aria-label="Disabled input example" readonly>
+        </div>
+        <div class="mb-3">
             <label for="messageInput" class="form-label">Message</label>
             <textarea class="form-control" id="messageInput" name="message" required rows="3" placeholder="Enter your message"></textarea>
-          </div>
-          <div class="modal-footer">
+        </div>
+        <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             <button type="submit" class="btn btn-primary">Send Message</button>
-          </div>
-        </form>
+        </div>
+    </form>
       </div>
     </div>
   </div>

@@ -1,7 +1,7 @@
 <?php
 session_name('admin_session'); // Set custom session name
 // $lifetime = 604800; // 7 days in seconds
-$lifetime = 30; 
+$lifetime = 604800; 
 session_set_cookie_params($lifetime); // Set session cookie lifetime
 session_start(); // Start the session
 

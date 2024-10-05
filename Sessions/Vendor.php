@@ -3,7 +3,7 @@
 session_name('vendor_session');
 
 // Set session cookie parameters for 7 days (1 week)
-$lifetime = 7; // 7 days in seconds
+$lifetime = 604800; 
 session_set_cookie_params($lifetime);
 session_start();
 
