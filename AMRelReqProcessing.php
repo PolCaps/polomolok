@@ -26,8 +26,6 @@ $user = $result->fetch_assoc();
 if (!$user) {
     die("No User found with ID " . htmlspecialchars($user_id));
 }
-
-// Close the connection
 $conn->close();
 ?>
 
@@ -278,12 +276,12 @@ $conn->close();
     <div class="container-fluid py-4">
 
 <div class="row my-4">
-    <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
+    <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
         <div class="card">
             <div class="card-header pb-0">
                 <div class="row">
                     <div class="col-lg-6 col-7">
-                        <h6 class="text-info">Request Relocation / Processing</h6>
+                        <h6 class="text-info">Relocation Request /Processing</h6>
                     </div>
                     <div class="col-lg-6 col-5 my-auto text-end">
                         <div class="dropdown float-lg-end pe-4 mx-2">
@@ -405,7 +403,7 @@ $conn->close();
                                     <td class='text-center text-xs font-weight-bold mb-0'>${item.vendor_id}</td>
                                     <td class='text-center text-xs font-weight-bold mb-0'>${item.current_stall}</td>
                                     <td class='text-center text-xs font-weight-bold mb-0'>${item.fn} ${item.ln}</td>
-                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.reason.substring(0, 50)}...</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.reason.substring(0, 10)}...</td>
                                     <td class='text-center text-xs font-weight-bold mb-0'>${item.approval_status}</td>
                                     <td class='text-center text-xs font-weight-bold mb-0'>${item.request_date}</td>`;
                                 tableBody.appendChild(row);
@@ -472,8 +470,7 @@ $conn->close();
                         <option value="Rejected">Rejected</option>
                     </select>
                 </div>
-
-                <!-- Accordion for Relocation Details (conditionally shown) -->
+                
                 <div class="accordion mb-4" id="relocationAccordion" style="display: none;">
                     <div class="accordion-item">
                         
@@ -481,38 +478,49 @@ $conn->close();
                             <div class="accordion-body">
                                 <!-- Relocation Form -->
                                 <form id="relocationForm">
-                                    <div class="row g-3">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="newLocation" class="form-label">Relocate to:</label>
-                                                <select class="form-select" id="newLocation" required>
-                                                    <option value="">Select Stall</option>
-                                                    <option value="Building A">A-02</option>
-                                                    <option value="Building B">A-03</option>
-                                                    <option value="Building C">A-04</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="relocationDate" class="form-label">Relocation Date</label>
-                                                <input type="date" class="form-control" id="relocationDate" required>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="text-end mt-3">
-                                        <button type="submit" class="btn btn-success">Submit Relocation</button>
-                                    </div>
-                                </form>
+                                  <div class="row g-3">
+                                      <div class="col-md-6">
+                                          <div class="form-group">
+                                              <label for="buildingSelect" class="form-label">Building:</label>
+                                              <select class="form-select" id="buildingSelect" required>
+                                                  <option value="">Building</option>
+                                                  <option value="Building A">Building A</option>
+                                                  <option value="Building B">Building B</option>
+                                                  <option value="Building C">Building C</option>
+                                                  <option value="Building D">Building D</option>
+                                                  <option value="Building E">Building E</option>
+                                                  <option value="Building F">Building F</option>
+                                                  <option value="Building G">Building G</option>
+                                                  <option value="Building H">Building H</option>
+                                                  <option value="Building I">Building I</option>
+                                                  <option value="Building J">Building J</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <div class="form-group">
+                                              <label for="stallSelect" class="form-label">Relocate to:</label>
+                                              <select class="form-select" id="stallSelect" required>
+                                                  <option value="">Select Stall</option>
+                                              </select>
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <div class="form-group">
+                                              <label for="relocationDate" class="form-label">Relocation Date</label>
+                                              <input type="date" class="form-control" id="relocationDate" required>
+                                          </div>
+                                      </div>
+                                  </div>
+                                  <div class="text-end mt-3">
+                                      <button type="submit" class="btn btn-success">Submit Relocation</button>
+                                  </div>
+                              </form>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="modal-footer justify-content-between">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save Changes</button>
-            </div>
+            </div> 
         </div>
     </div>
 </div>

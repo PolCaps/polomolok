@@ -365,29 +365,28 @@ if ($conn->connect_error) {
 }
 
 $vendor_id = $vendor['vendor_id']; // Assume this is set earlier in your script
-$current_stall = ""; // Initialize variable for current stall
 
-// Prepare the SQL query
+// Prepare the SQL query to fetch all stalls for the vendor across all buildings
 $sql = "
-    SELECT 'building_a' AS building, stall_no FROM building_a WHERE vendor_id = ?
+    SELECT 'Building A' AS building, stall_no FROM building_a WHERE vendor_id = ?
     UNION ALL
-    SELECT 'building_b' AS building, stall_no FROM building_b WHERE vendor_id = ?
+    SELECT 'Building B' AS building, stall_no FROM building_b WHERE vendor_id = ?
     UNION ALL
-    SELECT 'building_c' AS building, stall_no FROM building_c WHERE vendor_id = ?
+    SELECT 'Building C' AS building, stall_no FROM building_c WHERE vendor_id = ?
     UNION ALL
-    SELECT 'building_d' AS building, stall_no FROM building_d WHERE vendor_id = ?
+    SELECT 'Building D' AS building, stall_no FROM building_d WHERE vendor_id = ?
     UNION ALL
-    SELECT 'building_e' AS building, stall_no FROM building_e WHERE vendor_id = ?
+    SELECT 'Building E' AS building, stall_no FROM building_e WHERE vendor_id = ?
     UNION ALL
-    SELECT 'building_f' AS building, stall_no FROM building_f WHERE vendor_id = ?
+    SELECT 'Building F' AS building, stall_no FROM building_f WHERE vendor_id = ?
     UNION ALL
-    SELECT 'building_g' AS building, stall_no FROM building_g WHERE vendor_id = ?
+    SELECT 'Building G' AS building, stall_no FROM building_g WHERE vendor_id = ?
     UNION ALL
-    SELECT 'building_h' AS building, stall_no FROM building_h WHERE vendor_id = ?
+    SELECT 'Building H' AS building, stall_no FROM building_h WHERE vendor_id = ?
     UNION ALL
-    SELECT 'building_i' AS building, stall_no FROM building_i WHERE vendor_id = ?
+    SELECT 'Building I' AS building, stall_no FROM building_i WHERE vendor_id = ?
     UNION ALL
-    SELECT 'building_j' AS building, stall_no FROM building_j WHERE vendor_id = ?;
+    SELECT 'Building J' AS building, stall_no FROM building_j WHERE vendor_id = ?;
 ";
 
 // Prepare the statement
@@ -400,20 +399,26 @@ $stmt->bind_param("iiiiiiiiii", $vendor_id, $vendor_id, $vendor_id, $vendor_id, 
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Fetch the stall number
+// Initialize an array to store the stalls
+$stalls = [];
+
+// Fetch the stall numbers
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $current_stall = htmlspecialchars($row['stall_no']); // Store the stall number
-        
+        $stalls[] = [
+            'building' => htmlspecialchars($row['building']),
+            'stall_no' => htmlspecialchars($row['stall_no'])
+        ]; 
     }
 } else {
-    echo "No stall found for vendor ID: " . htmlspecialchars($vendor_id);
+    echo "No stalls found for vendor ID: " . htmlspecialchars($vendor_id);
 }
 
 // Close connections
 $stmt->close();
 $conn->close();
 ?>
+
 <!-- Modal for Relocation Request -->
 <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -428,10 +433,23 @@ $conn->close();
             <label for="vendorId" class="form-label">Vendor Id</label>
             <input class="form-control" type="text" id="vendorId" name="vendor_id" value="<?php echo htmlspecialchars($vendor_id); ?>" aria-label="Disabled input example" readonly>
         </div>
+
         <div class="mb-3">
-            <label for="currentStall" class="form-label">Current Stall</label>
-            <input class="form-control" type="text" id="currentStall" name="currentStall" value="<?php echo htmlspecialchars($current_stall); ?>" aria-label="Disabled input example" readonly>
-        </div>
+          <label for="currentStall" class="form-label">Select Stall to Relocate</label>
+          <select class="form-select" id="currentStall" name="currentStall" required>
+              <?php if (!empty($stalls)): ?>
+                  <option value="">Select a stall</option>
+                  <?php foreach ($stalls as $stall): ?>
+                      <option value="<?php echo $stall['stall_no']; ?>">
+                          <?php echo $stall['building'] . " - Stall " . $stall['stall_no']; ?>
+                      </option>
+                  <?php endforeach; ?>
+              <?php else: ?>
+                  <option value="">No stalls available</option>
+              <?php endif; ?>
+          </select>
+      </div>
+
         <div class="mb-3">
             <label for="messageInput" class="form-label">Message</label>
             <textarea class="form-control" id="messageInput" name="message" required rows="3" placeholder="Enter your message"></textarea>
