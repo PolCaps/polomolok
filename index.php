@@ -15,7 +15,8 @@ session_start()
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <!-- Favicons -->
   <!-- <link href="assets/img/favicon.png" rel="icon"> -->
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+  <!--   mao dyay ni naga conflict sa icons
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> -->
   <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
