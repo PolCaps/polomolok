@@ -433,6 +433,7 @@ $conn->close();
                         <div class="form-group">
                             <label for="modalVendorID" class="form-label text-muted">Vendor ID</label>
                             <p class="form-control-plaintext" id="modalVendorID">Loading...</p>
+                            
                         </div>
                     </div>
                     <div class="col-md-6">
@@ -471,36 +472,85 @@ $conn->close();
                     </select>
                 </div>
                 
+
+                <?php
+// Check if this is an AJAX request to fetch vacant stalls
+if (isset($_GET['building'])) {
+    // Database connection
+    include('database_config.php');
+
+    // Create a connection
+    $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+    if ($mysqli->connect_error) {
+        die('Connection error: ' . $mysqli->connect_error);
+    }
+
+    // Get the building parameter from the AJAX request
+    $building = $_GET['building'];
+
+    // Define a whitelist of allowed buildings to prevent SQL injection
+    $allowedBuildings = ['building_a', 'building_b', 'building_c', 'building_d', 'building_e', 
+                         'building_f', 'building_g', 'building_h', 'building_i', 'building_j'];
+
+    // Check if the building is in the allowed list
+    if (in_array($building, $allowedBuildings)) {
+        // Prepare and execute the query to fetch vacant stalls from the specific building table
+        $stmt = $mysqli->prepare("SELECT stall_no FROM $building WHERE stall_status = 'Vacant'");
+        if ($stmt) {
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            $vacantStalls = [];
+            while ($row = $result->fetch_assoc()) {
+                $vacantStalls[] = $row['stall_no'];
+            }
+
+            // Return the data as JSON and exit the script
+            echo json_encode($vacantStalls);
+        } else {
+            echo json_encode(['error' => 'Failed to prepare the SQL statement.']);
+        }
+    } else {
+        // If the building is not in the allowed list, return an error message
+        echo json_encode(['error' => 'Invalid building specified.']);
+    }
+
+    exit;
+}
+?>
+
                 <div class="accordion mb-4" id="relocationAccordion" style="display: none;">
                     <div class="accordion-item">
                         
                         <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#relocationAccordion">
                             <div class="accordion-body">
                                 <!-- Relocation Form -->
-                                <form id="relocationForm">
+                                <form id="relocationForm" action="approve_relocation.php" method="POST">
                                   <div class="row g-3">
                                       <div class="col-md-6">
                                           <div class="form-group">
                                               <label for="buildingSelect" class="form-label">Building:</label>
                                               <select class="form-select" id="buildingSelect" required>
-                                                  <option value="">Building</option>
-                                                  <option value="Building A">Building A</option>
-                                                  <option value="Building B">Building B</option>
-                                                  <option value="Building C">Building C</option>
-                                                  <option value="Building D">Building D</option>
-                                                  <option value="Building E">Building E</option>
-                                                  <option value="Building F">Building F</option>
-                                                  <option value="Building G">Building G</option>
-                                                  <option value="Building H">Building H</option>
-                                                  <option value="Building I">Building I</option>
-                                                  <option value="Building J">Building J</option>
-                                              </select>
+                                                <option value="">Building</option>
+                                                <option value="building_a">Building A</option>
+                                                <option value="building_b">Building B</option>
+                                                <option value="building_c">Building C</option>
+                                                <option value="building_d">Building D</option>
+                                                <option value="building_e">Building E</option>
+                                                <option value="building_f">Building F</option>
+                                                <option value="building_g">Building G</option>
+                                                <option value="building_h">Building H</option>
+                                                <option value="building_i">Building I</option>
+                                                <option value="building_j">Building J</option>
+                                            </select>
                                           </div>
                                       </div>
+                                      <input type="hidden" id="modalVendorIDInput" name="vendor_id">
                                       <div class="col-md-6">
                                           <div class="form-group">
                                               <label for="stallSelect" class="form-label">Relocate to:</label>
-                                              <select class="form-select" id="stallSelect" required>
+                                              <select class="form-select" id="stallSelect" name="new_stall" required>
                                                   <option value="">Select Stall</option>
                                               </select>
                                           </div>
@@ -508,14 +558,69 @@ $conn->close();
                                       <div class="col-md-6">
                                           <div class="form-group">
                                               <label for="relocationDate" class="form-label">Relocation Date</label>
-                                              <input type="date" class="form-control" id="relocationDate" required>
+                                              <input type="date" class="form-control" id="relocationDate" name="relocation_date" required>
                                           </div>
                                       </div>
+                                      <div class="form-group mb-4">
+                                          <label for="maintenanceDescription" class="form-label text-muted">Maintenance Description</label>
+                                          <textarea class="form-control" id="maintenanceDescription" rows="4" required></textarea>
+                                      </div>
+                                  </div>
                                   </div>
                                   <div class="text-end mt-3">
-                                      <button type="submit" class="btn btn-success">Submit Relocation</button>
+                                      <button type="submit" class="btn btn-info">Relocate Vendor</button>
                                   </div>
                               </form>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Listen for changes in the Building dropdown
+    const buildingSelect = document.getElementById('buildingSelect');
+    const stallSelect = document.getElementById('stallSelect');
+
+    buildingSelect.addEventListener('change', function () {
+        const building = buildingSelect.value;
+
+        // Clear the Stall dropdown options
+        stallSelect.innerHTML = '<option value="">Select Stall</option>';
+
+        // Only make AJAX request if a building is selected
+        if (building !== "") {
+            // Make an AJAX request to fetch vacant stalls for the selected building
+            const xhr = new XMLHttpRequest();
+            xhr.open('GET', `fetch_vacant_stall.php?building=${encodeURIComponent(building)}`, true);
+            xhr.onload = function () {
+                if (xhr.status === 200) {
+                    console.log('Server response:', xhr.responseText); // Log the raw response
+                    try {
+                        const response = JSON.parse(xhr.responseText); // Parse the response as JSON
+
+                        // Check if the response contains stalls or an error
+                        if (response.error) {
+                            console.error(response.error);
+                        } else {
+                            // Populate the Stall dropdown with the received vacant stalls
+                            response.forEach(function (stall) {
+                                const option = document.createElement('option');
+                                option.value = stall;
+                                option.textContent = stall;
+                                stallSelect.appendChild(option);
+                            });
+                        }
+                    } catch (e) {
+                        console.error('Error parsing JSON:', e, xhr.responseText); // Show parsing error
+                    }
+                } else {
+                    console.error('Failed to fetch data. Status:', xhr.status);
+                }
+            };
+            xhr.onerror = function () {
+                console.error('Request error');
+            };
+            xhr.send();
+        }
+    });
+});
+</script>
                             </div>
                         </div>
                     </div>
@@ -547,28 +652,28 @@ $conn->close();
 
                     // Add click event to open the modal with the corresponding details
                     row.addEventListener('click', function () {
-                        const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+                    const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
 
-                        // Populate modal with the full details from the clicked row
-                        document.getElementById('modalVendorID').textContent = item.vendor_id;
-                        document.getElementById('modalcurrentStall').textContent = item.current_stall;
-                        document.getElementById('modalName').textContent = item.fn + ' ' + item.ln;
-                        document.getElementById('messageContent').value = item.reason;
-                        document.getElementById('modalRequestDate').textContent = item.request_date;
-                        document.getElementById('relocationStatus').value = item.approval_status;
+                    // Populate modal with the full details from the clicked row
+                    document.getElementById('modalVendorID').textContent = item.vendor_id; // For display
+                    document.getElementById('modalVendorIDInput').value = item.vendor_id; // Set hidden input value
+                    document.getElementById('modalcurrentStall').textContent = item.current_stall;
+                    document.getElementById('modalName').textContent = item.fn + ' ' + item.ln;
+                    document.getElementById('messageContent').value = item.reason;
+                    document.getElementById('modalRequestDate').textContent = item.request_date;
+                    document.getElementById('relocationStatus').value = item.approval_status;
 
-                        // Toggle accordion visibility based on relocation status
-                        const relocationAccordion = document.getElementById('relocationAccordion');
-                        if (item.relocation_status === 'Accepted') {
-                            relocationAccordion.style.display = 'block';
-                        } else {
-                            relocationAccordion.style.display = 'none';
-                        }
+                    // Toggle accordion visibility based on relocation status
+                    const relocationAccordion = document.getElementById('relocationAccordion');
+                    if (item.relocation_status === 'Accepted') {
+                        relocationAccordion.style.display = 'block';
+                    } else {
+                        relocationAccordion.style.display = 'none';
+                    }
 
-                        // Show the modal
-                        messageModal.show();
-                    });
-
+                    // Show the modal
+                    messageModal.show();
+                });
                     tableBody.appendChild(row);
                 });
             } else {

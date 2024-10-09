@@ -243,7 +243,7 @@ $conn->close();
         <div class="d-grid gap-2 d-md-block py-3 px-3">
         <p class="text-title">Actions</p>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#messageModal">
-          Open Form Modal
+          Make Request
         </button>
         </div>
         <div class="row my-4">
