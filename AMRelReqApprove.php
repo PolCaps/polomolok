@@ -279,7 +279,7 @@ $conn->close();
     <div class="container-fluid py-4">
 
 <div class="row my-4">
-    <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
+    <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
         <div class="card">
             <div class="card-header pb-0">
                 <div class="row">
@@ -395,8 +395,9 @@ $conn->close();
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Vendor ID</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation ID</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Reason</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Maintenance</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Approval Date</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Status</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
                 </tr>
@@ -417,27 +418,30 @@ $conn->close();
         })
         .then(data => {
             const tableBody = document.getElementById('dataTableBody');
-            tableBody.innerHTML = ''; // Clear existing content
+            tableBody.innerHTML = ''; 
 
             if (data.length > 0) {
                 data.forEach(item => {
-                    const row = document.createElement('tr');
+                  const row = document.createElement('tr');
 
-                    row.innerHTML = `
+                  row.innerHTML = `
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.fn + ' ' + item.ln)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.vendor_id)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0 data-id'>${escapeHtml(item.relocation_id)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.message)}'>${escapeHtml(item.message.substring(0, 50))}...</td>
-                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.date_sent)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0 data-id'>${escapeHtml(item.request_id)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.reason)}'>${escapeHtml(item.reason.substring(0, 50))}...</td>
+                        <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.descript)}'>${escapeHtml(item.descript.substring(0, 50))}...</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.approval_date)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0'>
-                            <select class='form-select relocation-status' data-statusid='${escapeHtml(item.relocation_id)}'>
-                                <option value='Processing' ${item.relocation_status === 'Processing' ? 'selected' : ''}>Processing</option>
-                                <option value='Accepted' ${item.relocation_status === 'Accepted' ? 'selected' : ''}>Accepted</option>
-                                <option value='Declined' ${item.relocation_status === 'Declined' ? 'selected' : ''}>Declined</option>
+                            <select class='form-select relocation-status' data-statusid='${escapeHtml(item.request_id)}'>
+                                <option value='Processing' ${item.approval_status === 'Processing' ? 'selected' : ''}>Processing</option>
+                                <option value='Approved' ${item.approval_status === 'Approved' ? 'selected' : ''}>Approved</option>
+                                <option value='Declined' ${item.approval_status === 'Declined' ? 'selected' : ''}>Declined</option>
                             </select>
                         </td>
-                        <td class='text-center text-xs font-weight-bold mb-0'><button data-id='${escapeHtml(item.relocation_id)}' class="btn btn-danger btnDel">Delete</button></td>
+                        <td class='text-center text-xs font-weight-bold mb-0'><button data-id='${escapeHtml(item.request_id)}' class="btn btn-danger btnDel">Delete</button></td>
                     `;
+
+
 
                     tableBody.appendChild(row);
                 });

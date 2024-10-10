@@ -10,11 +10,11 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT r.relocation_id, v.first_name AS fn, v.last_name AS ln, r.message, r.date_sent, r.relocation_status, v.vendor_id
+$sql = "SELECT r.request_id, v.first_name AS fn, v.last_name AS ln, r.reason, r.approval_date, r.approval_status, r.maintenance_description AS descript, v.vendor_id
         FROM relocation_req r
         LEFT JOIN vendors v ON r.vendor_id = v.vendor_id
-        WHERE r.relocation_status = 'Accepted'
-        ORDER BY r.date_sent DESC";
+        WHERE r.approval_status = 'Approved'
+        ORDER BY r.request_date DESC";
 
 
 // Execute the query
