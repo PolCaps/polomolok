@@ -273,74 +273,54 @@ session_start()
 
     </section><!-- /Hero Section -->
 
-    <!-- About Section -->
-    <section id="about" class="about section">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>About Us<br></h2>
-        <p>
-          This Public Market is very easy to access by public transportation.
-          Where you can find affordable goods, fruits and different root crops.
-          This building is currently improved with the local government. Located at French Street Polomolok, South
-          Cotabato.
-          There are a lot of thing to do in Polomolok South Cotabato, all you need to do is to enjoy the town for their
-          rich culture and attraction as well.
-        </p>
-      </div><!-- End Section Title -->
-
-
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
-            <h5>
-              Polomolok Public Market's Accessbilities:
-            </h5>
-            <ul>
-              <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible entrance.</span></li>
-              <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible parking lot.</span></li>
-              <li><i class="bi bi-check2-circle"></i> <span>Cleanest market in South Cotabato.</span></li>
-              <li><i class="bi bi-check2-circle"></i> <span>Smoke free zone.</span></li>
-              <li><i class="bi bi-check2-circle"></i> <span>Affordable farm to market goods.</span></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-            <p>OF ALL the places that I could have explored at my hometown, Polomolok, South Cotabato,
-              I found myself exploring the public market. I am low key fascinated by public markets.
-              Not many would think much about it but just a destination to go to find what they need
-              to cook food or for the house. <br> <br>
-              However, what fascinates me about the public markets
-              is its vital role in the local economy of a small town like Polomolok. Compared to other
-              municipalities, in South Cotabato, Polomolok is not small. </p>
-            <a href="#" class="read-more bg-warning"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section><!-- /About Section -->
+   
 
     <?php
     include('database_config.php');
     $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
     if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
+        die("Connection failed: " . $conn->connect_error);
     }
-    $sql = "SELECT buildings, overall_stalls, vendors, workers FROM pagebuilder_table WHERE stats_id = 1";
+
+    // First query
+    $sql = "SELECT buildings, overall_stalls, vendors, workers 
+            FROM pagebuilder_table PT
+            WHERE stats_id = 1";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-      $row = $result->fetch_assoc();
+        $data = $result->fetch_assoc();
     } else {
-      echo "No data found";
+        echo "No data found";
+        $data = []; // Initialize $data as an empty array if no data is found
     }
+
+    // Second query
+    $sql2 = "SELECT COUNT(*) AS totalworkers FROM users";
+    $workResult = $conn->query($sql2); // Changed variable name to $workResult
+
+    if ($workResult) {
+        $users = $workResult->fetch_assoc();
+        $data['totalworkers'] = $users['totalworkers'];
+    } else {
+        $data['totalworkers'] = null;
+    }
+
+    // Third query
+    $sql3 = "SELECT COUNT(*) AS totalvendors FROM vendors";
+    $vendorResult = $conn->query($sql3); // Changed variable name to $vendorResult
+
+    if ($vendorResult) {
+        $users = $vendorResult->fetch_assoc();
+        $data['totalVendors'] = $users['totalvendors']; // Use 'totalvendors' as per SQL alias
+    } else {
+        $data['totalVendors'] = null;
+    }
+
     $conn->close();
-    ?>
+?>
+
 
 
     <!-- Stats Section -->
@@ -351,21 +331,21 @@ session_start()
         <div class="row gy-4">
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['buildings']; ?>"
+              <span data-purecounter-start="0" data-purecounter-end="<?php echo $data['buildings']; ?>"
                 data-purecounter-duration="1" class="purecounter"></span>
               <p>Buildings</p>
             </div>
           </div><!-- End Stats Item -->
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['overall_stalls']; ?>"
+              <span data-purecounter-start="0" data-purecounter-end="<?php echo $data['overall_stalls']; ?>"
                 data-purecounter-duration="1" class="purecounter"></span>
               <p>Overall Stalls</p>
             </div>
           </div><!-- End Stats Item -->
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['vendors']; ?>"
+              <span data-purecounter-start="0" data-purecounter-end="<?php echo $data['vendors']; ?>"
                 data-purecounter-duration="1" class="purecounter"></span>
               <p>Vendors</p>
             </div>
@@ -373,7 +353,7 @@ session_start()
 
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['workers']; ?>"
+              <span data-purecounter-start="0" data-purecounter-end="<?php echo $data['totalworkers']; ?>"
                 data-purecounter-duration="1" class="purecounter"></span>
               <p>Workers</p>
             </div>
@@ -489,6 +469,28 @@ session_start()
 </div><!-- End container -->
 
 </section><!-- End Announcements Section -->
+
+
+<!-- Call To Action Section -->
+<section id="call-to-action" class="call-to-action section">
+
+<div class="container">
+  <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
+    <div class="col-xl-10">
+      <div class="text-center">
+        <h3>Interested In Owning a stall?</h3>
+        <p>Unlock your business potential and grab a stall at our bustling market and watch your dreams thrive!</p>
+        <a class="cta-btn" data-bs-toggle="modal" data-bs-target="#vendorApplicationModal">Apply Application</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</section><!-- /Call To Action Section -->
 
 
 
@@ -620,6 +622,57 @@ session_start()
       </div>
 
     </section><!-- /Testimonials Section -->
+
+     <!-- About Section -->
+     <section id="about" class="about section">
+
+<!-- Section Title -->
+<div class="container section-title" data-aos="fade-up">
+  <h2>About Us<br></h2>
+  <p>
+    This Public Market is very easy to access by public transportation.
+    Where you can find affordable goods, fruits and different root crops.
+    This building is currently improved with the local government. Located at French Street Polomolok, South
+    Cotabato.
+    There are a lot of thing to do in Polomolok South Cotabato, all you need to do is to enjoy the town for their
+    rich culture and attraction as well.
+  </p>
+</div><!-- End Section Title -->
+
+
+<div class="container">
+
+  <div class="row gy-4">
+
+    <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
+      <h5>
+        Polomolok Public Market's Accessbilities:
+      </h5>
+      <ul>
+        <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible entrance.</span></li>
+        <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible parking lot.</span></li>
+        <li><i class="bi bi-check2-circle"></i> <span>Cleanest market in South Cotabato.</span></li>
+        <li><i class="bi bi-check2-circle"></i> <span>Smoke free zone.</span></li>
+        <li><i class="bi bi-check2-circle"></i> <span>Affordable farm to market goods.</span></li>
+      </ul>
+    </div>
+
+    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+      <p>OF ALL the places that I could have explored at my hometown, Polomolok, South Cotabato,
+        I found myself exploring the public market. I am low key fascinated by public markets.
+        Not many would think much about it but just a destination to go to find what they need
+        to cook food or for the house. <br> <br>
+        However, what fascinates me about the public markets
+        is its vital role in the local economy of a small town like Polomolok. Compared to other
+        municipalities, in South Cotabato, Polomolok is not small. </p>
+      <a href="#" class="read-more bg-warning"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
+    </div>
+
+  </div>
+
+</div>
+
+</section><!-- /About Section -->
 
     <!-- Services Section -->
     <section id="services" class="services section">
@@ -822,26 +875,7 @@ session_start()
     </section><!-- /Services Section -->
 
 
-    <!-- Call To Action Section -->
-    <section id="call-to-action" class="call-to-action section">
-
-      <div class="container">
-        <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
-          <div class="col-xl-10">
-            <div class="text-center">
-              <h3>Interested In Owning a stall?</h3>
-              <p>Unlock your business potential and grab a stall at our bustling market and watch your dreams thrive!</p>
-              <a class="cta-btn" data-bs-toggle="modal" data-bs-target="#vendorApplicationModal">Apply Application</a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-
-
-
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    </section><!-- /Call To Action Section -->
+    
 
     </section><!-- /Faq Section -->
 
