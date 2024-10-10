@@ -14,7 +14,7 @@ if (isset($_POST['relocation_id'])) {
     $relocation_id = $_POST['relocation_id'];
 
     // Prepare the SQL statement
-    $stmt = $conn->prepare("DELETE FROM relocation_req WHERE relocation_id = ?");
+    $stmt = $conn->prepare("DELETE FROM relocation_req WHERE request_id = ?");
 
     if ($stmt) {
         // Bind parameters

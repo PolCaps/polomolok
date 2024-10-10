@@ -9,13 +9,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Check if 'id' and 'status' are set
-if (isset($_POST['id']) && isset($_POST['status'])) {
-    $id = $_POST['id'];
+// Check if 'relocationId' and 'status' are set
+if (isset($_POST['relocationId']) && isset($_POST['status'])) {
+    $id = $_POST['relocationId'];
     $status = $_POST['status'];
 
     // Prepare the SQL statement
-    $stmt = $conn->prepare("UPDATE relocation_req SET relocation_status = ? WHERE relocation_id = ?");
+    $stmt = $conn->prepare("UPDATE relocation_req SET approval_status = ? WHERE vendor_id = ?");
 
     if ($stmt) {
         // Bind parameters
@@ -23,7 +23,7 @@ if (isset($_POST['id']) && isset($_POST['status'])) {
 
         // Execute the statement
         if ($stmt->execute()) {
-            echo 'Status updated successfully.';
+            echo 'success';
         } else {
             echo 'Error updating status: ' . $stmt->error;
         }

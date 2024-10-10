@@ -464,44 +464,14 @@ $conn->close();
 <!-- Relocation Status Dropdown -->
 <div class="form-group mb-4">
     <label for="relocationStatus" class="form-label text-muted">Relocation Status</label>
-    <select class="form-select" id="relocationStatus" onchange="updateRelocationStatus()">
+    <select class="form-select" id="relocationStatus" onchange="triggerRelocationStatusChange()">
         <option value="Pending">Pending</option>
         <option value="Accepted">Accepted</option>
         <option value="Rejected">Rejected</option>
     </select>
 </div>
 
-<script>
-function updateRelocationStatus() {
-    // Get the selected value from the dropdown
-    const status = document.getElementById('relocationStatus').value;
-    
-    // Create an AJAX request
-    const xhr = new XMLHttpRequest();
-    xhr.open('POST', 'updateRelStatus.php', true);
-    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-    
-    // Send the data
-    xhr.onreadystatechange = function() {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-            // Response received from PHP
-            const response = xhr.responseText;
-            if (response === 'success') {
-                // Reload the DataTable to reflect the updated status
-                $('#yourDataTable').DataTable().ajax.reload();
-                alert('Relocation status updated successfully!');
-            } else {
-                alert('Error updating relocation status.');
-            }
-        }
-    };
-    
-    const relocationId = 123;
 
-    // Sending the relocation ID and the new status
-    xhr.send(`relocationId=${relocationId}&status=${status}`);
-}
-</script>
                 
 
                 <?php
@@ -662,7 +632,7 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
 </div>
 
-<!-- JavaScript to handle click event and populate modal -->
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
     fetch('fetch_RelReqProcessing.php')
@@ -732,12 +702,63 @@ function escapeHtml(text) {
 // Relocation Status Change Logic
 document.getElementById('relocationStatus').addEventListener('change', function () {
     const relocationAccordion = document.getElementById('relocationAccordion');
-    if (this.value === 'Accepted') {
+    const selectedStatus = this.value;
+
+    if (selectedStatus === 'Accepted') {
         relocationAccordion.style.display = 'block';
     } else {
         relocationAccordion.style.display = 'none';
     }
+
+    // Call the triggerRelocationStatusChange function if the selected status is "Rejected"
+    if (selectedStatus === 'Rejected') {
+        triggerRelocationStatusChange();
+    }
 });
+
+function triggerRelocationStatusChange() {
+    // Get the selected value from the dropdown
+    const status = document.getElementById('relocationStatus').value;
+
+    // Only proceed if the status is "Rejected"
+    if (status === 'Rejected') {
+        // Create an AJAX request
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'updateRelStatus.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        // Send the data
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                console.log(`Response status: ${xhr.status}`);
+                console.log(`Response text: ${xhr.responseText}`);
+
+                if (xhr.status === 200) {
+                    // Response received from PHP
+                    const response = xhr.responseText.trim();
+                    if (response === 'success') {
+                      window.location.reload();
+                        alert('Relocation status updated successfully!');
+                    } else {
+                        alert('Error sending status: ' + response);
+                    }
+                } else {
+                    alert('Error: Failed to reach the server.');
+                }
+            }
+        };
+
+        const vendorId = document.getElementById('modalVendorIDInput').value; // Get the actual relocation ID
+
+        // Debugging: Log the data being sent
+        console.log(`Sending ID: ${vendorId}, Status: ${status}`);
+
+        // Sending the relocation ID and the new status
+        xhr.send(`relocationId=${vendorId}&status=${status}`);
+    }
+}
+
+
 
 </script>
 
