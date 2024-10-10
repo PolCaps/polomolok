@@ -1,6 +1,4 @@
 <?php
-// submit_relocation.php
-
 // Database connection
 include('database_config.php');
 
@@ -17,28 +15,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_POST['vendor_id'])) {
         $vendorID = $_POST['vendor_id']; // Retrieve the vendor ID from the hidden input
 
-        // Now you can use $vendorID in your SQL queries or logic
-        // Example: Update the relocation_req table
-        $relocatedStall = $_POST['stallSelect']; // assuming you have this input
-        $relocationDate = $_POST['relocation_date']; // assuming you have this input
-        $maintenanceDescription = $_POST['maintenanceDescription']; // retrieve maintenance description
-        $approvedDate = date('Y-m-d H:i:s'); // Get the current timestamp
+        // Retrieve inputs safely
+        $relocatedStall = $_POST['stallSelect'] ?? null;
+        $relocationDate = $_POST['relocation_date'] ?? null;
+        $maintenanceDescription = $_POST['maintenanceDescription'] ?? null;
+        $approvedDate = date('Y-m-d H:i:s');
+        $approvalStatus = "Approved";
 
-        // Prepare the SQL statement to insert into the relocation_req table
-        $stmt = $mysqli->prepare("UPDATE relocation_req SET relocated_stall = ?, relocation_date = ?, maintenance_description = ?, approval_date = ? WHERE vendor_id = ?");
-        $stmt->bind_param("ssssi", $relocatedStall, $relocationDate, $maintenanceDescription, $approvedDate, $vendorID);
+        // Check if all necessary fields are available before executing the query
+        if ($relocatedStall && $relocationDate && $maintenanceDescription) {
+            // Prepare the SQL statement to update the relocation_req table
+            $stmt = $mysqli->prepare("UPDATE relocation_req SET relocated_stall = ?, relocation_date = ?, maintenance_description = ?, approval_status = ?, approval_date = ? WHERE vendor_id = ?");
+            $stmt->bind_param("sssssi", $relocatedStall, $relocationDate, $maintenanceDescription, $approvalStatus, $approvedDate, $vendorID);
 
-        // Execute the statement
-        if ($stmt->execute()) {
-            // Success message or further logic
-            echo "Relocation request updated successfully.";
+            // Execute the statement
+            if ($stmt->execute()) {
+                // Success message or further logic
+                echo "Relocation request updated successfully.";
+            } else {
+                // Error handling
+                echo "Error updating record: " . $stmt->error;
+            }
+
+            // Close the statement
+            $stmt->close();
         } else {
-            // Error handling
-            echo "Error updating record: " . $stmt->error;
+            echo "All fields are required.";
         }
-
-        // Close the statement
-        $stmt->close();
     } else {
         // Handle the case where vendor_id is not set
         echo "Vendor ID is not set.";
