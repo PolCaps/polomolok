@@ -1039,26 +1039,33 @@ session_start()
                           <div class="invalid-feedback">Please enter a valid contact number.</div>
                         </div>
                         <div class="form-group mb-3">
-                          <label for="building_type">Building Type</label>
-                          <select id="building_type" class="form-control" name="building_type" required>
-                            <option value=""></option>
-                            <option value="Building A">Building A</option>
-                            <option value="Building B">Building B</option>
-                            <option value="Building C">Building C</option>
-                            <option value="Building D">Building D</option>
-                            <option value="Building E">Building E</option>
-                            <option value="Building F">Building F</option>
-                            <option value="Building G">Building G</option>
-                            <option value="Building H">Building H</option>
-                            <option value="Building I">Building I</option>
-                            <option value="Building J">Building J</option>
-                          </select>
+                            <label for="commodities">Goods/Commodities</label>
+                            <select id="commodities" class="form-control" name="commodities" required onchange="toggleOthersInput()">
+                                <option value=""></option>
+                                <option value="Seafoods">Seafoods</option>
+                                <option value="Meats">Meats</option>
+                                <option value="Breads">Breads</option>
+                                <option value="Processed Goods">Processed Goods</option>
+                                <option value="Vegetables and Fruits">Vegetable and Fruits</option>
+                                <option value="Others">Others</option>
+                            </select>
+                            <input type="text" id="other_commodities" class="form-control mt-2" name="other_commodities" placeholder="Please specify..." style="display:none;">
                         </div>
-                        <div class="form-group mb-3">
-                          <label for="stall_no" class="form-label">Stall No.:</label>
-                          <input type="number" id="stall_no" class="form-control" name="stall_no" required>
-                          <div class="invalid-feedback">Please enter a stall no.</div>
-                        </div>
+
+                        <script>
+                          function toggleOthersInput() {
+                              const commoditiesSelect = document.getElementById('commodities');
+                              const othersInput = document.getElementById('other_commodities');
+                              if (commoditiesSelect.value === 'Others') {
+                                  othersInput.style.display = 'block'; // Show the input field
+                                  othersInput.required = true; // Make it required
+                              } else {
+                                  othersInput.style.display = 'none'; // Hide the input field
+                                  othersInput.value = ''; // Clear the input value
+                                  othersInput.required = false; // Remove required status
+                              }
+                          }
+                      </script>
                       </div>
                       <!-- Business Details -->
                       <div class="col-md-6 mt-2">

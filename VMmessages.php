@@ -338,59 +338,114 @@ $stmt1->close();
                             <p>Welcome, <?php echo htmlspecialchars($vendor['first_name']); ?>!</p>
 
                             <div class="accordion" id="chatAccordion">
-    <div class="accordion-item">
-        <h2 class="accordion-header" id="headingOne">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                Open Chats
-            </button>
-        </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#chatAccordion">
-            <div class="accordion-body">
-                <div id="message-box" style="max-height: 300px; overflow-y: auto; border: 1px solid #e0e0e0; padding: 10px; border-radius: 8px;">
-                    <!-- Messages will appear here -->
-                </div>
-                <form id="message-form" class="mt-3">
-                    <div class="input-group">
-                        <input type="text" id="message-input" class="form-control" placeholder="Type a message" required />
-                        <button type="submit" class="btn btn-primary ms-2">Send</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                            Open Chats
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#chatAccordion">
+                                        <div class="accordion-body">
+                                            <div id="message-box" style="max-height: 300px; overflow-y: auto; border: 1px solid #e0e0e0; padding: 10px; border-radius: 8px;">
+                                                <!-- Messages will appear here -->
+                                            </div>
+                                            <form id="message-form" method="POST" action="send_message.php">
+                                                <div class="mb-3">
+                                                    
+                                                
+                                                <label for="recipient-select" class="form-label">Send Message To:</label>
+                                                    
+                                                <?php
+                                                include('database_config.php');
+
+                                                // Create a connection to the database
+                                                $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+                                                // Check connection
+                                                if ($conn->connect_error) {
+                                                    die("Connection failed: " . $conn->connect_error);
+                                                }
+
+                                                // Query to select only Admin users
+                                                $query = "SELECT id, user_type, first_name, last_name FROM users";
+                                                $result = $conn->query($query);
+
+                                                // Check if the query returned any results
+                                                if ($result && $result->num_rows > 0) {
+                                                    echo '<select id="recipient-select" name="recipient_id" class="form-select" required>';
+                                                    echo '<option value="">Select Recipient</option>';
+
+                                                    // Loop through each Admin user and add them as options in the dropdown
+                                                    while ($users = $result->fetch_assoc()) {
+                                                      echo '<option value="' . htmlspecialchars($users['id']) . '">' . htmlspecialchars($users['first_name']) . ' ' . htmlspecialchars($users['last_name']) . ' - ' . htmlspecialchars($users['user_type']) . '</option>';
+                                                    }
+
+                                                    echo '</select>';
+                                                } else {
+                                                    echo '<select id="recipient-select" name="recipient_id" class="form-select" required>';
+                                                    echo '<option value="">No one is Available</option>';
+                                                    echo '</select>';
+                                                }
+
+                                                // Close the database connection
+                                                $conn->close();
+                                                ?>
+
+                                                </div>
+                                                <div class="input-group">
+                                                    <input type="text" id="message-input" class="form-control" placeholder="Type a message" required />
+                                                    <button type="submit" class="btn btn-primary ms-2">Send</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                             <script>
+                                const vendorId = <?php echo json_encode($vendor_id); ?>;
                                 const messageForm = document.getElementById('message-form');
                                 const messageInput = document.getElementById('message-input');
                                 const messageBox = document.getElementById('message-box');
+                                const recipientSelect = document.getElementById('recipient-select');
 
                                 messageForm.addEventListener('submit', function (e) {
                                     e.preventDefault();
                                     const message = messageInput.value;
+                                    const recipientId = recipientSelect.value;
 
+                                    if (!recipientId) {
+                                        alert('Please select User to send the message to.');
+                                        return;
+                                    }
+
+                                    // Create message element with styles
                                     const messageElement = document.createElement('div');
-                                    messageElement.textContent = message;
+                                    messageElement.className = 'bg-warning text-dark p-2 my-2 rounded';
+                                    messageElement.textContent = `You (Vendor): ${message}`;
                                     messageBox.appendChild(messageElement);
                                     messageInput.value = '';
 
-                                    fetch('http://localhost:3001/sendMessage', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                        },
-                                        body: JSON.stringify({
-                                            message: message
-                                        }),
-                                    })
-                                    .then(response => response.json())
-                                    .then(data => {
-                              
-                                        console.log(data);
-                                    })
-                                    .catch(error => {
-                                        console.error('Error:', error);
-                                    });
+                                    // Send the message to the server
+                                    fetch('send_message.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        message: message,
+                                        senderId: vendorId, 
+                                        recipientId: recipientId,
+                                    }),
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    console.log(data);
+                                    // Optionally fetch messages again to update the UI
+                                })
+                                .catch(error => {
+                                    console.error('Error:', error);
+                                });
                                 });
                             </script>
 
