@@ -15,9 +15,13 @@ $last_name = $_POST['last_name'] ?? null;
 $contact_number = $_POST['contact_number'] ?? null;
 $age = $_POST['age'] ?? null;
 $email = $_POST['email'] ?? null;
-$building_type = $_POST['building_type'] ?? null;
-$stall_no = $_POST['stall_no'] ?? null;
+$commodities = $_POST['commodities'] ?? null; // This is the select field
+$other_commodities = $_POST['other_commodities'] ?? null; // This is the text input
 $address = $_POST['address'] ?? null;
+
+if ($commodities === 'Others' && !empty($other_commodities)) {
+    $commodities = $other_commodities; // Use the specified input if "Others" was selected
+} 
 
 // Handle file upload
 if (isset($_FILES['file_upload']) && $_FILES['file_upload']['error'] == UPLOAD_ERR_OK) {
@@ -36,13 +40,13 @@ if (isset($_FILES['file_upload']) && $_FILES['file_upload']['error'] == UPLOAD_E
     // Move the uploaded file to the desired directory
     if (move_uploaded_file($file_tmp_name, $file_path)) {
         // Prepare and bind for the rent_application table
-        $stmt = $conn->prepare("INSERT INTO rent_application (first_name, middle_name, last_name, contact_no, age, email, building_type, stall_no, address, rentapp_file) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        $stmt = $conn->prepare("INSERT INTO rent_application (first_name, middle_name, last_name, contact_no, age, email, commodities, address, rentapp_file) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
         
         if ($stmt === false) {
             die(json_encode(['success' => false, 'message' => "Prepare failed: " . $conn->error]));
         }
         
-        if (!$stmt->bind_param("ssssisssss", $first_name, $middle_name, $last_name, $contact_number, $age, $email, $building_type, $stall_no, $address, $file_path)) {
+        if (!$stmt->bind_param("ssssissss", $first_name, $middle_name, $last_name, $contact_number, $age, $email, $commodities, $address, $file_path)) {
             die(json_encode(['success' => false, 'message' => "Bind param failed: " . $stmt->error]));
         }
 
@@ -63,7 +67,7 @@ if (isset($_FILES['file_upload']) && $_FILES['file_upload']['error'] == UPLOAD_E
             if ($stmt_payment->execute()) {
                 echo json_encode([
                     'success' => true,
-                    'message' => "Success! Data inserted into both tables.",
+                    'message' => "Success! Congratulation. You are now ready for Step 3.",
                     'applicant_id' => $applicant_id
                 ]);
             } else {
