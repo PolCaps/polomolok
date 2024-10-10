@@ -256,6 +256,92 @@ include('Sessions/Admin.php');
       </div>
     </nav>
     <!-- End Navbar -->
+
+
+    <?php
+// Include database configuration
+include('database_config.php');
+
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Query to get total payments from receipts for the current month
+$totalPaymentsQuery = "SELECT SUM(totalPay) AS totalPayments 
+                       FROM receipts 
+                       WHERE MONTH(issued_date) = MONTH(CURRENT_DATE()) 
+                       AND YEAR(issued_date) = YEAR(CURRENT_DATE())";
+$totalPaymentsResult = $conn->query($totalPaymentsQuery);
+if ($totalPaymentsResult) {
+    $totalPayments = $totalPaymentsResult->fetch_assoc();
+    $data['totalPayments'] = $totalPayments['totalPayments'];
+} else {
+    $data['totalPayments'] = null;
+}
+
+// Query to count inquiries for the current month
+$inquiriesCountQuery = "SELECT COUNT(*) AS totalInquiries 
+                        FROM inquiry 
+                        ";
+
+$inquiriesCountResult = $conn->query($inquiriesCountQuery);
+if ($inquiriesCountResult) {
+    $inquiriesCount = $inquiriesCountResult->fetch_assoc();
+    $data['totalInquiries'] = $inquiriesCount['totalInquiries'];
+} else {
+    $data['totalInquiries'] = null;
+}
+
+
+
+
+// Query to count rent applications for the current month
+$rentAppCountQuery = "SELECT COUNT(*) AS rentAppCount 
+                      FROM rentapp_payment 
+                      WHERE MONTH(payment_date) = MONTH(CURRENT_DATE()) 
+                      AND YEAR(payment_date) = YEAR(CURRENT_DATE())";
+$rentAppCountResult = $conn->query($rentAppCountQuery);
+if ($rentAppCountResult) {
+    $rentAppCount = $rentAppCountResult->fetch_assoc();
+    $data['rentAppCount'] = $rentAppCount['rentAppCount'];
+} else {
+    $data['rentAppCount'] = null;
+}
+
+// Query to count active vendors
+$activeVendorsQuery = "SELECT COUNT(*) AS activeVendorsCount 
+                       FROM vendors 
+                       WHERE Vendor_Status = 'ACTIVE'";
+$activeVendorsResult = $conn->query($activeVendorsQuery);
+if ($activeVendorsResult) {
+    $activeVendorsCount = $activeVendorsResult->fetch_assoc();
+    $data['activeVendorsCount'] = $activeVendorsCount['activeVendorsCount'];
+} else {
+    $data['activeVendorsCount'] = null;
+}
+
+// Query to count active staffs
+$activeUserQuery = "SELECT COUNT(*) AS MEEDO 
+                       FROM users";
+$activeUserResult = $conn->query($activeUserQuery);
+if ($activeUserResult) {
+    $activeUserCount = $activeUserResult->fetch_assoc();
+    $data['MEEDO'] = $activeUserCount['MEEDO'];
+} else {
+    $data['MEEDO'] = null;
+}
+
+// Close the connection
+$conn->close();
+?>
+
+
+
+
     <div class="container-fluid py-4">
       <div class="row">
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
@@ -266,7 +352,7 @@ include('Sessions/Admin.php');
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Reports</p>
                     <h5 class="font-weight-bolder mb-0">
-                      P53,000
+                    <?php echo htmlspecialchars($data['rentAppCount'] + $data['totalInquiries'] ) ; ?> 
                       <span class="text-success text-sm font-weight-bolder">+55%</span>
                     </h5>
                   </div>
@@ -286,10 +372,10 @@ include('Sessions/Admin.php');
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Today's Users</p>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Users</p>
                     <h5 class="font-weight-bolder mb-0">
-                      2,300
-                      <span class="text-success text-sm font-weight-bolder">+3%</span>
+                    <?php echo htmlspecialchars($data['activeVendorsCount'] + $data['MEEDO'] ) ; ?> 
+                      <span class="text-success text-sm font-weight-bolder">overall</span>
                     </h5>
                   </div>
                 </div>
@@ -311,7 +397,7 @@ include('Sessions/Admin.php');
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">New Clients</p>
                     <h5 class="font-weight-bolder mb-0">
                       +3,462
-                      <span class="text-danger text-sm font-weight-bolder">-2%</span>
+                      <span class="text-success text-sm font-weight-bolder">-2%</span>
                     </h5>
                   </div>
                 </div>
@@ -332,8 +418,8 @@ include('Sessions/Admin.php');
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Sales</p>
                     <h5 class="font-weight-bolder mb-0">
-                      P103,430
-                      <span class="text-success text-sm font-weight-bolder">+5%</span>
+                    P <?php echo htmlspecialchars(number_format($data['totalPayments'], 2, '.', ',')); ?>
+                      <span class="text-success text-sm font-weight-bolder">pesos</span>
                     </h5>
                   </div>
                 </div>
