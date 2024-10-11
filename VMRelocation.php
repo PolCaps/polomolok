@@ -311,8 +311,10 @@ $conn->close();
                     if ($conn->connect_error) {
                       die("Connection failed: " . $conn->connect_error);
                     }
+                    // Get the vendor ID from the session
+                    $vendor_id = $_SESSION['vendor_id'];
 
-                    $vendor_id = $vendor['vendor_id'];
+                   
 
                     $sql = "SELECT current_stall, relocated_stall, reason, approval_status, request_date FROM relocation_req WHERE vendor_id = ?";
                     $stmt = $conn->prepare($sql);
