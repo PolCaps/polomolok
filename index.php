@@ -10,16 +10,14 @@ session_start()
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>PolomolokPublicMarket</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+  <meta content="Polomolok Public Market Official Website" name="description">
+  <meta content="Polomolok Official Website" name="keywords">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <!-- Favicons -->
   <!-- <link href="assets/img/favicon.png" rel="icon"> -->
   <!--   mao dyay ni naga conflict sa icons
   <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> -->
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <!-- Fonts -->
@@ -123,7 +121,7 @@ session_start()
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="#hero" class="active">Home<br></a></li>
-          <li><a href="#about">About</a></li>
+          <li><a href="#call-to-action">Rent Stall</a></li>
           <li class="dropdown"><a href="#services"><span>Wayfinding & Directory</span> <i
                 class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
@@ -139,7 +137,9 @@ session_start()
               <li><a href="Wayfinding.php">Building J</a></li>
             </ul>
           </li>
-          <li><a href="#call-to-action">Rent Stall</a></li>
+          <li><a href="#about">About</a></li>
+
+          
           <li><a href="#contact">Contact</a></li>
 
         </ul>
@@ -623,57 +623,7 @@ session_start()
 
     </section><!-- /Testimonials Section -->
 
-     <!-- About Section -->
-     <section id="about" class="about section">
-
-<!-- Section Title -->
-<div class="container section-title" data-aos="fade-up">
-  <h2>About Us<br></h2>
-  <p>
-    This Public Market is very easy to access by public transportation.
-    Where you can find affordable goods, fruits and different root crops.
-    This building is currently improved with the local government. Located at French Street Polomolok, South
-    Cotabato.
-    There are a lot of thing to do in Polomolok South Cotabato, all you need to do is to enjoy the town for their
-    rich culture and attraction as well.
-  </p>
-</div><!-- End Section Title -->
-
-
-<div class="container">
-
-  <div class="row gy-4">
-
-    <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
-      <h5>
-        Polomolok Public Market's Accessbilities:
-      </h5>
-      <ul>
-        <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible entrance.</span></li>
-        <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible parking lot.</span></li>
-        <li><i class="bi bi-check2-circle"></i> <span>Cleanest market in South Cotabato.</span></li>
-        <li><i class="bi bi-check2-circle"></i> <span>Smoke free zone.</span></li>
-        <li><i class="bi bi-check2-circle"></i> <span>Affordable farm to market goods.</span></li>
-      </ul>
-    </div>
-
-    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-      <p>OF ALL the places that I could have explored at my hometown, Polomolok, South Cotabato,
-        I found myself exploring the public market. I am low key fascinated by public markets.
-        Not many would think much about it but just a destination to go to find what they need
-        to cook food or for the house. <br> <br>
-        However, what fascinates me about the public markets
-        is its vital role in the local economy of a small town like Polomolok. Compared to other
-        municipalities, in South Cotabato, Polomolok is not small. </p>
-      <a href="#" class="read-more bg-warning"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
-    </div>
-
-  </div>
-
-</div>
-
-</section><!-- /About Section -->
-
+    
     <!-- Services Section -->
     <section id="services" class="services section">
 
@@ -875,7 +825,57 @@ session_start()
     </section><!-- /Services Section -->
 
 
-    
+     <!-- About Section -->
+     <section id="about" class="about section">
+
+<!-- Section Title -->
+<div class="container section-title" data-aos="fade-up">
+  <h2>About Us<br></h2>
+  <p>
+    This Public Market is very easy to access by public transportation.
+    Where you can find affordable goods, fruits and different root crops.
+    This building is currently improved with the local government. Located at French Street Polomolok, South
+    Cotabato.
+    There are a lot of thing to do in Polomolok South Cotabato, all you need to do is to enjoy the town for their
+    rich culture and attraction as well.
+  </p>
+</div><!-- End Section Title -->
+
+
+<div class="container">
+
+  <div class="row gy-4">
+
+    <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
+      <h5>
+        Polomolok Public Market's Accessbilities:
+      </h5>
+      <ul>
+        <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible entrance.</span></li>
+        <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible parking lot.</span></li>
+        <li><i class="bi bi-check2-circle"></i> <span>Cleanest market in South Cotabato.</span></li>
+        <li><i class="bi bi-check2-circle"></i> <span>Smoke free zone.</span></li>
+        <li><i class="bi bi-check2-circle"></i> <span>Affordable farm to market goods.</span></li>
+      </ul>
+    </div>
+
+    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+      <p>OF ALL the places that I could have explored at my hometown, Polomolok, South Cotabato,
+        I found myself exploring the public market. I am low key fascinated by public markets.
+        Not many would think much about it but just a destination to go to find what they need
+        to cook food or for the house. <br> <br>
+        However, what fascinates me about the public markets
+        is its vital role in the local economy of a small town like Polomolok. Compared to other
+        municipalities, in South Cotabato, Polomolok is not small. </p>
+      <a href="#" class="read-more bg-warning"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
+    </div>
+
+  </div>
+
+</div>
+
+</section><!-- /About Section -->
+
 
     </section><!-- /Faq Section -->
 
