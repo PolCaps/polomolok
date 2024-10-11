@@ -15,6 +15,7 @@ $sql = "
     SELECT r.request_id, 
            v.vendor_id,
            r.current_stall,
+           r.relocated_stall,
            v.first_name AS fn, 
            v.last_name AS ln, 
            r.reason, 
