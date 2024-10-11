@@ -30,7 +30,7 @@ if ($stmt) {
     if ($stmt->execute()) {
         // Use JavaScript alert and redirect
         echo "<script>
-            alert('New record created successfully');
+            alert('Sent successfully');
             window.location.href = 'VMRelocation.php';
         </script>";
     } else {

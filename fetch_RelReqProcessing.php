@@ -22,9 +22,10 @@ $sql = "
            r.approval_status,
            r.request_date
     FROM relocation_req r
-    LEFT JOIN vendors v ON r.vendor_id = v.vendor_id
+    JOIN vendors v ON r.vendor_id = v.vendor_id
     WHERE r.approval_status = 'Pending'
-    ORDER BY r.request_date DESC"; 
+    ORDER BY r.request_date DESC
+    "; 
  
 
 // Execute the query

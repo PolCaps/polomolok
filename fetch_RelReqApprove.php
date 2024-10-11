@@ -10,9 +10,9 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$sql = "SELECT r.request_id, v.first_name AS fn, v.last_name AS ln, r.reason, r.approval_date, r.approval_status, r.maintenance_description AS descript, v.vendor_id
+$sql = "SELECT r.request_id, v.first_name AS fn, v.last_name AS ln, r.relocated_stall, r.current_stall,  r.reason, r.approval_date, r.approval_status, r.maintenance_description AS descript, v.vendor_id
         FROM relocation_req r
-        LEFT JOIN vendors v ON r.vendor_id = v.vendor_id
+        JOIN vendors v ON v.vendor_id = r.vendor_id
         WHERE r.approval_status = 'Approved'
         ORDER BY r.request_date DESC";
 

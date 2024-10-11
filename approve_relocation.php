@@ -6,7 +6,10 @@ include('database_config.php');
 $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 if ($mysqli->connect_error) {
-    die('Connection error: ' . $mysqli->connect_error);
+    die("<script>
+            alert('Connection error: " . $mysqli->connect_error . "');
+            window.location.href = 'AMRelReqProcessing.php';
+        </script>");
 }
 
 // Check if the form is submitted
@@ -30,21 +33,33 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             // Execute the statement
             if ($stmt->execute()) {
-                // Success message or further logic
-                echo "Relocation request updated successfully.";
+                // Success message
+                echo "<script>
+                        alert('Updated successfully.');
+                        window.location.href = 'AMRelReqProcessing.php';
+                    </script>";
             } else {
                 // Error handling
-                echo "Error updating record: " . $stmt->error;
+                echo "<script>
+                        alert('Error updating record: " . $stmt->error . "');
+                        window.location.href = 'AMRelReqProcessing.php';
+                    </script>";
             }
 
             // Close the statement
             $stmt->close();
         } else {
-            echo "All fields are required.";
+            echo "<script>
+                    alert('All fields are required.');
+                    window.location.href = 'AMRelReqProcessing.php';
+                </script>";
         }
     } else {
         // Handle the case where vendor_id is not set
-        echo "Vendor ID is not set.";
+        echo "<script>
+                alert('Vendor ID is not set.');
+                window.location.href = 'AMRelReqProcessing.php';
+            </script>";
     }
 }
 
