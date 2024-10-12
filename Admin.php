@@ -240,6 +240,12 @@ include('Sessions/Admin.php');
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
+
+            <?php 
+            include('Notification/AdminNotif.php');
+            ?>
+         
+
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -252,6 +258,7 @@ include('Sessions/Admin.php');
 
             
           </ul>
+          
         </div>
       </div>
     </nav>
