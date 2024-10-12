@@ -9,14 +9,14 @@ $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 // Check the connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  die("Connection failed: " . $conn->connect_error);
 }
 
 // Fetch vendor information
 $sql = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
+  die("Prepare failed: " . $conn->error);
 }
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -25,7 +25,7 @@ $user = $result->fetch_assoc();
 
 // Check if vendor data is retrieved
 if (!$user) {
-    die("No User found with ID " . htmlspecialchars($user_id));
+  die("No User found with ID " . htmlspecialchars($user_id));
 }
 
 // Close the connection
@@ -36,7 +36,7 @@ $conn->close();
 <html lang="en">
 
 <head>
-<meta charset="utf-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
@@ -61,7 +61,7 @@ $conn->close();
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
     id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
@@ -136,8 +136,8 @@ $conn->close();
           </a>
           <div class="collapse" id="collapseAccounts">
             <div class="right-aligned-links" style="text-align: right;">
-            <a class="nav-link" href="AMuser.php">Users</a>
-            <a class="nav-link" href="AMvendor.php">Vendors</a>
+              <a class="nav-link" href="AMuser.php">Users</a>
+              <a class="nav-link" href="AMvendor.php">Vendors</a>
             </div>
           </div>
         </li>
@@ -239,7 +239,8 @@ $conn->close();
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
-    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
+      navbar-scroll="true">
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
@@ -278,137 +279,155 @@ $conn->close();
     <!-- End Navbar -->
     <div class="container-fluid py-4">
 
-<div class="row my-4">
-    <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
-        <div class="card">
+      <div class="row my-4">
+        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
+          <div class="card">
             <div class="card-header pb-0">
-                <div class="row">
-                    <div class="col-lg-6 col-7">
-                        <h6 class="text-info">Request Relocation / Approved</h6>
-                    </div>
-                    <div class="col-lg-6 col-5 my-auto text-end">
-                        <div class="dropdown float-lg-end pe-4 mx-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-week" viewBox="0 0 16 16" id="filterDate" data-bs-toggle="dropdown" aria-expanded="false">
-                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
-                                <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
-                            </svg>
-                            <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="filterDate">
-                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('today')">Today</a></li>
-                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('week')">This Week</a></li>
-                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('month')">This Month</a></li>
-                                <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#customDateModal">Custom Date</a></li>
-                            </ul>
-                            <div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="customDateModalLabel">Select Custom Date</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form id="customDateForm" method="POST">
-                                                <input type="text" id="customStartDate" name="start_date" class="form-control mb-2" placeholder="Start Date">
-                                                <!-- <input type="text" id="customEndDate" name="end_date" class="form-control" placeholder="End Date"> -->
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary" onclick="submitCustomDateForm()">Apply</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    flatpickr('#customStartDate', {
-                                        dateFormat: 'Y-m-d'
-                                    });
-                                    flatpickr('#customEndDate', {
-                                        dateFormat: 'Y-m-d'
-                                    });
-                                });
-
-                                function filterByDate(period) {
-                                    const today = new Date();
-                                    let startDate, endDate;
-
-                                    switch(period) {
-                                        case 'today':
-                                            startDate = endDate = today.toISOString().split('T')[0];
-                                            break;
-                                        case 'week':
-                                            const firstDayOfWeek = today.getDate() - today.getDay();
-                                            startDate = new Date(today.setDate(firstDayOfWeek)).toISOString().split('T')[0];
-                                            endDate = new Date(today.setDate(firstDayOfWeek + 6)).toISOString().split('T')[0];
-                                            break;
-                                        case 'month':
-                                            startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
-                                            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
-                                            break;
-                                    }
-
-                                    document.getElementById('customStartDate').value = startDate;
-                                    // document.getElementById('customEndDate').value = endDate;
-                                    document.getElementById('customDateForm').submit();
-                                }
-
-                                function submitCustomDateForm() {
-                                    document.getElementById('customDateForm').submit();
-                                }
-                            </script>
-                        </div>
-                    </div>
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <h6 class="text-info">Request Relocation / Approved</h6>
                 </div>
+                <div class="col-lg-6 col-5 my-auto text-end">
+                  <div class="dropdown float-lg-end pe-4 mx-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                      class="bi bi-calendar2-week" viewBox="0 0 16 16" id="filterDate" data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                      <path
+                        d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
+                      <path
+                        d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
+                    </svg>
+                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="filterDate">
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;"
+                          onclick="filterByDate('today')">Today</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;"
+                          onclick="filterByDate('week')">This Week</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;"
+                          onclick="filterByDate('month')">This Month</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal"
+                          data-bs-target="#customDateModal">Custom Date</a></li>
+                    </ul>
+                    <div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel"
+                      aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="customDateModalLabel">Select Custom Date</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form id="customDateForm" method="POST">
+                              <input type="text" id="customStartDate" name="start_date" class="form-control mb-2"
+                                placeholder="Start Date">
+                              <!-- <input type="text" id="customEndDate" name="end_date" class="form-control" placeholder="End Date"> -->
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary"
+                              onclick="submitCustomDateForm()">Apply</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <script>
+                      document.addEventListener('DOMContentLoaded', function () {
+                        flatpickr('#customStartDate', {
+                          dateFormat: 'Y-m-d'
+                        });
+                        flatpickr('#customEndDate', {
+                          dateFormat: 'Y-m-d'
+                        });
+                      });
+
+                      function filterByDate(period) {
+                        const today = new Date();
+                        let startDate, endDate;
+
+                        switch (period) {
+                          case 'today':
+                            startDate = endDate = today.toISOString().split('T')[0];
+                            break;
+                          case 'week':
+                            const firstDayOfWeek = today.getDate() - today.getDay();
+                            startDate = new Date(today.setDate(firstDayOfWeek)).toISOString().split('T')[0];
+                            endDate = new Date(today.setDate(firstDayOfWeek + 6)).toISOString().split('T')[0];
+                            break;
+                          case 'month':
+                            startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+                            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+                            break;
+                        }
+
+                        document.getElementById('customStartDate').value = startDate;
+                        // document.getElementById('customEndDate').value = endDate;
+                        document.getElementById('customDateForm').submit();
+                      }
+
+                      function submitCustomDateForm() {
+                        document.getElementById('customDateForm').submit();
+                      }
+                    </script>
+                  </div>
+                </div>
+              </div>
             </div>
             <style>
-            .message {
-                max-width: 200px; /* Set the maximum width for the message */
-                overflow: hidden; /* Hide the overflowed content */
-                text-overflow: ellipsis; /* Add the ellipsis for overflowed content */
-                white-space: nowrap; /* Prevent text from wrapping to the next line */
-            }
+              .message {
+                max-width: 200px;
+                /* Set the maximum width for the message */
+                overflow: hidden;
+                /* Hide the overflowed content */
+                text-overflow: ellipsis;
+                /* Add the ellipsis for overflowed content */
+                white-space: nowrap;
+                /* Prevent text from wrapping to the next line */
+              }
             </style>
             <div class="card-body px-5 pb-2">
-    <div class="table-responsive">
-        <!-- Search and Delete Dropdown -->
-        <div class="d-flex justify-content-between mb-3">
-            <button class="btn btn-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                Search User
-            </button>
-            <ul class="dropdown-menu">
-                <li>
-                    <form id="searchForm" class="px-4 py-2">
+              <div class="table-responsive">
+                <!-- Search and Delete Dropdown -->
+                <div class="d-flex justify-content-between mb-3">
+                  <button class="btn btn-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Search User
+                  </button>
+                  <ul class="dropdown-menu">
+                    <li>
+                      <form id="searchForm" class="px-4 py-2">
                         <div class="mb-3">
-                            <label for="searchUsername" class="form-label">Username</label>
-                            <input type="text" class="form-control" id="searchUsername" placeholder="Enter username">
+                          <label for="searchUsername" class="form-label">Username</label>
+                          <input type="text" class="form-control" id="searchUsername" placeholder="Enter username">
                         </div>
                         <button type="submit" class="btn btn-primary">Search</button>
-                    </form>
-                </li>
-            </ul>
-           
-        </div>
+                      </form>
+                    </li>
+                  </ul>
 
-        <table class="table align-items-center mb-0">
-            <thead>
-                <tr>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Vendor ID</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation ID</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Status</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
-                </tr>
-            </thead>
-            <tbody id="dataTableBody">
-            </tbody>
-        </table>
+                </div>
+
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Vendor ID</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation ID</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocated Stalls</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Current Stall</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Reason</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Maintenance</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Approval Date</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Status</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dataTableBody">
+                  </tbody>
+                </table>
 
 
-        <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        fetch('fetch_RelReqApprove.php')
+                <script>
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('fetch_RelReqApprove.php')
         .then(response => {
             if (!response.ok) {
                 throw new Error('Network response was not ok');
@@ -417,7 +436,7 @@ $conn->close();
         })
         .then(data => {
             const tableBody = document.getElementById('dataTableBody');
-            tableBody.innerHTML = ''; // Clear existing content
+            tableBody.innerHTML = '';
 
             if (data.length > 0) {
                 data.forEach(item => {
@@ -426,17 +445,20 @@ $conn->close();
                     row.innerHTML = `
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.fn + ' ' + item.ln)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.vendor_id)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0 data-id'>${escapeHtml(item.relocation_id)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.message)}'>${escapeHtml(item.message.substring(0, 50))}...</td>
-                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.date_sent)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0 data-id'>${escapeHtml(item.request_id)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.relocated_stall)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.current_stall)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.reason)}'>${escapeHtml(item.reason.substring(0, 50))}...</td>
+                        <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.descript)}'>${escapeHtml(item.descript.substring(0, 50))}...</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.approval_date)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0'>
-                            <select class='form-select relocation-status' data-statusid='${escapeHtml(item.relocation_id)}'>
-                                <option value='Processing' ${item.relocation_status === 'Processing' ? 'selected' : ''}>Processing</option>
-                                <option value='Accepted' ${item.relocation_status === 'Accepted' ? 'selected' : ''}>Accepted</option>
-                                <option value='Declined' ${item.relocation_status === 'Declined' ? 'selected' : ''}>Declined</option>
+                            <select class='form-select relocation-status' data-statusid='${escapeHtml(item.request_id)}'>
+                                <option value='Processing' ${item.approval_status === 'Processing' ? 'selected' : ''}>Processing</option>
+                                <option value='Approved' ${item.approval_status === 'Approved' ? 'selected' : ''}>Approved</option>
+                                <option value='Declined' ${item.approval_status === 'Declined' ? 'selected' : ''}>Declined</option>
                             </select>
                         </td>
-                        <td class='text-center text-xs font-weight-bold mb-0'><button data-id='${escapeHtml(item.relocation_id)}' class="btn btn-danger btnDel">Delete</button></td>
+                        <td class='text-center text-xs font-weight-bold mb-0'><button data-id='${escapeHtml(item.request_id)}' class="btn btn-danger btnDel">Delete</button></td>
                     `;
 
                     tableBody.appendChild(row);
@@ -470,91 +492,27 @@ $conn->close();
                         .then(result => {
                             console.log(result);
                             if (result === 'Status updated successfully.') {
-                              window.location.reload();
                                 alert('Status updated.');
+                                window.location.reload();
                             } else {
-                              window.location.reload();
                                 alert('Error updating status.');
+                                window.location.reload();
                             }
                         })
                         .catch(error => console.error('Error:', error));
                     });
                 });
-
             } else {
                 const row = document.createElement('tr');
-                row.innerHTML = "<td colspan='7' class='text-center text-xs font-weight-bold mb-0'>No inquiries found</td>";
+                row.innerHTML = "<td colspan='9' class='text-center text-xs font-weight-bold mb-0'>No inquiries found</td>";
                 tableBody.appendChild(row);
             }
         })
         .catch(error => console.error('Error fetching data:', error));
-    });
-
-    // Escape HTML function
-    function escapeHtml(text) {
-        const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-        };
-        return text.replace(/[&<>"']/g, function (m) { return map[m]; });
-    }
-
-    // Delete row function
-    function deleteRow(id) {
-        fetch('deleteRel.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            },
-            body: new URLSearchParams({ 'relocation_id': id })
-        })
-        .then(response => response.text())
-        .then(result => {
-            alert(result);
-            location.reload(); // Reload page to see changes
-        })
-        .catch(error => console.error('Error deleting record:', error));
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-    // Handle search form submission
-    document.getElementById('searchForm').addEventListener('submit', function(event) {
-        event.preventDefault();
-        const username = document.getElementById('searchUsername').value;
-        if (username) {
-            // Fetch and display results based on username
-            fetch('searchRel.php?username=' + encodeURIComponent(username))
-                .then(response => response.json())
-                .then(data => {
-                    const tbody = document.getElementById('dataTableBody');
-                    tbody.innerHTML = ''; // Clear current table rows
-
-                    data.forEach(row => {
-                        const tr = document.createElement('tr');
-                        tr.innerHTML = `
-                            <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(row.name)}</td>
-                            <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(row.email_add)}</td>
-                            <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(row.subject)}</td>
-                            <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(row.message)}'>${escapeHtml(row.message.substr(0, 50))}...</td>
-                            <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(row.sent_date)}</td>
-                            <td class='text-center text-xs font-weight-bold mb-0'><input type='checkbox' class='delete-checkbox' data-id='${escapeHtml(row.relocation_id)}'></td>
-                        `;
-                        tbody.appendChild(tr);
-                    });
-
-                    // Add event listeners to new elements
-                    addEventListeners();
-                })
-                .catch(error => console.error('Error searching for user:', error));
-        }
-    });
 });
 
-
-        function escapeHtml(text) {
+// Escape HTML function
+function escapeHtml(text) {
     const map = {
         '&': '&amp;',
         '<': '&lt;',
@@ -564,36 +522,55 @@ $conn->close();
     };
     return text.replace(/[&<>"']/g, m => map[m]);
 }
-    </script>
-    </div>
-</div>
 
-<!-- Bootstrap Modal -->
-          <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="messageModalLabel">Message Details</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                          <p id="messageContent"></p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-        <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const messageModal = document.getElementById('messageModal');
-            messageModal.addEventListener('show.bs.modal', (event) => {
-                const button = event.relatedTarget; // Button that triggered the modal
-                const message = button.getAttribute('data-message'); // Extract info from data-* attributes
-                const modalBody = messageModal.querySelector('.modal-body #messageContent');
-                modalBody.textContent = message; // Update the modal's content.
-            });
-        });
-
+// Delete row function
+function deleteRow(id) {
+    fetch('deleteRel.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ 'relocation_id': id })
+    })
+    .then(response => response.text())
+    .then(result => {
+        alert(result);
+        location.reload(); // Reload page to see changes
+    })
+    .catch(error => console.error('Error deleting record:', error));
+}
 </script>
+
+              </div>
+            </div>
+
+            <!-- Bootstrap Modal -->
+            <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="messageModalLabel">Message Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p id="messageContent"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script>
+              document.addEventListener('DOMContentLoaded', () => {
+                const messageModal = document.getElementById('messageModal');
+                messageModal.addEventListener('show.bs.modal', (event) => {
+                  const button = event.relatedTarget; // Button that triggered the modal
+                  const message = button.getAttribute('data-message'); // Extract info from data-* attributes
+                  const modalBody = messageModal.querySelector('.modal-body #messageContent');
+                  modalBody.textContent = message; // Update the modal's content.
+                });
+              });
+
+            </script>
 
   </main>
   <div class="fixed-plugin">
@@ -602,23 +579,25 @@ $conn->close();
     <div class="card shadow-lg">
       <div class="card-header pb-0 pt-3">
         <div class="float-start">
-        <h5 class="card-text">Username: <span class="card-text text-info"><?php echo htmlspecialchars($user['username']); ?></span></h5>
-        <p class="card-text">Role: <span class="card-text text-info"><?php echo htmlspecialchars($user['user_type']); ?></span></p>
-       
+          <h5 class="card-text">Username: <span
+              class="card-text text-info"><?php echo htmlspecialchars($user['username']); ?></span></h5>
+          <p class="card-text">Role: <span
+              class="card-text text-info"><?php echo htmlspecialchars($user['user_type']); ?></span></p>
+
         </div>
         <div class="float-end mt-4">
           <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
             <i class="fas fa-times"></i>
           </button>
         </div>
-        </div>
+      </div>
       <hr class="horizontal dark my-1">
       <div class="card-body pt-sm-3 pt-0">
         <a class="btn bg-gradient-info w-85 text-white mx-4" href="Admin.php">Edit Profile</a>
         <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
         <hr class="horizontal dark my-1">
         <div class="text-small">Fixed Navbar</div>
-        <div class="form-check form-switch ps-0"> 
+        <div class="form-check form-switch ps-0">
           <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
         </div>
       </div>

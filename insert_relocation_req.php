@@ -7,9 +7,13 @@ $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 // Check the connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    // Use JavaScript alert and redirect
+    echo "<script>
+        alert('Connection failed: " . $conn->connect_error . "');
+        window.location.href = 'VMRelocation.php';
+    </script>";
+    exit();
 }
-
 
 // Get data from POST request
 $vendor_id = $_POST['vendor_id'];
@@ -19,16 +23,34 @@ $current_stall = $_POST['currentStall'];
 // Prepare and bind
 $stmt = $conn->prepare("INSERT INTO relocation_req (vendor_id, reason, current_stall) VALUES (?, ?, ?)");
 
-$stmt->bind_param("iss", $vendor_id, $reason, $current_stall);
+if ($stmt) {
+    $stmt->bind_param("iss", $vendor_id, $reason, $current_stall);
 
-// Execute the statement
-if ($stmt->execute()) {
-    echo "New record created successfully";
+    // Execute the statement
+    if ($stmt->execute()) {
+        // Use JavaScript alert and redirect
+        echo "<script>
+            alert('Sent successfully');
+            window.location.href = 'VMRelocation.php';
+        </script>";
+    } else {
+        // Use JavaScript alert and redirect for error
+        echo "<script>
+            alert('Error: " . $stmt->error . "');
+            window.location.href = 'VMRelocation.php';
+        </script>";
+    }
+
+    // Close the statement
+    $stmt->close();
 } else {
-    echo "Error: " . $stmt->error;
+    // Use JavaScript alert and redirect for statement preparation error
+    echo "<script>
+        alert('Error preparing statement: " . $conn->error . "');
+        window.location.href = 'VMRelocation.php';
+    </script>";
 }
 
-// Close connections
-$stmt->close();
+// Close the connection
 $conn->close();
 ?>

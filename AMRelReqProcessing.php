@@ -402,6 +402,7 @@ $conn->close();
                                 row.innerHTML = `
                                     <td class='text-center text-xs font-weight-bold mb-0'>${item.vendor_id}</td>
                                     <td class='text-center text-xs font-weight-bold mb-0'>${item.current_stall}</td>
+                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.relocated_stall}</td>
                                     <td class='text-center text-xs font-weight-bold mb-0'>${item.fn} ${item.ln}</td>
                                     <td class='text-center text-xs font-weight-bold mb-0'>${item.reason.substring(0, 10)}...</td>
                                     <td class='text-center text-xs font-weight-bold mb-0'>${item.approval_status}</td>
@@ -461,19 +462,21 @@ $conn->close();
                     <label for="messageContent" class="form-label text-muted">Message</label>
                     <textarea class="form-control" id="messageContent" rows="4" readonly></textarea>
                 </div>
+<!-- Relocation Status Dropdown -->
+<div class="form-group mb-4">
+    <label for="relocationStatus" class="form-label text-muted">Relocation Status</label>
+    <select class="form-select" id="relocationStatus" onchange="triggerRelocationStatusChange()">
+        <option value="Pending">Pending</option>
+        <option value="Accepted">Accepted</option>
+        <option value="Rejected">Rejected</option>
+    </select>
+</div>
 
-                <!-- Relocation Status Dropdown -->
-                <div class="form-group mb-4">
-                    <label for="relocationStatus" class="form-label text-muted">Relocation Status</label>
-                    <select class="form-select" id="relocationStatus">
-                        <option value="Pending">Pending</option>
-                        <option value="Accepted">Accepted</option>
-                        <option value="Rejected">Rejected</option>
-                    </select>
-                </div>
+
                 
 
                 <?php
+
 // Check if this is an AJAX request to fetch vacant stalls
 if (isset($_GET['building'])) {
     // Database connection
@@ -550,7 +553,7 @@ if (isset($_GET['building'])) {
                                       <div class="col-md-6">
                                           <div class="form-group">
                                               <label for="stallSelect" class="form-label">Relocate to:</label>
-                                              <select class="form-select" id="stallSelect" name="new_stall" required>
+                                              <select class="form-select" id="stallSelect" name="stallSelect" required>
                                                   <option value="">Select Stall</option>
                                               </select>
                                           </div>
@@ -563,7 +566,7 @@ if (isset($_GET['building'])) {
                                       </div>
                                       <div class="form-group mb-4">
                                           <label for="maintenanceDescription" class="form-label text-muted">Maintenance Description</label>
-                                          <textarea class="form-control" id="maintenanceDescription" rows="4" required></textarea>
+                                          <textarea class="form-control" id="maintenanceDescription" name="maintenanceDescription"  rows="4" required></textarea>
                                       </div>
                                   </div>
                                   </div>
@@ -630,10 +633,10 @@ document.addEventListener('DOMContentLoaded', function () {
     </div>
 </div>
 
-<!-- JavaScript to handle click event and populate modal -->
+
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        fetch('fetch_RelReqProcessing.php')
+    fetch('fetch_RelReqProcessing.php')
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('dataTableBody');
@@ -643,37 +646,37 @@ document.addEventListener('DOMContentLoaded', function () {
                 data.forEach(item => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.vendor_id}</td>
-                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.current_stall}</td>
-                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.fn} ${item.ln}</td>
-                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.reason.substring(0, 50)}...</td>
-                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.approval_status}</td>
-                                    <td class='text-center text-xs font-weight-bold mb-0'>${item.request_date}</td>`;
+                        <td class='text-center text-xs font-weight-bold mb-0'>${item.vendor_id}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${item.current_stall}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${item.fn} ${item.ln}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${item.reason.substring(0, 50)}...</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${item.approval_status}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${item.request_date}</td>`;
 
                     // Add click event to open the modal with the corresponding details
                     row.addEventListener('click', function () {
-                    const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
+                        const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
 
-                    // Populate modal with the full details from the clicked row
-                    document.getElementById('modalVendorID').textContent = item.vendor_id; // For display
-                    document.getElementById('modalVendorIDInput').value = item.vendor_id; // Set hidden input value
-                    document.getElementById('modalcurrentStall').textContent = item.current_stall;
-                    document.getElementById('modalName').textContent = item.fn + ' ' + item.ln;
-                    document.getElementById('messageContent').value = item.reason;
-                    document.getElementById('modalRequestDate').textContent = item.request_date;
-                    document.getElementById('relocationStatus').value = item.approval_status;
+                        // Populate modal with the full details from the clicked row
+                        document.getElementById('modalVendorID').textContent = item.vendor_id; // For display
+                        document.getElementById('modalVendorIDInput').value = item.vendor_id; // Set hidden input value
+                        document.getElementById('modalcurrentStall').textContent = item.current_stall;
+                        document.getElementById('modalName').textContent = item.fn + ' ' + item.ln;
+                        document.getElementById('messageContent').value = item.reason;
+                        document.getElementById('modalRequestDate').textContent = item.request_date;
+                        document.getElementById('relocationStatus').value = item.approval_status;
 
-                    // Toggle accordion visibility based on relocation status
-                    const relocationAccordion = document.getElementById('relocationAccordion');
-                    if (item.relocation_status === 'Accepted') {
-                        relocationAccordion.style.display = 'block';
-                    } else {
-                        relocationAccordion.style.display = 'none';
-                    }
+                        // Toggle accordion visibility based on relocation status
+                        const relocationAccordion = document.getElementById('relocationAccordion');
+                        if (item.approval_status === 'Accepted') {
+                            relocationAccordion.style.display = 'block';
+                        } else {
+                            relocationAccordion.style.display = 'none';
+                        }
 
-                    // Show the modal
-                    messageModal.show();
-                });
+                        // Show the modal
+                        messageModal.show();
+                    });
                     tableBody.appendChild(row);
                 });
             } else {
@@ -683,29 +686,81 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         })
         .catch(error => console.error('Error fetching data:', error));
-    });
+});
 
-    // Escape HTML function
-    function escapeHtml(text) {
-        const map = {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#039;'
-        };
-        return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+// Escape HTML function
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
+}
+
+// Relocation Status Change Logic
+document.getElementById('relocationStatus').addEventListener('change', function () {
+    const relocationAccordion = document.getElementById('relocationAccordion');
+    const selectedStatus = this.value;
+
+    if (selectedStatus === 'Accepted') {
+        relocationAccordion.style.display = 'block';
+    } else {
+        relocationAccordion.style.display = 'none';
     }
 
-    // Relocation Status Change Logic
-    document.getElementById('relocationStatus').addEventListener('change', function () {
-        const relocationAccordion = document.getElementById('relocationAccordion');
-        if (this.value === 'Accepted') {
-            relocationAccordion.style.display = 'block';
-        } else {
-            relocationAccordion.style.display = 'none';
-        }
-    });
+    // Call the triggerRelocationStatusChange function if the selected status is "Rejected"
+    if (selectedStatus === 'Rejected') {
+        triggerRelocationStatusChange();
+    }
+});
+
+function triggerRelocationStatusChange() {
+    // Get the selected value from the dropdown
+    const status = document.getElementById('relocationStatus').value;
+
+    // Only proceed if the status is "Rejected"
+    if (status === 'Rejected') {
+        // Create an AJAX request
+        const xhr = new XMLHttpRequest();
+        xhr.open('POST', 'updateRelStatus.php', true);
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        // Send the data
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4) {
+                console.log(`Response status: ${xhr.status}`);
+                console.log(`Response text: ${xhr.responseText}`);
+
+                if (xhr.status === 200) {
+                    // Response received from PHP
+                    const response = xhr.responseText.trim();
+                    if (response === 'success') {
+                      window.location.reload();
+                        alert('Relocation status updated successfully!');
+                    } else {
+                        alert('Error sending status: ' + response);
+                    }
+                } else {
+                    alert('Error: Failed to reach the server.');
+                }
+            }
+        };
+
+        const vendorId = document.getElementById('modalVendorIDInput').value; // Get the actual relocation ID
+
+        // Debugging: Log the data being sent
+        console.log(`Sending ID: ${vendorId}, Status: ${status}`);
+
+        // Sending the relocation ID and the new status
+        xhr.send(`relocationId=${vendorId}&status=${status}`);
+    }
+}
+
+
+
 </script>
 
   </main>

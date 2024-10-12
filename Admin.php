@@ -30,12 +30,96 @@ include('Sessions/Admin.php');
 
   <!-- boosttrap ni bago  -->
   <link href="assets\vendor\bootstrap-icons\bootstrap-icons.css" rel="stylesheet" />
-
+ 
   
-
+<link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" /> <!-- Bootstrap CSS --></body>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
+
+<div class="modal fade" id="reminderModal" tabindex="-1" aria-labelledby="reminderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reminderModalLabel">REMINDERS</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">A new entry has been added. Please check!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Show modal function
+    function showModal(updatedTables) {
+        const modal = new bootstrap.Modal(document.getElementById('reminderModal'));
+        modal.show();
+        startAutoCloseTimer(); // Start the timer when the modal is shown
+
+        // Update the modal message
+        const modalMessage = document.getElementById('modal-message');
+        if (updatedTables.length === 1) {
+            modalMessage.textContent = `A new entry has been added: ${updatedTables[0]}. Please check!`;
+        } else {
+            modalMessage.textContent = `New entries have been added: ${updatedTables.join(', ')}. Please check!`;
+        }
+    }
+
+    let autoCloseTimeout;
+    const autoCloseDuration = 120000; // 2 minutes, can be adjusted as needed
+
+    // Close modal function
+    function closeModal() {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('reminderModal'));
+        if (modal) {
+            modal.hide();
+        }
+        clearTimeout(autoCloseTimeout); // Clear the timeout when the modal is closed
+    }
+
+    // Start the auto-close timer
+    function startAutoCloseTimer() {
+        autoCloseTimeout = setTimeout(closeModal, autoCloseDuration);
+    }
+
+    function checkForNewEntries() {
+        fetch('check_new.php')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response received:', data);
+                if (data.newEntry) {
+                    const updatedTables = Object.keys(data.newEntries).filter(table => data.newEntries[table]);
+                    console.log('Updated tables:', updatedTables);
+                    showModal(updatedTables);
+                } else {
+                    console.log('No new entries found.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    // Check for new entries every 5 seconds
+    setInterval(checkForNewEntries, 5000);
+
+    // Initial check when the page loads
+    checkForNewEntries();
+});
+</script>
+
+
+
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
     id="sidenav-main">
     <div class="sidenav-header">
@@ -212,6 +296,7 @@ include('Sessions/Admin.php');
     </div>
 
   </aside>
+
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
@@ -263,6 +348,92 @@ include('Sessions/Admin.php');
       </div>
     </nav>
     <!-- End Navbar -->
+
+
+    <?php
+// Include database configuration
+include('database_config.php');
+
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Query to get total payments from receipts for the current month
+$totalPaymentsQuery = "SELECT SUM(totalPay) AS totalPayments 
+                       FROM receipts 
+                       WHERE MONTH(issued_date) = MONTH(CURRENT_DATE()) 
+                       AND YEAR(issued_date) = YEAR(CURRENT_DATE())";
+$totalPaymentsResult = $conn->query($totalPaymentsQuery);
+if ($totalPaymentsResult) {
+    $totalPayments = $totalPaymentsResult->fetch_assoc();
+    $data['totalPayments'] = $totalPayments['totalPayments'];
+} else {
+    $data['totalPayments'] = null;
+}
+
+// Query to count inquiries for the current month
+$inquiriesCountQuery = "SELECT COUNT(*) AS totalInquiries 
+                        FROM inquiry 
+                        ";
+
+$inquiriesCountResult = $conn->query($inquiriesCountQuery);
+if ($inquiriesCountResult) {
+    $inquiriesCount = $inquiriesCountResult->fetch_assoc();
+    $data['totalInquiries'] = $inquiriesCount['totalInquiries'];
+} else {
+    $data['totalInquiries'] = null;
+}
+
+
+
+
+// Query to count rent applications for the current month
+$rentAppCountQuery = "SELECT COUNT(*) AS rentAppCount 
+                      FROM rentapp_payment 
+                      WHERE MONTH(payment_date) = MONTH(CURRENT_DATE()) 
+                      AND YEAR(payment_date) = YEAR(CURRENT_DATE())";
+$rentAppCountResult = $conn->query($rentAppCountQuery);
+if ($rentAppCountResult) {
+    $rentAppCount = $rentAppCountResult->fetch_assoc();
+    $data['rentAppCount'] = $rentAppCount['rentAppCount'];
+} else {
+    $data['rentAppCount'] = null;
+}
+
+// Query to count active vendors
+$activeVendorsQuery = "SELECT COUNT(*) AS activeVendorsCount 
+                       FROM vendors 
+                       WHERE Vendor_Status = 'ACTIVE'";
+$activeVendorsResult = $conn->query($activeVendorsQuery);
+if ($activeVendorsResult) {
+    $activeVendorsCount = $activeVendorsResult->fetch_assoc();
+    $data['activeVendorsCount'] = $activeVendorsCount['activeVendorsCount'];
+} else {
+    $data['activeVendorsCount'] = null;
+}
+
+// Query to count active staffs
+$activeUserQuery = "SELECT COUNT(*) AS MEEDO 
+                       FROM users";
+$activeUserResult = $conn->query($activeUserQuery);
+if ($activeUserResult) {
+    $activeUserCount = $activeUserResult->fetch_assoc();
+    $data['MEEDO'] = $activeUserCount['MEEDO'];
+} else {
+    $data['MEEDO'] = null;
+}
+
+// Close the connection
+$conn->close();
+?>
+
+
+
+
     <div class="container-fluid py-4">
       <div class="row">
         <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
@@ -273,7 +444,7 @@ include('Sessions/Admin.php');
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Reports</p>
                     <h5 class="font-weight-bolder mb-0">
-                      P53,000
+                    <?php echo htmlspecialchars($data['rentAppCount'] + $data['totalInquiries'] ) ; ?> 
                       <span class="text-success text-sm font-weight-bolder">+55%</span>
                     </h5>
                   </div>
@@ -293,10 +464,10 @@ include('Sessions/Admin.php');
               <div class="row">
                 <div class="col-8">
                   <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Today's Users</p>
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Users</p>
                     <h5 class="font-weight-bolder mb-0">
-                      2,300
-                      <span class="text-success text-sm font-weight-bolder">+3%</span>
+                    <?php echo htmlspecialchars($data['activeVendorsCount'] + $data['MEEDO'] ) ; ?> 
+                      <span class="text-success text-sm font-weight-bolder">overall</span>
                     </h5>
                   </div>
                 </div>
@@ -318,7 +489,7 @@ include('Sessions/Admin.php');
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">New Clients</p>
                     <h5 class="font-weight-bolder mb-0">
                       +3,462
-                      <span class="text-danger text-sm font-weight-bolder">-2%</span>
+                      <span class="text-success text-sm font-weight-bolder">-2%</span>
                     </h5>
                   </div>
                 </div>
@@ -339,8 +510,8 @@ include('Sessions/Admin.php');
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Sales</p>
                     <h5 class="font-weight-bolder mb-0">
-                      P103,430
-                      <span class="text-success text-sm font-weight-bolder">+5%</span>
+                    P <?php echo htmlspecialchars(number_format($data['totalPayments'], 2, '.', ',')); ?>
+                      <span class="text-success text-sm font-weight-bolder">pesos</span>
                     </h5>
                   </div>
                 </div>
