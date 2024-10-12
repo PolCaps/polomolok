@@ -357,122 +357,149 @@ include('Sessions/Cashier.php');
 
           <script>
             document.addEventListener('DOMContentLoaded', function() {
-                fetch('populate_rentapp_paymentUnpaid.php')
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            const tableBody = document.getElementById('dataTableBodyReceipt');
-                            tableBody.innerHTML = ''; // Clear existing rows
-                            data.data.forEach(item => {
-                                const row = document.createElement('tr');
-                                
-                                row.innerHTML = `
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">
-                                      ${item.first_name} ${item.middle_name ? item.middle_name + ' ' : ''}${item.last_name}
-                                    </h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.payment_status || 'N/A'}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.proof_of_payment}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.OR_no}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.payment_date || 'N/A'}</h6></div></td>
-                                `;
-                                
-                                tableBody.appendChild(row);
-                            });
-                        } else {
-                            console.error('Failed to fetch data:', data.message);
-                        }
-                    })
-                    .catch(error => console.error('Error:', error));
-            });
+    fetch('populate_rentapp_paymentUnpaid.php')
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.getElementById('dataTableBodyReceipt');
+            tableBody.innerHTML = ''; // Clear existing rows
+            
+            if (data.success) {
+                if (data.data.length > 0) {
+                    // Populate table with applicants
+                    data.data.forEach(item => {
+                        const row = document.createElement('tr');
+                        
+                        row.innerHTML = `
+                            <td class="text-center">
+                                <div class="avatar-group mt-1">
+                                    <h6 class="text-xs text-center">${item.applicant_id}</h6>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="avatar-group mt-1">
+                                    <h6 class="text-xs text-center">
+                                        ${item.first_name} ${item.middle_name ? item.middle_name + ' ' : ''}${item.last_name}
+                                    </h6>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="avatar-group mt-1">
+                                    <h6 class="text-xs text-center">${item.payment_status || 'N/A'}</h6>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="avatar-group mt-1">
+                                    <h6 class="text-xs text-center">${item.proof_of_payment || 'N/A'}</h6>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="avatar-group mt-1">
+                                    <h6 class="text-xs text-center">${item.OR_no || 'N/A'}</h6>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="avatar-group mt-1">
+                                    <h6 class="text-xs text-center">${item.payment_date || 'N/A'}</h6>
+                                </div>
+                            </td>
+                        `;
+                        
+                        tableBody.appendChild(row);
+                    });
+                } else {
+                    // No applicants found, add a message row
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td colspan="6" class="text-center">
+                            <h6 class="text-xs text-center">No rent applicants available.</h6>
+                        </td>
+                    `;
+                    tableBody.appendChild(row);
+                }
+            } else {
+                console.error('Failed to fetch data:', data.message);
+            }
+        })
+        .catch(error => console.error('Error:', error));
+});
           </script>
-           <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-           <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+
            <script>
            document.addEventListener('DOMContentLoaded', function () {
-            // Handle table row click to populate the modal
-            document.getElementById('dataTableBodyReceipt').addEventListener('click', function (event) {
-                if (event.target.closest('tr')) {
-                    const row = event.target.closest('tr');
-                    const cells = row.getElementsByTagName('td');
+    // Handle table row click to populate the modal
+    document.getElementById('dataTableBodyReceipt').addEventListener('click', function (event) {
+        if (event.target.closest('tr')) {
+            const row = event.target.closest('tr');
+            const cells = row.getElementsByTagName('td');
 
-                    // Extract data from the row
-                    const applicantId = cells[0].textContent.trim();
-                    const fullName = cells[1].textContent.trim(); // Assuming first name is in cell[1]
-                    const paymentStatus = cells[2].textContent.trim(); // Assuming verify status is in cell[4]
+            // Extract data from the row
+            const applicantId = cells[0].textContent.trim();
+            const fullName = cells[1].textContent.trim(); // Assuming full name is in cell[1]
+            const paymentStatus = cells[2].textContent.trim(); // Assuming payment status is in cell[2]
 
-                    // Populate modal fields
-                    document.getElementById('modalApplicantId').value = applicantId;
-                    document.getElementById('modalFirstName').value = fullName;
-                    document.getElementById('modalPaymentStatus').value = paymentStatus;
+            // Populate modal fields
+            document.getElementById('modalApplicantId').value = applicantId;
+            document.getElementById('modalFirstName').value = fullName;
+            document.getElementById('modalPaymentStatus').value = paymentStatus;
 
-                    // Show the modal
-                    new bootstrap.Modal(document.getElementById('paymentDetailsModal')).show();
-                  }
-                });
+            // Show the modal
+            new bootstrap.Modal(document.getElementById('paymentDetailsModal')).show();
+        }
+    });
 
-            // Handle form submission and file upload
-            document.getElementById('saveChangesBtn').addEventListener('click', function () {
-                const applicantId = document.getElementById('modalApplicantId').value.trim();
-                const paymentStatus = document.getElementById('modalPaymentStatus').value;
-                const proofOfPayment = document.getElementById('modalProofOfPayment').files[0]; // File input
-                const ORNumber = document.getElementById('modalORNumber').value.trim();
-                const paymentDate = document.getElementById('modalPaymentDate').value;
+    // Handle form submission and file upload
+    document.getElementById('saveChangesBtn').addEventListener('click', function () {
+        const applicantId = document.getElementById('modalApplicantId').value.trim();
+        const applicantName = document.getElementById('modalFirstName').value.trim();
+        const paymentStatus = document.getElementById('modalPaymentStatus').value;
+        const proofOfPayment = document.getElementById('modalProofOfPayment').files[0]; // File input
+        const ORNumber = document.getElementById('modalORNumber').value.trim();
+        const paymentDate = document.getElementById('modalPaymentDate').value;
 
-                // Validate required fields
-                if (!applicantId || !paymentStatus) {
-                    showAlert('alert-danger', 'Applicant ID and Payment Status are required.');
-                    return;
-                  }
+        // Validate required fields
+        if (!applicantId || !paymentStatus) {
+            alert('Applicant ID and Payment Status are required.');
+            return;
+        }
 
-                // Create FormData object to send file and form data
-                const formData = new FormData();
-                formData.append('applicant_id', applicantId);
-                formData.append('payment_status', paymentStatus);
-                if (proofOfPayment) {
-                    formData.append('proof_of_payment', proofOfPayment);
-                }
-                formData.append('OR_no', ORNumber);
-                formData.append('payment_date', paymentDate);
+        // Create FormData object to send file and form data
+        const formData = new FormData();
+        formData.append('applicant_id', applicantId);
+        formData.append('applicant_name', applicantName);
+        formData.append('payment_status', paymentStatus);
+        if (proofOfPayment) {
+            formData.append('proof_of_payment', proofOfPayment);
+        }
+        formData.append('OR_no', ORNumber);
+        formData.append('payment_date', paymentDate);
 
-                // Send the AJAX request
-                fetch('verify_payment.php', {
-                    method: 'POST',
-                    body: formData // FormData handles multipart/form-data automatically
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showAlert('alert-success', 'Payment details updated successfully.');
-                        setTimeout(() => {
-                            window.location.reload(); // Refresh the page after successful submission
-                        }, 1000);
-                    } else {
-                        showAlert('alert-danger', 'Failed to update payment details: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    showAlert('alert-danger', 'An error occurred. Please try again.');
-                    console.error('Error:', error);
-                });
-
-            // Show alerts
-            function showAlert(type, message) {
-                const alertDiv = document.getElementById('modalAlert');
-                alertDiv.className = `alert ${type}`;
-                alertDiv.textContent = message;
-                alertDiv.classList.remove('d-none');
-                setTimeout(() => {
-                    alertDiv.classList.add('d-none');
-                }, 3000);
+        // Send the AJAX request
+        fetch('verify_payment.php', {
+            method: 'POST',
+            body: formData // FormData handles multipart/form-data automatically
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Payment details updated successfully.');
+                location.reload(); // Reload the page after successful submission
+            } else {
+                alert('Failed to update payment details: ' + data.message);
             }
-          });
+        })
+        .catch(error => {
+            alert('An error occurred. Please try again.');
+            console.error('Error:', error);
         });
-
+    });
+});
            </script>
 
         </div>
       </div>
+</div>
+</div>
+</div>
 
 
   </main>

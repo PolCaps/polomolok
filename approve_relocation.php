@@ -15,8 +15,8 @@ if ($mysqli->connect_error) {
 // Check if the form is submitted
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Check if the vendor_id is set in the POST request
-    if (isset($_POST['vendor_id'])) {
-        $vendorID = $_POST['vendor_id']; // Retrieve the vendor ID from the hidden input
+    if (isset($_POST['request_id'])) {
+        $request_id = $_POST['request_id']; 
 
         // Retrieve inputs safely
         $relocatedStall = $_POST['stallSelect'] ?? null;
@@ -28,8 +28,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // Check if all necessary fields are available before executing the query
         if ($relocatedStall && $relocationDate && $maintenanceDescription) {
             // Prepare the SQL statement to update the relocation_req table
-            $stmt = $mysqli->prepare("UPDATE relocation_req SET relocated_stall = ?, relocation_date = ?, maintenance_description = ?, approval_status = ?, approval_date = ? WHERE vendor_id = ?");
-            $stmt->bind_param("sssssi", $relocatedStall, $relocationDate, $maintenanceDescription, $approvalStatus, $approvedDate, $vendorID);
+            $stmt = $mysqli->prepare("UPDATE relocation_req SET relocated_stall = ?, relocation_date = ?, maintenance_description = ?, approval_status = ?, approval_date = ? WHERE request_id = ?");
+            $stmt->bind_param("sssssi", $relocatedStall, $relocationDate, $maintenanceDescription, $approvalStatus, $approvedDate, $request_id);
 
             // Execute the statement
             if ($stmt->execute()) {

@@ -20,23 +20,41 @@ $unreadCount = $result->num_rows;
 // Close the database connection
 $conn->close();
 ?>
+<style>
+    .position-relative {
+    position: relative; /* Set the position of the parent element */
+}
 
-              
-<li class="nav-item dropdown pe-2 d-flex align-items-center mx-2">
+#notification-count {
+    position: absolute; /* Position the badge */
+    top: 0;             /* Adjust this value if needed */
+    right: 0;          /* Keep the badge in the top-right corner */
+    transform: translate(50%, -50%); /* Center the badge relative to the corner */
+}
+
+@media (max-width: 576px) {
+    #notification-count {
+        /* Adjust badge position for smaller screens if necessary */
+        top: 0; 
+        right: 0; 
+    }
+}
+</style>
+
+<li class="nav-item dropdown pe-2 d-flex align-items-center mx-2 position-relative">
     <a href="javascript:;" class="nav-link text-body p-0" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
         <i class="fa fa-bell cursor-pointer me-sm-1"></i>
-        
-        <span class="d-sm-inline d-none">Notification</span>
-        <span class="position-absolute top-10 start-100 translate-middle badge rounded-pill bg-danger" id="notification-count">
+        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notification-count">
             <?php echo $unreadCount > 0 ? $unreadCount : '0'; ?>
             <span class="visually-hidden">unread messages</span>
         </span>
+        <span class="d-sm-inline d-none">Notification</span>
     </a>
     <ul class="dropdown-menu dropdown-menu-end px-2 py-3 me-sm-n4" aria-labelledby="dropdownMenuButton" style="max-height: 280px; overflow-y: auto;">
         <?php if ($result->num_rows > 0): ?>
             <?php while($row = $result->fetch_assoc()): ?>
                 <li class="mb-2">
-                    <a class="dropdown-item border-radius-md" data-notif-id="<?= $row['notif_id'] ?>"> <!-- Add notif_id here -->
+                    <a class="dropdown-item border-radius-md" data-notif-id="<?= $row['notif_id'] ?>">
                         <div class="d-flex py-1">
                             <div class="d-flex flex-column justify-content-center">
                                 <h6 class="text-sm font-weight-normal mb-1">
@@ -61,7 +79,10 @@ $conn->close();
     document.querySelectorAll('.dropdown-item').forEach(item => {
         item.addEventListener('click', function() {
             const notifId = this.getAttribute('data-notif-id'); // Get the notif_id
+            const notificationType = this.querySelector('h6 span').innerText.trim(); // Trim whitespace
+            console.log('Notification Type:', notificationType); // Debug log
 
+            // Mark the notification as read
             fetch('Notification/mark_readNotif.php', {
                 method: 'POST',
                 headers: {
@@ -74,10 +95,26 @@ $conn->close();
             })
             .then(response => {
                 if (response.ok) {
-                    // Reload the page after a short delay
-                    setTimeout(() => {
-                        location.reload(); // Reload the current page
-                    }, 50); // Delay of 50 milliseconds (0.05 seconds)
+                    // Redirect based on notification type
+                    switch (notificationType) {
+                        case 'Relocation Request':
+                            window.location.href = 'AMRelReqProcessing.php';
+                            break;
+                        case 'Rent Application':
+                            window.location.href = 'AMStallApp.php';
+                            break;
+                        case 'Ready For Drawlots':
+                            window.location.href = 'AMReadydraw.php';
+                            break;
+                        case 'New Inquiry':
+                            window.location.href = 'AMinquiries.php';
+                            break;
+                        // You can add more cases as needed
+                        default:
+                            console.log('No action defined for this notification type:', notificationType); // More details
+                    }
+                } else {
+                    console.error('Failed to mark notification as read:', response.statusText);
                 }
             })
             .catch(error => {

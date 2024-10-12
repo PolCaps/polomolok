@@ -252,7 +252,7 @@ if (isset($_GET['building'])) {
           <div class="collapse" id="collapseRelRequest">
             <div class="right-aligned-links" style="text-align: right;">
               <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
-              <a class="nav-link" href="AMRelReqProcessing.php">Processing</a>
+              <a class="nav-link" href="AMRelReqProcessing.php">Pending</a>
               <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
             </div>
           </div>
@@ -317,6 +317,10 @@ if (isset($_GET['building'])) {
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
+            <?php 
+            include('Notification/AdminNotif.php');
+            ?>
+         
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -889,41 +893,6 @@ document.getElementById('monthly_rentals').addEventListener('click', function ()
     this.blur();
   }
 });
-
-// $(document).ready(function () {
-//   $('#submit').on('click', function (e) {
-//     e.preventDefault(); // Prevent default form submission
-
-//     var buildingType = $('#building_type').val();
-//     var stallNo = $('#stall_no').val();
-//     var monthlyRentals = $('#monthly_rentals').val();
-//     var startedDate = $('#started_date').val();
-//     var endDate = $('#end_date').val();
-
-//     $.ajax({
-//       url: 'process_formVendor.php', // The server-side script URL
-//       type: 'POST',
-//       data: {
-//         building_type: buildingType,
-//         stall_no: stallNo,
-//         monthly_rentals: monthlyRentals,
-//         started_date: startedDate,
-//         end_date: endDate
-//       },
-//       success: function (response) {
-//         var result = JSON.parse(response);
-//         if (result.status === 'success') {
-//           alert(result.message);
-//         } else {
-//           alert(result.message);
-//         }
-//       },
-//       error: function () {
-//         alert('An error occurred while processing the request.');
-//       }
-//     });
-//   });
-// });
 
 </script>
       </div>

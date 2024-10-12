@@ -53,10 +53,9 @@ $conn->close();
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
-  <!-- Nepcha Analytics (nepcha.com) -->
-  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
 
 </head>
 
@@ -199,7 +198,7 @@ $conn->close();
           <div class="collapse" id="collapseRelRequest">
             <div class="right-aligned-links" style="text-align: right;">
               <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
-              <a class="nav-link" href="AMRelReqProcessing.php">Processing</a>
+              <a class="nav-link" href="AMRelReqProcessing.php">Pending</a>
               <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
             </div>
           </div>
@@ -263,6 +262,10 @@ $conn->close();
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
+            <?php 
+            include('Notification/AdminNotif.php');
+            ?>
+         
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -359,16 +362,6 @@ $conn->close();
               
 
                 <div class="col-lg-6 col-5 my-auto text-end d-flex">
-              <!-- Status Filter Dropdown -->
-                <div class="dropdown float-lg pe-1 mx-1 my-1">
-                  <select id="statusFilter" class="form-select" onchange="filterByStatus()">
-                    <option value="ALL">All</option>
-                    <option value="ACCEPTED">Accepted</option>
-                    <option value="PROCESSING">Processing</option>
-                    <option value="DECLINED">Declined</option>
-                  </select>
-                </div>
-
                   <div class="input-group mx-3">
                   <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
                       <input type="text" class="form-control px-1" id="searchInput" placeholder="Search for...">
@@ -560,9 +553,9 @@ $conn->close();
       <thead>
         <tr>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Approval Status</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Applicant ID</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Goods/Commodities</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Applicant Name</th>
-          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Date of Submitted</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Submitted Date</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Rent Application File</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Contact No.</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Email Address</th>
@@ -595,7 +588,7 @@ $conn->close();
             processCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.Approval}</span></h6></div>`;
 
             const applicantidCell = document.createElement('td');
-            applicantidCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div>`;
+            applicantidCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.commodities}</h6></div>`;
 
             const nameCell = document.createElement('td');
             nameCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.first_name} ${item.middle_name} ${item.last_name}</h6></div>`;
