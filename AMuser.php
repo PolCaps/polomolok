@@ -729,6 +729,15 @@ $conn->close(); // Close the database connection
                                     <label for="monthly_rentals">Monthly Rentals:</label>
                                     <input type="text" id="monthly_rentals" name="monthly_rentals" class="form-control">
                                   </div>
+                                    <!-- Checkbox to trigger building details accordion -->
+                                    <div class="form-group mb-3">
+                                      <input type="checkbox" id="buildingDetailsCheckbox" name="buildingDetailsCheckbox">
+                                      <label for="buildingDetailsCheckbox">Add Building Details:</label>
+                                  </div>
+
+                                  <!-- Building details accordion container -->
+                                  <div id="buildingDetailsContainer"></div>
+
                                   <div class="form-group mb-3">
                                     <label for="started_date">Started Date:</label>
                                     <input type="date" id="started_date" name="started_date" class="form-control">
@@ -751,6 +760,9 @@ $conn->close(); // Close the database connection
                               </div>
                             </div>
                           </div>
+                          <script>
+    
+</script>
                         </div>
                       </div>
                     </div>
@@ -890,40 +902,71 @@ document.getElementById('monthly_rentals').addEventListener('click', function ()
   }
 });
 
-// $(document).ready(function () {
-//   $('#submit').on('click', function (e) {
-//     e.preventDefault(); // Prevent default form submission
+const checkbox = document.getElementById('buildingDetailsCheckbox');
+    const container = document.getElementById('buildingDetailsContainer');
 
-//     var buildingType = $('#building_type').val();
-//     var stallNo = $('#stall_no').val();
-//     var monthlyRentals = $('#monthly_rentals').val();
-//     var startedDate = $('#started_date').val();
-//     var endDate = $('#end_date').val();
-
-//     $.ajax({
-//       url: 'process_formVendor.php', // The server-side script URL
-//       type: 'POST',
-//       data: {
-//         building_type: buildingType,
-//         stall_no: stallNo,
-//         monthly_rentals: monthlyRentals,
-//         started_date: startedDate,
-//         end_date: endDate
-//       },
-//       success: function (response) {
-//         var result = JSON.parse(response);
-//         if (result.status === 'success') {
-//           alert(result.message);
-//         } else {
-//           alert(result.message);
-//         }
-//       },
-//       error: function () {
-//         alert('An error occurred while processing the request.');
-//       }
-//     });
-//   });
-// });
+    checkbox.addEventListener('change', function() {
+        if (checkbox.checked) {
+            container.innerHTML = '';
+            for (let i = 1; i <= 5; i++) {
+                container.innerHTML += `
+                    <div class="accordion-item mb-3">
+                        <h2 class="accordion-header" id="headingBuilding${i}">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBuilding${i}" aria-expanded="false" aria-controls="collapseBuilding${i}">
+                                Building Details ${i}
+                            </button>
+                        </h2>
+                        <div id="collapseBuilding${i}" class="accordion-collapse collapse" aria-labelledby="headingBuilding${i}" data-bs-parent="#accordionExample">
+                            <div class="accordion-body">
+                                <div class="form-group mb-3">
+                                    <label for="building_type${i}">Buildings:</label>
+                                    <select id="building_type${i}" name="building_type${i}" class="form-control">
+                                        <option value="">Select Buildings</option>
+                                        <option value="building_a">Building A</option>
+                                        <option value="building_b">Building B</option>
+                                        <option value="building_c">Building C</option>
+                                        <option value="building_d">Building D</option>
+                                        <option value="building_e">Building E</option>
+                                        <option value="building_f">Building F</option>
+                                        <option value="building_g">Building G</option>
+                                        <option value="building_h">Building H</option>
+                                        <option value="building_i">Building I</option>
+                                        <option value="building_j">Building J</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select a building type.</div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="building_floor${i}">Building Floor:</label>
+                                    <select id="building_floor${i}" name="building_floor${i}" class="form-control">
+                                        <option value="">Select Building Floor</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select a building floor.</div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="stall_no${i}">Stall Number:</label>
+                                    <select id="stall_no${i}" name="stall_no${i}" class="form-control">
+                                        <option value="">Select Stall</option>
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select a stall number.</div>
+                                </div>
+                                <div class="form-group mb-3">
+                                    <label for="monthly_rentals${i}">Monthly Rentals:</label>
+                                    <input type="text" id="monthly_rentals${i}" name="monthly_rentals${i}" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>`;
+            }
+        } else {
+            container.innerHTML = ''; // Clear the container if unchecked
+        }
+    });
 
 </script>
       </div>

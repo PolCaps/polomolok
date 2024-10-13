@@ -249,6 +249,17 @@ include('Sessions/Cashier.php');
 
             <?php
 
+include 'database_config.php'; // Include the database connection
+
+// Create a new MySQLi connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+
 // Fetch vendor details for display
 $sqlvendor = "
   SELECT 
