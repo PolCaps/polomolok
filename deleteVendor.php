@@ -1,69 +1,92 @@
-<?php
+<?php 
+ini_set('display_errors', 1);
+error_reporting(E_ALL);
+
 include 'database_config.php'; 
 
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+    echo "Connection failed: " . addslashes($conn->connect_error);
+    exit();
 }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Log the received POST data
+    error_log(print_r($_POST, true));
 
-    $username = $_POST['delete_username'];
+    $vendor_id = $_POST['vendor_id'];
 
-    if (!empty($username)) {
+    if (!empty($vendor_id)) {
+        // Start a transaction
+        $conn->begin_transaction();
 
-        // Get vendor_id for the username
-        $sqlA = "SELECT vendor_id FROM vendors WHERE username = ?";
-        $stmtA = $conn->prepare($sqlA);
-        $stmtA->bind_param("s", $username);
-        $stmtA->execute();
-        $resultA = $stmtA->get_result();
-        
-        if ($resultA->num_rows > 0) {
-            $vendor = $resultA->fetch_assoc();
-            $id = $vendor['vendor_id'];
+        try {
+            $tables = ['building_a', 'building_b', 'building_c', 'building_d', 'building_e', 
+                       'building_f', 'building_g', 'building_h', 'building_i', 'building_j'];
 
-            // Update building_a table
-            $sqlB = "UPDATE building_a SET stall_status = 'Vacant' WHERE vendor_id = ?";
-            $stmtB = $conn->prepare($sqlB);
-            $stmtB->bind_param("i", $id);
-            $stmtB->execute();
+            $updated = false; // Track if any updates were made
 
-            if ($stmtB->affected_rows > 0) {
-                // Delete vendor_id from building_a table
-                $sqlD = "DELETE FROM building_a WHERE vendor_id = ?";
-                $stmtD = $conn->prepare($sqlD);
-                $stmtD->bind_param("i", $id);
-                $stmtD->execute();
+            // Step 1: Update stall status and vendor_id to NULL
+            foreach ($tables as $table) {
+                // Check if vendor_id exists in the current building table
+                $sqlCheckVendor = "SELECT COUNT(*) FROM $table WHERE vendor_id = ?";
+                $stmtCheck = $conn->prepare($sqlCheckVendor);
+                $stmtCheck->bind_param("i", $vendor_id);
+                $stmtCheck->execute();
+                $stmtCheck->bind_result($count);
+                $stmtCheck->fetch();
+                $stmtCheck->close();
 
-                if ($stmtD->affected_rows > 0) {
-                    // Delete from vendors table
-                    $sqlC = "DELETE FROM vendors WHERE vendor_id = ?";
-                    $stmtC = $conn->prepare($sqlC);
-                    $stmtC->bind_param("i", $id);
-                    $stmtC->execute();
+                // If vendor_id exists, update the stall_status
+                if ($count > 0) {
+                    // Update the stall_status to Vacant and set vendor_id to NULL
+                    $sqlUpdate = "UPDATE $table SET stall_status = 'Vacant', vendor_id = NULL WHERE vendor_id = ?";
+                    $stmtUpdate = $conn->prepare($sqlUpdate);
+                    $stmtUpdate->bind_param("i", $vendor_id);
+                    $stmtUpdate->execute();
 
-                    if ($stmtC->affected_rows > 0) {
-                        echo "Vendor deleted successfully.";
-                    } else {
-                        echo "Error: Vendor not deleted.";
+                    if ($stmtUpdate->affected_rows > 0) {
+                        $updated = true; // Mark that at least one update occurred
                     }
-                    $stmtC->close();
-                } else {
-                    echo "Error: Vendor_id not deleted from building_a.";
+                    $stmtUpdate->close();
                 }
-                $stmtD->close();
-            } else {
-                echo "Error: Vendor's stall status not updated. No rows affected.";
             }
 
-            $stmtB->close();
-        } else {
-            echo "Error: Vendor not found.";
-        }
+            // Step 2: Delete the vendor
+            $sqlDeleteVendor = "DELETE FROM vendors WHERE vendor_id = ?";
+            $stmtDeleteVendor = $conn->prepare($sqlDeleteVendor);
+            
+            // Check if preparation was successful
+            if ($stmtDeleteVendor === false) {
+                echo "SQL prepare error: " . addslashes($conn->error);
+                exit();
+            }
 
-        $stmtA->close();
+            $stmtDeleteVendor->bind_param("i", $vendor_id);
+            $stmtDeleteVendor->execute();
+
+            if ($stmtDeleteVendor->affected_rows > 0) {
+                echo "Vendor deleted successfully!";
+            } else {
+                echo "Error deleting vendor from vendors table.";
+            }
+            $stmtDeleteVendor->close();
+
+            // Step 3: Optionally, update any additional records if needed
+            // (In this case, the vendor_id has already been set to NULL in the previous step)
+            if ($updated) {
+                $conn->commit();
+                echo "Delete successful!";
+            } else {
+                echo "No updates made; vendor ID not found in any building tables.";
+            }
+
+        } catch (Exception $e) {
+            // Roll back the transaction if any update fails
+            $conn->rollback();
+            echo "Failed to update tables: " . $e->getMessage();
+        }
     } else {
         echo "No vendor selected.";
     }

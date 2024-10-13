@@ -9,10 +9,11 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$vendor_id = $vendor['vendor_id']; // Assume $vendor_id is set earlier in your script
+// Assume $vendor_id is set earlier in your script
+$vendor_id = $vendor['vendor_id'];
 
 // Fetch data
-$sql = "SELECT message, relocation_status FROM relocation_req WHERE vendor_id = ?";
+$sql = "SELECT current_stall, relocated_stall, reason, approval_status FROM relocation_req WHERE vendor_id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $vendor_id);
 $stmt->execute();
@@ -21,12 +22,12 @@ $result = $stmt->get_result();
 // Display data
 while ($row = $result->fetch_assoc()) {
     echo "<tr>";
-    echo "<td class='text-center'>";
-    $message = htmlspecialchars($row['message']);
-    $trimmedMessage = strlen($message) > 50 ? substr($message, 0, 50) . '...' : $message;
-    echo "<span data-bs-toggle='modal' data-bs-target='#messageModalEnlarge' data-message='" . $message . "' class='message-preview'>" . $trimmedMessage . "</span>";
-    echo "</td>";
-    echo "<td class='text-center'>" . htmlspecialchars($row['relocation_status']) . "</td>";
+    echo "<td class='text-center'>" . htmlspecialchars($vendor_id) . "</td>"; // Vendor ID
+    echo "<td class='text-center'>" . htmlspecialchars($row['current_stall']) . "</td>"; // Current Stall
+    echo "<td class='text-center'>" . htmlspecialchars($row['relocated_stall']) . "</td>"; // Relocated Stall
+    echo "<td class='text-center'>" . htmlspecialchars($row['reason']) . "</td>"; // Reason
+    echo "<td class='text-center'>" . htmlspecialchars($row['approval_status']) . "</td>"; // Approval Status
+    echo "<td class='text-center'>" . htmlspecialchars($row['request_date']) . "</td>"; // Relocation Request Date
     echo "</tr>";
 }
 

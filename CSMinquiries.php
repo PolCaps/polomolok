@@ -1,44 +1,7 @@
 <?php
-session_name('customerservice_session');
-session_start();
-
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'CUSTOMER_SERVICE') {
-    header("Location: index.php");
-    exit();
-}
-
-$user_id = $_SESSION['id'];
-
-// Include database configuration
-include('database_config.php');
-
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Fetch vendor information
-$sql = "SELECT * FROM users WHERE id = ?";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
-}
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-// Check if vendor data is retrieved
-if (!$user) {
-    die("No User found with ID " . htmlspecialchars($user_id));
-}
-
-// Close the connection
-$conn->close();
+include('Sessions/CustomerService.php');
 ?>
+
 
 
 <!DOCTYPE html>
@@ -50,7 +13,7 @@ $conn->close();
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Inquiries
+    Customer Service
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -101,7 +64,7 @@ $conn->close();
         <br>
         <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Archives</h6>
         <li class="nav-item">
-          <a class="nav-link" href="CSMarchivedinquiries.php">
+          <a class="nav-link " href="CSMarchivedinquiries.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-dots-fill" viewBox="0 0 16 16">
               <path d="M16 8c0 3.866-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.584.296-1.925.864-4.181 1.234-.2.032-.352-.176-.273-.362.354-.836.674-1.95.77-2.966C.744 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7M5 8a1 1 0 1 0-2 0 1 1 0 0 0 2 0m4 0a1 1 0 1 0-2 0 1 1 0 0 0 2 0m3 1a1 1 0 1 0 0-2 1 1 0 0 0 0 2"/>
@@ -130,7 +93,7 @@ $conn->close();
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Staff</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Customer Service</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
           </ol>
           <h6 class="font-weight-bolder mb-0">Inquiries</h6>
@@ -146,7 +109,7 @@ $conn->close();
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Staff</span>
+                <span class="d-sm-inline d-none">Customer Service</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -376,53 +339,55 @@ $result = $conn->query($sql);
             });
 
             if (selectedIds.length > 0) {
-                // Redirect to archive inquiries page with IDs as query string
-                window.location.href = `CSMarchivedinquiries.php.php?ids=${JSON.stringify(selectedIds)}`;
+                // Convert the selected IDs to a comma-separated string
+                const idString = selectedIds.join(',');
+                // Redirect to archive inquiries page with IDs as a query string
+                window.location.href = `CSMarchivedinquiries.php?ids=${idString}`;
             } else {
                 alert("Please select at least one inquiry to archive.");
             }
-            });
+        });
 
-            document.getElementById("deleteBtn").addEventListener("click", function () {
+        document.getElementById("deleteBtn").addEventListener("click", function () {
           const selectedIds = [];
           document.querySelectorAll('input.inquiry-checkbox:checked').forEach(checkbox => {
               selectedIds.push(checkbox.value);
           });
 
-            if (selectedIds.length > 0) {
-                if (confirm("Are you sure you want to delete the selected inquiries? This action cannot be undone.")) {
-                    // Send delete request using fetch
-                    fetch('delete_inquiries.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify({ ids: selectedIds })
-                    })
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        if (data.success) {
-                            alert("Inquiries deleted successfully!");
-                            // Optionally reload the table to reflect changes
-                            location.reload();
-                        } else {
-                            alert("Error deleting inquiries. Please try again.");
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        alert("An error occurred while deleting inquiries.");
-                    });
-                }
-            } else {
-                alert("Please select at least one inquiry to delete.");
-            }
-        });
+          if (selectedIds.length > 0) {
+              if (confirm("Are you sure you want to delete the selected inquiries? This action cannot be undone.")) {
+                  // Send delete request using fetch
+                  fetch('delete_inquiries.php', {
+                      method: 'POST',
+                      headers: {
+                          'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ ids: selectedIds })
+                  })
+                  .then(response => {
+                      if (!response.ok) {
+                          throw new Error('Network response was not ok');
+                      }
+                      return response.json();
+                  })
+                  .then(data => {
+                      if (data.success) {
+                          alert("Inquiries deleted successfully!");
+                          // Reload the table to reflect changes
+                          location.reload();
+                      } else {
+                          alert("Error deleting inquiries: " + data.message);
+                      }
+                  })
+                  .catch(error => {
+                      console.error('Error:', error);
+                      alert("An error occurred while deleting inquiries.");
+                  });
+              }
+          } else {
+            alert("Please select at least one inquiry to delete.");
+          }
+      });
     </script>
 </div>
         </div>

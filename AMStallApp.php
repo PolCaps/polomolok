@@ -1,13 +1,5 @@
 <?php
-session_name('admin_session');
-session_start();
-
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'ADMIN') {
-    header("Location: index.php");
-    exit();
-}
-// Get the vendor ID from the session
-$user_id = $_SESSION['id'];
+include('Sessions/Admin.php');
 
 // Include database configuration
 include('database_config.php');
@@ -61,10 +53,9 @@ $conn->close();
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
-  <!-- Nepcha Analytics (nepcha.com) -->
-  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+
 
 </head>
 
@@ -144,8 +135,8 @@ $conn->close();
           </a>
           <div class="collapse" id="collapseAccounts">
             <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="AMUser.php">Users</a>
-              <a class="nav-link" href="AMVendor.php">Vendors</a>
+            <a class="nav-link" href="AMuser.php">Users</a>
+            <a class="nav-link" href="AMvendor.php">Vendors</a>
             </div>
           </div>
         </li>
@@ -207,7 +198,7 @@ $conn->close();
           <div class="collapse" id="collapseRelRequest">
             <div class="right-aligned-links" style="text-align: right;">
               <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
-              <a class="nav-link" href="AMRelReqProcessing.php">Processing</a>
+              <a class="nav-link" href="AMRelReqProcessing.php">Pending</a>
               <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
             </div>
           </div>
@@ -271,6 +262,10 @@ $conn->close();
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
+            <?php 
+            include('Notification/AdminNotif.php');
+            ?>
+         
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -367,19 +362,21 @@ $conn->close();
               
 
                 <div class="col-lg-6 col-5 my-auto text-end d-flex">
-              <!-- Status Filter Dropdown -->
-                <div class="dropdown float-lg pe-1 mx-1 my-1">
-                  <select id="statusFilter" class="form-select" onchange="filterByStatus()">
-                    <option value="ALL">All</option>
-                    <option value="ACCEPTED">Accepted</option>
-                    <option value="PROCESSING">Processing</option>
-                    <option value="DECLINED">Declined</option>
-                  </select>
-                </div>
-
                   <div class="input-group mx-3">
-                    <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                    <input type="text" id="searchInput" class="form-control" placeholder="Search for...">
+                  <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
+                      <input type="text" class="form-control px-1" id="searchInput" placeholder="Search for...">
+
+                      <script>
+                        document.getElementById('searchInput').addEventListener('keyup', function() {
+                            var filter = this.value.toLowerCase();
+                            var rows = document.querySelectorAll('#table-body tr');
+
+                            rows.forEach(function(row) {
+                                var text = row.textContent.toLowerCase();
+                                row.style.display = text.includes(filter) ? '' : 'none';
+                            });
+                        });
+                        </script>
                   </div>
                   
 
@@ -551,142 +548,112 @@ $conn->close();
 
 
             <div class="card-body px-0 pb-2">
-              <div class="table-responsive">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <!-- pwede ra eh delete -->
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                        APPROVAL STATUS</th>
+  <div class="table-responsive">
+    <table class="table align-items-center mb-0">
+      <thead>
+        <tr>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Approval Status</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Goods/Commodities</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Applicant Name</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Submitted Date</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Rent Application File</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Contact No.</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Email Address</th>
+          <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Address</th>
+        </tr>
+      </thead>
+      <tbody id="table-body">
+      </tbody>
+    </table>
+  </div>
+</div>
 
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                        Applicant ID</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                        Applicant Name</th>
-                      <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Status</th> -->
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Date
-                        of Submitted</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Rent
-                        Application File</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Stall
-                        No</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                        Building Type</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                        Contact No.</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Email
-                        Address</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
-                        Address</th>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Fetch and populate table data
+    fetch('populate_rent_app.php')
+      .then(response => response.json())
+      .then(data => {
+        const tableBody = document.getElementById('table-body');
+        tableBody.innerHTML = ''; // Clear existing content
 
-                    </tr>
-                  </thead>
-                  <tbody id="table-body">
+        if (Array.isArray(data) && data.length > 0) {
+          data.forEach(item => {
+            const row = document.createElement('tr');
+            row.setAttribute('data-id', item.applicant_id); // Add data-id for reference
+            row.setAttribute('class', 'clickable-row'); // Add a class for styling
 
-                  </tbody>
-                </table>
-              </div>
-            </div>
-            <script>
-              document.addEventListener('DOMContentLoaded', function () {
-                // Fetch and populate table data
-                fetch('populate_rent_app.php')
-                  .then(response => response.json())
-                  .then(data => {
-                    const tableBody = document.getElementById('table-body');
-                    tableBody.innerHTML = ''; // Clear existing content
+            // Create table cells
+            const processCell = document.createElement('td');
+            processCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.Approval}</span></h6></div>`;
 
-                    if (Array.isArray(data) && data.length > 0) {
-                      data.forEach(item => {
-                        const row = document.createElement('tr');
-                        row.setAttribute('data-id', item.applicant_id); // Add data-id for reference
-                        row.setAttribute('class', 'clickable-row'); // Add a class for styling
+            const applicantidCell = document.createElement('td');
+            applicantidCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.commodities}</h6></div>`;
 
-                        // Create table cells
+            const nameCell = document.createElement('td');
+            nameCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.first_name} ${item.middle_name} ${item.last_name}</h6></div>`;
 
-                        const processCell = document.createElement('td');
-                        processCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.Approval}</span></h6></div>`;
-                        
+            const dateCell = document.createElement('td');
+            dateCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applied_date}</h6></div>`;
 
+            const fileCell = document.createElement('td');
+            fileCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center"><a href="${item.rentapp_file}" target="_blank">View File</a></h6></div>`;
 
-                        const applicantidCell = document.createElement('td');
-                        applicantidCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div>`;
+            const contactCell = document.createElement('td');
+            contactCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.contact_no}</h6></div>`;
 
-                        const nameCell = document.createElement('td');
-                        nameCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.first_name} ${item.middle_name} ${item.last_name}</h6></div>`;
+            const emailCell = document.createElement('td');
+            emailCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.email}</h6></div>`;
 
-                        // const statusCell = document.createElement('td');
-                        // statusCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.Approval}</h6></div>`;
+            const addressCell = document.createElement('td');
+            addressCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.address}</h6></div>`;
 
-                        const dateCell = document.createElement('td');
-                        dateCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applied_date}</h6></div>`;
+            // Append cells to row
+            row.appendChild(processCell);
+            row.appendChild(applicantidCell);
+            row.appendChild(nameCell);
+            row.appendChild(dateCell);
+            row.appendChild(fileCell);
+            row.appendChild(contactCell);
+            row.appendChild(emailCell);
+            row.appendChild(addressCell);
 
-                        const fileCell = document.createElement('td');
-                        fileCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center"><a href="${item.rentapp_file}" target="_blank">View File</a></h6></div>`;
+            // Append row to table body
+            tableBody.appendChild(row);
+          });
 
-                        const stallnoCell = document.createElement('td');
-                        stallnoCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.stall_no}</h6></div>`;
+          // Add click event listener to each row
+          document.querySelectorAll('.clickable-row').forEach(row => {
+            row.addEventListener('click', function () {
+              const id = this.getAttribute('data-id');
+              const item = data.find(d => d.applicant_id === id);
+              showModal(item);
+            });
+          });
+        } else {
+          const row = document.createElement('tr');
+          const cell = document.createElement('td');
+          cell.colSpan = 8;
+          cell.textContent = 'No records found';
+          row.appendChild(cell);
+          tableBody.appendChild(row);
+        }
+      })
+      .catch(error => console.error('Error fetching data:', error));
 
-                        const buildingTypeCell = document.createElement('td');
-                        buildingTypeCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.building_type}</h6></div>`;
+    function showModal(item) {
+      // Populate the modal with data
+      document.getElementById('applicantId').value = item.applicant_id;
+      document.getElementById('fullName').value = `${item.first_name} ${item.middle_name} ${item.last_name}`;
+      document.getElementById('status').value = item.status;
 
-                        const contactCell = document.createElement('td');
-                        contactCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.contact_no}</h6></div>`;
+      // Show the modal
+      const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+      modal.show();
+    }
+  });
+</script>
 
-                        const emailCell = document.createElement('td');
-                        emailCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.email}</h6></div>`;
-
-                        const addressCell = document.createElement('td');
-                        addressCell.innerHTML = `<div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.address}</h6></div>`;
-
-                        // Append cells to row
-                        row.appendChild(processCell);
-                        row.appendChild(applicantidCell);
-                        row.appendChild(nameCell);
-                        // row.appendChild(statusCell);
-                        row.appendChild(dateCell);
-                        row.appendChild(fileCell);
-                        row.appendChild(stallnoCell);
-                        row.appendChild(buildingTypeCell);
-                        row.appendChild(contactCell);
-                        row.appendChild(emailCell);
-                        row.appendChild(addressCell);
-
-                        // Append row to table body
-                        tableBody.appendChild(row);
-                      });
-
-                      // Add click event listener to each row
-                      document.querySelectorAll('.clickable-row').forEach(row => {
-                        row.addEventListener('click', function () {
-                          const id = this.getAttribute('data-id');
-                          const item = data.find(d => d.applicant_id === id);
-                          showModal(item);
-                        });
-                      });
-                    } else {
-                      const row = document.createElement('tr');
-                      const cell = document.createElement('td');
-                      cell.colSpan = 10;
-                      cell.textContent = 'No records found';
-                      row.appendChild(cell);
-                      tableBody.appendChild(row);
-                    }
-                  })
-                  .catch(error => console.error('Error fetching data:', error));
-
-                function showModal(item) {
-                  // Populate the modal with data
-                  document.getElementById('applicantId').value = item.applicant_id;
-                  document.getElementById('fullName').value = `${item.first_name} ${item.middle_name} ${item.last_name}`;
-                  document.getElementById('status').value = item.status;
-
-                  // Show the modal
-                  const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
-                  modal.show();
-                }
-              });
-            </script>
 
           </div>
         </div>

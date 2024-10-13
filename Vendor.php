@@ -1,14 +1,5 @@
 <?php
-session_name('vendor_session');
-session_start();
-
-if (!isset($_SESSION['vendor_id'])) {
-    header("Location: index.php");
-    exit();
-}
-
-// Get the vendor ID from the session
-$vendor_id = $_SESSION['vendor_id'];
+include('Sessions/Vendor.php');
 
 // Include database configuration
 include('database_config.php');
@@ -16,112 +7,77 @@ include('database_config.php');
 // Create a connection
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check the connection
+// Check for connection errors
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  die("Connection failed: " . $conn->connect_error);
 }
 
-// Fetch vendor information
+// SQL query with placeholders (removed r.receipt AS receiptsImg)
 $sql = "
-    SELECT v.*, b.* 
-    FROM vendors v 
-    JOIN (
-        SELECT * FROM building_a WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_b WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_c WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_d WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_e WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_f WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_g WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_h WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_i WHERE vendor_id = ?
-        UNION
-        SELECT * FROM building_j WHERE vendor_id = ?
-    ) b ON v.vendor_id = b.vendor_id
+  SELECT v.*, 
+         v.payment_due AS due_dates,
+         buildings.monthly_rentals, 
+         buildings.stall_no
+  FROM vendors v
+  JOIN (
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_a
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_b
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_c
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_d
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_e
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_f
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_g
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_h
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_i
+      UNION ALL
+      SELECT vendor_id, monthly_rentals, stall_no FROM building_j
+  ) AS buildings ON v.vendor_id = buildings.vendor_id
+  WHERE v.vendor_id = ?
 ";
-$values = array_fill(0, 10, $vendor_id);
+
+// Prepare the SQL statement
 $stmt = $conn->prepare($sql);
+
+// Check if preparation was successful
 if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
+  die("Error preparing query: " . $conn->error);
 }
-$types = str_repeat('i', count($values));
-$stmt->bind_param($types, ...$values);
-$stmt->execute();
+
+// Bind the vendor_id parameter to the SQL query
+$stmt->bind_param("i", $vendor_id);
+
+// Execute the statement
+if (!$stmt->execute()) {
+  die("Error executing query: " . $stmt->error);
+}
+
+// Get the result
 $result = $stmt->get_result();
-$vendor = $result->fetch_assoc();
 
-
-if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
-
-  echo "<script>
-   alert('No information in your account. You need to fill-up your account first!');
-
-
-  document.addEventListener('DOMContentLoaded', function() {
-      var accountModal = new bootstrap.Modal(document.getElementById('accountModal'));
-      accountModal.show();
-
-      var form = document.getElementById('createVendorForm');
-      var modalElement = document.getElementById('accountModal'); // Reference the entire modal element
-
-      // Handle clicks outside the modal window (including the backdrop)
-      document.addEventListener('click', function(event) {
-          if (!modalElement.contains(event.target) && !form.checkValidity()) {
-              event.preventDefault(); // Prevent closing the modal
-              alert('Please fill out all required fields before closing.');
-          }
-      });
-
-      // Handle close button click
-      var closeButton = document.getElementById('closeButton');
-      closeButton.addEventListener('click', function() {
-          if (form.checkValidity()) {
-              accountModal.hide(); // Close the modal if the form is valid
-          } else {
-              alert('Please fill out all required fields before closing.');
-          }
-      });
-
-      // Disable accordion interaction (optional, adjust selector if needed)
-      var accordions = document.querySelectorAll('.accordion-header, .accordion-toggle');
-      accordions.forEach(function(accordion) {
-          accordion.style.pointerEvents = 'none';
-          accordion.style.opacity = '0.5';
-      });
-
-      // Prevent back navigation
-      window.history.pushState(null, null, window.location.href);
-      window.onpopstate = function() {
-          window.history.pushState(null, null, window.location.href);
-      };
-  });
-  </script>";
+// Check if data is retrieved
+if ($result->num_rows > 0) {
+  $vendor = $result->fetch_assoc();
 } else {
+  // Output an alert message with a redirect to the Vendor.php page
   echo "<script>
-          console.log('Vendor data available'); // Or handle vendor data as needed
-        </script>";
+    alert('No vendor found.');
+    window.location.href = 'Vendor.php';
+  </script>";
+  exit();
 }
 
-
-
-$query = "SELECT started_date, payment_due FROM vendors WHERE vendor_id = ?";
-$stmt1 = $conn->prepare($query);
-$stmt1->bind_param('i', $vendor_id);
-$stmt1->execute();
-$stmt1->bind_result($started_date, $payment_due);
-$stmt1->fetch();
-$stmt1->close();
-
+// Close the statement and connection
+$stmt->close();
+$conn->close();
 ?>
-
 <script>
 
     document.addEventListener('DOMContentLoaded', function() {
@@ -205,31 +161,16 @@ $stmt1->close();
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMaps" aria-expanded="false" aria-controls="collapseMaps">
+          <a class="nav-link" href="VMStalls.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pin-map-fill" viewBox="0 0 16 16">
-                <title>office</title>
-                    <path fill-rule="evenodd" d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z"/>
-                    <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z"/>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-shop" viewBox="0 0 16 16">
+                <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
               </svg>
             </div>
-            <span class="nav-link-text ms-1">Maps</span>
+            <span class="nav-link-text ms-1">Stalls Availability</span>
           </a>
-          <div class="collapse" id="collapseMaps">
-            <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="ABuildingA.html">Building A</a>
-              <a class="nav-link" href="ABuildingB.html">Building B</a>
-              <a class="nav-link" href="ABuildingC.html">Building C</a>
-              <a class="nav-link" href="ABuildingD.html">Building D</a>
-              <a class="nav-link" href="ABuildingE.html">Building E</a>
-              <a class="nav-link" href="ABuildingF.html">Building F</a>
-              <a class="nav-link" href="ABuildingG.html">Building G</a>
-              <a class="nav-link" href="ABuildingH.html">Building H</a>
-              <a class="nav-link" href="ABuildingI.html">Building I</a>
-              <a class="nav-link" href="ABuildingJ.html">Building J</a>
-            </div>
-          </div>
         </li>
+        
         <li class="nav-item">
           <a class="nav-link " href="VMDocuments.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -265,7 +206,20 @@ $stmt1->close();
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link  " href="VMCommunication.php">
+          <a class="nav-link " href="VMmessages.php">
+            <div
+              class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                class="bi bi-envelope-fill" viewBox="0 0 16 16">
+                <path
+                  d="M.05 3.555A2 2 0 0 1 2 2h12a2 2 0 0 1 1.95 1.555L8 8.414zM0 4.697v7.104l5.803-3.558zM6.761 8.83l-6.57 4.027A2 2 0 0 0 2 14h12a2 2 0 0 0 1.808-1.144l-6.57-4.027L8 9.586zm3.436-.586L16 11.801V4.697z" />
+              </svg>
+            </div>
+            <span class="nav-link-text ms-1">Messages</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link  " href="VMReminders.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-chat-text" viewBox="0 0 16 16">
                 <path d="M2.678 11.894a1 1 0 0 1 .287.801 11 11 0 0 1-.398 2c1.395-.323 2.247-.697 2.634-.893a1 1 0 0 1 .71-.074A8 8 0 0 0 8 14c3.996 0 7-2.807 7-6s-3.004-6-7-6-7 2.808-7 6c0 1.468.617 2.83 1.678 3.894m-.493 3.905a22 22 0 0 1-.713.129c-.2.032-.352-.176-.273-.362a10 10 0 0 0 .244-.637l.003-.01c.248-.72.45-1.548.524-2.319C.743 11.37 0 9.76 0 8c0-3.866 3.582-7 8-7s8 3.134 8 7-3.582 7-8 7a9 9 0 0 1-2.347-.306c-.52.263-1.639.742-3.468 1.105"/>
@@ -337,96 +291,7 @@ $stmt1->close();
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
-      <div class="row">
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-8">
-                  <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Reports</p>
-                    <h5 class="font-weight-bolder mb-0">
-                      P53,000
-                      <span class="text-success text-sm font-weight-bolder">+55%</span>
-                    </h5>
-                  </div>
-                </div>
-                <div class="col-4 text-end">
-                  <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                    <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-8">
-                  <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Today's Users</p>
-                    <h5 class="font-weight-bolder mb-0">
-                      2,300
-                      <span class="text-success text-sm font-weight-bolder">+3%</span>
-                    </h5>
-                  </div>
-                </div>
-                <div class="col-4 text-end">
-                  <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                    <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-8">
-                  <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">New Clients</p>
-                    <h5 class="font-weight-bolder mb-0">
-                      +3,462
-                      <span class="text-danger text-sm font-weight-bolder">-2%</span>
-                    </h5>
-                  </div>
-                </div>
-                <div class="col-4 text-end">
-                  <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-xl-3 col-sm-6">
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-8">
-                  <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Sales</p>
-                    <h5 class="font-weight-bolder mb-0">
-                      P103,430
-                      <span class="text-success text-sm font-weight-bolder">+5%</span>
-                    </h5>
-                  </div>
-                </div>
-                <div class="col-4 text-end">
-                  <div class="icon icon-shape bg-gradient-primary shadow text-center border-radius-md">
-                    <i class="ni ni-cart text-lg opacity-10" aria-hidden="true"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      
      
 
   <!-- Modal Structure -->

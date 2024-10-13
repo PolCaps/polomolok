@@ -1,42 +1,5 @@
 <?php
-session_name('docuhandler_session');
-session_start();
-
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'DOCUMENT_HANDLER') {
-    header("Location: index.php");
-    exit();
-}
-$user_id = $_SESSION['id'];
-
-// Include database configuration
-include('database_config.php');
-
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Fetch vendor information
-$sql = "SELECT * FROM users WHERE id = ?";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
-}
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-// Check if vendor data is retrieved
-if (!$user) {
-    die("No User found with ID " . htmlspecialchars($user_id));
-}
-
-// Close the connection
-$conn->close();
+include('Sessions/DocumentHandler.php');
 ?>
 
 <!DOCTYPE html>
@@ -48,7 +11,7 @@ $conn->close();
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Vendor Documents
+  Document Monitoring
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -116,7 +79,7 @@ $conn->close();
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Staff</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Document Handler</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
           </ol>
           <h6 class="font-weight-bolder mb-0">Payment Reminder</h6>
@@ -132,7 +95,7 @@ $conn->close();
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Staff</span>
+                <span class="d-sm-inline d-none">Document Handler</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -196,19 +159,21 @@ if ($resultA === false) {
 
 // Check if there are results
 if ($resultA->num_rows > 0) {
-    while($rowA = $resultA->fetch_assoc()) {
-        $tableRows .= '
-        <tr>
-            <td class="align-middle text-center text-sm">' . htmlspecialchars($rowA['username']) . '</td>
-            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['lease_agreement']) . '</a></td>
-            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['business_license']) . '</a></td>
-            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['business_permits']) . '</a></td>
-            <td class="text-center"><a href="#" target="_blank" class="btn btn-sm btn-warning my-1">View ' . htmlspecialchars($rowA['other_supporting']) . '</a></td>
-        </tr>';
-    }
+  while ($rowA = $resultA->fetch_assoc()) {
+      $tableRows .= '
+      <tr>
+          <td class="align-middle text-center text-sm">' . htmlspecialchars($rowA['username']) . '</td>
+          <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['lease_agreements']) . '">View</span></td>
+          <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['business_license']) . '">View</span></td>
+          <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['business_permits']) . '">View</span></td>
+          <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['other_supporting']) . '">View</span></td>
+      </tr>';
+  }
 } else {
-    $tableRows = '<tr><td colspan="5" class="text-center">No records found</td></tr>';
+  $tableRows = '<tr><td colspan="5" class="text-center">No records found</td></tr>';
 }
+
+
 
 // Close connection
 $conn->close();
@@ -288,6 +253,28 @@ $conn->close();
       }
       Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
     }
+
+
+    // Wait until the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    // Get all clickable elements
+    const clickables = document.querySelectorAll('.clickable');
+    
+    // Add event listeners to all clickable elements
+    clickables.forEach(clickable => {
+        clickable.addEventListener('click', function() {
+            const documentUrl = this.getAttribute('data-doc');
+            
+            // Assuming that documentUrl is a valid URL, open it in a new tab
+            if (documentUrl) {
+                window.open(documentUrl, '_blank');
+            } else {
+                alert('Error: No documents!');
+            }
+        });
+    });
+});
+
   </script>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>

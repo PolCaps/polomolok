@@ -10,15 +10,14 @@ session_start()
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>PolomolokPublicMarket</title>
-  <meta content="" name="description">
-  <meta content="" name="keywords">
+  <meta content="Polomolok Public Market Official Website" name="description">
+  <meta content="Polomolok Official Website" name="keywords">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <!-- Favicons -->
   <!-- <link href="assets/img/favicon.png" rel="icon"> -->
-  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!--   mao dyay ni naga conflict sa icons
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon"> -->
+  
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
   <!-- Fonts -->
@@ -122,23 +121,25 @@ session_start()
       <nav id="navmenu" class="navmenu">
         <ul>
           <li><a href="#hero" class="active">Home<br></a></li>
-          <li><a href="#about">About</a></li>
-          <li class="dropdown"><a href="#services"><span>Building Directory</span> <i
+          <li><a href="#call-to-action">Rent Stall</a></li>
+          <li class="dropdown"><a href="#services"><span>Wayfinding & Directory</span> <i
                 class="bi bi-chevron-down toggle-dropdown"></i></a>
             <ul>
-              <li><a href="BuildingDirectoryA.php">Building A</a></li>
-              <li><a href="DirectoryBuildingB.php">Building B</a></li>
-              <li><a href="DirectoryBuildingC.php">Building C</a></li>
-              <li><a href="DirectoryBuildingD.php">Building D</a></li>
-              <li><a href="DirectoryBuildingE.php">Building E</a></li>
-              <li><a href="DirectoryBuildingF.php">Building F</a></li>
-              <li><a href="DirectoryBuildingG.php">Building G</a></li>
-              <li><a href="DirectoryBuildingH.php">Building H</a></li>
-              <li><a href="DirectoryBuildingI.php">Building I</a></li>
-              <li><a href="DirectoryBuildingJ.php">Building J</a></li>
+              <li><a href="Wayfinding.php">Building A</a></li>
+              <li><a href="Wayfinding.php">Building B</a></li>
+              <li><a href="Wayfinding.php">Building C</a></li>
+              <li><a href="Wayfinding.php">Building D</a></li>
+              <li><a href="Wayfinding.php">Building E</a></li>
+              <li><a href="Wayfinding.php">Building F</a></li>
+              <li><a href="Wayfinding.php">Building G</a></li>
+              <li><a href="Wayfinding.php">Building H</a></li>
+              <li><a href="Wayfinding.php">Building I</a></li>
+              <li><a href="Wayfinding.php">Building J</a></li>
             </ul>
           </li>
-          <li><a href="#call-to-action">Rent Stall</a></li>
+          <li><a href="#about">About</a></li>
+
+          
           <li><a href="#contact">Contact</a></li>
 
         </ul>
@@ -272,74 +273,54 @@ session_start()
 
     </section><!-- /Hero Section -->
 
-    <!-- About Section -->
-    <section id="about" class="about section">
-
-      <!-- Section Title -->
-      <div class="container section-title" data-aos="fade-up">
-        <h2>About Us<br></h2>
-        <p>
-          This Public Market is very easy to access by public transportation.
-          Where you can find affordable goods, fruits and different root crops.
-          This building is currently improved with the local government. Located at French Street Polomolok, South
-          Cotabato.
-          There are a lot of thing to do in Polomolok South Cotabato, all you need to do is to enjoy the town for their
-          rich culture and attraction as well.
-        </p>
-      </div><!-- End Section Title -->
-
-
-      <div class="container">
-
-        <div class="row gy-4">
-
-          <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
-            <h5>
-              Polomolok Public Market's Accessbilities:
-            </h5>
-            <ul>
-              <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible entrance.</span></li>
-              <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible parking lot.</span></li>
-              <li><i class="bi bi-check2-circle"></i> <span>Cleanest market in South Cotabato.</span></li>
-              <li><i class="bi bi-check2-circle"></i> <span>Smoke free zone.</span></li>
-              <li><i class="bi bi-check2-circle"></i> <span>Affordable farm to market goods.</span></li>
-            </ul>
-          </div>
-
-          <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
-            <p>OF ALL the places that I could have explored at my hometown, Polomolok, South Cotabato,
-              I found myself exploring the public market. I am low key fascinated by public markets.
-              Not many would think much about it but just a destination to go to find what they need
-              to cook food or for the house. <br> <br>
-              However, what fascinates me about the public markets
-              is its vital role in the local economy of a small town like Polomolok. Compared to other
-              municipalities, in South Cotabato, Polomolok is not small. </p>
-            <a href="#" class="read-more bg-warning"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
-          </div>
-
-        </div>
-
-      </div>
-
-    </section><!-- /About Section -->
+   
 
     <?php
     include('database_config.php');
     $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
     if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
+        die("Connection failed: " . $conn->connect_error);
     }
-    $sql = "SELECT buildings, overall_stalls, vendors, workers FROM pagebuilder_table WHERE stats_id = 1";
+
+    // First query
+    $sql = "SELECT buildings, overall_stalls, vendors, workers 
+            FROM pagebuilder_table PT
+            WHERE stats_id = 1";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
-      $row = $result->fetch_assoc();
+        $data = $result->fetch_assoc();
     } else {
-      echo "No data found";
+        echo "No data found";
+        $data = []; // Initialize $data as an empty array if no data is found
     }
+
+    // Second query
+    $sql2 = "SELECT COUNT(*) AS totalworkers FROM users";
+    $workResult = $conn->query($sql2); // Changed variable name to $workResult
+
+    if ($workResult) {
+        $users = $workResult->fetch_assoc();
+        $data['totalworkers'] = $users['totalworkers'];
+    } else {
+        $data['totalworkers'] = null;
+    }
+
+    // Third query
+    $sql3 = "SELECT COUNT(*) AS totalvendors FROM vendors";
+    $vendorResult = $conn->query($sql3); // Changed variable name to $vendorResult
+
+    if ($vendorResult) {
+        $users = $vendorResult->fetch_assoc();
+        $data['totalVendors'] = $users['totalvendors']; // Use 'totalvendors' as per SQL alias
+    } else {
+        $data['totalVendors'] = null;
+    }
+
     $conn->close();
-    ?>
+?>
+
 
 
     <!-- Stats Section -->
@@ -350,21 +331,21 @@ session_start()
         <div class="row gy-4">
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['buildings']; ?>"
+              <span data-purecounter-start="0" data-purecounter-end="<?php echo $data['buildings']; ?>"
                 data-purecounter-duration="1" class="purecounter"></span>
               <p>Buildings</p>
             </div>
           </div><!-- End Stats Item -->
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['overall_stalls']; ?>"
+              <span data-purecounter-start="0" data-purecounter-end="<?php echo $data['overall_stalls']; ?>"
                 data-purecounter-duration="1" class="purecounter"></span>
               <p>Overall Stalls</p>
             </div>
           </div><!-- End Stats Item -->
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['vendors']; ?>"
+              <span data-purecounter-start="0" data-purecounter-end="<?php echo $data['vendors']; ?>"
                 data-purecounter-duration="1" class="purecounter"></span>
               <p>Vendors</p>
             </div>
@@ -372,7 +353,7 @@ session_start()
 
           <div class="col-lg-3 col-md-6">
             <div class="stats-item text-center w-100 h-100">
-              <span data-purecounter-start="0" data-purecounter-end="<?php echo $row['workers']; ?>"
+              <span data-purecounter-start="0" data-purecounter-end="<?php echo $data['totalworkers']; ?>"
                 data-purecounter-duration="1" class="purecounter"></span>
               <p>Workers</p>
             </div>
@@ -488,6 +469,28 @@ session_start()
 </div><!-- End container -->
 
 </section><!-- End Announcements Section -->
+
+
+<!-- Call To Action Section -->
+<section id="call-to-action" class="call-to-action section">
+
+<div class="container">
+  <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
+    <div class="col-xl-10">
+      <div class="text-center">
+        <h3>Interested In Owning a stall?</h3>
+        <p>Unlock your business potential and grab a stall at our bustling market and watch your dreams thrive!</p>
+        <a class="cta-btn" data-bs-toggle="modal" data-bs-target="#vendorApplicationModal">Apply Application</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</section><!-- /Call To Action Section -->
 
 
 
@@ -620,13 +623,14 @@ session_start()
 
     </section><!-- /Testimonials Section -->
 
+    
     <!-- Services Section -->
     <section id="services" class="services section">
 
       <!-- Section Title -->
       <div class="container section-title" data-aos="fade-up">
-        <h2>Market's Map</h2>
-        <p>Polomolok Public Market's Maps</p>
+        <h2>Explore the Market's Map</h2>
+        <p>Discover Your Way Around Polomolok Public Market with Interactive Directory and Wayfinding</p>
       </div><!-- End Section Title -->
 
       <div class="container">
@@ -644,7 +648,7 @@ session_start()
                 </svg>
                 <i class="bi bi-shop"></i>
               </div>
-              <a href="BuildingE.html" class="stretched-link">
+              <a href="https://app.mappedin.com/map/66f38d8142d0ac000b79d820?floor=m_f949f9430c226683" class="stretched-link">
                 <h3>Building A</h3>
               </a>
               <p>Polomolok Gymnasium, Offices, <br>and Commercial Stores</p>
@@ -665,8 +669,7 @@ session_start()
               <a href="service-details.html" class="stretched-link">
                 <h3>Building B</h3>
               </a>
-              <p>Ut autem aut autem non a. Sint sint sit facilis nam iusto sint. Libero corrupti neque eum hic non ut
-                nesciunt dolorem.</p>
+              <p>Thrift Store, Tailoring, Salon, Gadgets, and Printing</p>
             </div>
           </div><!-- End Service Item -->
 
@@ -680,11 +683,10 @@ session_start()
                 </svg>
                 <i class="bi bi-easel"></i>
               </div>
-              <a href="service-details.html" class="stretched-link">
+              <a href="https://app.mappedin.com/map/66f7db4242d0ac000b79d8d7" class="stretched-link">
                 <h3>Building C</h3>
               </a>
-              <p>Ut excepturi voluptatem nisi sed. Quidem fuga consequatur. Minus ea aut. Vel qui id voluptas adipisci
-                eos earum corrupti.</p>
+              <p>Commercial and Offices building</p>
             </div>
           </div><!-- End Service Item -->
 
@@ -701,8 +703,7 @@ session_start()
               <a href="service-details.html" class="stretched-link">
                 <h3>Building D</h3>
               </a>
-              <p>Non et temporibus minus omnis sed dolor esse consequatur. Cupiditate sed error ea fuga sit provident
-                adipisci neque.</p>
+              <p>Barbershop, Printing Shop, Center, etc... </p>
               <a href="service-details.html" class="stretched-link"></a>
             </div>
           </div><!-- End Service Item -->
@@ -720,8 +721,7 @@ session_start()
               <a href="service-details.html" class="stretched-link">
                 <h3>Building E</h3>
               </a>
-              <p>Cumque et suscipit saepe. Est maiores autem enim facilis ut aut ipsam corporis aut. Sed animi at autem
-                alias eius labore.</p>
+              <p>Bakeshop, Retail goods, and convenience store.</p>
               <a href="service-details.html" class="stretched-link"></a>
             </div>
           </div><!-- End Service Item -->
@@ -739,8 +739,7 @@ session_start()
               <a href="service-details.html" class="stretched-link">
                 <h3>Building F</h3>
               </a>
-              <p>Hic molestias ea quibusdam eos. Fugiat enim doloremque aut neque non et debitis iure. Corrupti
-                recusandae ducimus enim.</p>
+              <p>Meats and Hotdogs</p>
               <a href="service-details.html" class="stretched-link"></a>
             </div>
           </div><!-- End Service Item -->
@@ -779,7 +778,7 @@ session_start()
               </a>
               <p>Fruits, Dry Goods, Carenderias, <br>
                 and Retail Store</p>
-              <a href="service-details.html" class="stretched-link"></a>
+              <a href="https://app.mappedin.com/map/66f38d8142d0ac000b79d820?floor=m_f949f9430c226683" class="stretched-link"></a>
             </div>
           </div><!-- End Service Item -->
 
@@ -796,8 +795,7 @@ session_start()
               <a href="service-details.html" class="stretched-link">
                 <h3>Building I</h3>
               </a>
-              <p>Hic molestias ea quibusdam eos. Fugiat enim doloremque aut neque non et debitis iure. Corrupti
-                recusandae ducimus enim.</p>
+              <p>Vegetables</p>
               <a href="service-details.html" class="stretched-link"></a>
             </div>
           </div>
@@ -812,12 +810,11 @@ session_start()
                 </svg>
                 <i class="bi bi-chat-square-text"></i>
               </div>
-              <a href="service-details.html" class="stretched-link">
+              <a href="https://app.mappedin.com/map/66f4e68d42d0ac000b79d85f?floor=m_c58eeda6171361abl" class="stretched-link">
                 <h3>Building J</h3>
               </a>
-              <p>Hic molestias ea quibusdam eos. Fugiat enim doloremque aut neque non et debitis iure. Corrupti
-                recusandae ducimus enim.</p>
-              <a href="service-details.html" class="stretched-link"></a>
+              <p>Details-addmore, eg: Ukayan</p>
+              <a href="https://app.mappedin.com/map/66f4e68d42d0ac000b79d85f?floor=m_c58eeda6171361abl" class="stretched-link"></a>
             </div>
           </div>
 
@@ -828,26 +825,57 @@ session_start()
     </section><!-- /Services Section -->
 
 
-    <!-- Call To Action Section -->
-    <section id="call-to-action" class="call-to-action section">
+     <!-- About Section -->
+     <section id="about" class="about section">
 
-      <div class="container">
-        <div class="row justify-content-center" data-aos="zoom-in" data-aos-delay="100">
-          <div class="col-xl-10">
-            <div class="text-center">
-              <h3>Interested In Owning a stall?</h3>
-              <p>Unlock your business potential and grab a stall at our bustling market and watch your dreams thrive!</p>
-              <a class="cta-btn" data-bs-toggle="modal" data-bs-target="#vendorApplicationModal">Apply Application</a>
-            </div>
-          </div>
-        </div>
-      </div>
+<!-- Section Title -->
+<div class="container section-title" data-aos="fade-up">
+  <h2>About Us<br></h2>
+  <p>
+    This Public Market is very easy to access by public transportation.
+    Where you can find affordable goods, fruits and different root crops.
+    This building is currently improved with the local government. Located at French Street Polomolok, South
+    Cotabato.
+    There are a lot of thing to do in Polomolok South Cotabato, all you need to do is to enjoy the town for their
+    rich culture and attraction as well.
+  </p>
+</div><!-- End Section Title -->
 
 
+<div class="container">
 
+  <div class="row gy-4">
 
-      <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    </section><!-- /Call To Action Section -->
+    <div class="col-lg-6 content" data-aos="fade-up" data-aos-delay="100">
+      <h5>
+        Polomolok Public Market's Accessbilities:
+      </h5>
+      <ul>
+        <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible entrance.</span></li>
+        <li><i class="bi bi-check2-circle"></i> <span>Wheelchair accessible parking lot.</span></li>
+        <li><i class="bi bi-check2-circle"></i> <span>Cleanest market in South Cotabato.</span></li>
+        <li><i class="bi bi-check2-circle"></i> <span>Smoke free zone.</span></li>
+        <li><i class="bi bi-check2-circle"></i> <span>Affordable farm to market goods.</span></li>
+      </ul>
+    </div>
+
+    <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+      <p>OF ALL the places that I could have explored at my hometown, Polomolok, South Cotabato,
+        I found myself exploring the public market. I am low key fascinated by public markets.
+        Not many would think much about it but just a destination to go to find what they need
+        to cook food or for the house. <br> <br>
+        However, what fascinates me about the public markets
+        is its vital role in the local economy of a small town like Polomolok. Compared to other
+        municipalities, in South Cotabato, Polomolok is not small. </p>
+      <a href="#" class="read-more bg-warning"><span>Read More</span><i class="bi bi-arrow-right"></i></a>
+    </div>
+
+  </div>
+
+</div>
+
+</section><!-- /About Section -->
+
 
     </section><!-- /Faq Section -->
 
@@ -891,7 +919,7 @@ session_start()
               <i class="bi bi-envelope flex-shrink-0"></i>
               <div>
                 <h3>Email Us</h3>
-                <p>info@example.com</p>
+                <p>admin@polomolokpublicmarket.com</p>
               </div>
             </div><!-- End Info Item -->
 
@@ -1011,26 +1039,33 @@ session_start()
                           <div class="invalid-feedback">Please enter a valid contact number.</div>
                         </div>
                         <div class="form-group mb-3">
-                          <label for="building_type">Building Type</label>
-                          <select id="building_type" class="form-control" name="building_type" required>
-                            <option value=""></option>
-                            <option value="Building A">Building A</option>
-                            <option value="Building B">Building B</option>
-                            <option value="Building C">Building C</option>
-                            <option value="Building D">Building D</option>
-                            <option value="Building E">Building E</option>
-                            <option value="Building F">Building F</option>
-                            <option value="Building G">Building G</option>
-                            <option value="Building H">Building H</option>
-                            <option value="Building I">Building I</option>
-                            <option value="Building J">Building J</option>
-                          </select>
+                            <label for="commodities">Goods/Commodities</label>
+                            <select id="commodities" class="form-control" name="commodities" required onchange="toggleOthersInput()">
+                                <option value=""></option>
+                                <option value="Seafoods">Seafoods</option>
+                                <option value="Meats">Meats</option>
+                                <option value="Breads">Breads</option>
+                                <option value="Processed Goods">Processed Goods</option>
+                                <option value="Vegetables and Fruits">Vegetable and Fruits</option>
+                                <option value="Others">Others</option>
+                            </select>
+                            <input type="text" id="other_commodities" class="form-control mt-2" name="other_commodities" placeholder="Please specify..." style="display:none;">
                         </div>
-                        <div class="form-group mb-3">
-                          <label for="stall_no" class="form-label">Stall No.:</label>
-                          <input type="number" id="stall_no" class="form-control" name="stall_no" required>
-                          <div class="invalid-feedback">Please enter a stall no.</div>
-                        </div>
+
+                        <script>
+                          function toggleOthersInput() {
+                              const commoditiesSelect = document.getElementById('commodities');
+                              const othersInput = document.getElementById('other_commodities');
+                              if (commoditiesSelect.value === 'Others') {
+                                  othersInput.style.display = 'block'; // Show the input field
+                                  othersInput.required = true; // Make it required
+                              } else {
+                                  othersInput.style.display = 'none'; // Hide the input field
+                                  othersInput.value = ''; // Clear the input value
+                                  othersInput.required = false; // Remove required status
+                              }
+                          }
+                      </script>
                       </div>
                       <!-- Business Details -->
                       <div class="col-md-6 mt-2">
@@ -1095,135 +1130,65 @@ session_start()
 
       <script>
         // Function to handle the opening of the link and collapsing/expanding sections
-        document.getElementById('openLinkBtn').addEventListener('click', function () {
-          // Collapse the other section
-          var payRentDetails = document.getElementById('payRentDetails');
-          if (payRentDetails) {
-            var bsCollapsePayRent = new bootstrap.Collapse(payRentDetails, {
-              toggle: false
-            });
-            bsCollapsePayRent.hide();
-          }
+document.getElementById('openLinkBtn').addEventListener('click', function () {
+  var payRentDetails = document.getElementById('payRentDetails');
+  if (payRentDetails) {
+    var bsCollapsePayRent = new bootstrap.Collapse(payRentDetails, { toggle: false });
+    bsCollapsePayRent.hide();
+  }
 
-          // Expand the current section
-          var formDetails = document.getElementById('formDetails');
-          if (formDetails) {
-            var bsCollapseForm = new bootstrap.Collapse(formDetails, {
-              toggle: false
-            });
-            bsCollapseForm.show();
-          }
+  var formDetails = document.getElementById('formDetails');
+  if (formDetails) {
+    var bsCollapseForm = new bootstrap.Collapse(formDetails, { toggle: false });
+    bsCollapseForm.show();
+  }
 
-          // Open the link in a new tab
-          window.open('https://form.jotform.com/242034145550042', '_blank');
-        });
+  window.open('https://form.jotform.com/242034145550042', '_blank');
+});
 
-        // Function to handle the opening of the pay rent section
-        document.getElementById('payRentBtn').addEventListener('click', function () {
-          // Collapse the other section
-          var formDetails = document.getElementById('formDetails');
-          if (formDetails) {
-            var bsCollapseForm = new bootstrap.Collapse(formDetails, {
-              toggle: false
-            });
-            bsCollapseForm.hide();
-          }
 
-          // Expand the current section
-          var payRentDetails = document.getElementById('payRentDetails');
-          if (payRentDetails) {
-            var bsCollapsePayRent = new bootstrap.Collapse(payRentDetails, {
-              toggle: false
-            });
-            bsCollapsePayRent.show();
-          }
-        });
+// Function to handle vendor application form submission
+document.getElementById('vendorApplicationForm').addEventListener('submit', function (event) {
+  event.preventDefault(); // Prevent default form submission
 
-        // Function to handle vendor application form submission
-        document.getElementById('vendorApplicationForm').addEventListener('submit', function (event) {
-          event.preventDefault(); // Prevent default form submission
+  var form = this;
+  if (!form.checkValidity()) {
+    form.classList.add('was-validated');
+    return; // Stop if form is not valid
+  }
 
-          var form = this;
-          if (!form.checkValidity()) {
-            form.classList.add('was-validated');
-            return; // Stop if form is not valid
-          }
+  var formData = new FormData(form);
+  fetch(form.action, {
+    method: form.method,
+    body: formData
+  })
+    .then(response => response.json())
+    .then(data => {
+      var submissionAlert = document.getElementById('submissionAlert');
+      if (data.success) {
+        submissionAlert.classList.remove('d-none', 'alert-danger');
+        submissionAlert.classList.add('alert-success');
+        submissionAlert.innerText = `${data.message}`;
 
-          var formData = new FormData(form);
-          fetch(form.action, {
-            method: form.method,
-            body: formData
-          })
-            .then(response => response.json())
-            .then(data => {
-              var submissionAlert = document.getElementById('submissionAlert');
-              if (data.success) {
-                submissionAlert.classList.remove('d-none', 'alert-danger');
-                submissionAlert.classList.add('alert-success');
-                submissionAlert.innerText = `${data.message} Your Applicant ID is: ${data.applicant_id}, please save this for future reference.`;
+        setTimeout(() => {
+          form.reset(); // Clear the form fields
+          form.classList.remove('was-validated'); // Remove validation classes
+        }, 1000); // Clear the form and hide the alert after 2 seconds
+      } else {
+        submissionAlert.classList.remove('d-none', 'alert-success');
+        submissionAlert.classList.add('alert-danger');
+        submissionAlert.innerText = data.message;
+      }
+      submissionAlert.classList.remove('d-none');
+    })
+    .catch(error => {
+      var submissionAlert = document.getElementById('submissionAlert');
+      submissionAlert.classList.remove('d-none', 'alert-success');
+      submissionAlert.classList.add('alert-danger');
+      submissionAlert.innerText = 'An unexpected error occurred.';
+    });
+});
 
-                // Optionally display the applicant ID in a separate element
-                document.getElementById('applicant_id_display').innerText = `Your Applicant ID: ${data.applicant_id}, please save this for future reference.`;
-
-                setTimeout(() => {
-                  form.reset(); // Clear the form fields
-                  form.classList.remove('was-validated'); // Remove validation classes
-                }, 1000); // Clear the form and hide the alert after 2 seconds
-              } else {
-                submissionAlert.classList.remove('d-none', 'alert-success');
-                submissionAlert.classList.add('alert-danger');
-                submissionAlert.innerText = data.message;
-              }
-              submissionAlert.classList.remove('d-none');
-            })
-            .catch(error => {
-              var submissionAlert = document.getElementById('submissionAlert');
-              submissionAlert.classList.remove('d-none', 'alert-success');
-              submissionAlert.classList.add('alert-danger');
-              submissionAlert.innerText = 'An unexpected error occurred.';
-            });
-        });
-
-        // Function to handle pay rent form submission
-        document.getElementById('payRentForm').addEventListener('submit', function (event) {
-          event.preventDefault();
-          var form = this;
-          if (form.checkValidity() === false) {
-            event.stopPropagation();
-            form.classList.add('was-validated');
-            return;
-          }
-
-          var formData = new FormData(form);
-          fetch(form.action, {
-            method: form.method,
-            body: formData
-          })
-            .then(response => response.json())
-            .then(data => {
-              var paymentAlert = document.getElementById('paymentAlert');
-              if (data.success) {
-                paymentAlert.classList.remove('d-none', 'alert-danger');
-                paymentAlert.classList.add('alert-success');
-                paymentAlert.innerText = 'Payment submitted successfully!';
-
-                setTimeout(() => {
-                  form.reset(); // Clear the form fields
-                  form.classList.remove('was-validated'); // Remove validation classes
-                }, 1000); // Clear the form and hide the alert after 2 seconds
-              } else {
-                paymentAlert.classList.remove('d-none', 'alert-success');
-                paymentAlert.classList.add('alert-danger');
-                paymentAlert.innerText = 'Failed to submit payment. Please try again.';
-              }
-            })
-            .catch(error => {
-              var paymentAlert = document.getElementById('paymentAlert');
-              paymentAlert.classList.remove('d-none', 'alert-success');
-              paymentAlert.classList.add('alert-danger');
-              paymentAlert.innerText = 'An error occurred. Please try again.';
-            });
-        });
       </script>
       <div id="alertContainer"></div>
 
@@ -1249,10 +1214,9 @@ session_start()
           </a>
           <p>Follow us on social media account:</p>
           <div class="social-links d-flex ">
-            <a href=""><i class="bi bi-twitter-x"></i></a>
+           
             <a href="https://www.facebook.com/profile.php?id=100084174512254"><i class="bi bi-facebook"></i></a>
-            <a href=""><i class="bi bi-instagram"></i></a>
-            <a href=""><i class="bi bi-linkedin"></i></a>
+            
           </div>
         </div>
 

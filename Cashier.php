@@ -1,54 +1,17 @@
 <?php
-session_name('cashier_session');
-session_start();
-
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'CASHIER') {
-    header("Location: index.php");
-    exit();
-}
-$user_id = $_SESSION['id'];
-
-// Include database configuration
-include('database_config.php');
-
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Fetch vendor information
-$sql = "SELECT * FROM users WHERE id = ?";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
-}
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-// Check if vendor data is retrieved
-if (!$user) {
-    die("No User found with ID " . htmlspecialchars($user_id));
-}
-
-// Close the connection
-$conn->close();
+include('Sessions/Cashier.php');
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8" />
+<meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Staff Dashboard
+    Cashier
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -60,13 +23,12 @@ $conn->close();
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
-  <!-- Nepcha Analytics (nepcha.com) -->
-  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
-  <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" /> <!-- Bootstrap CSS --></body>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main">
+
+<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
       <a class="navbar-brand m-0" href="#" target="_blank">
@@ -80,8 +42,8 @@ $conn->close();
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" href="#">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-primary text-center me-2 d-flex align-items-center justify-content-center">
+          <a class="nav-link" href="Cashier.php">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-shop" viewBox="0 0 16 16">
                 <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
               </svg>
@@ -90,17 +52,83 @@ $conn->close();
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="CMReciept.php">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
-                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMaps"
+            aria-expanded="false" aria-controls="collapseMaps">
+            <div
+              class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-pin-map-fill" viewBox="0 0 16 16">
+                <title>office</title>
+                <path fill-rule="evenodd"
+                  d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z" />
+                <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z" />
               </svg>
             </div>
-            <span class="nav-link-text ms-1">Reciept</span>
+            <span class="nav-link-text ms-1">Maps</span>
           </a>
+          <div class="collapse" id="collapseMaps">
+            <div class="right-aligned-links" style="text-align: right;">
+              <a class="nav-link" href="ABuildingA.php">Building A</a>
+              <a class="nav-link" href="ABuildingB.php">Building B</a>
+              <a class="nav-link" href="ABuildingC.php">Building C</a>
+              <a class="nav-link" href="ABuildingD.php">Building D</a>
+              <a class="nav-link" href="ABuildingE.php">Building E</a>
+              <a class="nav-link" href="ABuildingF.php">Building F</a>
+              <a class="nav-link" href="ABuildingG.php">Building G</a>
+              <a class="nav-link" href="ABuildingH.php">Building H</a>
+              <a class="nav-link" href="ABuildingI.php">Building I</a>
+              <a class="nav-link" href="ABuildingJ.php">Building J</a>
+            </div>
+          </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link  " href="CMPaymentRem.php">
+  <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReceipt"
+    aria-expanded="false" aria-controls="collapseReceipt">
+    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+      </svg>
+    </div>
+    <span class="nav-link-text ms-1">Receipts</span>
+  </a>
+  <div class="collapse" id="collapseReceipt">
+    <div class="right-aligned-links" style="text-align: right;">
+      <a class="nav-link" href="CMReceiptVendor.php">Vendors</a>
+      
+      <!-- Dropdown for Rent Stall Applicants -->
+      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseStallApp"
+         aria-expanded="false" aria-controls="collapseStallApp">
+        Rent Stall Applicants
+      </a>
+      <div class="collapse" id="collapseStallApp">
+        <ul class="nav flex-column ms-3"> <!-- Added 'ms-3' for margin on the left -->
+          <li class="nav-item">
+            <a class="nav-link" href="CMReceiptApplicantsPaid.php">Paid</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="CMReceiptApplicantsUnpaid.php">Unpaid</a>
+          </li>
+        </ul>
+      </div>
+      
+    </div>
+  </div>
+</li>
+        <li class="nav-item">
+          <a class="nav-link" href="CMReports.php">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-richtext" viewBox="0 0 16 16">
+              <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+              <path d="M4.5 12.5A.5.5 0 0 1 5 12h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5m0-2A.5.5 0 0 1 5 10h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5m1.639-3.708 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V8.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V8s1.54-1.274 1.639-1.208M6.25 6a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5"/>
+            </svg>
+          </div>
+          <span class="nav-link-text ms-1">Monthly Reports</span>
+        </a>
+        </li>
+       
+        
+        <li class="nav-item">
+          <a class="nav-link " href="CMPaymentRem.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
                 <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
@@ -169,9 +197,14 @@ $conn->close();
               <div class="card-body">
                 <h5 class="card-title text-lg text-info mb-3 text-start mx-2">Staff Profile</h5>
                 <div class="row">
-                  <div class="col-md-4">
-                    <img src="image/profile.jpg" class="img-fluid rounded-circle" alt="Admin Profile Picture">
-                  </div>
+                <div class="col-md-4">
+                  <?php
+                  // Check if the user has a profile picture set; if not, use a default image
+                  $profilePicture = !empty($user['picture_profile']) ? $user['picture_profile'] : 'image/profile.jpg';
+                  ?>
+                  <img src="<?php echo htmlspecialchars($profilePicture); ?>" class="img-fluid rounded-circle"
+                    alt="Admin Profile Picture" style="width: 100px; height: 100px; object-fit: cover;">
+                </div>
                   <div class="col-md-8 my-3">
                   <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?></h6>
                     <p class="card-text">Username: <?php echo htmlspecialchars($user['username']); ?></p>
@@ -183,9 +216,10 @@ $conn->close();
                   <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                     Change Password
                   </button>
-                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Change Profile Picture
-                  </button>
+                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Change Profile Picture
+                </button>
                 </div>
                 <div class="accordion" id="profile-accordion">
                   <div class="accordion-item">
@@ -296,18 +330,53 @@ if (empty($current_password) || empty($new_password)) {
                     </div>
                   </div>
                   <div class="accordion-item">
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#profile-accordion">
-                      <div class="accordion-body">
-                        <form>
-                          <div class="mb-3">
-                            <label for="profile-picture" class="form-label">Profile Picture</label>
-                            <input type="file" class="form-control" id="profile-picture" accept="image/*">
-                          </div>
-                          <button type="submit" class="btn btn-primary">Update Profile Picture</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+            data-bs-parent="#profile-accordion">
+            <div class="accordion-body">
+              <form id="uploadForm" action="cashierPicUpload.php" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                  <label for="profile-picture" class="form-label">Profile Picture</label>
+                  <input type="file" class="form-control" id="profile-picture" name="profile-picture" required>
+                </div>
+                <?php
+
+                // Get the user ID from the session
+                $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
+
+                // Check if user_id is available and set it in the hidden input
+                if ($user_id !== null) {
+                  echo '<input type="hidden" name="id" id="id" value="' . htmlspecialchars($user_id) . '">';
+                } else {
+                  echo '<p>Error: User ID is not set in the session.</p>';
+                }
+                ?>
+                <button type="submit" class="btn btn-primary">Update Profile Picture</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+          $(document).ready(function () {
+            $('#uploadForm').on('submit', function (e) {
+              e.preventDefault(); // Prevent default form submission
+
+              var formData = new FormData(this); // Create FormData object with form data
+
+              $.ajax({
+                url: $(this).attr('action'), // URL to send the request to
+                type: 'POST', // Request method
+                data: formData, // Form data
+                contentType: false, // Prevent setting Content-Type header
+                processData: false, // Prevent jQuery from processing data
+                success: function (response) {
+                  alert(response); // Display response as an alert, regardless of success or error
+                }
+              });
+            });
+          });
+        </script>
                 </div>
               </div>
             </div>
@@ -392,7 +461,7 @@ if (!$user) {
 
       
   <!--   Core JS Files   -->
-  <script src="assets2/js/core/popper.min.js"></script>
+ <script src="assets2/js/core/popper.min.js"></script>
   <script src="assets2/js/core/bootstrap.min.js"></script>
   <script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/smooth-scrollbar.min.js"></script>
@@ -410,10 +479,6 @@ if (!$user) {
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Bootstrap Bundle with Popper -->
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

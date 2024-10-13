@@ -1,13 +1,5 @@
 <?php
-session_name('admin_session');
-session_start();
-
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'ADMIN') {
-  header("Location: index.php");
-  exit();
-}
-// Get the vendor ID from the session
-$user_id = $_SESSION['id'];
+include('Sessions/Admin.php');
 
 // Include database configuration
 include('database_config.php');
@@ -34,6 +26,10 @@ $user = $result->fetch_assoc();
 // Check if vendor data is retrieved
 if (!$user) {
   die("No User found with ID " . htmlspecialchars($user_id));
+} else {
+  if (!isset($user['first_name']) || !isset($user['user_type'])) {
+    die("User information is incomplete for ID " . htmlspecialchars($user_id));
+  }
 }
 
 // Handle AJAX request
@@ -193,8 +189,8 @@ if (isset($_GET['building'])) {
           </a>
           <div class="collapse" id="collapseAccounts">
             <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="AMUser.php">Users</a>
-              <a class="nav-link" href="AMVendor.php">Vendors</a>
+              <a class="nav-link" href="AMuser.php">Users</a>
+              <a class="nav-link" href="AMvendor.php">Vendors</a>
             </div>
           </div>
         </li>
@@ -256,7 +252,7 @@ if (isset($_GET['building'])) {
           <div class="collapse" id="collapseRelRequest">
             <div class="right-aligned-links" style="text-align: right;">
               <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
-              <a class="nav-link" href="AMRelReqProcessing.php">Processing</a>
+              <a class="nav-link" href="AMRelReqProcessing.php">Pending</a>
               <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
             </div>
           </div>
@@ -321,6 +317,10 @@ if (isset($_GET['building'])) {
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
+            <?php 
+            include('Notification/AdminNotif.php');
+            ?>
+         
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -391,6 +391,8 @@ if (isset($_GET['building'])) {
           <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#showexampleModal">
             Add New Vendor/User
           </button>
+        
+         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" id="deleteBtn">DELETE</button>
         </div>
 
         <body>
@@ -419,7 +421,34 @@ if (isset($_GET['building'])) {
             }
           </style>
 
-                
+<?php
+include("database_config.php");
+
+// Create connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// SQL query to fetch user details from the `users` table
+$sql = "SELECT id, username FROM users";
+$result = $conn->query($sql);
+
+// Initialize an array to hold user data
+$users = [];
+if ($result->num_rows > 0) {
+    while ($row = $result->fetch_assoc()) {
+        $users[] = $row; // Add each user to the array
+    }
+} else {
+    echo "No users found.";
+}
+
+$conn->close(); // Close the database connection
+?>
+  
               <script>
                 $(document).ready(function() {
                     // Show the modal if there is a message
@@ -427,7 +456,107 @@ if (isset($_GET['building'])) {
                         $('#successModal').modal('show');
                     <?php endif; ?>
                 });
+
             </script>
+
+
+<!-- Modal for User Deletion -->
+<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel">Delete User</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="searchUser" class="form-label">Search User</label>
+                        <input type="text" class="form-control" id="searchUser" placeholder="Enter username">
+                    </div>
+                    <div class="mb-3">
+                        <label for="userDropdown" class="form-label">Select User</label>
+                        <select class="form-select" id="userDropdown">
+                            <option value="">Select a user</option>
+                            <?php foreach ($users as $user): ?>
+                                <option value="<?php echo $user['id']; ?>"><?php echo $user['username']; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete User</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const searchInput = document.getElementById('searchUser');
+        const userDropdown = document.getElementById('userDropdown');
+
+        // Filter dropdown based on search input
+        searchInput.addEventListener('input', function () {
+            const searchTerm = searchInput.value.toLowerCase();
+            const options = userDropdown.querySelectorAll('option');
+            options.forEach(option => {
+                const isVisible = option.textContent.toLowerCase().includes(searchTerm);
+                option.style.display = isVisible ? 'block' : 'none';
+            });
+        });
+        document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
+    const userDropdown = document.getElementById('userDropdown');
+    const selectedUserId = userDropdown.value;
+    const selectedUserName = userDropdown.options[userDropdown.selectedIndex].text; // Get the selected user's name
+    
+    if (selectedUserId) {
+        try {
+            const response = await fetch('deleteUser.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userId: selectedUserId }), // Send the selected user ID
+            });
+
+            if (!response.ok) {
+                // If the response is not successful (e.g., 404, 500), handle it here
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Success message
+                alert(`Success: User ${selectedUserName} has been deleted.`);
+                window.location.href = 'AMUser.php';
+                $('#deleteModal').modal('hide'); // Close the modal
+                // Optionally refresh the page or dropdown if needed
+            } else {
+                // Handle failure based on the result from the PHP file
+                if (result.message) {
+                    alert(`Error: ${result.message}`);
+                } else {
+                    alert('Error: Unknown issue occurred while deleting the user.');
+                }
+            }
+        } catch (error) {
+            // Catch any other error (network issues, unexpected errors, etc.)
+            console.error('Error deleting user:', error);
+            alert(`Failed to delete user. Error: ${error.message}`);
+        }
+    } else {
+        alert('Please select a user to delete.');
+    }
+});
+
+
+    });
+    </script>
+
+
+
           <div class="modal fade" id="showexampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -765,43 +894,13 @@ document.getElementById('monthly_rentals').addEventListener('click', function ()
   }
 });
 
-// $(document).ready(function () {
-//   $('#submit').on('click', function (e) {
-//     e.preventDefault(); // Prevent default form submission
-
-//     var buildingType = $('#building_type').val();
-//     var stallNo = $('#stall_no').val();
-//     var monthlyRentals = $('#monthly_rentals').val();
-//     var startedDate = $('#started_date').val();
-//     var endDate = $('#end_date').val();
-
-//     $.ajax({
-//       url: 'process_formVendor.php', // The server-side script URL
-//       type: 'POST',
-//       data: {
-//         building_type: buildingType,
-//         stall_no: stallNo,
-//         monthly_rentals: monthlyRentals,
-//         started_date: startedDate,
-//         end_date: endDate
-//       },
-//       success: function (response) {
-//         var result = JSON.parse(response);
-//         if (result.status === 'success') {
-//           alert(result.message);
-//         } else {
-//           alert(result.message);
-//         }
-//       },
-//       error: function () {
-//         alert('An error occurred while processing the request.');
-//       }
-//     });
-//   });
-// });
-
 </script>
       </div>
+
+
+      
+
+
 
       <div class="row my-4">
         <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
@@ -905,7 +1004,7 @@ document.getElementById('monthly_rentals').addEventListener('click', function ()
                     </tr>
                     <?php
                   }
-                  $conn->close();
+              
               ?>
                   </tbody>
                 </table>
@@ -920,15 +1019,55 @@ document.getElementById('monthly_rentals').addEventListener('click', function ()
     </div>
   </main>
   <div class="fixed-plugin">
+
+  <?php
+
+// Get the user ID from the session
+$user_id = $_SESSION['id'];
+
+// Include database configuration
+include('database_config.php');
+
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch user information
+$sql = "SELECT * FROM users WHERE id = ?";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+  die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$usertype = $result->fetch_assoc();
+
+// Check if user data is retrieved
+if (!$usertype) {
+  die("No User found with ID " . htmlspecialchars($user_id));
+} else {
+  if (!isset($usertype['first_name']) || !isset($usertype['user_type'])) {
+    die("User information is incomplete for ID " . htmlspecialchars($user_id));
+  }
+}
+
+$conn->close();
+?>
+
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" href="#">
       <i class="fas fa-cog"></i> </a>
     <div class="card shadow-lg">
       <div class="card-header pb-0 pt-3">
         <div class="float-start">
 
-          <h5 class="text-center">Username: <span
-              class="text-info"><?php echo htmlspecialchars($user['first_name']) ?></span> </h5>
-          <p>Role: <span class="text-info"><?php echo htmlspecialchars($user['user_type']) ?></span> </p>
+        <h5 class="text-center">Username: <span class="text-info"><?php echo htmlspecialchars($usertype['first_name'] ?? 'Unknown') ?></span></h5>
+<p>Role: <span class="text-info"><?php echo htmlspecialchars($usertype['user_type'] ?? 'Unknown') ?></span></p>
+
         </div>
         <div class="float-end mt-4">
           <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">

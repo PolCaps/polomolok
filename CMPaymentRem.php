@@ -1,42 +1,5 @@
 <?php
-session_name('cashier_session');
-session_start();
-
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'STAFF') {
-    header("Location: index.php");
-    exit();
-}
-
-$user_id = $_SESSION['id'];
-
-// Include database configuration
-include('database_config.php');
-
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Fetch vendor information
-$sql = "SELECT * FROM users WHERE id = ?";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
-}
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-// Check if vendor data is retrieved
-if (!$user) {
-    die("No User found with ID " . htmlspecialchars($user_id));
-}
-
-
+include('Sessions/Cashier.php');
 ?>
 
 
@@ -49,7 +12,7 @@ if (!$user) {
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Vendor Payment Reminder
+    Cashier
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -88,17 +51,83 @@ if (!$user) {
           </a>
         </li>
         <li class="nav-item">
-          <a class="nav-link " href="CMReciept.php">
-            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
-                <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMaps"
+            aria-expanded="false" aria-controls="collapseMaps">
+            <div
+              class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                class="bi bi-pin-map-fill" viewBox="0 0 16 16">
+                <title>office</title>
+                <path fill-rule="evenodd"
+                  d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z" />
+                <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z" />
               </svg>
             </div>
-            <span class="nav-link-text ms-1">Reciept</span>
+            <span class="nav-link-text ms-1">Maps</span>
           </a>
+          <div class="collapse" id="collapseMaps">
+            <div class="right-aligned-links" style="text-align: right;">
+              <a class="nav-link" href="ABuildingA.php">Building A</a>
+              <a class="nav-link" href="ABuildingB.php">Building B</a>
+              <a class="nav-link" href="ABuildingC.php">Building C</a>
+              <a class="nav-link" href="ABuildingD.php">Building D</a>
+              <a class="nav-link" href="ABuildingE.php">Building E</a>
+              <a class="nav-link" href="ABuildingF.php">Building F</a>
+              <a class="nav-link" href="ABuildingG.php">Building G</a>
+              <a class="nav-link" href="ABuildingH.php">Building H</a>
+              <a class="nav-link" href="ABuildingI.php">Building I</a>
+              <a class="nav-link" href="ABuildingJ.php">Building J</a>
+            </div>
+          </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="CMPaymentRem.php">
+  <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReceipt"
+    aria-expanded="false" aria-controls="collapseReceipt">
+    <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#000000" class="bi bi-person-lines-fill" viewBox="0 0 16 16">
+        <path d="M6 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5 6s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zM11 3.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5m.5 2.5a.5.5 0 0 0 0 1h4a.5.5 0 0 0 0-1zm2 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zm0 3a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1z"/>
+      </svg>
+    </div>
+    <span class="nav-link-text ms-1">Receipts</span>
+  </a>
+  <div class="collapse" id="collapseReceipt">
+    <div class="right-aligned-links" style="text-align: right;">
+      <a class="nav-link" href="CMReceiptVendor.php">Vendors</a>
+      
+      <!-- Dropdown for Rent Stall Applicants -->
+      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseStallApp"
+         aria-expanded="false" aria-controls="collapseStallApp">
+        Rent Stall Applicants
+      </a>
+      <div class="collapse" id="collapseStallApp">
+        <ul class="nav flex-column ms-3"> <!-- Added 'ms-3' for margin on the left -->
+          <li class="nav-item">
+            <a class="nav-link" href="CMReceiptApplicantsPaid.php">Paid</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="CMReceiptApplicantsUnpaid.php">Unpaid</a>
+          </li>
+        </ul>
+      </div>
+      
+    </div>
+  </div>
+</li>
+        <li class="nav-item">
+          <a class="nav-link" href="CMReports.php">
+            <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-richtext" viewBox="0 0 16 16">
+              <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
+              <path d="M4.5 12.5A.5.5 0 0 1 5 12h3a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5m0-2A.5.5 0 0 1 5 10h6a.5.5 0 0 1 0 1H5a.5.5 0 0 1-.5-.5m1.639-3.708 1.33.886 1.854-1.855a.25.25 0 0 1 .289-.047l1.888.974V8.5a.5.5 0 0 1-.5.5H5a.5.5 0 0 1-.5-.5V8s1.54-1.274 1.639-1.208M6.25 6a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5"/>
+            </svg>
+          </div>
+          <span class="nav-link-text ms-1">Monthly Reports</span>
+        </a>
+        </li>
+       
+        
+        <li class="nav-item">
+          <a class="nav-link " href="CMPaymentRem.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
                 <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
@@ -127,7 +156,7 @@ if (!$user) {
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Staff</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Cashier</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
           </ol>
           <h6 class="font-weight-bolder mb-0">Payment Reminder</h6>
@@ -143,7 +172,7 @@ if (!$user) {
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Staff</span>
+                <span class="d-sm-inline d-none">Cashier</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -222,23 +251,24 @@ if (!$user) {
 
 // Fetch vendor details for display
 $sqlvendor = "
-    SELECT 
-        CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
-        v.username AS username, 
-        v.end_date AS due_date, 
-        a.monthly_rentals AS rent_due,
-        v.vendor_id AS vendor_id
-    FROM vendors v
-    JOIN building_a a ON v.vendor_id = a.vendor_id
-    LEFT JOIN building_b b ON v.vendor_id = b.vendor_id
-    LEFT JOIN building_c c ON v.vendor_id = c.vendor_id
-    LEFT JOIN building_d d ON v.vendor_id = d.vendor_id
-    LEFT JOIN building_e e ON v.vendor_id = e.vendor_id
-    LEFT JOIN building_f f ON v.vendor_id = f.vendor_id
-    LEFT JOIN building_g g ON v.vendor_id = g.vendor_id
-    LEFT JOIN building_h h ON v.vendor_id = h.vendor_id
-    LEFT JOIN building_i i ON v.vendor_id = i.vendor_id
-    LEFT JOIN building_j j ON v.vendor_id = j.vendor_id
+  SELECT 
+    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+    v.username AS username, 
+    v.payment_due AS payment_dues, 
+    COALESCE(a.monthly_rentals, b.monthly_rentals, c.monthly_rentals, d.monthly_rentals, e.monthly_rentals, 
+             f.monthly_rentals, g.monthly_rentals, h.monthly_rentals, i.monthly_rentals, j.monthly_rentals) AS rent_due,
+    v.vendor_id AS vendor_id
+FROM vendors v
+LEFT JOIN building_a a ON v.vendor_id = a.vendor_id
+LEFT JOIN building_b b ON v.vendor_id = b.vendor_id
+LEFT JOIN building_c c ON v.vendor_id = c.vendor_id
+LEFT JOIN building_d d ON v.vendor_id = d.vendor_id
+LEFT JOIN building_e e ON v.vendor_id = e.vendor_id
+LEFT JOIN building_f f ON v.vendor_id = f.vendor_id
+LEFT JOIN building_g g ON v.vendor_id = g.vendor_id
+LEFT JOIN building_h h ON v.vendor_id = h.vendor_id
+LEFT JOIN building_i i ON v.vendor_id = i.vendor_id
+LEFT JOIN building_j j ON v.vendor_id = j.vendor_id
 ";
 
 $resultA = $conn->query($sqlvendor);
@@ -268,7 +298,7 @@ if ($resultA->num_rows > 0) {
               <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['rent_due']) . '</span>
           </td>
           <td class="align-middle text-center text-sm">
-              <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['due_date']) . '</span>
+              <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['payment_dues']) . '</span>
           </td>
           <td class="align-middle text-center text-sm">
               <button type="button" class="btn btn-sm btn-primary my-1" onclick="openSendMessageModal(\'' . htmlspecialchars($rowA['name']) . '\', ' . htmlspecialchars($rowA['vendor_id']) . ')">
@@ -291,7 +321,7 @@ if ($resultA->num_rows > 0) {
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
           <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
-          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due Date</th>
+          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Due Status</th>
           <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
         </tr>
       </thead>
@@ -319,7 +349,7 @@ if ($resultA->num_rows > 0) {
           </div>
           <div class="mb-3">
             <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
-            <input type="text" class="form-control" id="remaining-balance" name="remaining-balance" required>
+            <input type="number" class="form-control" id="remaining-balance" name="remaining-balance" step="0.01" min="0" required>
           </div>
           <div class="mb-3">
             <label for="monthly-rentals" class="col-form-label">Monthly Rentals:</label>
@@ -327,11 +357,11 @@ if ($resultA->num_rows > 0) {
           </div>
           <div class="mb-3">
             <label for="miscellaneous-fees" class="col-form-label">Miscellaneous Fees (optional):</label>
-            <input type="text" class="form-control" id="miscellaneous-fees" name="miscellaneous-fees">
+            <input type="number" class="form-control" id="miscellaneous-fees" name="miscellaneous-fees" step="0.01" min="0" >
           </div>
           <div class="mb-3">
             <label for="other-fees" class="col-form-label">Other Fees (optional):</label>
-            <input type="text" class="form-control" id="other-fees" name="other-fees">
+            <input type="number" class="form-control" id="other-fees" name="other-fees" step="0.01" min="0" >
           </div>
           <input type="hidden" id="vendor-id" name="vendor-id">
           <button type="submit" id="submit" class="btn btn-primary">Generate Invoice</button>
@@ -347,6 +377,26 @@ if ($resultA->num_rows > 0) {
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // Format the input as currency
+  function formatCurrencyInput(input) {
+    let value = parseFloat(input.value.replace(/,/g, ''));
+    if (!isNaN(value)) {
+      input.value = value.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits: 2 });
+    }
+  }
+
+  // Attach input event to format currency
+  document.querySelectorAll('.currency-input').forEach(input => {
+    input.addEventListener('input', function() {
+      formatCurrencyInput(this);
+    });
+
+    // Optional: Format when the input loses focus
+    input.addEventListener('blur', function() {
+      formatCurrencyInput(this);
+    });
+  });
+
   // Function to open the modal and set vendor details
   function openSendMessageModal(vendorName, vendorId) {
     document.getElementById('vendor-name').value = vendorName;
@@ -389,9 +439,7 @@ document.addEventListener('DOMContentLoaded', () => {
     .then(response => response.json())
     .then(data => {
       if (data.success) {
-        // Display a popup with the PDF download link
         alert('Invoice generated successfully!');
-        // Optionally, you can open the PDF directly
         window.open(data.file, '_blank');
       } else {
         alert('Error: ' + data.message);
@@ -400,7 +448,6 @@ document.addEventListener('DOMContentLoaded', () => {
     .catch(error => console.error('Error:', error));
   });
 
-  // Ensure openSendMessageModal is available for use
   window.openSendMessageModal = openSendMessageModal;
 });
 </script>

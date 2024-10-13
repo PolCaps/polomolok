@@ -1,43 +1,7 @@
 <?php
-session_name('customerservice_session');
-session_start();
-
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'CUSTOMER_SERVICE') {
-    header("Location: index.php");
-    exit();
-}
-$user_id = $_SESSION['id'];
-
-// Include database configuration
-include('database_config.php');
-
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Fetch vendor information
-$sql = "SELECT * FROM users WHERE id = ?";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
-}
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-// Check if vendor data is retrieved
-if (!$user) {
-    die("No User found with ID " . htmlspecialchars($user_id));
-}
-
-// Close the connection
-$conn->close();
+include('Sessions/CustomerService.php');
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -48,7 +12,7 @@ $conn->close();
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Staff Dashboard
+    Customer Service
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -63,9 +27,91 @@ $conn->close();
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
   <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" /> <!-- Bootstrap CSS --></body>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
+
+<div class="modal fade" id="reminderModal" tabindex="-1" aria-labelledby="reminderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="reminderModalLabel">REMINDERS</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-message">A new entry has been added. Please check!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    // Show modal function
+    function showModal(updatedTables) {
+        const modal = new bootstrap.Modal(document.getElementById('reminderModal'));
+        modal.show();
+        startAutoCloseTimer(); // Start the timer when the modal is shown
+
+        // Update the modal message
+        const modalMessage = document.getElementById('modal-message');
+        if (updatedTables.length === 1) {
+            modalMessage.textContent = `A new entry has been added: ${updatedTables[0]}. Please check!`;
+        } else {
+            modalMessage.textContent = `New entries have been added: ${updatedTables.join(', ')}. Please check!`;
+        }
+    }
+
+    let autoCloseTimeout;
+    const autoCloseDuration = 120000; // 2 minutes, can be adjusted as needed
+
+    // Close modal function
+    function closeModal() {
+        const modal = bootstrap.Modal.getInstance(document.getElementById('reminderModal'));
+        if (modal) {
+            modal.hide();
+        }
+        clearTimeout(autoCloseTimeout); // Clear the timeout when the modal is closed
+    }
+
+    // Start the auto-close timer
+    function startAutoCloseTimer() {
+        autoCloseTimeout = setTimeout(closeModal, autoCloseDuration);
+    }
+
+    function checkForNewEntries() {
+        fetch('check_new.php')
+            .then(response => response.json())
+            .then(data => {
+                console.log('Response received:', data);
+                if (data.newEntry) {
+                    const updatedTables = Object.keys(data.newEntries).filter(table => data.newEntries[table]);
+                    console.log('Updated tables:', updatedTables);
+                    showModal(updatedTables);
+                } else {
+                    console.log('No new entries found.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    }
+
+    // Check for new entries every 5 seconds
+    setInterval(checkForNewEntries, 5000);
+
+    // Initial check when the page loads
+    checkForNewEntries();
+});
+</script>
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -130,7 +176,7 @@ $conn->close();
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Staff</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Customer Service</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modules</li>
           </ol>
           <h6 class="font-weight-bolder mb-0">Dashboard</h6>
@@ -146,7 +192,7 @@ $conn->close();
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Staff</span>
+                <span class="d-sm-inline d-none">Customer Service</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -170,9 +216,14 @@ $conn->close();
               <div class="card-body">
                 <h5 class="card-title text-lg text-info mb-3 text-start mx-2">Staff Profile</h5>
                 <div class="row">
-                  <div class="col-md-4">
-                    <img src="image/profile.jpg" class="img-fluid rounded-circle" alt="Admin Profile Picture">
-                  </div>
+                <div class="col-md-4">
+                  <?php
+                  // Check if the user has a profile picture set; if not, use a default image
+                  $profilePicture = !empty($user['picture_profile']) ? $user['picture_profile'] : 'image/profile.jpg';
+                  ?>
+                  <img src="<?php echo htmlspecialchars($profilePicture); ?>" class="img-fluid rounded-circle"
+                    alt="Admin Profile Picture" style="width: 100px; height: 100px; object-fit: cover;">
+                </div>
                   <div class="col-md-8 my-3">
                   <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?></h6>
                     <p class="card-text">Username: <?php echo htmlspecialchars($user['username']); ?></p>
@@ -184,9 +235,10 @@ $conn->close();
                   <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
                     Change Password
                   </button>
-                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                    Change Profile Picture
-                  </button>
+                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse"
+                  data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                  Change Profile Picture
+                </button>
                 </div>
                 <div class="accordion" id="profile-accordion">
                   <div class="accordion-item">
@@ -297,18 +349,53 @@ if (empty($current_password) || empty($new_password)) {
                     </div>
                   </div>
                   <div class="accordion-item">
-                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#profile-accordion">
-                      <div class="accordion-body">
-                        <form>
-                          <div class="mb-3">
-                            <label for="profile-picture" class="form-label">Profile Picture</label>
-                            <input type="file" class="form-control" id="profile-picture" accept="image/*">
-                          </div>
-                          <button type="submit" class="btn btn-primary">Update Profile Picture</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
+          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
+            data-bs-parent="#profile-accordion">
+            <div class="accordion-body">
+              <form id="uploadForm" action="custServicesPicUpload.php" method="post" enctype="multipart/form-data">
+                <div class="mb-3">
+                  <label for="profile-picture" class="form-label">Profile Picture</label>
+                  <input type="file" class="form-control" id="profile-picture" name="profile-picture" required>
+                </div>
+                <?php
+
+                // Get the user ID from the session
+                $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
+
+                // Check if user_id is available and set it in the hidden input
+                if ($user_id !== null) {
+                  echo '<input type="hidden" name="id" id="id" value="' . htmlspecialchars($user_id) . '">';
+                } else {
+                  echo '<p>Error: User ID is not set in the session.</p>';
+                }
+                ?>
+                <button type="submit" class="btn btn-primary">Update Profile Picture</button>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+          $(document).ready(function () {
+            $('#uploadForm').on('submit', function (e) {
+              e.preventDefault(); // Prevent default form submission
+
+              var formData = new FormData(this); // Create FormData object with form data
+
+              $.ajax({
+                url: $(this).attr('action'), // URL to send the request to
+                type: 'POST', // Request method
+                data: formData, // Form data
+                contentType: false, // Prevent setting Content-Type header
+                processData: false, // Prevent jQuery from processing data
+                success: function (response) {
+                  alert(response); // Display response as an alert, regardless of success or error
+                }
+              });
+            });
+          });
+        </script>
                 </div>
               </div>
             </div>

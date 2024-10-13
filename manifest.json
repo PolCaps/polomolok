@@ -44,7 +44,7 @@
     }
     
   ],
-  "start_url": "https://samsapach.online/PolomolokPublicMarket/",
+  "start_url": "http://127.0.0.1/polomolok/",
   "background_color": "#ffff00",
   "display": "standalone",
   "theme_color": "#f8f9fa"

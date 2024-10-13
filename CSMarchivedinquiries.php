@@ -1,43 +1,5 @@
 <?php
-session_name('customerservice_session');
-session_start();
-
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'CUSTOMER_SERVICE') {
-    header("Location: index.php");
-    exit();
-}
-
-$user_id = $_SESSION['id'];
-
-// Include database configuration
-include('database_config.php');
-
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Fetch vendor information
-$sql = "SELECT * FROM users WHERE id = ?";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
-}
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-// Check if vendor data is retrieved
-if (!$user) {
-    die("No User found with ID " . htmlspecialchars($user_id));
-}
-
-// Close the connection
-$conn->close();
+include('Sessions/CustomerService.php');
 ?>
 
 
@@ -50,7 +12,7 @@ $conn->close();
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Inquiries
+    Customer Service
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -79,7 +41,7 @@ $conn->close();
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link " href="CustomerService.php">
+          <a class="nav-link" href="CustomerService.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-shop" viewBox="0 0 16 16">
                 <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
@@ -130,7 +92,7 @@ $conn->close();
       <div class="container-fluid py-1 px-3">
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
-            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Staff</a></li>
+            <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Customer Service</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
           </ol>
           <h6 class="font-weight-bolder mb-0">Inquiries</h6>
@@ -146,7 +108,7 @@ $conn->close();
             <li class="nav-item d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body font-weight-bold px-0">
                 <i class="fa fa-user me-sm-1"></i>
-                <span class="d-sm-inline d-none">Staff</span>
+                <span class="d-sm-inline d-none">Customer Service</span>
               </a>
             </li>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
@@ -189,6 +151,94 @@ if ($start_date && $end_date) {
 
 $result = $conn->query($sql);
 ?>
+<?php
+// Include your database configuration file
+include('database_config.php');
+
+// Create a connection using mysqli
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Initialize a variable to hold alert messages
+$alertMessage = '';
+
+// Check if the 'ids' parameter is present in the URL
+if (isset($_GET['ids'])) {
+    // Get the comma-separated list of inquiry IDs
+    $ids = $_GET['ids'];
+
+    // Convert the string of IDs into an array
+    $inquiryIds = explode(',', $ids);
+
+    // Convert each ID to an integer (sanitize the input to prevent SQL injection)
+    $inquiryIds = array_map('intval', $inquiryIds);
+
+    // Convert the array back to a comma-separated string for the SQL query
+    $idString = implode(',', $inquiryIds);
+
+    // Step 1: Use INSERT IGNORE to avoid duplicates in the archived_inquiries table
+    $copyQuery = "INSERT IGNORE INTO archived_inquiries (inquiry_id, name, email_add, subject, message, sent_date)
+                  SELECT inq_id, name, email_add, subject, message, sent_date 
+                  FROM inquiry 
+                  WHERE inq_id IN ($idString)";
+
+    // Execute the copy query
+    if ($conn->query($copyQuery) === TRUE) {
+        // Step 2 (Optional): Delete the inquiries from the original table after copying
+        $deleteQuery = "DELETE FROM inquiry WHERE inq_id IN ($idString)";
+        
+        // Execute the delete query
+        if ($conn->query($deleteQuery) === TRUE) {
+            $toastMessage = "Inquiries archived successfully!";
+        } else {
+          $toastMessage = "Error deleting inquiries: " . $conn->error;
+        }
+    } else {
+      $toastMessage = "Error copying inquiries: " . $conn->error;
+    }
+} else {
+  $toastMessage = "";
+}
+
+// Close the connection
+$conn->close();
+?>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+<div id="alertMessage" class="alert alert-dismissible fade show" role="alert" style="display: none;">
+    <strong id="alertTitle"></strong> <span id="alertBody"></span>
+    <button type="button" class="btn-close" onclick="document.getElementById('alertMessage').style.display='none'"></button>
+</div>
+<div class="toast-container position-fixed top-0 end-0 p-3" id="toastNotif">
+        <?php if (!empty($toastMessage)): ?>
+            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="2000" id="toastNotif">
+                <div class="toast-header">
+                    <strong class="me-auto info">Notification</strong>
+                    <button type="button" class="btn-close bg-info" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+                <div class="toast-body">
+                    <?php echo $toastMessage; ?>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+    <script>
+    // Function to auto-dismiss the toast after 2 seconds
+    $(document).ready(function() {
+        const toastElement = $('#toastNotif');
+        if (toastElement.length) {
+            toastElement.toast('show'); // Show the toast immediately
+            setTimeout(function() {
+                toastElement.toast('hide');
+            }, 2000); // Auto-dismiss after 2 seconds
+        }
+    });
+</script>
 
 <div class="row my-4">
     <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
@@ -423,7 +473,7 @@ $result = $conn->query($sql);
                   });
               }
           } else {
-              alert("Please select at least one inquiry to delete.");
+            alert("Please select at least one inquiry to delete.");
           }
       });
     </script>

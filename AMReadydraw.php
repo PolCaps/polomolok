@@ -1,13 +1,5 @@
 <?php
-session_name('admin_session');
-session_start();
-
-if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'ADMIN') {
-    header("Location: index.php");
-    exit();
-}
-// Get the vendor ID from the session
-$user_id = $_SESSION['id'];
+include('Sessions/Admin.php');
 
 // Include database configuration
 include('database_config.php');
@@ -17,14 +9,14 @@ $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 // Check the connection
 if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
+  die("Connection failed: " . $conn->connect_error);
 }
 
 // Fetch vendor information
 $sql = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
+  die("Prepare failed: " . $conn->error);
 }
 $stmt->bind_param("i", $user_id);
 $stmt->execute();
@@ -33,7 +25,7 @@ $user = $result->fetch_assoc();
 
 // Check if vendor data is retrieved
 if (!$user) {
-    die("No User found with ID " . htmlspecialchars($user_id));
+  die("No User found with ID " . htmlspecialchars($user_id));
 }
 
 // Close the connection
@@ -44,7 +36,7 @@ $conn->close();
 <html lang="en">
 
 <head>
-<meta charset="utf-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
@@ -69,7 +61,7 @@ $conn->close();
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
     id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
@@ -144,8 +136,8 @@ $conn->close();
           </a>
           <div class="collapse" id="collapseAccounts">
             <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="AMUser.php">Users</a>
-              <a class="nav-link" href="AMVendor.php">Vendors</a>
+            <a class="nav-link" href="AMuser.php">Users</a>
+            <a class="nav-link" href="AMvendor.php">Vendors</a>
             </div>
           </div>
         </li>
@@ -207,7 +199,7 @@ $conn->close();
           <div class="collapse" id="collapseRelRequest">
             <div class="right-aligned-links" style="text-align: right;">
               <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
-              <a class="nav-link" href="AMRelReqProcessing.php">Processing</a>
+              <a class="nav-link" href="AMRelReqProcessing.php">Pending</a>
               <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
             </div>
           </div>
@@ -271,6 +263,10 @@ $conn->close();
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
+            <?php 
+            include('Notification/AdminNotif.php');
+            ?>
+         
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -308,89 +304,127 @@ $conn->close();
           </div>
         </div>
         <div class="card-body px-0 pb-2">
-          <div class="table-responsive">
-            <table class="table align-items-center mb-0">
-              <thead>
+    <div class="table-responsive">
+        <table class="table align-items-center mb-0">
+            <thead>
                 <tr>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant
-                    ID</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Official
-                    Reciept No.</th>
-                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Proof Of
-                    Payment</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment
-                    Status</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Verify
-                    Status</th>
-                  <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment
-                    Date</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant Name</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Commodities</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact No.</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email Address</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Status</th>
                 </tr>
-              </thead>
-              <tbody id="dataTableBodyReceipt">
+            </thead>
+            <tbody id="dataTableBodyReceipt">
+                <?php
+                // Establish a connection to the database
+                include 'database_config.php'; // Include the database connection
 
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+                // Create a new MySQLi connection
+                $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-      <script>
-        document.addEventListener('DOMContentLoaded', function () {
-          fetch('populate_rentapp_paymentFiltered.php')
-            .then(response => response.json())
-            .then(data => {
-              if (data.success) {
-                const tableBody = document.getElementById('dataTableBodyReceipt');
-                tableBody.innerHTML = ''; // Clear existing rows
-                data.data.forEach(item => {
-                  const row = document.createElement('tr');
+                // Check connection
+                if ($conn->connect_error) {
+                    die("Connection failed: " . $conn->connect_error);
+                }
 
-                  row.innerHTML = `
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.applicant_id}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.OR_no}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center"><a href="${item.proof_of_payment}" target="_blank">View Proof</a></h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.payment_status || 'N/A'}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.verify_status}</h6></div></td>
-                                    <td class="text-center"><div class="avatar-group mt-1"><h6 class="text-xs text-center">${item.payment_date || 'N/A'}</h6></div></td>
-                                `;
+                // Query to join the two tables and get the desired columns
+                $query = "
+                  SELECT 
+                    ra.applicant_id, 
+                    ra.commodities, 
+                    ra.first_name, 
+                    ra.middle_name, 
+                    ra.last_name, 
+                    ra.contact_no, 
+                    ra.email, 
+                    rp.payment_status
+                  FROM 
+                    rent_application ra
+                    INNER JOIN rentapp_payment rp ON ra.applicant_id = rp.applicant_id
+                  WHERE 
+                    rp.payment_status = 'Paid'
+                ";
 
-                  tableBody.appendChild(row);
-                });
-              } else {
-                console.error('Failed to fetch data:', data.message);
-              }
-            })
-            .catch(error => console.error('Error:', error));
-        });
-      </script>
+                // Execute the query
+                $result = mysqli_query($conn, $query);
+
+                // Check if the query was successful
+                if (!$result) {
+                    die("Query failed: " . mysqli_error($conn));
+                }
+
+                // Fetch the results as an associative array and populate the table body
+                while ($row = mysqli_fetch_assoc($result)) {
+                    echo "<tr>
+                            
+                            <td class='text-center'>
+                                <div class='avatar-group mt-1'>
+                                    <h6 class='text-xs text-center'>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</h6>
+                                </div>
+                            </td>
+                            <td class='text-center'>
+                                <div class='avatar-group mt-1'>
+                                    <h6 class='text-xs text-center'>{$row['commodities']}</h6>
+                                </div>
+                            </td>
+                            <td class='text-center'>
+                                <div class='avatar-group mt-1'>
+                                    <h6 class='text-xs text-center'>{$row['contact_no']}</h6>
+                                </div>
+                            </td>
+                            <td class='text-center'>
+                                <div class='avatar-group mt-1'>
+                                    <h6 class='text-xs text-center'>{$row['email']}</h6>
+                                </div>
+                            </td>
+                            <td class='text-center'>
+                                <div class='avatar-group mt-1'>
+                                    <h6 class='text-xs text-center'>{$row['payment_status']}</h6>
+                                </div>
+                            </td>
+                        </tr>";
+                }
+
+                // Close the connection
+                mysqli_close($conn);
+                ?>
+            </tbody>
+        </table>
     </div>
 </div>
-</div>
-</div>
-</main>
+
+
+    </div>
+    </div>
+    </div>
+    </div>
+  </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" href="#">
       <i class="fas fa-cog"></i> </a>
     <div class="card shadow-lg">
       <div class="card-header pb-0 pt-3">
         <div class="float-start">
-        <h5 class="card-text">Username: <span class="card-text text-info"><?php echo htmlspecialchars($user['username']); ?></span></h5>
-        <p class="card-text">Role: <span class="card-text text-info"><?php echo htmlspecialchars($user['user_type']); ?></span></p>
-       
+          <h5 class="card-text">Username: <span
+              class="card-text text-info"><?php echo htmlspecialchars($user['username']); ?></span></h5>
+          <p class="card-text">Role: <span
+              class="card-text text-info"><?php echo htmlspecialchars($user['user_type']); ?></span></p>
+
         </div>
         <div class="float-end mt-4">
           <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
             <i class="fas fa-times"></i>
           </button>
         </div>
-        </div>
+      </div>
       <hr class="horizontal dark my-1">
       <div class="card-body pt-sm-3 pt-0">
         <a class="btn bg-gradient-info w-85 text-white mx-4" href="Admin.php">Edit Profile</a>
         <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
         <hr class="horizontal dark my-1">
         <div class="text-small">Fixed Navbar</div>
-        <div class="form-check form-switch ps-0"> 
+        <div class="form-check form-switch ps-0">
           <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
         </div>
       </div>
