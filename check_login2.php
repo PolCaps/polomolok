@@ -84,15 +84,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 header('Location: Vendor.php');
                 exit();
             } else {
-                // If no user or vendor is found
-                session_name('default_session');
-                session_start();
-                $_SESSION['status'] = "Invalid Username or Password";
-                header("Location: index.php");
+                echo "<script>alert('Invalid Username or Password'); window.location.href = 'index.php';</script>";
                 exit();
             }
         } else {
-            echo "Failed to prepare statement.";
+            echo "<script>alert('Failed sql'); window.location.href = 'index.php';</script>";
+                exit();
         }
     }
 }

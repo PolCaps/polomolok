@@ -449,7 +449,7 @@ $conn->close();
         <table class="table align-items-center mb-0">
           <thead>
             <tr>
-              <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor ID</th>
+              <!-- <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor ID</th> -->
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Receipt ID</th>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date</th>
               <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">File</th>
@@ -493,28 +493,36 @@ function fetchReceiptHistory(vendorId) {
   xhr.send();
 }
 
-// Function to display receipt history data in the modal
-function displayReceiptHistory(data) {
-  var tbody = document.getElementById('receiptHistoryBody');
-  var html = '';
+ // Display receipt history in the modal
+ function displayReceiptHistory(data) {
+        var tbody = document.getElementById('receiptHistoryBody');
+        var html = '';
 
-  data.forEach(function(row) {
-    html += '<tr>';
-    html += '  <td>' + row.vendor_id + '</td>';
-    html += '  <td>' + row.receiptsNum + '</td>';
-    html += '  <td>' + row.Dates + '</td>';
-    html += '  <td>';
-    if (row.receipts_history) {
-      html += '    <a href="' + row.receipts_history + '" target="_blank">View File</a>';
-    } else {
-      html += '    No File Available';
-    }
-    html += '  </td>';
-    html += '</tr>';
-  });
+        data.forEach(function (row) {
+          html += '<tr>';
+          html += '<td>' + row.receiptsNum + '</td>';
+          html += '<td>' + row.Dates + '</td>';
+          html += '<td>';
+          if (row.receipts_history) {
+            // Create a link that calls the viewFile function when clicked
+            html += '<a href="#" onclick="viewFile(\'' + row.receipts_history + '\')" style="text-decoration: none; color: blue;">View File</a>';
+          } else {
+            html += 'No File Available';
+          }
+          html += '</td>';
+          html += '</tr>';
+        });
+        tbody.innerHTML = html;
+      }
 
-  tbody.innerHTML = html;
-}
+      // Function to open the file in a modal using an iframe
+      function viewFile(fileUrl) {
+        const iframe = document.getElementById('fileIframe');
+        iframe.src = fileUrl;
+
+        const modal = new bootstrap.Modal(document.getElementById('fileModal'));
+        modal.show();
+      }
 
 // Add event listener to the button to open the modal
 document.addEventListener('DOMContentLoaded', function() {
@@ -569,6 +577,20 @@ document.getElementById('vendorSelect').addEventListener('change', function() {
 const vendors = <?php echo json_encode($dataV); ?>;
 populateVendorSelect(vendors);
 </script>
+
+<div class="modal fade" id="fileModal" tabindex="-1" aria-labelledby="fileModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="fileModalLabel">File Viewer</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="height: 500px; overflow: hidden;">
+              <iframe id="fileIframe" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
 
