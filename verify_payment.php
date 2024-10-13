@@ -12,6 +12,7 @@ if ($conn->connect_error) {
 
 // Fetch form data
 $applicant_id = $_POST['applicant_id'] ?? null;
+$applicant_name = $_POST['applicant_name'] ?? null;
 $payment_status = $_POST['payment_status'] ?? null;
 $OR_no = $_POST['OR_no'] ?? null;
 $payment_date = $_POST['payment_date'] ?? null;
@@ -25,7 +26,7 @@ if (!$applicant_id || !$payment_status) {
 // Handle file upload if proof_of_payment is provided
 $proof_of_payment_path = null;
 if ($proof_of_payment) {
-    $target_dir = "payment_proofs/rent_application";
+    $target_dir = "payment_proofs/rent_application/";
     $file_name = basename($proof_of_payment['name']);
     $target_file = $target_dir . uniqid() . '_' . $file_name;
     
@@ -52,6 +53,22 @@ if ($stmt === false) {
 $stmt->bind_param("sssss", $payment_status, $OR_no, $payment_date, $proof_of_payment_path, $applicant_id);
 
 if ($stmt->execute()) {
+    // Prepare notification insertion for Admin
+    $notification_type = 'Ready For Drawlots';
+    $notification_message = "Rent Applicant: $applicant_name";
+    $time_stamp = date('Y-m-d H:i:s'); // Current timestamp
+    $is_read = 0; // Set to 0 for unread
+
+    // Insert notification for Admin
+    $stmt_admin = $conn->prepare("INSERT INTO notifications (user_type, notification_type, message, time_stamp, is_read) VALUES (?, ?, ?, ?, ?)");
+    $user_type_admin = 'Admin';
+
+    if ($stmt_admin) {
+        $stmt_admin->bind_param("ssssi", $user_type_admin, $notification_type, $notification_message, $time_stamp, $is_read);
+        $stmt_admin->execute();
+        $stmt_admin->close();
+    }
+
     echo json_encode(['success' => true, 'message' => 'Payment details updated successfully.']);
 } else {
     echo json_encode(['success' => false, 'message' => "Execute failed: " . $stmt->error]);

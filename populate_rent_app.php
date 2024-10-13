@@ -13,7 +13,7 @@
                   // Fetch data
                 //  $sql = "SELECT applicant_id, first_name, middle_name, last_name, status, contact_no, email, building_type, stall_no, address, rentapp_file, applied_date FROM rent_application";
 
-                $sql = "SELECT Approval, applicant_id, first_name, middle_name, last_name, contact_no, building_type, stall_no, age, email, address, rentapp_file, applied_date 
+                $sql = "SELECT Approval, applicant_id, first_name, middle_name, last_name, contact_no, commodities, age, email, address, rentapp_file, applied_date 
                 FROM rent_application
                 ORDER BY applied_date DESC";
                   $result = $conn->query($sql);

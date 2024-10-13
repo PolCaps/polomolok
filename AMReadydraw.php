@@ -199,7 +199,7 @@ $conn->close();
           <div class="collapse" id="collapseRelRequest">
             <div class="right-aligned-links" style="text-align: right;">
               <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
-              <a class="nav-link" href="AMRelReqProcessing.php">Processing</a>
+              <a class="nav-link" href="AMRelReqProcessing.php">Pending</a>
               <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
             </div>
           </div>
@@ -263,6 +263,10 @@ $conn->close();
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
+            <?php 
+            include('Notification/AdminNotif.php');
+            ?>
+         
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -304,8 +308,8 @@ $conn->close();
         <table class="table align-items-center mb-0">
             <thead>
                 <tr>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant Name</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Commodities</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact No.</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email Address</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Status</th>
@@ -328,6 +332,7 @@ $conn->close();
                 $query = "
                   SELECT 
                     ra.applicant_id, 
+                    ra.commodities, 
                     ra.first_name, 
                     ra.middle_name, 
                     ra.last_name, 
@@ -352,14 +357,15 @@ $conn->close();
                 // Fetch the results as an associative array and populate the table body
                 while ($row = mysqli_fetch_assoc($result)) {
                     echo "<tr>
+                            
                             <td class='text-center'>
                                 <div class='avatar-group mt-1'>
-                                    <h6 class='text-xs text-center'>{$row['applicant_id']}</h6>
+                                    <h6 class='text-xs text-center'>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</h6>
                                 </div>
                             </td>
                             <td class='text-center'>
                                 <div class='avatar-group mt-1'>
-                                    <h6 class='text-xs text-center'>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</h6>
+                                    <h6 class='text-xs text-center'>{$row['commodities']}</h6>
                                 </div>
                             </td>
                             <td class='text-center'>

@@ -196,7 +196,7 @@ $conn->close();
           <div class="collapse" id="collapseRelRequest">
             <div class="right-aligned-links" style="text-align: right;">
               <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
-              <a class="nav-link" href="AMRelReqProcessing.php">Processing</a>
+              <a class="nav-link" href="AMRelReqProcessing.php">Pending</a>
               <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
             </div>
           </div>
@@ -259,6 +259,10 @@ $conn->close();
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
+            <?php 
+            include('Notification/AdminNotif.php');
+            ?>
+         
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -281,7 +285,7 @@ $conn->close();
             <div class="card-header pb-0">
                 <div class="row">
                     <div class="col-lg-6 col-7">
-                        <h6 class="text-info">Relocation Request /Processing</h6>
+                        <h6 class="text-info">Relocation Request /Pending</h6>
                     </div>
                     <div class="col-lg-6 col-5 my-auto text-end">
                         <div class="dropdown float-lg-end pe-4 mx-2">
@@ -550,6 +554,7 @@ if (isset($_GET['building'])) {
                                           </div>
                                       </div>
                                       <input type="hidden" id="modalVendorIDInput" name="vendor_id">
+                                      <input type="hidden" id="modalrequestIDInput" name="request_id">
                                       <div class="col-md-6">
                                           <div class="form-group">
                                               <label for="stallSelect" class="form-label">Relocate to:</label>
@@ -660,6 +665,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         // Populate modal with the full details from the clicked row
                         document.getElementById('modalVendorID').textContent = item.vendor_id; // For display
                         document.getElementById('modalVendorIDInput').value = item.vendor_id; // Set hidden input value
+                        document.getElementById('modalrequestIDInput').value = item.request_id; // Set hidden input value
                         document.getElementById('modalcurrentStall').textContent = item.current_stall;
                         document.getElementById('modalName').textContent = item.fn + ' ' + item.ln;
                         document.getElementById('messageContent').value = item.reason;

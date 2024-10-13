@@ -291,8 +291,13 @@ $conn->close();
                   <thead>
                     <tr>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                        Vendor ID</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Reason
+                        Vendor ID
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Reason
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                        Current Stall
                       </th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         Relocation Stall</th>
@@ -323,24 +328,32 @@ $conn->close();
                     $result = $stmt->get_result();
 
                     // Display data
-                    while ($row = $result->fetch_assoc()) {
+                    if ($result->num_rows > 0) { // Check if there are any rows
+                      while ($row = $result->fetch_assoc()) {
+                          echo "<tr>";
+                          echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($vendor_id) . "</td>"; // Vendor ID
+                          
+                          $message = trim($row['reason']);
+                          $trimmedMessage = strlen($message) > 20 ? substr($message, 0, 20) . '...' : $message;
+                          echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($trimmedMessage) . "</td>";
+                          echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($row['current_stall']) . "</td>";
+                          
+                          $relocated_stall = !empty($row['relocated_stall']) ? htmlspecialchars($row['relocated_stall']) : "Relocation Pending";
+                          echo "<td class='text-xs font-weight-bold text-center'>" . $relocated_stall . "</td>";
+                  
+                          // Display approval status (relocation status)
+                          $approval_status = !empty($row['approval_status']) ? htmlspecialchars($row['approval_status']) : "N/A";
+                          echo "<td class='text-xs font-weight-bold text-center'>" . $approval_status . "</td>";
+                  
+                          echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($row['request_date']) . "</td>";
+                          echo "</tr>";
+                      }
+                  } else {
+                      // If no results were found, output a message in the table
                       echo "<tr>";
-                      echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($vendor_id) . "</td>"; // Vendor ID
-                    
-                      $message = trim($row['reason']);
-                      $trimmedMessage = strlen($message) > 20 ? substr($message, 0, 20) . '...' : $message;
-                      echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($trimmedMessage) . "</td>";
-
-                      $relocated_stall = !empty($row['relocated_stall']) ? htmlspecialchars($row['relocated_stall']) : "Relocation Pending";
-                      echo "<td class='text-xs font-weight-bold text-center'>" . $relocated_stall . "</td>";
-
-                      // Display approval status (relocation status)
-                      $approval_status = !empty($row['approval_status']) ? htmlspecialchars($row['approval_status']) : "N/A";
-                      echo "<td class='text-xs font-weight-bold text-center'>" . $approval_status . "</td>";
-
-                      echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($row['request_date']) . "</td>";
+                      echo "<td colspan='6' class='text-center text-xs font-weight-bold mb-0'>You have no Request</td>";
                       echo "</tr>";
-                    }
+                  }
 
                     // Close connections
                     $stmt->close();
@@ -466,6 +479,8 @@ $conn->close();
                       <input class="form-control" type="text" id="vendorId" name="vendor_id"
                         value="<?php echo htmlspecialchars($vendor_id); ?>" aria-label="Disabled input example"
                         readonly>
+                        <input type="hidden" id="vendor_name" name="vendor_name"  value="<?php echo htmlspecialchars($vendor['first_name']) . ' ' . htmlspecialchars($vendor['middle_name']) . ' ' . htmlspecialchars($vendor['last_name']); ?>" 
+                        aria-label="Disabled input example">
                     </div>
 
                     <div class="mb-3">

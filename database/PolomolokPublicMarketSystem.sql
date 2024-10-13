@@ -1549,6 +1549,12 @@ CREATE TABLE `vendors` (
 -- Dumping data for table `vendors`
 --
 
+INSERT INTO `vendors` (`VendorStatus`, `vendor_id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `started_date`, `payment_due`) VALUES
+('ACTIVE', 55, 'jp', 'janpot21', 'John', 'P', 'Paras', 38, 'Poblacion, Polomolok', 'jp@gmail.com', '+639510462062', '2024-07-28', '2024-08-08'),
+('INACTIVE', 66, 'meedocash', 'cah123', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-21', '2024-09-23'),
+('INACTIVE', 67, 'vendorsbuilding3', 'vendor123', 'Vendor', 'in', 'buildingThree', 33, 'Cannery Site', 'dsfsafsdsafsdf', '9510462062', '2024-09-21', '2024-09-21'),
+('INACTIVE', 68, 'vendorsbuildingfour', 'four1234', '', NULL, NULL, NULL, NULL, NULL, NULL, '2024-09-21', '2024-09-21'),
+('ACTIVE', 69, 'vendorbuildinge', 'be123', 'REYAN JAN', 'BARRANCO', 'SAMONTANES', 23, 'Polotana Subdivision, West Drive.', 'gdgdsf', '9510462062', '2024-08-27', 'MONTHLY');
 INSERT INTO `vendors` (`Vendor_Status`, `vendor_id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `started_date`, `payment_due`) VALUES
 ('ACTIVE', 80, 'vendor1', 'vendor12345', 'Vendows', 'Middle', 'Gelatine', 25, 'Gensan', '@gensan.com', '99386846655568', '2024-09-26', 'MONTHLY'),
 ('ACTIVE', 82, 'vendorbuildinge', 'be123', 'Vendor', 'in', 'BuildingE', 65, 'gensan', '@gmail.com', '92198364908', '2024-09-28', 'MONTHLY');

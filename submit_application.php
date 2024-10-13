@@ -65,9 +65,32 @@ if (isset($_FILES['file_upload']) && $_FILES['file_upload']['error'] == UPLOAD_E
             }
 
             if ($stmt_payment->execute()) {
+                // Prepare notification data
+                $user_type = 'Admin'; // Example user type
+                $notification_type = 'Rent Application'; // Example notification type
+                $message = "New rent application submitted by $first_name $last_name."; // Example message
+                $time_stamp = date('Y-m-d H:i:s'); // Current timestamp
+                $is_read = 0; 
+
+                // Insert notification into the notifications table
+                $stmt_notification = $conn->prepare("INSERT INTO notifications (user_type, notification_type, message, time_stamp, is_read) VALUES (?, ?, ?, ?, ?)");
+                if ($stmt_notification === false) {
+                    die(json_encode(['success' => false, 'message' => "Prepare failed for notification: " . $conn->error]));
+                }
+                
+                if (!$stmt_notification->bind_param("ssssi", $user_type, $notification_type, $message, $time_stamp, $is_read)) {
+                    die(json_encode(['success' => false, 'message' => "Bind param failed for notification: " . $stmt_notification->error]));
+                }
+
+                if (!$stmt_notification->execute()) {
+                    echo json_encode(['success' => false, 'message' => "Error inserting notification: " . $stmt_notification->error]);
+                }
+
+                $stmt_notification->close();
+
                 echo json_encode([
                     'success' => true,
-                    'message' => "Success! Congratulation. You are now ready for Step 3.",
+                    'message' => "Success! Congratulations. You are now ready for Step 3.",
                     'applicant_id' => $applicant_id
                 ]);
             } else {

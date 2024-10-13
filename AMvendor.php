@@ -248,7 +248,7 @@ if (isset($_GET['building'])) {
           <div class="collapse" id="collapseRelRequest">
             <div class="right-aligned-links" style="text-align: right;">
               <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
-              <a class="nav-link" href="AMRelReqProcessing.php">Processing</a>
+              <a class="nav-link" href="AMRelReqProcessing.php">Pending</a>
               <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
             </div>
           </div>
@@ -314,6 +314,10 @@ if (isset($_GET['building'])) {
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
+            <?php 
+            include('Notification/AdminNotif.php');
+            ?>
+         
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">

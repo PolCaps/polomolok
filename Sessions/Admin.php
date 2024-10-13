@@ -1,18 +1,43 @@
 <?php
 session_name('admin_session'); // Set custom session name
-// $lifetime = 604800; // 7 days in seconds
-$lifetime = 604800; 
+$lifetime = 604800; // 7 days in seconds
 session_set_cookie_params($lifetime); // Set session cookie lifetime
 session_start(); // Start the session
 
 // Check if the user is logged in and is an admin
 if (!isset($_SESSION['id']) || $_SESSION['user_type'] !== 'ADMIN') {
-    header("Location: index.php");
+    // Inject JavaScript for session restoration only if the session is not active
+    echo "<script>
+            // Check if session ID exists in local storage
+            if (localStorage.getItem('session_id')) {
+                // Re-authenticate or restore session using session ID
+                fetch('/restore_ADMINsession.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ session_id: localStorage.getItem('session_id') }),
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = 'Admin.php';
+                    } else {
+                        window.location.href = 'index.php';
+                    }
+                });
+            } else {
+                window.location.href = 'index.php';
+            }
+          </script>";
     exit();
 }
 
-// Check if the session has expired
-if (isset($_SESSION['login_time'])) {
+// If login_time is not set, set it when the session starts
+if (!isset($_SESSION['login_time'])) {
+    $_SESSION['login_time'] = time();
+} else {
+    // Check if the session has expired
     $time_since_login = time() - $_SESSION['login_time'];
     if ($time_since_login > $lifetime) {
         // Session expired, destroy the session and redirect to login
@@ -25,13 +50,12 @@ if (isset($_SESSION['login_time'])) {
               </script>";
         exit();
     }
-} else {
-    // If login_time is not set, set it when the session starts
-    $_SESSION['login_time'] = time();
 }
 
-// Get the user ID from the session
-$user_id = $_SESSION['id'];
+// Save the session ID in local storage upon successful login
+echo "<script>
+        localStorage.setItem('session_id', '" . session_id() . "');
+      </script>";
 
 // Include database configuration
 include('database_config.php');
@@ -45,6 +69,7 @@ if ($conn->connect_error) {
 }
 
 // Fetch user information
+$user_id = $_SESSION['id'];
 $sql = "SELECT * FROM users WHERE id = ?";
 $stmt = $conn->prepare($sql);
 if ($stmt === false) {

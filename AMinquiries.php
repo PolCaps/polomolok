@@ -41,7 +41,7 @@ $conn->close();
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Dashboard
+    Inquiries
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -51,13 +51,10 @@ $conn->close();
   <!-- Font Awesome Icons -->
   <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
   <!-- CSS Files -->
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
-  <!-- Nepcha Analytics (nepcha.com) -->
-  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
-  <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
+ 
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -199,7 +196,7 @@ $conn->close();
           <div class="collapse" id="collapseRelRequest">
             <div class="right-aligned-links" style="text-align: right;">
               <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
-              <a class="nav-link" href="AMRelReqProcessing.php">Processing</a>
+              <a class="nav-link" href="AMRelReqProcessing.php">Pending</a>
               <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
             </div>
           </div>
@@ -262,6 +259,11 @@ $conn->close();
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
+            
+            <?php 
+            include('Notification/AdminNotif.php');
+            ?>
+         
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -395,7 +397,6 @@ $result = $conn->query($sql);
                 <table class="table align-items-center mb-0">
                       <thead>
                           <tr>
-                              <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
                               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Inquiry ID</th>
                               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
                               <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email Address</th>
@@ -438,8 +439,6 @@ $result = $conn->query($sql);
                                 deleteInquiry(inquiry.inq_id);
                             }
                         });
-                        deleteCell.appendChild(deleteButton);
-                        row.appendChild(deleteCell);
 
                         const idCell = document.createElement("td");
                         idCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.inq_id}</div>`;
