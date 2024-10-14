@@ -31,30 +31,6 @@ if (!$user) {
     die("User information is incomplete for ID " . htmlspecialchars($user_id));
   }
 }
-
-// Handle AJAX request
-if (isset($_GET['building'])) {
-  $building = $_GET['building'];
-
-  $valid_buildings = ['building_a', 'building_b', 'building_c', 'building_d', 'building_e', 'building_f', 'building_g', 'building_h', 'building_i', 'building_j'];
-
-  if (in_array($building, $valid_buildings)) {
-    $sql = "SELECT vendor_id, stall_status, stall_no, building_floor, monthly_rentals FROM $building";
-    $result = $conn->query($sql);
-
-    $stalls = [];
-    while ($row = $result->fetch_assoc()) {
-      $stalls[] = $row;
-    }
-
-    echo json_encode($stalls);
-  } else {
-    echo json_encode([]);
-  }
-
-  $conn->close();
-  exit;
-}
 ?>
 
 <!DOCTYPE html>
@@ -63,7 +39,6 @@ if (isset($_GET['building'])) {
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
     Dashboard
@@ -82,7 +57,7 @@ if (isset($_GET['building'])) {
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
+
   <style>
     .alert {
       position: fixed;
@@ -114,7 +89,7 @@ if (isset($_GET['building'])) {
 <?php endif; ?>
 
 <body class="g-sidenav-show  bg-gray-100">
-<aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
+  <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 "
     id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none"
@@ -317,10 +292,10 @@ if (isset($_GET['building'])) {
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
-            <?php 
+            <?php
             include('Notification/AdminNotif.php');
             ?>
-         
+
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -345,33 +320,33 @@ if (isset($_GET['building'])) {
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Users:</p>
                     <h5 class="font-weight-bolder mb-0">
-                    <?php
-                    // Database configuration
-                    // Include database configuration
-                    include('database_config.php');
+                      <?php
+                      // Database configuration
+                      // Include database configuration
+                      include('database_config.php');
 
-                    // Create a connection
-                    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+                      // Create a connection
+                      $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-                    // Check the connection
-                    if ($conn->connect_error) {
+                      // Check the connection
+                      if ($conn->connect_error) {
                         die("Connection failed: " . $conn->connect_error);
-                    }
+                      }
 
-                    // SQL query to count the number of vendors
-                    $sql = "SELECT COUNT(*) as users_count FROM users";
-                    $result = $conn->query($sql);
+                      // SQL query to count the number of vendors
+                      $sqlc = "SELECT COUNT(*) as users_count FROM users";
+                      $result = $conn->query($sqlc);
 
-                    if ($result) {
+                      if ($result) {
                         $row = $result->fetch_assoc();
                         echo $row['users_count'];
-                    } else {
+                      } else {
                         echo "Error: " . $conn->error;
-                    }
+                      }
 
-                    // Close the connection
-                    $conn->close();
-                    ?>
+                      // Close the connection
+                      $conn->close();
+                      ?>
                     </h5>
                   </div>
                 </div>
@@ -391,8 +366,9 @@ if (isset($_GET['building'])) {
           <button type="button" class="btn btn-info" data-bs-toggle="modal" data-bs-target="#showexampleModal">
             Add New Vendor/User
           </button>
-        
-         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" id="deleteBtn">DELETE</button>
+
+          <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+            id="deleteBtn">DELETE</button>
         </div>
 
         <body>
@@ -421,139 +397,139 @@ if (isset($_GET['building'])) {
             }
           </style>
 
-<?php
-include("database_config.php");
+          <?php
+          include("database_config.php");
 
-// Create connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+          // Create connection
+          $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+          // Check connection
+          if ($conn->connect_error) {
+            die("Connection failed: " . $conn->connect_error);
+          }
 
-// SQL query to fetch user details from the `users` table
-$sql = "SELECT id, username FROM users";
-$result = $conn->query($sql);
+          // SQL query to fetch user details from the `users` table
+          $sqli = "SELECT id, username FROM users";
+          $result = $conn->query($sqli);
 
-// Initialize an array to hold user data
-$users = [];
-if ($result->num_rows > 0) {
-    while ($row = $result->fetch_assoc()) {
-        $users[] = $row; // Add each user to the array
-    }
-} else {
-    echo "No users found.";
-}
+          // Initialize an array to hold user data
+          $users = [];
+          if ($result->num_rows > 0) {
+            while ($row = $result->fetch_assoc()) {
+              $users[] = $row; // Add each user to the array
+            }
+          } else {
+            echo "No users found.";
+          }
 
-$conn->close(); // Close the database connection
-?>
-  
-              <script>
-                $(document).ready(function() {
-                    // Show the modal if there is a message
-                    <?php if (isset($_SESSION['message'])): ?>
-                        $('#successModal').modal('show');
-                    <?php endif; ?>
-                });
+          $conn->close(); // Close the database connection
+          ?>
 
-            </script>
+          <script>
+            $(document).ready(function () {
+              // Show the modal if there is a message
+              <?php if (isset($_SESSION['message'])): ?>
+                $('#successModal').modal('show');
+              <?php endif; ?>
+            });
+
+          </script>
 
 
-<!-- Modal for User Deletion -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
+          <!-- Modal for User Deletion -->
+          <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="deleteModalLabel">Delete User</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  <h5 class="modal-title" id="deleteModalLabel">Delete User</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div class="mb-3">
-                        <label for="searchUser" class="form-label">Search User</label>
-                        <input type="text" class="form-control" id="searchUser" placeholder="Enter username">
-                    </div>
-                    <div class="mb-3">
-                        <label for="userDropdown" class="form-label">Select User</label>
-                        <select class="form-select" id="userDropdown">
-                            <option value="">Select a user</option>
-                            <?php foreach ($users as $user): ?>
-                                <option value="<?php echo $user['id']; ?>"><?php echo $user['username']; ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
+                  <div class="mb-3">
+                    <label for="searchUser" class="form-label">Search User</label>
+                    <input type="text" class="form-control" id="searchUser" placeholder="Enter username">
+                  </div>
+                  <div class="mb-3">
+                    <label for="userDropdown" class="form-label">Select User</label>
+                    <select class="form-select" id="userDropdown">
+                      <option value="">Select a user</option>
+                      <?php foreach ($users as $user): ?>
+                        <option value="<?php echo $user['id']; ?>"><?php echo $user['username']; ?></option>
+                      <?php endforeach; ?>
+                    </select>
+                  </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete User</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete User</button>
                 </div>
+              </div>
             </div>
-        </div>
-    </div>
+          </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const searchInput = document.getElementById('searchUser');
-        const userDropdown = document.getElementById('userDropdown');
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              const searchInput = document.getElementById('searchUser');
+              const userDropdown = document.getElementById('userDropdown');
 
-        // Filter dropdown based on search input
-        searchInput.addEventListener('input', function () {
-            const searchTerm = searchInput.value.toLowerCase();
-            const options = userDropdown.querySelectorAll('option');
-            options.forEach(option => {
-                const isVisible = option.textContent.toLowerCase().includes(searchTerm);
-                option.style.display = isVisible ? 'block' : 'none';
-            });
-        });
-        document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
-    const userDropdown = document.getElementById('userDropdown');
-    const selectedUserId = userDropdown.value;
-    const selectedUserName = userDropdown.options[userDropdown.selectedIndex].text; // Get the selected user's name
-    
-    if (selectedUserId) {
-        try {
-            const response = await fetch('deleteUser.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ userId: selectedUserId }), // Send the selected user ID
-            });
+              // Filter dropdown based on search input
+              searchInput.addEventListener('input', function () {
+                const searchTerm = searchInput.value.toLowerCase();
+                const options = userDropdown.querySelectorAll('option');
+                options.forEach(option => {
+                  const isVisible = option.textContent.toLowerCase().includes(searchTerm);
+                  option.style.display = isVisible ? 'block' : 'none';
+                });
+              });
+              document.getElementById('confirmDeleteBtn').addEventListener('click', async function () {
+                const userDropdown = document.getElementById('userDropdown');
+                const selectedUserId = userDropdown.value;
+                const selectedUserName = userDropdown.options[userDropdown.selectedIndex].text; // Get the selected user's name
 
-            if (!response.ok) {
-                // If the response is not successful (e.g., 404, 500), handle it here
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
+                if (selectedUserId) {
+                  try {
+                    const response = await fetch('deleteUser.php', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      body: JSON.stringify({ userId: selectedUserId }), // Send the selected user ID
+                    });
 
-            const result = await response.json();
+                    if (!response.ok) {
+                      // If the response is not successful (e.g., 404, 500), handle it here
+                      throw new Error(`HTTP error! status: ${response.status}`);
+                    }
 
-            if (result.success) {
-                // Success message
-                alert(`Success: User ${selectedUserName} has been deleted.`);
-                window.location.href = 'AMUser.php';
-                $('#deleteModal').modal('hide'); // Close the modal
-                // Optionally refresh the page or dropdown if needed
-            } else {
-                // Handle failure based on the result from the PHP file
-                if (result.message) {
-                    alert(`Error: ${result.message}`);
+                    const result = await response.json();
+
+                    if (result.success) {
+                      // Success message
+                      alert(`Success: User ${selectedUserName} has been deleted.`);
+                      window.location.href = 'AMUser.php';
+                      $('#deleteModal').modal('hide'); // Close the modal
+                      // Optionally refresh the page or dropdown if needed
+                    } else {
+                      // Handle failure based on the result from the PHP file
+                      if (result.message) {
+                        alert(`Error: ${result.message}`);
+                      } else {
+                        alert('Error: Unknown issue occurred while deleting the user.');
+                      }
+                    }
+                  } catch (error) {
+                    // Catch any other error (network issues, unexpected errors, etc.)
+                    console.error('Error deleting user:', error);
+                    alert(`Failed to delete user. Error: ${error.message}`);
+                  }
                 } else {
-                    alert('Error: Unknown issue occurred while deleting the user.');
+                  alert('Please select a user to delete.');
                 }
-            }
-        } catch (error) {
-            // Catch any other error (network issues, unexpected errors, etc.)
-            console.error('Error deleting user:', error);
-            alert(`Failed to delete user. Error: ${error.message}`);
-        }
-    } else {
-        alert('Please select a user to delete.');
-    }
-});
+              });
 
 
-    });
-    </script>
+            });
+          </script>
 
 
 
@@ -661,6 +637,8 @@ $conn->close(); // Close the database connection
                             </div>
                           </div>
 
+
+
                           <div class="accordion-item">
                             <div id="collapseVendor" class="accordion-collapse collapse" aria-labelledby="headingVendor"
                               data-bs-parent="#accordionExample">
@@ -733,15 +711,6 @@ $conn->close(); // Close the database connection
                                     <label for="monthly_rentals">Monthly Rentals:</label>
                                     <input type="text" id="monthly_rentals" name="monthly_rentals" class="form-control">
                                   </div>
-                                    <!-- Checkbox to trigger building details accordion -->
-                                    <div class="form-group mb-3">
-                                      <input type="checkbox" id="buildingDetailsCheckbox" name="buildingDetailsCheckbox">
-                                      <label for="buildingDetailsCheckbox">Add Building Details:</label>
-                                  </div>
-
-                                  <!-- Building details accordion container -->
-                                  <div id="buildingDetailsContainer"></div>
-
                                   <div class="form-group mb-3">
                                     <label for="started_date">Started Date:</label>
                                     <input type="date" id="started_date" name="started_date" class="form-control">
@@ -764,9 +733,6 @@ $conn->close(); // Close the database connection
                               </div>
                             </div>
                           </div>
-                          <script>
-    
-</script>
                         </div>
                       </div>
                     </div>
@@ -775,53 +741,52 @@ $conn->close(); // Close the database connection
               </div>
             </div>
           </div>
-          
+
           <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
           <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
           <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-          
-          
+
           <script>
 
-          fetch('process_formAdSta.php', {
+            fetch('process_formAdSta.php', {
               method: 'POST',
               body: new FormData(document.querySelector('form'))
-          })
-          .then(response => response.json())
-          .then(data => {
-              const alertContainer = document.getElementById('alert-container'); // Make sure this exists in your HTML
-              alertContainer.innerHTML = data.message; // Insert the alert HTML
-          })
-          .catch(error => console.error('Error:', error));
-
-          
-function checkBuildingSelected() {
-  var building = document.getElementById('building_type').value;
-  if (!building) {
-    alert('Please select a building first.');
-    document.getElementById('building_type').focus();
-    return false;
-  }
-  return true;
-}
+            })
+              .then(response => response.json())
+              .then(data => {
+                const alertContainer = document.getElementById('alert-container'); // Make sure this exists in your HTML
+                alertContainer.innerHTML = data.message; // Insert the alert HTML
+              })
+              .catch(error => console.error('Error:', error));
 
 
-document.getElementById('account_type').addEventListener('change', function () {
-  var accountType = this.value;
-  var adminStaffAccordion = document.getElementById('collapseAdminStaff');
-  var vendorAccordion = document.getElementById('collapseVendor');
-
-  if (accountType === 'Admin' || accountType === 'Staff') {
-    adminStaffAccordion.classList.add('show');
-    vendorAccordion.classList.remove('show');
-  } else if (accountType === 'Vendor') {
-    adminStaffAccordion.classList.remove('show');
-    vendorAccordion.classList.add('show');
-  }
-});
+            function checkBuildingSelected() {
+              var building = document.getElementById('building_type').value;
+              if (!building) {
+                alert('Please select a building first.');
+                document.getElementById('building_type').focus();
+                return false;
+              }
+              return true;
+            }
 
 
-document.getElementById('building_type').addEventListener('change', function () {
+            document.getElementById('account_type').addEventListener('change', function () {
+              var accountType = this.value;
+              var adminStaffAccordion = document.getElementById('collapseAdminStaff');
+              var vendorAccordion = document.getElementById('collapseVendor');
+
+              if (accountType === 'Admin' || accountType === 'Staff') {
+                adminStaffAccordion.classList.add('show');
+                vendorAccordion.classList.remove('show');
+              } else if (accountType === 'Vendor') {
+                adminStaffAccordion.classList.remove('show');
+                vendorAccordion.classList.add('show');
+              }
+            });
+
+
+            document.getElementById('building_type').addEventListener('change', function () {
   var building = this.value;
   var stallSelect = document.getElementById('stall_no');
   var floorSelect = document.getElementById('building_floor');
@@ -833,34 +798,74 @@ document.getElementById('building_type').addEventListener('change', function () 
 
   if (building) {
     $.ajax({
-      url: window.location.href,
+      url: 'fetch_buildings.php',
       type: 'GET',
       data: { building: building },
       success: function (data) {
         var stalls = JSON.parse(data);
         var floors = new Set();
 
-        stalls.forEach(function (stall) {
-          if (stall.stall_status === 'Vacant' && !stall.vendor_id) {
+        if (stalls.length === 0) {
+          stallSelect.innerHTML = '<option value="">No stalls available</option>';
+          floorSelect.innerHTML = '<option value="">No floors available</option>';
+        } else {
+          stalls.forEach(function (stall) {
+            if (stall.stall_status === 'Vacant' && !stall.vendor_id) {
+              var option = document.createElement('option');
+              option.value = stall.stall_no;
+              option.text = stall.stall_no;
+              stallSelect.appendChild(option);
+
+              floors.add(stall.building_floor);
+            }
+          });
+
+          floors.forEach(function (floor) {
             var option = document.createElement('option');
-            option.value = stall.stall_no;
-            option.text = stall.stall_no;
-            stallSelect.appendChild(option);
-
-            floors.add(stall.building_floor);
-          }
-        });
-
-        floors.forEach(function (floor) {
-          var option = document.createElement('option');
-          option.value = floor;
-          option.text = floor;
-          floorSelect.appendChild(option);
-        });
+            option.value = floor;
+            option.text = floor;
+            floorSelect.appendChild(option);
+          });
+        }
       }
     });
   }
 });
+
+document.getElementById('building_floor').addEventListener('change', function () {
+  var building = document.getElementById('building_type').value;
+  var floor = this.value;
+  var stallSelect = document.getElementById('stall_no');
+  var rent = document.getElementById('monthly_rentals');
+
+  stallSelect.innerHTML = '<option value="">Select Stall</option>';
+  rent.value = '';
+
+  if (building && floor) {
+    $.ajax({
+      url: 'fetch_buildings.php',
+      type: 'GET',
+      data: { building: building },
+      success: function (data) {
+        var stalls = JSON.parse(data);
+
+        if (stalls.length === 0) {
+          stallSelect.innerHTML = '<option value="">No stalls available</option>';
+        } else {
+          stalls.forEach(function (stall) {
+            if (stall.stall_status === 'Vacant' && !stall.vendor_id && stall.building_floor === floor) {
+              var option = document.createElement('option');
+              option.value = stall.stall_no;
+              option.text = stall.stall_no;
+              stallSelect.appendChild(option);
+            }
+          });
+        }
+      }
+    });
+  }
+});
+
 
 document.getElementById('stall_no').addEventListener('change', function () {
   var stallNo = this.value;
@@ -869,7 +874,7 @@ document.getElementById('stall_no').addEventListener('change', function () {
 
   if (stallNo && building) {
     $.ajax({
-      url: window.location.href,
+      url: 'fetch_buildings.php',
       type: 'GET',
       data: { building: building },
       success: function (data) {
@@ -906,79 +911,8 @@ document.getElementById('monthly_rentals').addEventListener('click', function ()
   }
 });
 
-const checkbox = document.getElementById('buildingDetailsCheckbox');
-    const container = document.getElementById('buildingDetailsContainer');
-
-    checkbox.addEventListener('change', function() {
-        if (checkbox.checked) {
-            container.innerHTML = '';
-            for (let i = 1; i <= 5; i++) {
-                container.innerHTML += `
-                    <div class="accordion-item mb-3">
-                        <h2 class="accordion-header" id="headingBuilding${i}">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseBuilding${i}" aria-expanded="false" aria-controls="collapseBuilding${i}">
-                                Building Details ${i}
-                            </button>
-                        </h2>
-                        <div id="collapseBuilding${i}" class="accordion-collapse collapse" aria-labelledby="headingBuilding${i}" data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                <div class="form-group mb-3">
-                                    <label for="building_type${i}">Buildings:</label>
-                                    <select id="building_type${i}" name="building_type${i}" class="form-control">
-                                        <option value="">Select Buildings</option>
-                                        <option value="building_a">Building A</option>
-                                        <option value="building_b">Building B</option>
-                                        <option value="building_c">Building C</option>
-                                        <option value="building_d">Building D</option>
-                                        <option value="building_e">Building E</option>
-                                        <option value="building_f">Building F</option>
-                                        <option value="building_g">Building G</option>
-                                        <option value="building_h">Building H</option>
-                                        <option value="building_i">Building I</option>
-                                        <option value="building_j">Building J</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select a building type.</div>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="building_floor${i}">Building Floor:</label>
-                                    <select id="building_floor${i}" name="building_floor${i}" class="form-control">
-                                        <option value="">Select Building Floor</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select a building floor.</div>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="stall_no${i}">Stall Number:</label>
-                                    <select id="stall_no${i}" name="stall_no${i}" class="form-control">
-                                        <option value="">Select Stall</option>
-                                        <option value="1">1</option>
-                                        <option value="2">2</option>
-                                        <option value="3">3</option>
-                                    </select>
-                                    <div class="invalid-feedback">Please select a stall number.</div>
-                                </div>
-                                <div class="form-group mb-3">
-                                    <label for="monthly_rentals${i}">Monthly Rentals:</label>
-                                    <input type="text" id="monthly_rentals${i}" name="monthly_rentals${i}" class="form-control">
-                                </div>
-                            </div>
-                        </div>
-                    </div>`;
-            }
-        } else {
-            container.innerHTML = ''; // Clear the container if unchecked
-        }
-    });
-
-</script>
+          </script>
       </div>
-
-
-      
-
-
 
       <div class="row my-4">
         <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
@@ -999,16 +933,16 @@ const checkbox = document.getElementById('buildingDetailsCheckbox');
                       <input type="text" class="form-control px-1" id="searchInput" placeholder="Search for...">
 
                       <script>
-                        document.getElementById('searchInput').addEventListener('keyup', function() {
-                            var filter = this.value.toLowerCase();
-                            var rows = document.querySelectorAll('#dataTableBody tr');
+                        document.getElementById('searchInput').addEventListener('keyup', function () {
+                          var filter = this.value.toLowerCase();
+                          var rows = document.querySelectorAll('#dataTableBody tr');
 
-                            rows.forEach(function(row) {
-                                var text = row.textContent.toLowerCase();
-                                row.style.display = text.includes(filter) ? '' : 'none';
-                            });
+                          rows.forEach(function (row) {
+                            var text = row.textContent.toLowerCase();
+                            row.style.display = text.includes(filter) ? '' : 'none';
+                          });
                         });
-                        </script>
+                      </script>
 
                     </div>
                   </div>
@@ -1021,69 +955,89 @@ const checkbox = document.getElementById('buildingDetailsCheckbox');
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">User Type</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Full Name</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Age</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Address</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email Add</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Contact No.</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Profile Picture</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">ID
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                        User Type</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                        Username</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Full
+                        Name</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Age
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Address</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email
+                        Add</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Contact No.</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Profile Picture</th>
                     </tr>
                   </thead>
                   <tbody id="dataTableBody">
-                  <?php
-                  include("database_config.php");
+                    <?php
+                    include("database_config.php");
 
-                  // Create connection
-                  $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+                    // Create connection
+                    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-                  // Check connection
-                  if ($conn->connect_error) {
-                    die("Connection failed: " . $conn->connect_error);
-                  }
+                    // Check connection
+                    if ($conn->connect_error) {
+                      die("Connection failed: " . $conn->connect_error);
+                    }
 
-                  // SQL query to fetch user details from the `user` table
-                  $sql = "SELECT id, username, first_name, middle_name, last_name, age, address, email_add, contact_no, user_type, picture_profile FROM users";
+                    // SQL query to fetch user details from the `user` table
+                    $sql = "SELECT id, username, first_name, middle_name, last_name, age, address, email_add, contact_no, user_type, picture_profile FROM users";
 
-                  $resultV = $conn->query($sql);
+                    $resultV = $conn->query($sql);
 
-                  if ($resultV === false) {
-                    die("Error executing query: " . $conn->error);
-                  }
+                    if ($resultV === false) {
+                      die("Error executing query: " . $conn->error);
+                    }
 
-                  if ($resultV->num_rows > 0) {
-                    while ($rowV = $resultV->fetch_assoc()) {
-                      ?>
-                      <tr>
-                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['id']); ?></td>
-                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['user_type']); ?></td>
-                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['username']); ?></td>
-                        <td class='text-center text-xs font-weight-bold'>
+                    if ($resultV->num_rows > 0) {
+                      while ($rowV = $resultV->fetch_assoc()) {
+                        ?>
+                        <tr>
+                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['id']); ?></td>
+                          <td class='text-center text-xs font-weight-bold'>
+                            <?php echo htmlspecialchars($rowV['user_type']); ?>
+                          </td>
+                          <td class='text-center text-xs font-weight-bold'>
+                            <?php echo htmlspecialchars($rowV['username']); ?>
+                          </td>
+                          <td class='text-center text-xs font-weight-bold'>
                             <?php
                             echo htmlspecialchars($rowV['first_name'] . ' ' . $rowV['middle_name'] . ' ' . $rowV['last_name']);
                             ?>
-                        </td>
-                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['age']); ?></td>
-                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['address']); ?></td>
-                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['email_add']); ?></td>
-                        <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['contact_no']); ?></td>
-                        <td class='text-center text-xs font-weight-bold'>
-                          <img src="<?php echo htmlspecialchars($rowV['picture_profile']); ?>" alt="No Profile Pic" style="width: 50px; height: 50px;">
-                        </td>
+                          </td>
+                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['age']); ?>
+                          </td>
+                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['address']); ?>
+                          </td>
+                          <td class='text-center text-xs font-weight-bold'>
+                            <?php echo htmlspecialchars($rowV['email_add']); ?>
+                          </td>
+                          <td class='text-center text-xs font-weight-bold'>
+                            <?php echo htmlspecialchars($rowV['contact_no']); ?>
+                          </td>
+                          <td class='text-center text-xs font-weight-bold'>
+                            <img src="<?php echo htmlspecialchars($rowV['picture_profile']); ?>" alt="No Profile Pic"
+                              style="width: 50px; height: 50px;">
+                          </td>
+                        </tr>
+                        <?php
+                      }
+                    } else {
+                      ?>
+                      <tr>
+                        <td colspan='11' class='text-center'>No results found.</td>
                       </tr>
                       <?php
                     }
-                  } else {
+
                     ?>
-                    <tr>
-                      <td colspan='11' class='text-center'>No results found.</td>
-                    </tr>
-                    <?php
-                  }
-              
-              ?>
                   </tbody>
                 </table>
               </div>
@@ -1098,44 +1052,44 @@ const checkbox = document.getElementById('buildingDetailsCheckbox');
   </main>
   <div class="fixed-plugin">
 
-  <?php
+    <?php
 
-// Get the user ID from the session
-$user_id = $_SESSION['id'];
+    // Get the user ID from the session
+    $user_id = $_SESSION['id'];
 
-// Include database configuration
-include('database_config.php');
+    // Include database configuration
+    include('database_config.php');
 
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+    // Create a connection
+    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check the connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
+    // Check the connection
+    if ($conn->connect_error) {
+      die("Connection failed: " . $conn->connect_error);
+    }
 
-// Fetch user information
-$sql = "SELECT * FROM users WHERE id = ?";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-  die("Prepare failed: " . $conn->error);
-}
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$usertype = $result->fetch_assoc();
+    // Fetch user information
+    $sql = "SELECT * FROM users WHERE id = ?";
+    $stmt = $conn->prepare($sql);
+    if ($stmt === false) {
+      die("Prepare failed: " . $conn->error);
+    }
+    $stmt->bind_param("i", $user_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $usertype = $result->fetch_assoc();
 
-// Check if user data is retrieved
-if (!$usertype) {
-  die("No User found with ID " . htmlspecialchars($user_id));
-} else {
-  if (!isset($usertype['first_name']) || !isset($usertype['user_type'])) {
-    die("User information is incomplete for ID " . htmlspecialchars($user_id));
-  }
-}
+    // Check if user data is retrieved
+    if (!$usertype) {
+      die("No User found with ID " . htmlspecialchars($user_id));
+    } else {
+      if (!isset($usertype['first_name']) || !isset($usertype['user_type'])) {
+        die("User information is incomplete for ID " . htmlspecialchars($user_id));
+      }
+    }
 
-$conn->close();
-?>
+    $conn->close();
+    ?>
 
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" href="#">
       <i class="fas fa-cog"></i> </a>
@@ -1143,8 +1097,10 @@ $conn->close();
       <div class="card-header pb-0 pt-3">
         <div class="float-start">
 
-        <h5 class="text-center">Username: <span class="text-info"><?php echo htmlspecialchars($usertype['first_name'] ?? 'Unknown') ?></span></h5>
-<p>Role: <span class="text-info"><?php echo htmlspecialchars($usertype['user_type'] ?? 'Unknown') ?></span></p>
+          <h5 class="text-center">Username: <span
+              class="text-info"><?php echo htmlspecialchars($usertype['first_name'] ?? 'Unknown') ?></span></h5>
+          <p>Role: <span class="text-info"><?php echo htmlspecialchars($usertype['user_type'] ?? 'Unknown') ?></span>
+          </p>
 
         </div>
         <div class="float-end mt-4">
@@ -1166,8 +1122,8 @@ $conn->close();
     </div>
   </div>
   </div>
- <!--   Core JS Files   -->
- <script src="assets2/js/core/popper.min.js"></script>
+  <!--   Core JS Files   -->
+  <script src="assets2/js/core/popper.min.js"></script>
   <script src="assets2/js/core/bootstrap.min.js"></script>
   <script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/smooth-scrollbar.min.js"></script>
@@ -1186,7 +1142,7 @@ $conn->close();
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
 
-    
+
   <link rel="stylesheet" href="loading.css">
   <script src="loading.js" defer></script>
   <div class="loader"></div>
