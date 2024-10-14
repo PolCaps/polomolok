@@ -27,15 +27,6 @@ include('Sessions/Admin.php');
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
-  <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-
-
-  <!-- Bootstrap CSS -->
-<link href="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/css/bootstrap.min.css" rel="stylesheet">
-
-<!-- Bootstrap Bundle with Popper -->
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.1.3/js/bootstrap.bundle.min.js"></script>
 
 </head>
 
@@ -262,84 +253,9 @@ include('Sessions/Admin.php');
     <!-- End Navbar -->
 
   
-
-    <div class="container-fluid py-4">
-    <div class="row mt-4">
-        <div class="d-grid gap-2 d-md-block py-3 px-3">
-            <div class="card mb-3" style="max-width: 100%;">
-                <div class="row g-0">
-                    <div class="col-md-12">
-                        <div class="card-body">
-                            <h5 class="card-title">MESSAGES</h5>
-                            <p>Welcome, <?php echo htmlspecialchars($user['first_name']); ?>!</p>
-
-                            <div class="accordion" id="chatAccordion">
-    <div class="accordion-item">
-        <h2 class="accordion-header" id="headingOne">
-            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                Open Chats
-            </button>
-        </h2>
-        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#chatAccordion">
-            <div class="accordion-body">
-                <div id="message-box" style="max-height: 300px; overflow-y: auto; border: 1px solid #e0e0e0; padding: 10px; border-radius: 8px;">
-                    <!-- Messages will appear here -->
-                </div>
-                <form id="message-form" class="mt-3">
-                    <div class="input-group">
-                        <input type="text" id="message-input" class="form-control" placeholder="Type a message" required />
-                        <button type="submit" class="btn btn-primary ms-2">Send</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-                            <script>
-                                const messageForm = document.getElementById('message-form');
-                                const messageInput = document.getElementById('message-input');
-                                const messageBox = document.getElementById('message-box');
-
-                                messageForm.addEventListener('submit', function (e) {
-                                    e.preventDefault();
-                                    const message = messageInput.value;
-
-                                    const messageElement = document.createElement('div');
-                                    messageElement.textContent = message;
-                                    messageBox.appendChild(messageElement);
-                                    messageInput.value = '';
-
-                                    fetch('http://localhost:3001/sendMessage', {
-                                        method: 'POST',
-                                        headers: {
-                                            'Content-Type': 'application/json',
-                                        },
-                                        body: JSON.stringify({
-                                            message: message
-                                        }),
-                                    })
-                                    .then(response => response.json())
-                                    .then(data => {
-                              
-                                        console.log(data);
-                                    })
-                                    .catch(error => {
-                                        console.error('Error:', error);
-                                    });
-                                });
-                            </script>
-
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-
-
+  <?php 
+  include('Messaging/ChatModule.php');
+  ?>
 
   </main>
   <div class="fixed-plugin">

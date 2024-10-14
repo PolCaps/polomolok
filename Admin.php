@@ -212,6 +212,7 @@ include('Sessions/Admin.php');
     </div>
 
   </aside>
+ 
 
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- Navbar -->
@@ -698,8 +699,8 @@ $conn->close();
     ?>
   </main>
   <div class="fixed-plugin">
-    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" href="#">
-      <i class="fas fa-cog"></i> </a>
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-3" href="#">
+    <i class="bi bi-gear-fill"></i> </a>
     <div class="card shadow-lg">
       <div class="card-header pb-0 pt-3">
         <div class="float-start">
@@ -731,6 +732,11 @@ $conn->close();
       </div>
     </div>
   </div>
+  <?php 
+
+include('Messaging/ChatBox.php');
+
+?>
 
   <!--   Core JS Files   -->
   <script src="assets2/js/core/popper.min.js"></script>
