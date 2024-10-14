@@ -74,6 +74,67 @@ if ($result->num_rows > 0) {
   exit();
 }
 
+if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
+
+  echo "<script>
+   alert('No information in your account. You need to fill-up your account first!');
+
+
+  document.addEventListener('DOMContentLoaded', function() {
+      var accountModal = new bootstrap.Modal(document.getElementById('accountModal'));
+      accountModal.show();
+
+      var form = document.getElementById('createVendorForm');
+      var modalElement = document.getElementById('accountModal'); // Reference the entire modal element
+
+      // Handle clicks outside the modal window (including the backdrop)
+      document.addEventListener('click', function(event) {
+          if (!modalElement.contains(event.target) && !form.checkValidity()) {
+              event.preventDefault(); // Prevent closing the modal
+              alert('Please fill out all required fields before closing.');
+          }
+      });
+
+      // Handle close button click
+      var closeButton = document.getElementById('closeButton');
+      closeButton.addEventListener('click', function() {
+          if (form.checkValidity()) {
+              accountModal.hide(); // Close the modal if the form is valid
+          } else {
+              alert('Please fill out all required fields before closing.');
+          }
+      });
+
+      // Disable accordion interaction (optional, adjust selector if needed)
+      var accordions = document.querySelectorAll('.accordion-header, .accordion-toggle');
+      accordions.forEach(function(accordion) {
+          accordion.style.pointerEvents = 'none';
+          accordion.style.opacity = '0.5';
+      });
+
+      // Prevent back navigation
+      window.history.pushState(null, null, window.location.href);
+      window.onpopstate = function() {
+          window.history.pushState(null, null, window.location.href);
+      };
+  });
+  </script>";
+} else {
+  echo "<script>
+          console.log('Vendor data available'); // Or handle vendor data as needed
+        </script>";
+}
+
+
+
+$query = "SELECT started_date, payment_due FROM vendors WHERE vendor_id = ?";
+$stmt1 = $conn->prepare($query);
+$stmt1->bind_param('i', $vendor_id);
+$stmt1->execute();
+$stmt1->bind_result($started_date, $payment_due);
+$stmt1->fetch();
+$stmt1->close();
+
 // Close the statement and connection
 $stmt->close();
 $conn->close();
