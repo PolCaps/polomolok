@@ -14,7 +14,7 @@
     box-shadow: 0 1px 2px 0 rgb(0 0 0 / 10%);
 }
 .chat-app .people-list {
-    width: 280px;
+    width: 300px;
     position: absolute;
     left: 0;
     top: 0;
@@ -278,27 +278,62 @@
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-search"></i></span>
                         <input type="text" class="form-control" placeholder="Search...">
-                        <a href="#" class="mt-2 px-3" id="newHeader" data-bs-toggle="modal" data-bs-target="#messageModal">
-                            <i class="fa fa-edit text-info"></i>
-                        </a>
                     </div>
                     <ul class="list-unstyled chat-list mt-2 mb-0">
-                        <li class="clearfix">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
-                            <div class="about">
-                                <div class="name">Briar Rose</div>
-                                <span class="text-sm">vendor</span>
-                            </div>
-                        </li>
-                        <li class="clearfix">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
-                            <div class="about">
-                                <div class="name">Reyan Samontanes</div>
-                                <span class="text-sm">Cashier</span>
-                            </div>
-                        </li>
-                       
-                        
+                        <?php
+                        include('database_config.php');
+
+                        // Create a connection
+                        $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+                        // Check the connection
+                        if ($conn->connect_error) {
+                            echo '<li class="text-danger">Connection failed: ' . htmlspecialchars($conn->connect_error) . '</li>';
+                        } else {
+                            // Fetch staff users
+                            $sqlUsers = "SELECT id, first_name, last_name, picture_profile FROM users"; // Adjust if needed
+                            $resultUsers = $conn->query($sqlUsers);
+
+                            // Generate HTML list items for users
+                            if ($resultUsers && $resultUsers->num_rows > 0) {
+                                while ($row = $resultUsers->fetch_assoc()) {
+                                    echo '<li class="clearfix">';
+                                    
+                                    // Construct the image path and display it
+                                    $imagePath = htmlspecialchars($row['picture_profile']);
+                                    echo '<img src="' . $imagePath . '" alt="avatar" onerror="this.src=\'https://bootdey.com/img/Content/avatar/avatar1.png\';">'; // Fallback image if profile picture is not found
+                                    
+                                    echo '<div class="about">';
+                                    echo '<div class="name text-sm">' . htmlspecialchars($row['first_name']) . ' ' . htmlspecialchars($row['last_name']) . '</div>';
+                                    echo '<span class="text-xs">Staff</span>';
+                                    echo '</div>';
+                                    echo '</li>';
+                                }
+                            }
+
+                            // Fetch vendors
+                            $sqlVendors = "SELECT vendor_id, first_name, last_name FROM vendors"; // Adjust if needed
+                            $resultVendors = $conn->query($sqlVendors);
+
+                            // Generate HTML list items for vendors
+                            if ($resultVendors && $resultVendors->num_rows > 0) {
+                                while ($row = $resultVendors->fetch_assoc()) {
+                                    echo '<li class="clearfix">';
+                                    echo '<img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">'; // Placeholder image
+                                    echo '<div class="about">';
+                                    echo '<div class="name ">' . htmlspecialchars($row['first_name']) . ' ' . htmlspecialchars($row['last_name']) . '</div>';
+                                    echo '<span class="text-xs">Vendor</span>';
+                                    echo '</div>';
+                                    echo '</li>';
+                                }
+                            } else {
+                                echo '<li>No users or vendors found</li>';
+                            }
+                        }
+
+                        // Close the connection
+                        $conn->close();
+                        ?>
                     </ul>
                 </div>
                 <div class="chat">
@@ -315,14 +350,10 @@
                         </div>
                         <div class="col-lg-1 col-1 text-end search-bar-mobile">
                             <div class="input-group">
-                                <div class="d-flex mx-6">
+                                <div class="d-flex mx-7">
                                 <a href="#" class="mt-3 mx-2" id="showThreads" data-bs-toggle="modal" data-bs-target="#threadsModal">
                                     <i class="fa fa-search text-info"></i>
-                                </a>
-                                <a href="#" class="mt-3 mx-2" id="newHeader" data-bs-toggle="modal" data-bs-target="#messageModal">
-                                    <i class="fa fa-edit text-info"></i>
-                                </a></div>
-                                
+                                </a>   
                             </div>
                         </div>
                     </div>
@@ -370,6 +401,7 @@
         </div>
     </div>
 </div>
+
 <div class="modal fade" id="threadsModal" tabindex="-1" aria-labelledby="threadsModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-scrollable">
         <div class="modal-content">
@@ -378,30 +410,66 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-            <div id="plist" class="people-list">
+                <div id="plist" class="people-list">
                     <div class="input-group">
                         <span class="input-group-text"><i class="fa fa-search"></i></span>
                         <input type="text" class="form-control" placeholder="Search...">
-                        <a href="#" class="mt-2 px-3" id="newHeader" data-bs-toggle="modal" data-bs-target="#messageModal">
-                            <i class="fa fa-edit text-info"></i>
-                        </a>
                     </div>
                     <ul class="list-unstyled chat-list mt-2 mb-0">
-                        <li class="clearfix">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar1.png" alt="avatar">
-                            <div class="about">
-                                <div class="name">Briar Rose</div>
-                                <span class="text-sm">vendor</span>
-                            </div>
-                        </li>
-                        <li class="clearfix">
-                            <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
-                            <div class="about">
-                                <div class="name">Reyan Samontanes</div>
-                                <span class="text-sm">Cashier</span>
-                            </div>
-                        </li>
-                        
+                        <?php
+                        include('database_config.php');
+
+                        // Create a connection
+                        $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+                        // Check the connection
+                        if ($conn->connect_error) {
+                            echo '<li class="text-danger">Connection failed: ' . htmlspecialchars($conn->connect_error) . '</li>';
+                        } else {
+                            // Fetch staff users
+                            $sqlUsers = "SELECT id, first_name, last_name, picture_profile FROM users"; // Adjust if needed
+                            $resultUsers = $conn->query($sqlUsers);
+
+                            // Generate HTML list items for users
+                            if ($resultUsers && $resultUsers->num_rows > 0) {
+                                while ($row = $resultUsers->fetch_assoc()) {
+                                    echo '<li class="clearfix">';
+                                    
+                                    // Construct the image path and display it
+                                    $imagePath = htmlspecialchars($row['picture_profile']);
+                                    echo '<img src="' . $imagePath . '" alt="avatar" onerror="this.src=\'https://bootdey.com/img/Content/avatar/avatar1.png\';">'; // Fallback image if profile picture is not found
+                                    
+                                    echo '<div class="about">';
+                                    echo '<div class="name">' . htmlspecialchars($row['first_name']) . ' ' . htmlspecialchars($row['last_name']) . '</div>';
+                                    echo '<span class="text-sm">Staff</span>';
+                                    echo '</div>';
+                                    echo '</li>';
+                                }
+                            }
+
+                            // Fetch vendors
+                            $sqlVendors = "SELECT vendor_id, first_name, last_name FROM vendors"; // Adjust if needed
+                            $resultVendors = $conn->query($sqlVendors);
+
+                            // Generate HTML list items for vendors
+                            if ($resultVendors && $resultVendors->num_rows > 0) {
+                                while ($row = $resultVendors->fetch_assoc()) {
+                                    echo '<li class="clearfix">';
+                                    echo '<img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">'; // Placeholder image
+                                    echo '<div class="about">';
+                                    echo '<div class="name">' . htmlspecialchars($row['first_name']) . ' ' . htmlspecialchars($row['last_name']) . '</div>';
+                                    echo '<span class="text-sm">Vendor</span>';
+                                    echo '</div>';
+                                    echo '</li>';
+                                }
+                            } else {
+                                echo '<li>No users or vendors found</li>';
+                            }
+                        }
+
+                        // Close the connection
+                        $conn->close();
+                        ?>
                     </ul>
                 </div>
             </div>
@@ -411,80 +479,9 @@
         </div>
     </div>
 </div>
-<!-- Modal Structure -->
-<div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="messageModalLabel">Send a Message</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-            <form id="messageForm" action="send_message.php" method="POST">
-    <div class="mb-3">
-        <input type="hidden" name="sender_id" value="<?php echo htmlspecialchars($user['id']); ?>">
-        
-        <label for="recipient" class="form-label">Recipient</label>
-        <select id="recipient" name="recipient" class="form-select" required>
-            <option value="" disabled selected>Select a recipient</option>
-            <?php
-            include('database_config.php');
 
-            // Create a connection
-            $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-            
-            // Check the connection
-            if ($conn->connect_error) {
-                echo "<option value='' disabled>Connection failed: " . htmlspecialchars($conn->connect_error) . "</option>";
-            } else {
-                // Fetch staff users
-                $sqlUsers = "SELECT id, first_name, last_name FROM users"; // Adjust if needed
-                $resultUsers = $conn->query($sqlUsers);
 
-                // Generate HTML options for users
-                if ($resultUsers && $resultUsers->num_rows > 0) {
-                    while ($row = $resultUsers->fetch_assoc()) {
-                        echo '<option value="' . htmlspecialchars($row['id']) . '">' . htmlspecialchars($row['first_name']) . ' ' . htmlspecialchars($row['last_name']) . ' (Staff)</option>';
-                    }
-                } 
 
-                // Fetch vendors
-                $sqlVendors = "SELECT vendor_id, first_name, last_name FROM vendors"; // Adjust if needed
-                $resultVendors = $conn->query($sqlVendors);
-
-                // Generate HTML options for vendors
-                if ($resultVendors && $resultVendors->num_rows > 0) {
-                    while ($row = $resultVendors->fetch_assoc()) {
-                        echo '<option value="' . htmlspecialchars($row['vendor_id']) . '">' . htmlspecialchars($row['first_name']) . ' ' . htmlspecialchars($row['last_name']) . ' (Vendor)</option>';
-                    }
-                } else {
-                    echo '<option value="" disabled>No users or vendors found</option>';
-                }
-            }
-
-            // Close the connection
-            $conn->close();
-            ?>
-        </select>
-    </div>
-    <div class="mb-3">
-        <label for="subject" class="form-label">Subject</label>
-        <input type="text" id="subject" name="subject" class="form-control" placeholder="Enter subject" required>
-    </div>
-    <div class="mb-3">
-        <label for="message" class="form-label">Message</label>
-        <textarea id="message" name="message" class="form-control" rows="6" placeholder="Enter your message" required></textarea>
-    </div>
-    <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Send Message</button>
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-    </div>
-</form>
-
-            </div>
-        </div>
-    </div>
-</div>
 
 <script>
     // Sample function to send a message
