@@ -20,7 +20,7 @@ ini_set('display_errors', 1);
 $user_id = isset($_POST['id']) ? $_POST['id'] : null;
 
 // Display the user ID in a plain response before proceeding
-echo "User ID is set: $user_id";
+//echo "User ID is set: $user_id";
 
 // Check if the form was submitted and the file was uploaded without errors
 if (isset($_FILES["profile-picture"]) && $_FILES["profile-picture"]["error"] === UPLOAD_ERR_OK) {
@@ -51,7 +51,9 @@ if (isset($_FILES["profile-picture"]) && $_FILES["profile-picture"]["error"] ===
 
                 // Execute the query
                 if ($stmt->execute()) {
-                    echo "Record inserted/updated successfully. File path: $targetFile";
+                    echo "Record successfully.";
+                    //header("Location: Admin.php");
+                    exit(); 
                 } else {
                     echo "Error inserting/updating record: " . $stmt->error;
                 }
