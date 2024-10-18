@@ -24,10 +24,6 @@ include('Sessions/CustomerService.php');
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
-  <!-- Nepcha Analytics (nepcha.com) -->
-  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
-  <script defer data-site="YOUR_DOMAIN_HERE" src="https://api.nepcha.com/js/nepcha-analytics.js"></script>
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" /> <!-- Bootstrap CSS --></body>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -49,69 +45,6 @@ include('Sessions/CustomerService.php');
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function() {
-    // Show modal function
-    function showModal(updatedTables) {
-        const modal = new bootstrap.Modal(document.getElementById('reminderModal'));
-        modal.show();
-        startAutoCloseTimer(); // Start the timer when the modal is shown
-
-        // Update the modal message
-        const modalMessage = document.getElementById('modal-message');
-        if (updatedTables.length === 1) {
-            modalMessage.textContent = `A new entry has been added: ${updatedTables[0]}. Please check!`;
-        } else {
-            modalMessage.textContent = `New entries have been added: ${updatedTables.join(', ')}. Please check!`;
-        }
-    }
-
-    let autoCloseTimeout;
-    const autoCloseDuration = 120000; // 2 minutes, can be adjusted as needed
-
-    // Close modal function
-    function closeModal() {
-        const modal = bootstrap.Modal.getInstance(document.getElementById('reminderModal'));
-        if (modal) {
-            modal.hide();
-        }
-        clearTimeout(autoCloseTimeout); // Clear the timeout when the modal is closed
-    }
-
-    // Start the auto-close timer
-    function startAutoCloseTimer() {
-        autoCloseTimeout = setTimeout(closeModal, autoCloseDuration);
-    }
-
-    function checkForNewEntries() {
-        fetch('check_new.php')
-            .then(response => response.json())
-            .then(data => {
-                console.log('Response received:', data);
-                if (data.newEntry) {
-                    const updatedTables = Object.keys(data.newEntries).filter(table => data.newEntries[table]);
-                    console.log('Updated tables:', updatedTables);
-                    showModal(updatedTables);
-                } else {
-                    console.log('No new entries found.');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-            });
-    }
-
-    // Check for new entries every 5 seconds
-    setInterval(checkForNewEntries, 5000);
-
-    // Initial check when the page loads
-    checkForNewEntries();
-});
-</script>
   <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -195,6 +128,12 @@ document.addEventListener("DOMContentLoaded", function() {
                 <span class="d-sm-inline d-none">Customer Service</span>
               </a>
             </li>
+
+            <?php 
+            include('Notification/CustomerServiceNotif.php');
+            ?>
+
+
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">

@@ -87,7 +87,6 @@ include('Sessions/CustomerService.php');
     </div>
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
-    <!-- Navbar -->
      
     <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur" navbar-scroll="true">
       <div class="container-fluid py-1 px-3">
@@ -112,6 +111,9 @@ include('Sessions/CustomerService.php');
                 <span class="d-sm-inline d-none">Customer Service</span>
               </a>
             </li>
+            <?php 
+            include('Notification/CustomerServiceNotif.php');
+            ?>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -156,7 +158,7 @@ $result = $conn->query($sql);
 ?>
 
 <div class="row my-4">
-    <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
+    <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
         <div class="card">
             <div class="card-header pb-0">
                 <div class="row">

@@ -11,7 +11,7 @@ if ($conn->connect_error) {
 }
 
 // Query to get the latest 5 unread notifications for Admin
-$sql = "SELECT * FROM notifications WHERE user_type = 'Admin' AND is_read = 0 ORDER BY time_stamp DESC LIMIT 5";
+$sql = "SELECT * FROM notifications WHERE user_type = 'Customer Service' AND is_read = 0 ORDER BY time_stamp DESC LIMIT 5";
 $result = $conn->query($sql);
 
 // Get the number of unread notifications
@@ -97,19 +97,10 @@ $conn->close();
                 if (response.ok) {
                     // Redirect based on notification type
                     switch (notificationType) {
-                        case 'Relocation Request':
-                            window.location.href = 'AMRelReqProcessing.php';
-                            break;
-                        case 'Rent Application':
-                            window.location.href = 'AMStallApp.php';
-                            break;
-                        case 'Ready For Drawlots':
-                            window.location.href = 'AMReadydraw.php';
-                            break;
                         case 'New Inquiry':
-                            window.location.href = 'AMinquiries.php';
+                            window.location.href = 'CSMinquiries.php';
                             break;
-                        // You can add more cases as needed
+
                         default:
                             console.log('No action defined for this notification type:', notificationType); // More details
                     }

@@ -176,7 +176,7 @@ session_start()
 
           ?>
           <form method="POST" action="check_login2.php" id="login-form">
-          <p class="alert alert-danger alert-dismissible fade show" >ONLY INTENDED FOR ADMIN AND VENDORS.</p>
+          
             <div class="form-floating mb-3">
               <input class="form-control" id="username" name="username" type="text" required
                 placeholder="VendorChua21.com" />

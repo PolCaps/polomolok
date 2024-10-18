@@ -97,19 +97,9 @@ $conn->close();
                 if (response.ok) {
                     // Redirect based on notification type
                     switch (notificationType) {
-                        case 'Relocation Request':
-                            window.location.href = 'AMRelReqProcessing.php';
+                        case 'Ready for payment':
+                            window.location.href = 'CMReceiptApplicantsUnpaid.php';
                             break;
-                        case 'Rent Application':
-                            window.location.href = 'AMStallApp.php';
-                            break;
-                        case 'Ready For Drawlots':
-                            window.location.href = 'AMReadydraw.php';
-                            break;
-                        case 'New Inquiry':
-                            window.location.href = 'AMinquiries.php';
-                            break;
-                        // You can add more cases as needed
                         default:
                             console.log('No action defined for this notification type:', notificationType); // More details
                     }
