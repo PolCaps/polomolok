@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Oct 10, 2024 at 10:28 AM
+-- Generation Time: Oct 20, 2024 at 12:47 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -61,6 +61,16 @@ CREATE TABLE `archived_inquiries` (
   `sent_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `archived_inquiries`
+--
+
+INSERT INTO `archived_inquiries` (`inquiry_id`, `name`, `email_add`, `subject`, `message`, `sent_date`) VALUES
+(35, 'Monalisa', 'auwvbfkse@gmail.com', 'Inquiry', 'QWDQWD', '2024-10-12 14:41:14'),
+(36, 'Protas', 'awdq@gmail.com', 'Message', 'qwd', '2024-10-12 14:46:16'),
+(37, 'Moana', 'moana@gmail.com', 'Inquire', 'Hello, Do you have any vacant stall?', '2024-10-13 08:02:59'),
+(38, 'Haku', 'Aoi@gmail.com', 'Inquire', 'Hello, open po kayo saturday?', '2024-10-18 08:46:19');
+
 -- --------------------------------------------------------
 
 --
@@ -72,7 +82,7 @@ CREATE TABLE `building_a` (
   `stall_no` varchar(50) DEFAULT NULL,
   `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
   `monthly_rentals` varchar(100) DEFAULT NULL,
-  `vendor_id` bigint(20) DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
   `stall_status` enum('Occupied','Vacant') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -188,7 +198,7 @@ CREATE TABLE `building_b` (
   `stall_no` varchar(50) DEFAULT NULL,
   `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
   `monthly_rentals` varchar(100) DEFAULT NULL,
-  `vendor_id` bigint(20) DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
   `stall_status` enum('Occupied','Vacant') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -349,7 +359,7 @@ CREATE TABLE `building_c` (
   `stall_no` varchar(50) DEFAULT NULL,
   `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
   `monthly_rentals` varchar(100) DEFAULT NULL,
-  `vendor_id` bigint(20) DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
   `stall_status` enum('Occupied','Vacant') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -492,7 +502,7 @@ CREATE TABLE `building_d` (
   `stall_no` varchar(50) DEFAULT NULL,
   `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
   `monthly_rentals` varchar(100) DEFAULT NULL,
-  `vendor_id` bigint(20) DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
   `stall_status` enum('Occupied','Vacant') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -559,7 +569,7 @@ CREATE TABLE `building_e` (
   `stall_no` varchar(50) DEFAULT NULL,
   `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
   `monthly_rentals` varchar(100) DEFAULT NULL,
-  `vendor_id` bigint(20) DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
   `stall_status` enum('Occupied','Vacant') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -749,7 +759,7 @@ CREATE TABLE `building_f` (
   `stall_no` varchar(50) DEFAULT NULL,
   `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
   `monthly_rentals` varchar(100) DEFAULT NULL,
-  `vendor_id` bigint(20) DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
   `stall_status` enum('Occupied','Vacant') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -828,7 +838,7 @@ CREATE TABLE `building_g` (
   `stall_no` varchar(50) DEFAULT NULL,
   `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
   `monthly_rentals` varchar(100) DEFAULT NULL,
-  `vendor_id` bigint(20) DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
   `stall_status` enum('Occupied','Vacant') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -987,7 +997,7 @@ CREATE TABLE `building_h` (
   `stall_no` varchar(50) DEFAULT NULL,
   `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
   `monthly_rentals` varchar(100) DEFAULT NULL,
-  `vendor_id` bigint(20) DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
   `stall_status` enum('Occupied','Vacant') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1086,7 +1096,7 @@ CREATE TABLE `building_i` (
   `stall_no` varchar(50) DEFAULT NULL,
   `building_floor` enum('Ground Floor','Second Floor','','') DEFAULT NULL,
   `monthly_rentals` varchar(100) DEFAULT NULL,
-  `vendor_id` bigint(20) DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
   `stall_status` enum('Occupied','Vacant') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1187,7 +1197,7 @@ CREATE TABLE `building_j` (
   `stall_no` varchar(50) DEFAULT NULL,
   `building_floor` enum('Ground Floor','Second Floor','Third Floor','') DEFAULT NULL,
   `monthly_rentals` varchar(100) DEFAULT NULL,
-  `vendor_id` bigint(20) DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
   `stall_status` enum('Occupied','Vacant') DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -1321,7 +1331,7 @@ INSERT INTO `building_j` (`building_id`, `stall_no`, `building_floor`, `monthly_
 
 CREATE TABLE `documents` (
   `document_id` int(11) NOT NULL,
-  `vendor_id` bigint(20) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
   `lease_agreements` varchar(255) DEFAULT NULL,
   `business_permits` varchar(255) DEFAULT NULL,
   `business_license` varchar(255) DEFAULT NULL,
@@ -1355,19 +1365,97 @@ CREATE TABLE `inquiry` (
   `sent_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `inquiry`
+--
+
+INSERT INTO `inquiry` (`inq_id`, `name`, `email_add`, `subject`, `message`, `sent_date`) VALUES
+(32, 'Briar Rose', 'blial@gmail.com', 'HelloWorld', 'Hadtod', '2024-10-12 12:25:06'),
+(33, 'Brose', 'brose@gmail.com', 'Inquiry', 'Hello, Do you have any map?', '2024-10-12 13:50:19'),
+(34, 'qwd', 'yusreadadulo123@gmail.com', 'qwdqw', 'dqwdq', '2024-10-12 13:51:25');
+
 -- --------------------------------------------------------
 
 --
--- Table structure for table `message`
+-- Table structure for table `message_details`
 --
 
-CREATE TABLE `message` (
+CREATE TABLE `message_details` (
   `message_id` int(11) NOT NULL,
-  `vendor_id` bigint(20) NOT NULL,
-  `id` int(11) NOT NULL,
-  `message` text NOT NULL,
-  `sent_date` timestamp NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+  `thread_id` int(11) NOT NULL,
+  `details` text NOT NULL,
+  `timestamp` datetime DEFAULT current_timestamp(),
+  `message_type` enum('text','file','image','video') DEFAULT 'text'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message_thread`
+--
+
+CREATE TABLE `message_thread` (
+  `thread_id` int(11) NOT NULL,
+  `subject` varchar(255) NOT NULL,
+  `created_by` int(11) NOT NULL,
+  `last_update` datetime NOT NULL,
+  `sender_id` int(11) NOT NULL,
+  `recipient_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `notifications`
+--
+
+CREATE TABLE `notifications` (
+  `notif_id` int(11) NOT NULL,
+  `user_type` varchar(250) DEFAULT NULL,
+  `vendor_id` int(11) DEFAULT NULL,
+  `message` text DEFAULT NULL,
+  `notification_type` varchar(50) DEFAULT NULL,
+  `time_stamp` datetime DEFAULT current_timestamp(),
+  `is_read` tinyint(1) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `notifications`
+--
+
+INSERT INTO `notifications` (`notif_id`, `user_type`, `vendor_id`, `message`, `notification_type`, `time_stamp`, `is_read`) VALUES
+(19, 'Admin', NULL, 'New Relocation Request by Reyan J Samontanes', 'Relocation Request', '2024-10-12 14:16:25', 1),
+(20, 'Admin', NULL, 'New Relocation Request by Reyan J Samontanes', 'Relocation Request', '2024-10-12 14:20:48', 1),
+(21, 'Admin', NULL, 'New Relocation Request by Reyan J Samontanes', 'Relocation Request', '2024-10-12 14:21:20', 1),
+(22, 'Admin', NULL, 'New Relocation Request by Reyan J Samontanes', 'Relocation Request', '2024-10-12 14:21:48', 1),
+(23, 'Admin', NULL, 'New Relocation Request by Reyan J Samontanes', 'Relocation Request', '2024-10-12 14:23:10', 1),
+(24, 'Admin', NULL, 'New Relocation Request by Reyan J Samontanes', 'Relocation Request', '2024-10-12 14:24:20', 1),
+(25, 'Admin', NULL, 'New Relocation Request by Reyan J Samontanes', 'Relocation Request', '2024-10-12 14:26:50', 1),
+(26, 'Admin', NULL, 'New rent application submitted by Blial  Rose.', 'Rent Application', '2024-10-12 14:35:03', 1),
+(27, 'Admin', NULL, 'New rent application submitted by Prince Jay  Sayre.', 'Rent Application', '2024-10-12 15:14:34', 1),
+(28, 'Admin', NULL, 'New inquiry submitted by Brose with subject: \'Inquiry\'.', 'New Inquiry', '2024-10-12 15:50:19', 1),
+(29, 'Customer Service', NULL, 'New inquiry submitted by Brose with subject: \'Inquiry\'.', 'New Inquiry', '2024-10-12 15:50:19', 1),
+(30, 'Admin', NULL, 'New inquiry submitted by qwd with subject: \'qwdqw\'.', 'New Inquiry', '2024-10-12 15:51:25', 1),
+(31, 'Customer Service', NULL, 'New inquiry submitted by qwd with subject: \'qwdqw\'.', 'New Inquiry', '2024-10-12 15:51:25', 1),
+(32, 'Admin', NULL, 'New rent application submitted by Longanisa Montes.', 'Rent Application', '2024-10-12 16:07:02', 1),
+(33, 'Admin', NULL, 'Rent Applicant: Longanisa L Montes', 'Ready For Drawlots', '2024-10-12 16:16:24', 1),
+(34, 'Admin', NULL, 'New inquiry submitted by Monalisa with subject: \'Inquiry\'.', 'New Inquiry', '2024-10-12 16:41:14', 1),
+(35, 'Customer Service', NULL, 'New inquiry submitted by Monalisa with subject: \'Inquiry\'.', 'New Inquiry', '2024-10-12 16:41:14', 1),
+(36, 'Admin', NULL, 'New inquiry submitted by Protas with subject: \'Message\'.', 'New Inquiry', '2024-10-12 16:46:16', 1),
+(37, 'Customer Service', NULL, 'New inquiry submitted by Protas with subject: \'Message\'.', 'New Inquiry', '2024-10-12 16:46:16', 1),
+(38, 'Admin', NULL, 'New inquiry submitted by Moana with subject: \'Inquire\'.', 'New Inquiry', '2024-10-13 10:02:59', 1),
+(39, 'Customer Service', NULL, 'New inquiry submitted by Moana with subject: \'Inquire\'.', 'New Inquiry', '2024-10-13 10:02:59', 1),
+(40, 'Admin', NULL, 'New inquiry submitted by Haku with subject: \'Inquire\'.', 'New Inquiry', '2024-10-18 10:46:19', 1),
+(41, 'Customer Service', NULL, 'New inquiry submitted by Haku with subject: \'Inquire\'.', 'New Inquiry', '2024-10-18 10:46:19', 1),
+(42, 'Admin', NULL, 'New rent application submitted by Beige Gray.', 'Rent Application', '2024-10-18 12:15:17', 1),
+(43, 'Cashier', NULL, 'New Approved Rent Applicant', 'Application Status Update', '2024-10-18 15:42:50', 1),
+(44, 'Cashier', NULL, 'New Approved Rent Applicant', 'Approved RentApp', '2024-10-18 15:45:32', 1),
+(45, 'Cashier', NULL, 'New Approved Rent Applicant', 'Approved RentApp', '2024-10-18 15:45:47', 1),
+(46, 'Cashier', NULL, 'New Approved Rent Applicant', 'Approved RentApp', '2024-10-18 15:45:51', 1),
+(47, 'Cashier', NULL, 'New Approved Rent Application', 'Approved RentApp', '2024-10-18 15:55:37', 1),
+(48, 'Cashier', NULL, 'New Approved Rent Application', 'Approved RentApp', '2024-10-18 15:56:56', 1),
+(49, 'Cashier', NULL, 'New Approved Rent Application', 'Ready for payment', '2024-10-18 15:57:32', 1),
+(50, 'Cashier', NULL, 'New Approved Rent Application', 'Ready for payment', '2024-10-18 21:59:37', 1);
 
 -- --------------------------------------------------------
 
@@ -1398,7 +1486,7 @@ INSERT INTO `pagebuilder_table` (`stats_id`, `buildings`, `overall_stalls`, `ven
 
 CREATE TABLE `receipts` (
   `receipt_id` int(11) NOT NULL,
-  `vendor_id` bigint(20) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
   `receipt` varchar(255) DEFAULT NULL,
   `totalPay` varchar(255) NOT NULL,
   `notes` text DEFAULT NULL,
@@ -1418,7 +1506,8 @@ INSERT INTO `receipts` (`receipt_id`, `vendor_id`, `receipt`, `totalPay`, `notes
 (12, 80, 'Receipts/file/80/erd.png', '35,232', '', '2024-09-30 10:41:08'),
 (13, 80, 'Receipts/file/80/erd.png', '$3160', '', '2024-09-30 13:56:21'),
 (14, 80, 'Receipts/file/80/BIR-Rules-on-Receipts-1024x657.jpg', 'ambot', '', '2024-09-30 14:01:44'),
-(15, 84, 'Receipts/file/84/7d9be3c8-aba2-4809-9f23-b07a8edfe748 (1).jpg', '4,080', '', '2024-10-02 16:17:10');
+(15, 84, 'Receipts/file/84/7d9be3c8-aba2-4809-9f23-b07a8edfe748 (1).jpg', '4,080', '', '2024-10-02 16:17:10'),
+(16, 83, 'Receipts/file/83/Blue Gold Elegant Minimalist Digital Marketer LinkedIn Banner.png', '5745', 'hmmm note', '2024-10-13 16:07:54');
 
 -- --------------------------------------------------------
 
@@ -1444,8 +1533,13 @@ CREATE TABLE `relocation_req` (
 --
 
 INSERT INTO `relocation_req` (`request_id`, `vendor_id`, `current_stall`, `relocated_stall`, `reason`, `request_date`, `approval_status`, `relocation_date`, `approval_date`, `maintenance_description`) VALUES
-(14, 83, 'B-15', NULL, 'Hello Can i Request Relocation because may buslot po yung bubong', '2024-10-06', 'Pending', '2024-10-15', '2024-10-09', NULL),
-(15, 83, 'A-02', NULL, 'Can i request relocation ASAP?', '2024-10-06', 'Pending', '2024-10-15', '2024-10-09', NULL);
+(35, 83, 'A-02', NULL, 'Request This A-02', '2024-10-12', 'Pending', NULL, NULL, NULL),
+(36, 83, 'B-15', NULL, 'Building hset', '2024-10-12', 'Pending', NULL, NULL, NULL),
+(37, 83, 'A-02', NULL, 'qwdqwd', '2024-10-12', 'Pending', NULL, NULL, NULL),
+(38, 83, 'B-15', NULL, 'asd', '2024-10-12', 'Pending', NULL, NULL, NULL),
+(39, 83, 'B-15', NULL, 'qqqqqqqqqqqqqqq', '2024-10-12', 'Pending', NULL, NULL, NULL),
+(40, 83, 'A-02', NULL, 'aaaa', '2024-10-12', 'Pending', NULL, NULL, NULL),
+(41, 83, 'A-02', NULL, 'saddsa', '2024-10-12', 'Pending', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1470,9 +1564,9 @@ CREATE TABLE `rentapp_payment` (
 --
 
 INSERT INTO `rentapp_payment` (`rentpayment_id`, `applicant_id`, `first_name`, `middle_name`, `last_name`, `payment_status`, `proof_of_payment`, `OR_no`, `payment_date`) VALUES
-(24, 2038, 'Meil', 'S', 'Sheida', 'Paid', 'payment_proofs/rent_application66fb6b77db0fb_c6c63c3f-131c-404f-b73a-63406cde2a44.jpg', 'hv76', '2024-09-30 16:00:00'),
-(25, 2039, 'Angkol', 'M', 'Nonoy', 'Paid', NULL, '', '0000-00-00 00:00:00'),
-(27, 2041, 'Reyan', 'J', 'Samontanes', 'Paid', NULL, '', '0000-00-00 00:00:00');
+(35, 2049, 'Prince Jay ', 'A', 'Sayre', 'Paid', 'payment_proofs/rent_application670a767939a76_b856f3cc-fc4b-4bd2-9f9b-6980033c7405.jpg', 'AKWBJDN22', '2024-10-18 16:00:00'),
+(36, 2050, 'Longanisa', 'L', 'Montes', 'Paid', 'payment_proofs/rent_application/670a84b836b67_WIN_20240826_22_46_11_Pro.jpg', 'segerh34', '2024-10-11 16:00:00'),
+(37, 2051, 'Beige', 'K', 'Gray', 'Unpaid', NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1487,8 +1581,7 @@ CREATE TABLE `rent_application` (
   `middle_name` varchar(50) NOT NULL,
   `last_name` varchar(250) NOT NULL,
   `contact_no` bigint(20) NOT NULL,
-  `building_type` text DEFAULT NULL,
-  `stall_no` bigint(20) DEFAULT NULL,
+  `commodities` text DEFAULT NULL,
   `age` int(11) DEFAULT NULL,
   `email` varchar(250) DEFAULT NULL,
   `address` text DEFAULT NULL,
@@ -1500,12 +1593,10 @@ CREATE TABLE `rent_application` (
 -- Dumping data for table `rent_application`
 --
 
-INSERT INTO `rent_application` (`Approval`, `applicant_id`, `first_name`, `middle_name`, `last_name`, `contact_no`, `building_type`, `stall_no`, `age`, `email`, `address`, `rentapp_file`, `applied_date`) VALUES
-('PROCESSING', 2034, 'Prince Jay', 'M', 'Sayre', 9171600383, 'Building B', 24, 22, 'sayre@gmaisl.com', 'sayre residence purok darussalam bawing', 'rent_applications_file_dir/Polomolok-Public-Market-Rent-Application-Form-Prince-J-Sayre.pdf', '2024-10-01 00:34:32'),
-('PROCESSING', 2037, 'awd', 'adw', 'a', 9171600383, 'Building I', 3, 21, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', 'rent_applications_file_dir/Polomolok-Public-Market-Rent-Application-Form-Prince-J-Sayre.pdf', '2024-10-01 01:47:28'),
-('APPROVED', 2038, 'Meil', 'S', 'Sheida', 9213912321, 'Building C', 24, 23, 'meilsheida@gmail.com', 'Polomolok Sultana South Cotabato', 'rent_applications_file_dir/Polomolok-Public-Market-Rent-Application-Form-Prince-J-Sayre.pdf', '2024-10-01 04:48:53'),
-('APPROVED', 2039, 'Angkol', 'M', 'Nonoy', 523532, 'Building B', 21, 22, 'hawd@gmail.com', 'awdaw', 'rent_applications_file_dir/BIR-Rules-on-Receipts-1024x657.jpg', '2024-10-01 04:27:20'),
-('APPROVED', 2041, 'Reyan', 'J', 'Samontanes', 9171600383, 'Building B', 21, 22, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', 'rent_applications_file_dir/Polomolok-Public-Market-Rent-Application-Form-reyan-J-samontanes (2).pdf', '2024-10-02 07:48:47');
+INSERT INTO `rent_application` (`Approval`, `applicant_id`, `first_name`, `middle_name`, `last_name`, `contact_no`, `commodities`, `age`, `email`, `address`, `rentapp_file`, `applied_date`) VALUES
+('APPROVED', 2049, 'Prince Jay ', 'A', 'Sayre', 9938739524, 'Thrift Shop', 24, 'prince@gmail.com', 'Polomolok South Cotabato', 'rent_applications_file_dir/Polomolok-Public-Market-Rent-Application-Form-Prince-Jay-A-Sayre.pdf', '2024-10-12 13:14:53'),
+('APPROVED', 2050, 'Longanisa', 'L', 'Montes', 9171600383, 'Vegetables and Fruits', 59, 'long@gmail.com', 'Polomolok Sultana', 'rent_applications_file_dir/Polomolok-Public-Market-Rent-Application-Form-Prince-Jay-A-Sayre.pdf', '2024-10-12 14:07:39'),
+('APPROVED', 2051, 'Beige', 'K', 'Gray', 9171600383, 'Processed Goods', 25, 'yusreadadulo123@gmail.com', 'sayre residence purok darussalam bawing', 'rent_applications_file_dir/Polomolok-Public-Market-Rent-Application-Form-Beige-K-Gray.pdf', '2024-10-18 13:59:37');
 
 -- --------------------------------------------------------
 
@@ -1534,7 +1625,7 @@ CREATE TABLE `users` (
 
 INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `middle_name`, `last_name`, `age`, `address`, `email_add`, `contact_no`, `user_type`, `picture_profile`) VALUES
 (11, 'rj', 'rj123', 'reyan', 'jan', 'samontanes', 43, 'polomolok', 'gmail.com', 3233252, 'ADMIN', 'adminProfile/FB_IMG_1602662112047.jpg'),
-(86, 'cashier', 'cash123', 'Montana', 'D.', 'Revilla', 21, 'Purok Dimansia', 'montana@gmail.com', 9938739511, 'CASHIER', NULL),
+(86, 'cashier', 'cash123', 'Montana', 'D.', 'Revilla', 21, 'Purok Dimansia', 'montana@gmail.com', 9938739511, 'CASHIER', 'cashierProfile/Screenshot 2024-10-08 195414.png'),
 (87, 'Longanisa', 'Talong', 'DocuMen', 'K.', 'Bambalolong', 44, 'Purok. Drimatia, Kalfungal', 'Documen@gmail.com', 9938757326, 'DOCUMENT_HANDLER', NULL),
 (152, 'King', 'pj123', 'King', 'Theous', 'The_third', 23, 'Dunglorian,', '@gmail.com', 98746439272, 'CUSTOMER_SERVICE', NULL),
 (156, 'services', 'serving123', 'services', 'Meedo', 'ServicesStaff', 23, 'Polotana Subdivision, West Drive.', 'Q@gmail', 9510462062, 'DOCUMENT_HANDLER', NULL),
@@ -1548,7 +1639,7 @@ INSERT INTO `users` (`id`, `username`, `password`, `first_name`, `middle_name`, 
 
 CREATE TABLE `vendors` (
   `Vendor_Status` enum('ACTIVE','INACTIVE','ON PROCESS','ON HOLD','DEACTIVATED','ON TRANSFER') NOT NULL DEFAULT 'ACTIVE',
-  `vendor_id` bigint(20) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
   `username` varchar(50) NOT NULL,
   `password` varchar(50) NOT NULL,
   `first_name` varchar(255) DEFAULT NULL,
@@ -1580,7 +1671,7 @@ INSERT INTO `vendors` (`Vendor_Status`, `vendor_id`, `username`, `password`, `fi
 
 CREATE TABLE `vendorsoa` (
   `id` int(11) NOT NULL,
-  `vendor_id` bigint(20) NOT NULL,
+  `vendor_id` int(11) NOT NULL,
   `username` varchar(255) NOT NULL,
   `remaining_balance` varchar(255) NOT NULL,
   `monthly_rentals` varchar(255) NOT NULL,
@@ -1704,11 +1795,24 @@ ALTER TABLE `inquiry`
   ADD PRIMARY KEY (`inq_id`);
 
 --
--- Indexes for table `message`
+-- Indexes for table `message_details`
 --
-ALTER TABLE `message`
+ALTER TABLE `message_details`
   ADD PRIMARY KEY (`message_id`),
-  ADD KEY `vendor_id` (`vendor_id`,`id`);
+  ADD KEY `thread_id` (`thread_id`);
+
+--
+-- Indexes for table `message_thread`
+--
+ALTER TABLE `message_thread`
+  ADD PRIMARY KEY (`thread_id`);
+
+--
+-- Indexes for table `notifications`
+--
+ALTER TABLE `notifications`
+  ADD PRIMARY KEY (`notif_id`),
+  ADD KEY `id` (`user_type`,`vendor_id`);
 
 --
 -- Indexes for table `pagebuilder_table`
@@ -1778,7 +1882,7 @@ ALTER TABLE `announcements`
 -- AUTO_INCREMENT for table `archived_inquiries`
 --
 ALTER TABLE `archived_inquiries`
-  MODIFY `inquiry_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `inquiry_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
 -- AUTO_INCREMENT for table `building_a`
@@ -1850,13 +1954,25 @@ ALTER TABLE `documents`
 -- AUTO_INCREMENT for table `inquiry`
 --
 ALTER TABLE `inquiry`
-  MODIFY `inq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `inq_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=39;
 
 --
--- AUTO_INCREMENT for table `message`
+-- AUTO_INCREMENT for table `message_details`
 --
-ALTER TABLE `message`
+ALTER TABLE `message_details`
   MODIFY `message_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `message_thread`
+--
+ALTER TABLE `message_thread`
+  MODIFY `thread_id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `notifications`
+--
+ALTER TABLE `notifications`
+  MODIFY `notif_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=51;
 
 --
 -- AUTO_INCREMENT for table `pagebuilder_table`
@@ -1868,37 +1984,37 @@ ALTER TABLE `pagebuilder_table`
 -- AUTO_INCREMENT for table `receipts`
 --
 ALTER TABLE `receipts`
-  MODIFY `receipt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `receipt_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `relocation_req`
 --
 ALTER TABLE `relocation_req`
-  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `request_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `rentapp_payment`
 --
 ALTER TABLE `rentapp_payment`
-  MODIFY `rentpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `rentpayment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=38;
 
 --
 -- AUTO_INCREMENT for table `rent_application`
 --
 ALTER TABLE `rent_application`
-  MODIFY `applicant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2042;
+  MODIFY `applicant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2052;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=183;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=185;
 
 --
 -- AUTO_INCREMENT for table `vendors`
 --
 ALTER TABLE `vendors`
-  MODIFY `vendor_id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `vendor_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `vendorsoa`
@@ -1911,16 +2027,10 @@ ALTER TABLE `vendorsoa`
 --
 
 --
--- Constraints for table `building_a`
+-- Constraints for table `message_details`
 --
-ALTER TABLE `building_a`
-  ADD CONSTRAINT `fk_vendor_id` FOREIGN KEY (`vendor_id`) REFERENCES `vendors` (`vendor_id`);
-
---
--- Constraints for table `receipts`
---
-ALTER TABLE `receipts`
-  ADD CONSTRAINT `receipts_ibfk_1` FOREIGN KEY (`vendor_id`) REFERENCES `vendors` (`vendor_id`);
+ALTER TABLE `message_details`
+  ADD CONSTRAINT `message_details_ibfk_1` FOREIGN KEY (`thread_id`) REFERENCES `message_thread` (`thread_id`);
 
 --
 -- Constraints for table `rentapp_payment`
