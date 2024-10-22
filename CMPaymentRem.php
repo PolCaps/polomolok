@@ -231,27 +231,55 @@ if ($conn->connect_error) {
 }
 
 
-// Fetch vendor details for display
 $sqlvendor = "
   SELECT 
     CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
     v.username AS username, 
     v.payment_due AS payment_dues, 
-    COALESCE(a.monthly_rentals, b.monthly_rentals, c.monthly_rentals, d.monthly_rentals, e.monthly_rentals, 
-             f.monthly_rentals, g.monthly_rentals, h.monthly_rentals, i.monthly_rentals, j.monthly_rentals) AS rent_due,
+    FORMAT(
+      SUM(
+        COALESCE(
+          CAST(REPLACE(a.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
+          CAST(REPLACE(b.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
+          CAST(REPLACE(c.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
+          CAST(REPLACE(d.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
+          CAST(REPLACE(e.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
+          CAST(REPLACE(f.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
+          CAST(REPLACE(g.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
+          CAST(REPLACE(h.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
+          CAST(REPLACE(i.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
+          CAST(REPLACE(j.monthly_rentals, ',', '') AS DECIMAL(10,2))
+        )
+      ), 2
+    ) AS rent_due,
+    GROUP_CONCAT(
+      DISTINCT COALESCE(a.stall_no, b.stall_no, c.stall_no, d.stall_no, e.stall_no, 
+                       f.stall_no, g.stall_no, h.stall_no, i.stall_no, j.stall_no) 
+      SEPARATOR ', '
+    ) AS stall_nos,
     v.vendor_id AS vendor_id
-FROM vendors v
-LEFT JOIN building_a a ON v.vendor_id = a.vendor_id
-LEFT JOIN building_b b ON v.vendor_id = b.vendor_id
-LEFT JOIN building_c c ON v.vendor_id = c.vendor_id
-LEFT JOIN building_d d ON v.vendor_id = d.vendor_id
-LEFT JOIN building_e e ON v.vendor_id = e.vendor_id
-LEFT JOIN building_f f ON v.vendor_id = f.vendor_id
-LEFT JOIN building_g g ON v.vendor_id = g.vendor_id
-LEFT JOIN building_h h ON v.vendor_id = h.vendor_id
-LEFT JOIN building_i i ON v.vendor_id = i.vendor_id
-LEFT JOIN building_j j ON v.vendor_id = j.vendor_id
+  FROM vendors v
+  LEFT JOIN building_a a ON v.vendor_id = a.vendor_id
+  LEFT JOIN building_b b ON v.vendor_id = b.vendor_id
+  LEFT JOIN building_c c ON v.vendor_id = c.vendor_id
+  LEFT JOIN building_d d ON v.vendor_id = d.vendor_id
+  LEFT JOIN building_e e ON v.vendor_id = e.vendor_id
+  LEFT JOIN building_f f ON v.vendor_id = f.vendor_id
+  LEFT JOIN building_g g ON v.vendor_id = g.vendor_id
+  LEFT JOIN building_h h ON v.vendor_id = h.vendor_id
+  LEFT JOIN building_i i ON v.vendor_id = i.vendor_id
+  LEFT JOIN building_j j ON v.vendor_id = j.vendor_id
+  GROUP BY 
+    v.vendor_id, 
+    v.username, 
+    v.payment_due
 ";
+
+
+
+
+
+
 
 $resultA = $conn->query($sqlvendor);
 
@@ -327,26 +355,55 @@ if ($resultA->num_rows > 0) {
         <form id="sendMessageForm" method="POST" action="generateSOA.php">
           <div class="mb-3">
             <label for="vendor-name" class="col-form-label">Vendor Name:</label>
-            <input type="text" class="form-control" id="vendor-name" name="vendor-name" readonly>
+            <input type="text" class="form-control" id="vendor-name" name="name" readonly>
           </div>
           <div class="mb-3">
             <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
-            <input type="number" class="form-control" id="remaining-balance" name="remaining-balance" step="0.01" min="0" required>
+            <input type="number" class="form-control" id="remaining-balance" name="remaining_balance" step="0.01" min="0">
           </div>
           <div class="mb-3">
             <label for="monthly-rentals" class="col-form-label">Monthly Rentals:</label>
-            <input type="text" class="form-control" id="monthly-rentals" name="monthly_rentals_total" readonly>
+            <input type="text" class="form-control" id="monthly-rentals" name="totalPay" readonly>
           </div>
           <div class="mb-3">
             <label for="miscellaneous-fees" class="col-form-label">Miscellaneous Fees (optional):</label>
-            <input type="number" class="form-control" id="miscellaneous-fees" name="miscellaneous-fees" step="0.01" min="0" >
+            <input type="number" class="form-control" id="miscellaneous-fees" name="miscellaneous_fees" step="0.01" min="0">
           </div>
           <div class="mb-3">
             <label for="other-fees" class="col-form-label">Other Fees (optional):</label>
-            <input type="number" class="form-control" id="other-fees" name="other-fees" step="0.01" min="0" >
+            <input type="number" class="form-control" id="other-fees" name="other_fees" step="0.01" min="0">
           </div>
+          <div class="mb-3">
+            <label for="monthBill" class="col-form-label">Bill for the Month:</label>
+            <input type="text" class="form-control" id="monthBill" name="monthBill">
+          </div>
+          <div class="mb-3">
+            <label for="building" class="col-form-label">Building Name/Number:</label>
+            <input type="text" class="form-control" id="building" name="building">
+          </div>
+          <div class="mb-3">
+            <label for="stallNumber" class="col-form-label">Stall Number:</label>
+            <input type="text" class="form-control" id="stallNumber" name="stallNumber">
+          </div>
+          <div class="mb-3">
+            <label for="dueDate" class="col-form-label">Due Date:</label>
+            <input type="date" class="form-control" id="dueDate" name="dueDate">
+          </div>
+          <div class="mb-3">
+            <label for="padlockingDate" class="col-form-label">Padlocking Date (optional):</label>
+            <input type="date" class="form-control" id="padlockingDate" name="padlockingDate">
+          </div>
+          <div class="mb-3">
+            <label for="numMonths" class="col-form-label">Number of Months:</label>
+            <input type="number" class="form-control" id="numMonths" name="numMonths" min="1">
+          </div>
+          <div class="mb-3">
+            <label for="penaltyFee" class="col-form-label">Penalty Fee (if any):</label>
+            <input type="number" class="form-control" id="penaltyFee" name="penaltyFee" step="0.01" min="0">
+          </div>
+          
           <input type="hidden" id="vendor-id" name="vendor-id">
-          <button type="submit" id="submit" class="btn btn-primary">Generate Invoice</button>
+          <button type="submit" id="submit" class="btn btn-primary">SEND SOA</button>
         </form>
       </div>
       <div class="modal-footer">
@@ -355,6 +412,7 @@ if ($resultA->num_rows > 0) {
     </div>
   </div>
 </div>
+
 
 
 <script>

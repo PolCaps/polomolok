@@ -14,7 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['vendorSelect'], $_POST['vendor_id'], $_POST['username'], $_POST['totalPayment'], $_FILES['receiptFile'])) {
         $vendor_id = $_POST['vendor_id'];
         $totalVenPay = $_POST['totalPayment'];
-        $notes = $_POST['receiptNotes'] ?? '';  // Optional notes field
+        $receiptNumber = $_POST['receiptNo'];
+        $notes = $_POST['receiptNotes'] ?? '';
         $username = $_POST['username'];
 
         // Check if vendor_id exists in vendors table
@@ -42,9 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Attempt to move the uploaded file
         if (move_uploaded_file($_FILES['receiptFile']['tmp_name'], $targetFile)) {
             // Insert new receipt record for the vendor
-            $stmtInsert = $conn->prepare("INSERT INTO receipts (vendor_id, receipt, totalPay, notes) VALUES (?, ?, ?, ?)");
+            $stmtInsert = $conn->prepare("INSERT INTO receipts (vendor_id, receipt, totalPay, notes, rec_num) VALUES (?, ?, ?, ?, ?)");
             if ($stmtInsert) {
-                $stmtInsert->bind_param("isss", $vendor_id, $targetFile, $totalVenPay, $notes);
+                $stmtInsert->bind_param("issss", $vendor_id, $targetFile, $totalVenPay, $notes, $receiptNumber);
                 if ($stmtInsert->execute()) {
                     echo "<script>alert('Successfully uploaded!'); window.location.href = '../CMReceiptVendor.php';</script>";
                 } else {
@@ -62,5 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
+
 $conn->close();
 ?>
+

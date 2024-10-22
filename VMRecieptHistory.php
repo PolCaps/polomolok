@@ -13,7 +13,6 @@ if ($conn->connect_error) {
   die("Connection failed: " . $conn->connect_error);
 }
 
-// SQL query with placeholders (removed r.receipt AS receiptsImg)
 $sql = "
   SELECT v.*, 
          v.payment_due AS due_dates,
@@ -357,36 +356,51 @@ $conn->close();
 
     // SQL query with a placeholder for vendor_id
     $sqlV = "
-    SELECT v.vendor_id, v.username, v.first_name, v.middle_name, v.last_name, 
-           GROUP_CONCAT(DISTINCT r.receipt SEPARATOR ', ') AS receipts, 
-           v.payment_due AS due_dates, 
-           stalls.buildings
-    FROM vendors v
-    JOIN (
-        SELECT vendor_id, stall_no AS buildings FROM building_a
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_b
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_c
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_d
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_e
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_f
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_g
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_h
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_i
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_j
-    ) AS stalls ON v.vendor_id = stalls.vendor_id
-    LEFT JOIN receipts r ON v.vendor_id = r.vendor_id
-    WHERE v.vendor_id = ?
-    GROUP BY v.vendor_id, stalls.buildings
+   SELECT 
+    v.vendor_id, 
+    v.username, 
+    v.first_name, 
+    v.middle_name, 
+    v.last_name, 
+    GROUP_CONCAT(DISTINCT r.receipt SEPARATOR ', ') AS receipts, 
+    v.payment_due AS due_dates, 
+    GROUP_CONCAT(DISTINCT stalls.buildings SEPARATOR ', ') AS buildings
+FROM 
+    vendors v
+JOIN (
+    SELECT vendor_id, stall_no AS buildings FROM building_a
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_b
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_c
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_d
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_e
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_f
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_g
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_h
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_i
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_j
+) AS stalls ON v.vendor_id = stalls.vendor_id
+LEFT JOIN receipts r ON v.vendor_id = r.vendor_id
+WHERE v.vendor_id = ?
+GROUP BY 
+    v.vendor_id, 
+    v.username, 
+    v.first_name, 
+    v.middle_name, 
+    v.last_name, 
+    v.payment_due
+ORDER BY 
+    v.username;
 ";
+
 
     // Prepare the SQL statement
     $stmt = $conn->prepare($sqlV);

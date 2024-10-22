@@ -232,13 +232,17 @@ include('Sessions/Cashier.php');
 
 
           <input type="hidden" id="vendor_id_input" name="vendor_id" value=""> <!-- Hidden input to store vendor ID -->
-          <div class="mb-3">
+          <!-- <div class="mb-3">
             <label for="receiptFile" class="form-label">Attach Receipt File or Photo</label>
             <input type="file" id="receiptFile" name="receiptFile" class="form-control" required>
-          </div>
+          </div> -->
           <div class="mb-3">
             <label for="totalPayment" class="form-label">Total Payments</label>
             <textarea id="totalPayment" name="totalPayment" class="form-control" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="receiptNo" class="form-label">Receipts Number (OR)</label>
+            <input type="text" id="receiptNo" name="receiptNo" class="form-control" required>
           </div>
           <div class="mb-3">
             <label for="receiptNotes" class="form-label">Notes (optional)</label>
@@ -274,34 +278,48 @@ if ($conn->connect_error) {
 }
 
 $sqlV = "
-    SELECT v.vendor_id, v.username, v.first_name, v.middle_name, v.last_name, 
-           GROUP_CONCAT(DISTINCT r.receipt SEPARATOR ', ') AS receipts, 
-           v.payment_due AS due_dates, 
-           stalls.buildings
-    FROM vendors v
-    JOIN (
-        SELECT vendor_id, stall_no AS buildings FROM building_a
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_b
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_c
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_d
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_e
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_f
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_g
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_h
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_i
-        UNION ALL
-        SELECT vendor_id, stall_no FROM building_j
-    ) AS stalls ON v.vendor_id = stalls.vendor_id
-    LEFT JOIN receipts r ON v.vendor_id = r.vendor_id
-    GROUP BY v.vendor_id, stalls.buildings
+   SELECT 
+    v.vendor_id, 
+    v.username, 
+    v.first_name, 
+    v.middle_name, 
+    v.last_name, 
+    GROUP_CONCAT(DISTINCT r.receipt SEPARATOR ', ') AS receipts, 
+    v.payment_due AS due_dates, 
+    GROUP_CONCAT(DISTINCT stalls.buildings SEPARATOR ', ') AS buildings
+FROM 
+    vendors v
+JOIN (
+    SELECT vendor_id, stall_no AS buildings FROM building_a
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_b
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_c
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_d
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_e
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_f
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_g
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_h
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_i
+    UNION ALL
+    SELECT vendor_id, stall_no FROM building_j
+) AS stalls ON v.vendor_id = stalls.vendor_id
+LEFT JOIN receipts r ON v.vendor_id = r.vendor_id
+GROUP BY 
+    v.vendor_id, 
+    v.username, 
+    v.first_name, 
+    v.middle_name, 
+    v.last_name, 
+    v.payment_due
+ORDER BY 
+    v.username
 ";
 
 

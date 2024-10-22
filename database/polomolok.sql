@@ -1402,7 +1402,7 @@ CREATE TABLE `receipts` (
   `receipt` varchar(255) DEFAULT NULL,
   `totalPay` varchar(255) NOT NULL,
   `notes` text DEFAULT NULL,
-  `issued_date` varchar(255) DEFAULT current_timestamp()
+  `issued_date` timestamp DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -1432,7 +1432,7 @@ CREATE TABLE `relocation_req` (
   `current_stall` varchar(100) NOT NULL,
   `relocated_stall` varchar(100) DEFAULT NULL,
   `reason` varchar(255) DEFAULT NULL,
-  `request_date` date NOT NULL DEFAULT current_timestamp(),
+  `request_date` timestamp NOT NULL DEFAULT current_timestamp(),
   `approval_status` enum('Pending','Approved','Rejected') DEFAULT 'Pending',
   `relocation_date` date DEFAULT NULL,
   `approval_date` date DEFAULT NULL,

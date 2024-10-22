@@ -314,27 +314,6 @@ $stmtA->close();
             </thead>
             <tbody id="dataTableBody">
               <?= $tableRows ?>
-              <script>
-                // Wait until the DOM is fully loaded
-                document.addEventListener('DOMContentLoaded', function () {
-                  // Get all clickable elements
-                  const clickables = document.querySelectorAll('.clickable');
-
-                  // Add event listeners to all clickable elements
-                  clickables.forEach(clickable => {
-                    clickable.addEventListener('click', function () {
-                      const documentUrl = this.getAttribute('data-doc');
-
-                      // Assuming that documentUrl is a valid URL, open it in a new tab
-                      if (documentUrl) {
-                        window.open(documentUrl, '_blank');
-                      } else {
-                        alert('Error: No documents!');
-                      }
-                    });
-                  });
-                });
-              </script>
             </tbody>
           </table>
         </div>
@@ -344,7 +323,60 @@ $stmtA->close();
     </div>
     </div>
 
+    <div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="documentModalLabel">Documents</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div id="errorMessage" class="text-danger mt-2" style="display: none;"></div>
+      </div>
+      <div class="modal-body">
+        <iframe id="documentViewer" src="" style="width: 100%; height: 500px;" frameborder="0"></iframe>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
 
+<script>
+  // Wait until the DOM is fully loaded
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get all clickable elements
+    const clickables = document.querySelectorAll('.clickable');
+
+    // Add event listeners to all clickable elements
+    clickables.forEach(clickable => {
+      clickable.addEventListener('click', function () {
+        const documentUrl = this.getAttribute('data-doc');
+        const documentViewer = document.getElementById('documentViewer');
+        const errorMessage = document.getElementById('errorMessage');
+
+        // Clear previous error message
+        errorMessage.style.display = 'none';
+        errorMessage.textContent = '';
+
+        // Check if the document URL is valid
+        if (documentUrl && documentUrl.trim() !== '') {
+          documentViewer.src = documentUrl; // Set the iframe source to the document URL
+          // Show the modal
+          const documentModal = new bootstrap.Modal(document.getElementById('documentModal'));
+          documentModal.show();
+        } else {
+          // Show error message in modal if no document URL
+          errorMessage.textContent = 'Error: No documents available to view!';
+          errorMessage.style.display = 'block';
+          documentViewer.src = ''; // Clear the iframe source
+          // Show the modal
+          const documentModal = new bootstrap.Modal(document.getElementById('documentModal'));
+          documentModal.show();
+        }
+      });
+    });
+  });
+</script>
 
 
     </div>
