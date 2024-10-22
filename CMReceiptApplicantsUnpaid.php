@@ -332,11 +332,10 @@ include('Sessions/Cashier.php');
         .then(response => response.json())
         .then(data => {
             const tableBody = document.getElementById('dataTableBodyReceipt');
-            tableBody.innerHTML = ''; // Clear existing rows
+            tableBody.innerHTML = ''; 
             
             if (data.success) {
                 if (data.data.length > 0) {
-                    // Populate table with applicants
                     data.data.forEach(item => {
                         const row = document.createElement('tr');
                         

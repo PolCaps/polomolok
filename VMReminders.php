@@ -294,12 +294,116 @@ if (!$vendor) {
     <div class="row my-4">
         <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
             <div class="card">
-                <div class="card-header pb-0">
+                <div class="card-header">
                     <div class="row">
                         <h6 class="text-center">
-                            <span class="text-sm text-secondary">Vendor Name:</span>
-                            <?php echo htmlspecialchars($vendor['username']); ?>
+                            <span class="text-info text-center">Message Reminders</span>
                         </h6>
+                    </div>
+                </div>
+
+
+
+                <div class="card-body px-0 pb-2">
+                    <div class="table-responsive">
+                    <table class="table align-items-center mb-0">
+                        <thead>
+                        <tr>
+                            <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">Stall</th>
+                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 text-center">
+                            Message</th>
+                            
+                        </tr>
+                        </thead>
+                        <tbody id="dataTableBody">
+                        <?php
+                        
+                        include('database_config.php');
+
+                        // Create a connection
+                        $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+                        // Check the connection
+                        if ($conn->connect_error) {
+                            echo json_encode(['success' => false, 'message' => 'Connection failed: ' . $conn->connect_error]);
+                            exit;
+                        }
+
+                        // Get the vendor_id from session
+                        if (isset($_SESSION['vendor_id'])) {
+                            $vendor_id = intval($_SESSION['vendor_id']); // Ensure vendor_id is an integer
+                        } else {
+                            echo "<tr><td colspan='3' class='text-center'>Vendor ID not found in session</td></tr>";
+                            exit;
+                        }
+
+                        // Query to join vendorsoa and building tables to get stall_no and message
+                        $query = "
+                        SELECT b.stall_no, v.message 
+                        FROM vendorsoa v
+                        INNER JOIN (
+                            SELECT stall_no, vendor_id FROM building_a
+                            UNION ALL 
+                            SELECT stall_no, vendor_id FROM building_b
+                            UNION ALL 
+                            SELECT stall_no, vendor_id FROM building_c
+                            UNION ALL 
+                            SELECT stall_no, vendor_id FROM building_d
+                            UNION ALL 
+                            SELECT stall_no, vendor_id FROM building_e
+                            UNION ALL 
+                            SELECT stall_no, vendor_id FROM building_f
+                            UNION ALL 
+                            SELECT stall_no, vendor_id FROM building_g
+                            UNION ALL 
+                            SELECT stall_no, vendor_id FROM building_h
+                            UNION ALL 
+                            SELECT stall_no, vendor_id FROM building_i
+                            UNION ALL 
+                            SELECT stall_no, vendor_id FROM building_j
+                        ) b ON v.vendor_id = b.vendor_id
+                        WHERE v.vendor_id = ? AND v.message IS NOT NULL;
+                    ";
+
+                        $stmt = $conn->prepare($query);
+                        $stmt->bind_param("i", $vendor_id); // Bind vendor_id as an integer
+                        $stmt->execute();
+                        $result = $stmt->get_result();
+
+                        // Check if any records are found
+                        if ($result->num_rows > 0) {
+                            // Loop through the results and generate table rows
+                            while ($row = $result->fetch_assoc()) {
+                                echo "<tr>";
+                                echo "<td class='text-center text-sm'>" . htmlspecialchars($row['stall_no']) . "</td>";
+                                echo "<td class='text-center text-sm'>" . htmlspecialchars($row['message']) . "</td>";
+                                echo "</tr>";
+                            }
+                        } else {
+                            echo "<tr><td colspan='3' class='text-center text-sm'>There are no Current Messages</td></tr>";
+                        }
+
+                        // Close the connection
+                        $stmt->close();
+                        $conn->close();
+                    ?>
+
+
+                        </tbody>
+                    </table>
+                    </div>
+      </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-4">
+        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <div class="row">
+                        <span class="text-info text-center">Statement of Account</span>
                     </div>
                 </div>
 
@@ -309,11 +413,69 @@ if (!$vendor) {
                     <div class="container">
                         <!-- Messages Reminders Label -->
                         <div class="row">
-                            <div class="col-12">
-                                <h4 class="text-uppercase text-secondary font-weight-bolder opacity-7" style="font-size: 2rem;">
-                                    STATEMENT OF ACCOUNT REMINDERS
-                                </h4>
+                            
+                            <!-- PDF Display Section -->
+                            <div id="pdfContainer" style="display: none;">
+                                <iframe id="pdfIframe" width="100%" height="500px"></iframe>
                             </div>
+                            <div id="pdfError" style="display: none; color: red;"></div>
+                            <div id="jsonError" style="display: none; color: green;"></div> <!-- JSON error display -->
+
+                            <script>
+                                // Embed the PHP variable in JavaScript
+                                const vendorId = <?php echo json_encode($vendor_id); ?>;
+
+                                async function fetchPdfData() {
+                                    try {
+                                        // Send a request to fetch the file path from the server
+                                        const response = await fetch('soa.php', {
+                                            method: 'POST',
+                                            headers: {
+                                                'Content-Type': 'application/json'
+                                            },
+                                            body: JSON.stringify({ 'vendor_id': vendorId }) // Use the JavaScript variable
+                                        });
+
+                                        const pdfIframe = document.getElementById('pdfIframe');
+                                        const pdfContainer = document.getElementById('pdfContainer');
+                                        const pdfError = document.getElementById('pdfError');
+                                        const jsonError = document.getElementById('jsonError'); // Locator for JSON errors
+
+                                        if (response.ok) {
+                                            const data = await response.json();
+
+                                            if (data.success && data.filePath) {
+                                                // Display the iframe with the PDF
+                                                pdfIframe.src = data.filePath;
+                                                pdfContainer.style.display = 'block'; // Show the PDF container
+                                                pdfError.style.display = 'none'; // Hide the error message
+                                                jsonError.style.display = 'none'; // Hide JSON error message
+                                            } else {
+                                                // Hide the iframe and show an error message
+                                                pdfContainer.style.display = 'none'; // Hide the PDF container
+                                                pdfError.textContent = data.message || 'No PDF file found.';
+                                                pdfError.style.display = 'block'; // Show the error message
+                                                jsonError.style.display = 'none'; // Hide JSON error message
+                                            }
+                                        } else {
+                                            // Handle network error
+                                            pdfContainer.style.display = 'none'; // Hide the PDF container
+                                            pdfError.textContent = 'Error: Network response was not ok';
+                                            pdfError.style.display = 'block'; // Show the error message
+                                            jsonError.style.display = 'none'; // Hide JSON error message
+                                        }
+                                    } catch (error) {
+                                        // Display error message for fetch or JSON errors
+                                        document.getElementById('pdfContainer').style.display = 'none'; // Hide the PDF container
+                                        document.getElementById('pdfError').style.display = 'none'; // Hide regular error message
+                                        jsonError.textContent = 'Error: ' + error.message;
+                                        jsonError.style.display = 'block'; // Show JSON error message
+                                    }
+                                }
+
+                                // Call the function to fetch PDF data
+                                fetchPdfData();
+                            </script>
                         </div>
                     </div>
                 </div>
@@ -322,83 +484,6 @@ if (!$vendor) {
     </div>
 </div>
 
-
-<!-- PDF Display Section -->
-<div id="pdfContainer" style="display: none;">
-    <iframe id="pdfIframe" width="100%" height="500px"></iframe>
-</div>
-<div id="pdfError" style="display: none; color: red;"></div>
-<div id="jsonError" style="display: none; color: green;"></div> <!-- JSON error display -->
-
-<script>
-    // Embed the PHP variable in JavaScript
-    const vendorId = <?php echo json_encode($vendor_id); ?>;
-
-    async function fetchPdfData() {
-        try {
-            // Send a request to fetch the file path from the server
-            const response = await fetch('soa.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ 'vendor_id': vendorId }) // Use the JavaScript variable
-            });
-
-            const pdfIframe = document.getElementById('pdfIframe');
-            const pdfContainer = document.getElementById('pdfContainer');
-            const pdfError = document.getElementById('pdfError');
-            const jsonError = document.getElementById('jsonError'); // Locator for JSON errors
-
-            if (response.ok) {
-                const data = await response.json();
-
-                if (data.success && data.filePath) {
-                    // Display the iframe with the PDF
-                    pdfIframe.src = data.filePath;
-                    pdfContainer.style.display = 'block'; // Show the PDF container
-                    pdfError.style.display = 'none'; // Hide the error message
-                    jsonError.style.display = 'none'; // Hide JSON error message
-                } else {
-                    // Hide the iframe and show an error message
-                    pdfContainer.style.display = 'none'; // Hide the PDF container
-                    pdfError.textContent = data.message || 'No PDF file found.';
-                    pdfError.style.display = 'block'; // Show the error message
-                    jsonError.style.display = 'none'; // Hide JSON error message
-                }
-            } else {
-                // Handle network error
-                pdfContainer.style.display = 'none'; // Hide the PDF container
-                pdfError.textContent = 'Error: Network response was not ok';
-                pdfError.style.display = 'block'; // Show the error message
-                jsonError.style.display = 'none'; // Hide JSON error message
-            }
-        } catch (error) {
-            // Display error message for fetch or JSON errors
-            document.getElementById('pdfContainer').style.display = 'none'; // Hide the PDF container
-            document.getElementById('pdfError').style.display = 'none'; // Hide regular error message
-            jsonError.textContent = 'Error: ' + error.message;
-            jsonError.style.display = 'block'; // Show JSON error message
-        }
-    }
-
-    // Call the function to fetch PDF data
-    fetchPdfData();
-</script>
-
-
-
-
-
-
-
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div>
     </main>
     <div class="fixed-plugin">
         <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">

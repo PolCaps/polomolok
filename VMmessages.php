@@ -131,9 +131,6 @@ $stmt1->close();
         }
     });
 
-
-
-
     const startedDate = new Date("<?php echo $started_date; ?>");
     const paymentDue = "<?php echo $payment_due; ?>";
 </script>

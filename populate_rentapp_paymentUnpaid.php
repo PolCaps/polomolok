@@ -32,7 +32,7 @@ $sql = "
     WHERE 
         ra.Approval = 'APPROVED' 
         AND rp.payment_status = 'Unpaid'
-";
+"; 
 
 $result = $conn->query($sql);
 

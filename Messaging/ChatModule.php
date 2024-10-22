@@ -75,7 +75,7 @@
 
         <!-- Right Sidebar for Chat -->
         <div class="col-lg-8 col-md-12 col-sm-12 mb-3">
-            <div class="card flex-grow-1 shadow-sm" style="max-height: 500px;">
+            <div class="card flex-grow-1 shadow-sm" style="max-height: 600px;">
                 <div class="card-header pb-0">
                     <div class="row">
                         <div class="col-8">

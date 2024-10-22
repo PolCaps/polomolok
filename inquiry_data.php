@@ -2,6 +2,7 @@
 // Start the session
 session_start();
 
+date_default_timezone_set('Asia/Manila');
 // Include database configuration
 include('database_config.php');
 
