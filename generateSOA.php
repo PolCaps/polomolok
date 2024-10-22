@@ -98,7 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($resultCheck->num_rows > 0) {
             // Vendor ID exists, so update the record
-            $sqlUpdate = "UPDATE vendorsoa SET username = ?, message = ?, remaining_balance = ?, monthly_rentals = ?, miscellaneous_fees = ?, other_fees = ?, total_amount = ?, date = ?, file_path = ? WHERE vendor_id = ?";
+            $sqlUpdate = "INSERT vendorsoa SET username = ?, message = ?, remaining_balance = ?, monthly_rentals = ?, miscellaneous_fees = ?, other_fees = ?, total_amount = ?, date = ?, file_path = ? WHERE vendor_id = ?";
             $stmtUpdate = $conn->prepare($sqlUpdate);
             $totalAmount = $monthly_rent + $miscellaneousFees + $otherFees + $remainingBalance;
             $stmtUpdate->bind_param("sssssssssi", $username, $message, $remainingBalance, $monthly_rent, $miscellaneousFees, $otherFees, $totalAmount, $date, $filePath, $vendorId);

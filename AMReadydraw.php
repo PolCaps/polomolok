@@ -201,6 +201,7 @@ $conn->close();
               <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
               <a class="nav-link" href="AMRelReqProcessing.php">Pending</a>
               <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
+              <a class="nav-link text-info" href="AMRelReqHistory.php">Archived</a>
             </div>
           </div>
         </li>

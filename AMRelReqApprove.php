@@ -188,7 +188,7 @@ $conn->close();
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRelRequest"
+          <a class="nav-link collapsed active" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRelRequest"
             aria-expanded="false" aria-controls="collapseRelRequest">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -201,6 +201,7 @@ $conn->close();
               <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
               <a class="nav-link" href="AMRelReqProcessing.php">Pending</a>
               <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
+              <a class="nav-link text-info" href="AMRelReqHistory.php">Archived</a>
             </div>
           </div>
         </li>
@@ -388,37 +389,19 @@ $conn->close();
                 /* Prevent text from wrapping to the next line */
               }
             </style>
-            <div class="card-body px-5 pb-2">
+            <div class="card-body px-2">
               <div class="table-responsive">
-                <!-- Search and Delete Dropdown -->
-                <div class="d-flex justify-content-between mb-3">
-                  <button class="btn btn-primary" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Search User
-                  </button>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <form id="searchForm" class="px-4 py-2">
-                        <div class="mb-3">
-                          <label for="searchUsername" class="form-label">Username</label>
-                          <input type="text" class="form-control" id="searchUsername" placeholder="Enter username">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Search</button>
-                      </form>
-                    </li>
-                  </ul>
 
-                </div>
 
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Vendor ID</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation ID</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocated Stalls</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Current Stall</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Reason</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Maintenance</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocated To</th>
+
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Reason</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Maintenance Details</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Approval Date</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Status</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actions</th>
@@ -448,31 +431,23 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     row.innerHTML = `
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.fn + ' ' + item.ln)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.vendor_id)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0 data-id'>${escapeHtml(item.request_id)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.relocated_stall)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.current_stall)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.relocated_stall)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.reason)}'>${escapeHtml(item.reason.substring(0, 50))}...</td>
                         <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.descript)}'>${escapeHtml(item.descript.substring(0, 50))}...</td>
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.approval_date)}</td>
-                        <td class='text-center text-xs font-weight-bold mb-0'>
-                            <select class='form-select relocation-status' data-statusid='${escapeHtml(item.request_id)}'>
-                                <option value='Processing' ${item.approval_status === 'Processing' ? 'selected' : ''}>Processing</option>
-                                <option value='Approved' ${item.approval_status === 'Approved' ? 'selected' : ''}>Approved</option>
-                                <option value='Declined' ${item.approval_status === 'Declined' ? 'selected' : ''}>Declined</option>
-                            </select>
-                        </td>
-                        <td class='text-center text-xs font-weight-bold mb-0'><button data-id='${escapeHtml(item.request_id)}' class="btn btn-danger btnDel">Delete</button></td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.approval_status)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'><button data-id='${escapeHtml(item.request_id)}' class="btn btn-info btnArchive mt-2">Archive</button></td>
                     `;
 
                     tableBody.appendChild(row);
                 });
 
                 // Add event listener to delete buttons
-                document.querySelectorAll('.btnDel').forEach(button => {
+                document.querySelectorAll('.btnArchive').forEach(button => {
                     button.addEventListener('click', function () {
                         const id = this.getAttribute('data-id');
-                        deleteRow(id);
+                        archiveRow(id);
                     });
                 });
 
@@ -508,7 +483,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
             } else {
                 const row = document.createElement('tr');
-                row.innerHTML = "<td colspan='9' class='text-center text-xs font-weight-bold mb-0'>No inquiries found</td>";
+                row.innerHTML = "<td colspan='9' class='text-center text-xs font-weight-bold mb-0'>No Current Approved Relocation Request Found</td>";
                 tableBody.appendChild(row);
             }
         })
@@ -528,8 +503,8 @@ function escapeHtml(text) {
 }
 
 // Delete row function
-function deleteRow(id) {
-    fetch('deleteRel.php', {
+function archiveRow(id) {
+    fetch('archiveRel.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',

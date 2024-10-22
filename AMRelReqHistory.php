@@ -1,8 +1,36 @@
 <?php
 include('Sessions/Admin.php');
 
-?>
+// Include database configuration
+include('database_config.php');
 
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+// Fetch vendor information
+$sql = "SELECT * FROM users WHERE id = ?";
+$stmt = $conn->prepare($sql);
+if ($stmt === false) {
+  die("Prepare failed: " . $conn->error);
+}
+$stmt->bind_param("i", $user_id);
+$stmt->execute();
+$result = $stmt->get_result();
+$user = $result->fetch_assoc();
+
+// Check if vendor data is retrieved
+if (!$user) {
+  die("No User found with ID " . htmlspecialchars($user_id));
+}
+
+// Close the connection
+$conn->close();
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -13,7 +41,7 @@ include('Sessions/Admin.php');
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
-    Dashboard
+    Administrator Dashboard
   </title>
   <!--     Fonts and icons     -->
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
@@ -27,6 +55,8 @@ include('Sessions/Admin.php');
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
   <!-- Nepcha Analytics (nepcha.com) -->
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
 </head>
 
@@ -106,13 +136,13 @@ include('Sessions/Admin.php');
           </a>
           <div class="collapse" id="collapseAccounts">
             <div class="right-aligned-links" style="text-align: right;">
-            <a class="nav-link" href="AMuser.php">Users</a>
-            <a class="nav-link" href="AMvendor.php">Vendors</a>
+              <a class="nav-link" href="AMuser.php">Users</a>
+              <a class="nav-link" href="AMvendor.php">Vendors</a>
             </div>
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" href="AMmessages.php">
+          <a class="nav-link " href="AMmessages.php">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -158,7 +188,7 @@ include('Sessions/Admin.php');
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRelRequest"
+          <a class="nav-link collapsed active" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRelRequest"
             aria-expanded="false" aria-controls="collapseRelRequest">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -179,7 +209,7 @@ include('Sessions/Admin.php');
           <h6 class="ps-4 ms-2 text-uppercase text-xs font-weight-bolder opacity-6">Page Customization</h6>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="HomepageEditor.php">
+          <a class="nav-link  " href="HomepageEditor.php">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <img src="image/icons/icons8-browser-settings-48.png" alt="approveicon" width="18px" height="18px">
@@ -190,21 +220,22 @@ include('Sessions/Admin.php');
       </ul>
     </div>
     <div class="sidenav-footer mx-3 mt-5">
-    <div class="card card-background shadow-none card-background-mask-info" id="sidenavCard">
+      <div class="card card-background shadow-none card-background-mask-info" id="sidenavCard">
         <div class="full-background" style="background-image: url('assets2/img/curved-images/white-curved.jpg')"></div>
         <div class="card-body text-start p-3 w-100">
-            <?php
-            // Check if the user has a profile picture set; if not, use a default image
-            $profilePicture = !empty($user['picture_profile']) ? $user['picture_profile'] : 'image/profile.jpg';
-            ?>
-            <img src="<?php echo htmlspecialchars($profilePicture); ?>" class="img-fluid" alt="Admin Profile Picture" style="height: 100px; width: 100px; border-radius: 1rem; margin-left: 40px;">
-            <h5 class="text-center mt-2">
-                <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
-            </h5>
-            <hr class="horizontal dark mt-0">
+          <?php
+          // Check if the user has a profile picture set; if not, use a default image
+          $profilePicture = !empty($user['picture_profile']) ? $user['picture_profile'] : 'image/profile.jpg';
+          ?>
+          <img src="<?php echo htmlspecialchars($profilePicture); ?>" class="img-fluid" alt="Admin Profile Picture"
+            style="min-width: 20px; min-height: 20px; height: 100px; width: 100px; margin-left: 40px;">
+          <h5 class="text-center mt-2">
+            <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?>
+          </h5>
+          <hr class="horizontal dark mt-0">
         </div>
+      </div>
     </div>
-</div>
 
   </aside>
   <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
@@ -217,7 +248,7 @@ include('Sessions/Admin.php');
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Admin</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modules</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Messages</h6>
+          <h6 class="font-weight-bolder mb-0">Relocation Request</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -233,7 +264,6 @@ include('Sessions/Admin.php');
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
-            
             <?php 
             include('Notification/AdminNotif.php');
             ?>
@@ -252,15 +282,239 @@ include('Sessions/Admin.php');
       </div>
     </nav>
     <!-- End Navbar -->
+    <div class="container-fluid py-4">
 
-  
-  <?php 
-  include('Messaging/ChatModule.php');
-  ?>
+      <div class="row my-4">
+        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
+          <div class="card">
+            <div class="card-header pb-0">
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <h6 class="text-info">Request Relocation / History</h6>
+                </div>
+                <div class="col-lg-6 col-5 my-auto text-end">
+                  <div class="dropdown float-lg-end pe-4 mx-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                      class="bi bi-calendar2-week" viewBox="0 0 16 16" id="filterDate" data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                      <path
+                        d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z" />
+                      <path
+                        d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z" />
+                    </svg>
+                    <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="filterDate">
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;"
+                          onclick="filterByDate('today')">Today</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;"
+                          onclick="filterByDate('week')">This Week</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;"
+                          onclick="filterByDate('month')">This Month</a></li>
+                      <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal"
+                          data-bs-target="#customDateModal">Custom Date</a></li>
+                    </ul>
+                    <div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel"
+                      aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="customDateModalLabel">Select Custom Date</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            <form id="customDateForm" method="POST">
+                              <input type="text" id="customStartDate" name="start_date" class="form-control mb-2"
+                                placeholder="Start Date">
+                              <!-- <input type="text" id="customEndDate" name="end_date" class="form-control" placeholder="End Date"> -->
+                            </form>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="button" class="btn btn-primary"
+                              onclick="submitCustomDateForm()">Apply</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <script>
+                      document.addEventListener('DOMContentLoaded', function () {
+                        flatpickr('#customStartDate', {
+                          dateFormat: 'Y-m-d'
+                        });
+                        flatpickr('#customEndDate', {
+                          dateFormat: 'Y-m-d'
+                        });
+                      });
+
+                      function filterByDate(period) {
+                        const today = new Date();
+                        let startDate, endDate;
+
+                        switch (period) {
+                          case 'today':
+                            startDate = endDate = today.toISOString().split('T')[0];
+                            break;
+                          case 'week':
+                            const firstDayOfWeek = today.getDate() - today.getDay();
+                            startDate = new Date(today.setDate(firstDayOfWeek)).toISOString().split('T')[0];
+                            endDate = new Date(today.setDate(firstDayOfWeek + 6)).toISOString().split('T')[0];
+                            break;
+                          case 'month':
+                            startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
+                            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
+                            break;
+                        }
+
+                        document.getElementById('customStartDate').value = startDate;
+                        // document.getElementById('customEndDate').value = endDate;
+                        document.getElementById('customDateForm').submit();
+                      }
+
+                      function submitCustomDateForm() {
+                        document.getElementById('customDateForm').submit();
+                      }
+                    </script>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <style>
+              .message {
+                max-width: 200px;
+                /* Set the maximum width for the message */
+                overflow: hidden;
+                /* Hide the overflowed content */
+                text-overflow: ellipsis;
+                /* Add the ellipsis for overflowed content */
+                white-space: nowrap;
+                /* Prevent text from wrapping to the next line */
+              }
+            </style>
+            <div class="card-body px-2">
+              <div class="table-responsive">
+
+
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Current Stall</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocated To</th>
+
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Vendor Reason</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Maintenance Details</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Approval Date</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="dataTableBody">
+                  </tbody>
+                </table>
+
+
+                <script>
+document.addEventListener('DOMContentLoaded', function () {
+    fetch('fetch_RelReqHistory.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            const tableBody = document.getElementById('dataTableBody');
+            tableBody.innerHTML = '';
+
+            if (data.length > 0) {
+                data.forEach(item => {
+                    const row = document.createElement('tr');
+
+                    row.innerHTML = `
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.fn + ' ' + item.ln)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.current_stall)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.relocated_stall)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.reason)}'>${escapeHtml(item.reason.substring(0, 50))}...</td>
+                        <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.descript)}'>${escapeHtml(item.descript.substring(0, 50))}...</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.approval_date)}</td>
+                        <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.approval_status)}</td>
+                    `;
+
+                    tableBody.appendChild(row);
+                });
+
+                
+            } else {
+                const row = document.createElement('tr');
+                row.innerHTML = "<td colspan='9' class='text-center text-xs font-weight-bold mb-0'><span>No Relocation History found</span></td>";
+                tableBody.appendChild(row);
+            }
+        })
+        .catch(error => console.error('Error fetching data:', error));
+});
+
+// Escape HTML function
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text.replace(/[&<>"']/g, m => map[m]);
+}
+
+// Delete row function
+function archiveRow(id) {
+    fetch('archiveRel.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({ 'relocation_id': id })
+    })
+    .then(response => response.text())
+    .then(result => {
+        alert(result);
+        location.reload(); // Reload page to see changes
+    })
+    .catch(error => console.error('Error deleting record:', error));
+}
+</script>
+
+              </div>
+            </div>
+
+            <!-- Bootstrap Modal -->
+            <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="messageModalLabel">Message Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p id="messageContent"></p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <script>
+              document.addEventListener('DOMContentLoaded', () => {
+                const messageModal = document.getElementById('messageModal');
+                messageModal.addEventListener('show.bs.modal', (event) => {
+                  const button = event.relatedTarget; // Button that triggered the modal
+                  const message = button.getAttribute('data-message'); // Extract info from data-* attributes
+                  const modalBody = messageModal.querySelector('.modal-body #messageContent');
+                  modalBody.textContent = message; // Update the modal's content.
+                });
+              });
+
+            </script>
 
   </main>
   <div class="fixed-plugin">
-    <a class="fixed-plugin-button text-dark position-fixed px-3 py-3" href="#">
+    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" href="#">
       <i class="fas fa-cog"></i> </a>
     <div class="card shadow-lg">
       <div class="card-header pb-0 pt-3">
@@ -308,6 +562,10 @@ include('Sessions/Admin.php');
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
+
+  <link rel="stylesheet" href="loading.css">
+  <script src="loading.js" defer></script>
+  <div class="loader"></div>
 </body>
 
 </html>

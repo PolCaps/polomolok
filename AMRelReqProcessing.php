@@ -185,7 +185,7 @@ $conn->close();
           </div>
         </li>
         <li class="nav-item">
-          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRelRequest"
+          <a class="nav-link collapsed active" href="#" data-bs-toggle="collapse" data-bs-target="#collapseRelRequest"
             aria-expanded="false" aria-controls="collapseRelRequest">
             <div
               class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
@@ -198,6 +198,7 @@ $conn->close();
               <a class="nav-link" href="AMRelReqApprove.php">Approved</a>
               <a class="nav-link" href="AMRelReqProcessing.php">Pending</a>
               <a class="nav-link" href="AMRelReqDeclined.php">Declined</a>
+              <a class="nav-link text-info" href="AMRelReqHistory.php">Archived</a>
             </div>
           </div>
         </li>
@@ -755,13 +756,13 @@ function triggerRelocationStatusChange() {
             }
         };
 
-        const vendorId = document.getElementById('modalVendorIDInput').value; // Get the actual relocation ID
+        const reqId = document.getElementById('modalrequestIDInput').value; // Get the actual relocation ID
 
         // Debugging: Log the data being sent
-        console.log(`Sending ID: ${vendorId}, Status: ${status}`);
+        console.log(`Sending ID: ${reqId}, Status: ${status}`);
 
         // Sending the relocation ID and the new status
-        xhr.send(`relocationId=${vendorId}&status=${status}`);
+        xhr.send(`relocationId=${reqId}&status=${status}`);
     }
 }
 

@@ -15,7 +15,7 @@ if (isset($_POST['relocationId']) && isset($_POST['status'])) {
     $status = $_POST['status'];
 
     // Prepare the SQL statement
-    $stmt = $conn->prepare("UPDATE relocation_req SET approval_status = ? WHERE vendor_id = ?");
+    $stmt = $conn->prepare("UPDATE relocation_req SET approval_status = ? WHERE request_id = ?");
 
     if ($stmt) {
         // Bind parameters

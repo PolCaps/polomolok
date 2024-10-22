@@ -304,7 +304,9 @@ $conn->close();
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         Relocation Status</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        Relocation Request Date</th>
+                        Relocation Date</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Relocation Request Submit</th>
                     </tr>
                   </thead>
                   <tbody id="dataTableBody">
@@ -321,7 +323,7 @@ $conn->close();
 
                    
 
-                    $sql = "SELECT current_stall, relocated_stall, reason, approval_status, request_date FROM relocation_req WHERE vendor_id = ?";
+                    $sql = "SELECT current_stall, relocated_stall, reason, approval_status, request_date, relocation_date, archive FROM relocation_req WHERE vendor_id = ? AND archive = 0";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("i", $vendor_id);
                     $stmt->execute();
@@ -344,6 +346,9 @@ $conn->close();
                           // Display approval status (relocation status)
                           $approval_status = !empty($row['approval_status']) ? htmlspecialchars($row['approval_status']) : "N/A";
                           echo "<td class='text-xs font-weight-bold text-center'>" . $approval_status . "</td>";
+
+                          $relocation_date = !empty($row['relocation_date']) ? htmlspecialchars($row['relocation_date']) : "Relocation Pending";
+                          echo "<td class='text-xs font-weight-bold text-center'>" . $relocation_date . "</td>";
                   
                           echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($row['request_date']) . "</td>";
                           echo "</tr>";
@@ -351,7 +356,7 @@ $conn->close();
                   } else {
                       // If no results were found, output a message in the table
                       echo "<tr>";
-                      echo "<td colspan='6' class='text-center text-xs font-weight-bold mb-0'>You have no Request</td>";
+                      echo "<td colspan='9' class='text-center text-xs font-weight-bold mb-0'>You have No Current Request</td>";
                       echo "</tr>";
                   }
 
