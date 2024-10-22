@@ -724,8 +724,7 @@ if (!$user) {
                                     </select>
                                   </div>
                                   <div class="modal-footer my-2" style="align-items: center; justify-content: center;">
-                                    <button type="submit" name="submitV" id="submit" class="btn btn-info lg">Create
-                                      Vendor</button>
+                                    <button type="submit" name="submitV" id="submit" class="btn btn-info lg">Create Vendor</button>
                                     <button type="button" class="btn btn-secondary"
                                       data-bs-dismiss="modal">Close</button>
                                   </div>
@@ -744,7 +743,6 @@ if (!$user) {
 
           <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
           <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
-          <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 
           <script>
 

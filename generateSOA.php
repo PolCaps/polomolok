@@ -98,10 +98,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if ($resultCheck->num_rows > 0) {
             // Vendor ID exists, so update the record
-            $sqlUpdate = "UPDATE vendorsoa SET username = ?, remaining_balance = ?, monthly_rentals = ?, miscellaneous_fees = ?, other_fees = ?, total_amount = ?, date = ?, file_path = ? WHERE vendor_id = ?";
+            $sqlUpdate = "UPDATE vendorsoa SET username = ?, message = ?, remaining_balance = ?, monthly_rentals = ?, miscellaneous_fees = ?, other_fees = ?, total_amount = ?, date = ?, file_path = ? WHERE vendor_id = ?";
             $stmtUpdate = $conn->prepare($sqlUpdate);
             $totalAmount = $monthly_rent + $miscellaneousFees + $otherFees + $remainingBalance;
-            $stmtUpdate->bind_param("ssssssssi", $username, $remainingBalance, $monthly_rent, $miscellaneousFees, $otherFees, $totalAmount, $date, $filePath, $vendorId);
+            $stmtUpdate->bind_param("sssssssssi", $username, $message, $remainingBalance, $monthly_rent, $miscellaneousFees, $otherFees, $totalAmount, $date, $filePath, $vendorId);
 
             if ($stmtUpdate->execute()) {
                 echo json_encode(['success' => true, 'message' => 'Statement of Account updated successfully!', 'file' => $filePath]);
@@ -112,10 +112,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtUpdate->close();
         } else {
             // Vendor ID does not exist, so insert a new record
-            $sqlInsert = "INSERT INTO vendorsoa (vendor_id, username, remaining_balance, monthly_rentals, miscellaneous_fees, other_fees, total_amount, date, file_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $sqlInsert = "INSERT INTO vendorsoa (vendor_id, username, message, remaining_balance, monthly_rentals, miscellaneous_fees, other_fees, total_amount, date, file_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
             $stmtInsert = $conn->prepare($sqlInsert);
             $totalAmount = $monthly_rent + $miscellaneousFees + $otherFees + $remainingBalance;
-            $stmtInsert->bind_param("issssssss", $vendorId, $username, $remainingBalance, $monthly_rent, $miscellaneousFees, $otherFees, $totalAmount, $date, $filePath);
+            $stmtInsert->bind_param("isssssssss", $vendorId, $username, $message, $remainingBalance, $monthly_rent, $miscellaneousFees, $otherFees, $totalAmount, $date, $filePath);
 
             if ($stmtInsert->execute()) {
                 echo json_encode(['success' => true, 'message' => 'Statement of Account generated successfully!', 'file' => $filePath]);
