@@ -26,17 +26,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         isset($_POST['numMonths']) &&
         isset($_POST['penaltyFee'])
     ) {
-        // Sanitize input data to avoid security risks
-        $monthBill = htmlspecialchars($_POST['monthBill']);
-        $buildingName = htmlspecialchars($_POST['building']);
-        $username = htmlspecialchars($_POST['name']);
-        $stallNumber = htmlspecialchars($_POST['stallNumber']);
-        $dueDate = htmlspecialchars($_POST['dueDate']);
-        $padlockingDate = htmlspecialchars($_POST['padlockingDate']);
-        $grandTotal = htmlspecialchars($_POST['grandTotal']);
-        $totalPay = htmlspecialchars($_POST['totalPay']);
-        $numMonths = htmlspecialchars($_POST['numMonths']);
-        $penaltyFee = htmlspecialchars($_POST['penaltyFee']);
+
+        $monthBill = ($_POST['monthBill']);
+        $buildingName = ($_POST['building']);
+        $username = ($_POST['name']);
+        $stallNumber = ($_POST['stallNumber']);
+        $dueDate = ($_POST['dueDate']);
+        $padlockingDate = ($_POST['padlockingDate']);
+        $grandTotal = ($_POST['grandTotal']);
+        $totalPay = ($_POST['totalPay']);
+        $numMonths = ($_POST['numMonths']);
+        $penaltyFee = ($_POST['penaltyFee']);
 
         // Prepare post data with additional fields for the PDF template
         $postData = [

@@ -501,29 +501,12 @@ if ($resultA->num_rows > 0) {
             <input type="text" class="form-control" id="vendor-name" name="name" readonly>
           </div>
           <div class="mb-3">
-                        <label for="reminderMessage" class="form-label">Message</label>
-                        <textarea class="form-control" id="reminderMessage" name="reminderMessage" rows="4" required></textarea>
-                    </div>
-          <div class="mb-3">
-            <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
-            <input type="number" class="form-control" id="remaining-balance" name="remaining_balance" step="0.01" min="0">
+              <label for="reminderMessage" class="form-label">Message</label>
+              <textarea class="form-control" id="reminderMessage" name="reminderMessage" rows="4" required></textarea>
           </div>
           <div class="mb-3">
             <label for="monthly-rentals" class="col-form-label">Monthly Rentals:</label>
             <input type="text" class="form-control" id="monthly-rentals" name="totalPay" readonly>
-          </div>
-          <div class="mb-3">
-            <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
-            <input type="number" class="form-control" id="remaining-balance" name="remaining-balance" step="0.01" min="0" required>
-          </div>
-         
-          <div class="mb-3">
-            <label for="miscellaneous-fees" class="col-form-label">Miscellaneous Fees (optional):</label>
-            <input type="number" class="form-control" id="miscellaneous-fees" name="miscellaneous_fees" step="0.01" min="0">
-          </div>
-          <div class="mb-3">
-            <label for="other-fees" class="col-form-label">Other Fees (optional):</label>
-            <input type="number" class="form-control" id="other-fees" name="other_fees" step="0.01" min="0">
           </div>
           <div class="mb-3">
             <label for="monthBill" class="col-form-label">Bill for the Month:</label>
@@ -542,7 +525,7 @@ if ($resultA->num_rows > 0) {
             <input type="date" class="form-control" id="dueDate" name="dueDate">
           </div>
           <div class="mb-3">
-            <label for="padlockingDate" class="col-form-label">Padlocking Date (optional):</label>
+            <label for="padlockingDate" class="col-form-label">Padlocking Date:</label>
             <input type="date" class="form-control" id="padlockingDate" name="padlockingDate">
           </div>
           <div class="mb-3">
@@ -550,7 +533,7 @@ if ($resultA->num_rows > 0) {
             <input type="number" class="form-control" id="numMonths" name="numMonths" min="1">
           </div>
           <div class="mb-3">
-            <label for="penaltyFee" class="col-form-label">Penalty Fee (if any):</label>
+            <label for="penaltyFee" class="col-form-label">Penalty Fee:</label>
             <input type="number" class="form-control" id="penaltyFee" name="penaltyFee" step="0.01" min="0">
           </div>
           
