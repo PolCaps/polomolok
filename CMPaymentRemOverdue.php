@@ -199,29 +199,203 @@ if ($conn->connect_error) {
 }
 $sqlvendor = "
     SELECT 
-        CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
-        v.username AS username, 
-        v.payment_due AS payment_dues, 
-        COALESCE(a.monthly_rentals, b.monthly_rentals, c.monthly_rentals, d.monthly_rentals, e.monthly_rentals, f.monthly_rentals, g.monthly_rentals, h.monthly_rentals, i.monthly_rentals, j.monthly_rentals) AS rent_due, 
-        v.vendor_id AS vendor_id, 
-        DATE_FORMAT(COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date), '%M %d, %Y') AS due_date, 
-        'Overdue' AS due_status  -- Set due_status to Overdue for all selected records
-    FROM vendors v 
-    LEFT JOIN building_a a ON v.vendor_id = a.vendor_id 
-    LEFT JOIN building_b b ON v.vendor_id = b.vendor_id 
-    LEFT JOIN building_c c ON v.vendor_id = c.vendor_id 
-    LEFT JOIN building_d d ON v.vendor_id = d.vendor_id 
-    LEFT JOIN building_e e ON v.vendor_id = e.vendor_id 
-    LEFT JOIN building_f f ON v.vendor_id = f.vendor_id 
-    LEFT JOIN building_g g ON v.vendor_id = g.vendor_id 
-    LEFT JOIN building_h h ON v.vendor_id = h.vendor_id 
-    LEFT JOIN building_i i ON v.vendor_id = i.vendor_id 
-    LEFT JOIN building_j j ON v.vendor_id = j.vendor_id 
-    WHERE 
-        COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) < NOW()  -- Filter only overdue records
-        AND COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) IS NOT NULL  -- Ensure due dates are not null
-    ORDER BY 
-        COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) ASC;  -- Sort by due date
+    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+    v.username AS username, 
+    v.vendor_id AS vendor_id, 
+    GROUP_CONCAT(a.stall_no ORDER BY a.stall_no ASC) AS stall_nos, 
+    'Building A' AS building, 
+    FORMAT(SUM(COALESCE(CAST(REPLACE(a.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS rent_due, 
+    DATE_FORMAT(MIN(a.due_date), '%M %d, %Y') AS due_date,
+    CASE 
+        WHEN MIN(a.due_date) < NOW() THEN 'Overdue'
+        WHEN MIN(a.due_date) >= NOW() AND MIN(a.due_date) <= DATE_ADD(NOW(), INTERVAL 7 DAY) THEN 'Upcoming'
+        ELSE 'No Due'
+    END AS due_status
+FROM vendors v
+INNER JOIN building_a a ON v.vendor_id = a.vendor_id
+GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
+HAVING due_status = 'Overdue'
+
+UNION ALL
+
+SELECT 
+    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+    v.username AS username, 
+    v.vendor_id AS vendor_id, 
+    GROUP_CONCAT(b.stall_no ORDER BY b.stall_no ASC) AS stall_nos, 
+    'Building B' AS building, 
+    FORMAT(SUM(COALESCE(CAST(REPLACE(b.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS rent_due, 
+    DATE_FORMAT(MIN(b.due_date), '%M %d, %Y') AS due_date,
+    CASE 
+        WHEN MIN(b.due_date) < NOW() THEN 'Overdue'
+        WHEN MIN(b.due_date) >= NOW() AND MIN(b.due_date) <= DATE_ADD(NOW(), INTERVAL 7 DAY) THEN 'Upcoming'
+        ELSE 'No Due'
+    END AS due_status
+FROM vendors v
+INNER JOIN building_b b ON v.vendor_id = b.vendor_id
+GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
+HAVING due_status = 'Overdue'
+
+UNION ALL
+
+SELECT 
+    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+    v.username AS username, 
+    v.vendor_id AS vendor_id, 
+    GROUP_CONCAT(c.stall_no ORDER BY c.stall_no ASC) AS stall_nos, 
+    'Building C' AS building, 
+    FORMAT(SUM(COALESCE(CAST(REPLACE(c.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS rent_due, 
+    DATE_FORMAT(MIN(c.due_date), '%M %d, %Y') AS due_date,
+    CASE 
+        WHEN MIN(c.due_date) < NOW() THEN 'Overdue'
+        WHEN MIN(c.due_date) >= NOW() AND MIN(c.due_date) <= DATE_ADD(NOW(), INTERVAL 7 DAY) THEN 'Upcoming'
+        ELSE 'No Due'
+    END AS due_status
+FROM vendors v
+INNER JOIN building_c c ON v.vendor_id = c.vendor_id
+GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
+HAVING due_status = 'Overdue'
+
+UNION ALL
+
+SELECT 
+    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+    v.username AS username, 
+    v.vendor_id AS vendor_id, 
+    GROUP_CONCAT(d.stall_no ORDER BY d.stall_no ASC) AS stall_nos, 
+    'Building D' AS building, 
+    FORMAT(SUM(COALESCE(CAST(REPLACE(d.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS rent_due, 
+    DATE_FORMAT(MIN(d.due_date), '%M %d, %Y') AS due_date,
+    CASE 
+        WHEN MIN(d.due_date) < NOW() THEN 'Overdue'
+        WHEN MIN(d.due_date) >= NOW() AND MIN(d.due_date) <= DATE_ADD(NOW(), INTERVAL 7 DAY) THEN 'Upcoming'
+        ELSE 'No Due'
+    END AS due_status
+FROM vendors v
+INNER JOIN building_d d ON v.vendor_id = d.vendor_id
+GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
+HAVING due_status = 'Overdue'
+
+UNION ALL
+
+SELECT 
+    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+    v.username AS username, 
+    v.vendor_id AS vendor_id, 
+    GROUP_CONCAT(e.stall_no ORDER BY e.stall_no ASC) AS stall_nos, 
+    'Building E' AS building, 
+    FORMAT(SUM(COALESCE(CAST(REPLACE(e.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS rent_due, 
+    DATE_FORMAT(MIN(e.due_date), '%M %d, %Y') AS due_date,
+    CASE 
+        WHEN MIN(e.due_date) < NOW() THEN 'Overdue'
+        WHEN MIN(e.due_date) >= NOW() AND MIN(e.due_date) <= DATE_ADD(NOW(), INTERVAL 7 DAY) THEN 'Upcoming'
+        ELSE 'No Due'
+    END AS due_status
+FROM vendors v
+INNER JOIN building_e e ON v.vendor_id = e.vendor_id
+GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
+HAVING due_status = 'Overdue'
+
+UNION ALL
+
+SELECT 
+    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+    v.username AS username, 
+    v.vendor_id AS vendor_id, 
+    GROUP_CONCAT(f.stall_no ORDER BY f.stall_no ASC) AS stall_nos, 
+    'Building F' AS building, 
+    FORMAT(SUM(COALESCE(CAST(REPLACE(f.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS rent_due, 
+    DATE_FORMAT(MIN(f.due_date), '%M %d, %Y') AS due_date,
+    CASE 
+        WHEN MIN(f.due_date) < NOW() THEN 'Overdue'
+        WHEN MIN(f.due_date) >= NOW() AND MIN(f.due_date) <= DATE_ADD(NOW(), INTERVAL 7 DAY) THEN 'Upcoming'
+        ELSE 'No Due'
+    END AS due_status
+FROM vendors v
+INNER JOIN building_f f ON v.vendor_id = f.vendor_id
+GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
+HAVING due_status = 'Overdue'
+
+UNION ALL
+
+SELECT 
+    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+    v.username AS username, 
+    v.vendor_id AS vendor_id, 
+    GROUP_CONCAT(g.stall_no ORDER BY g.stall_no ASC) AS stall_nos, 
+    'Building G' AS building, 
+    FORMAT(SUM(COALESCE(CAST(REPLACE(g.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS rent_due, 
+    DATE_FORMAT(MIN(g.due_date), '%M %d, %Y') AS due_date,
+    CASE 
+        WHEN MIN(g.due_date) < NOW() THEN 'Overdue'
+        WHEN MIN(g.due_date) >= NOW() AND MIN(g.due_date) <= DATE_ADD(NOW(), INTERVAL 7 DAY) THEN 'Upcoming'
+        ELSE 'No Due'
+    END AS due_status
+FROM vendors v
+INNER JOIN building_g g ON v.vendor_id = g.vendor_id
+GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
+HAVING due_status = 'Overdue'
+
+UNION ALL
+
+SELECT 
+    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+    v.username AS username, 
+    v.vendor_id AS vendor_id, 
+    GROUP_CONCAT(h.stall_no ORDER BY h.stall_no ASC) AS stall_nos, 
+    'Building H' AS building, 
+    FORMAT(SUM(COALESCE(CAST(REPLACE(h.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS rent_due, 
+    DATE_FORMAT(MIN(h.due_date), '%M %d, %Y') AS due_date,
+    CASE 
+        WHEN MIN(h.due_date) < NOW() THEN 'Overdue'
+        WHEN MIN(h.due_date) >= NOW() AND MIN(h.due_date) <= DATE_ADD(NOW(), INTERVAL 7 DAY) THEN 'Upcoming'
+        ELSE 'No Due'
+    END AS due_status
+FROM vendors v
+INNER JOIN building_h h ON v.vendor_id = h.vendor_id
+GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
+HAVING due_status = 'Overdue'
+
+UNION ALL
+
+SELECT 
+    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+    v.username AS username, 
+    v.vendor_id AS vendor_id, 
+    GROUP_CONCAT(i.stall_no ORDER BY i.stall_no ASC) AS stall_nos, 
+    'Building I' AS building, 
+    FORMAT(SUM(COALESCE(CAST(REPLACE(i.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS rent_due, 
+    DATE_FORMAT(MIN(i.due_date), '%M %d, %Y') AS due_date,
+    CASE 
+        WHEN MIN(i.due_date) < NOW() THEN 'Overdue'
+        WHEN MIN(i.due_date) >= NOW() AND MIN(i.due_date) <= DATE_ADD(NOW(), INTERVAL 7 DAY) THEN 'Upcoming'
+        ELSE 'No Due'
+    END AS due_status
+FROM vendors v
+INNER JOIN building_i i ON v.vendor_id = i.vendor_id
+GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
+HAVING due_status = 'Overdue'
+
+UNION ALL
+
+SELECT 
+    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+    v.username AS username, 
+    v.vendor_id AS vendor_id, 
+    GROUP_CONCAT(j.stall_no ORDER BY j.stall_no ASC) AS stall_nos, 
+    'Building J' AS building, 
+    FORMAT(SUM(COALESCE(CAST(REPLACE(j.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS rent_due, 
+    DATE_FORMAT(MIN(j.due_date), '%M %d, %Y') AS due_date,
+    CASE 
+        WHEN MIN(j.due_date) < NOW() THEN 'Overdue'
+        WHEN MIN(j.due_date) >= NOW() AND MIN(j.due_date) <= DATE_ADD(NOW(), INTERVAL 7 DAY) THEN 'Upcoming'
+        ELSE 'No Due'
+    END AS due_status
+FROM vendors v
+INNER JOIN building_j j ON v.vendor_id = j.vendor_id
+GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
+HAVING due_status = 'Overdue'
+
 ";
 
 

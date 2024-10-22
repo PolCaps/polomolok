@@ -51,7 +51,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 // If vendor_id exists, update the stall_status
                 if ($count > 0) {
                     // Update the stall_status to Vacant and set vendor_id to NULL
-                    $sqlUpdate = "UPDATE $table SET stall_status = 'Vacant', vendor_id = NULL WHERE vendor_id = ?";
+                    $sqlUpdate = "UPDATE $table SET stall_status = 'Vacant', vendor_id = NULL, started_date = NULL, due_date = NULL, due_status = NULL WHERE vendor_id = ?";
                     $stmtUpdate = $conn->prepare($sqlUpdate);
                     $stmtUpdate->bind_param("i", $vendor_id);
                     $stmtUpdate->execute();

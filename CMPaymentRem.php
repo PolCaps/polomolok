@@ -233,7 +233,7 @@ $sqlvendor = "
         ELSE 'No Due'
     END AS due_status
 FROM vendors v
-LEFT JOIN building_a a ON v.vendor_id = a.vendor_id
+INNER JOIN building_a a ON v.vendor_id = a.vendor_id
 GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
 
 UNION ALL
@@ -252,7 +252,7 @@ SELECT
         ELSE 'No Due'
     END AS due_status
 FROM vendors v
-LEFT JOIN building_b b ON v.vendor_id = b.vendor_id
+INNER JOIN building_b b ON v.vendor_id = b.vendor_id
 GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
 
 UNION ALL
@@ -271,7 +271,7 @@ SELECT
         ELSE 'No Due'
     END AS due_status
 FROM vendors v
-LEFT JOIN building_c c ON v.vendor_id = c.vendor_id
+INNER JOIN building_c c ON v.vendor_id = c.vendor_id
 GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
 
 UNION ALL
@@ -290,7 +290,7 @@ SELECT
         ELSE 'No Due'
     END AS due_status
 FROM vendors v
-LEFT JOIN building_d d ON v.vendor_id = d.vendor_id
+INNER JOIN building_d d ON v.vendor_id = d.vendor_id
 GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
 
 UNION ALL
@@ -309,7 +309,7 @@ SELECT
         ELSE 'No Due'
     END AS due_status
 FROM vendors v
-LEFT JOIN building_e e ON v.vendor_id = e.vendor_id
+INNER JOIN building_e e ON v.vendor_id = e.vendor_id
 GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
 
 UNION ALL
@@ -328,7 +328,7 @@ SELECT
         ELSE 'No Due'
     END AS due_status
 FROM vendors v
-LEFT JOIN building_f f ON v.vendor_id = f.vendor_id
+INNER JOIN building_f f ON v.vendor_id = f.vendor_id
 GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
 
 UNION ALL
@@ -347,7 +347,7 @@ SELECT
         ELSE 'No Due'
     END AS due_status
 FROM vendors v
-LEFT JOIN building_g g ON v.vendor_id = g.vendor_id
+INNER JOIN building_g g ON v.vendor_id = g.vendor_id
 GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
 
 UNION ALL
@@ -366,7 +366,7 @@ SELECT
         ELSE 'No Due'
     END AS due_status
 FROM vendors v
-LEFT JOIN building_h h ON v.vendor_id = h.vendor_id
+INNER JOIN building_h h ON v.vendor_id = h.vendor_id
 GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
 
 UNION ALL
@@ -385,7 +385,7 @@ SELECT
         ELSE 'No Due'
     END AS due_status
 FROM vendors v
-LEFT JOIN building_i i ON v.vendor_id = i.vendor_id
+INNER JOIN building_i i ON v.vendor_id = i.vendor_id
 GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
 
 UNION ALL
@@ -404,7 +404,7 @@ SELECT
         ELSE 'No Due'
     END AS due_status
 FROM vendors v
-LEFT JOIN building_j j ON v.vendor_id = j.vendor_id
+INNER JOIN building_j j ON v.vendor_id = j.vendor_id
 GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username 
 ";
 
