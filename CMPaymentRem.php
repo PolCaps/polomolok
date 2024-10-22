@@ -97,7 +97,7 @@ include('Sessions/Cashier.php');
         </li>
 
         <li class="nav-item">
-        <a class="nav-link collapsed" href="#"  data-bs-toggle="collapse" data-bs-target="#collapsePayRem">
+        <a class="nav-link collapsed active" href="#"  data-bs-toggle="collapse" data-bs-target="#collapsePayRem">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
                 <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
@@ -108,8 +108,9 @@ include('Sessions/Cashier.php');
           </a>
   <div class="collapse" id="collapsePayRem">
     <div class="right-aligned-links" style="text-align: center;">
-      <a class="nav-link" href="CMPaymentRem.php">Send Reminders</a>
-      <a class="nav-link" href="CMPaymentRem.php">Statement of Account</a>
+      <a class="nav-link" href="CMPaymentRem.php">Show All</a>
+      <a class="nav-link" href="CMPaymentRemOverdue.php">Overdued</a>
+      <a class="nav-link" href="CMPaymentRemUpcoming.php">Within 7 Days</a>
     </div>
   </div>
 </li>
@@ -174,14 +175,33 @@ include('Sessions/Cashier.php');
             <div class="card-header pb-0">
               <div class="row">
                 <div class="col-lg-6 col-7">
-                  <h6>Vendors</h6>
-                  <p class="text-sm mb-0">
-                    <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
-                    <span class="font-weight-bold ms-1">List of Vendors that are overdued</span>
-                  </p>
+                  <div class="d-flex">
+                  <i class="fa fa-calendar text-info mt-1 mx-2" aria-hidden="true"></i>
+                  <h6 class="text-info">Vendor Payment Reminders</h6>
+                  </div>
+                
+                 
                 </div>
                 
                 <div class="col-lg-6 col-5 my-auto text-end">
+                  <div class="d-flex flex-column">
+                    <div class="d-flex">
+                    <i class="fa fa-exclamation-circle text-danger text-xs mx-1" aria-hidden="true"></i>
+                    <p class="text-xs text-danger">Overdued: </p>
+                    <p class="text-xs mx-1"> Vendors who are past their expected Due Date</p>
+
+                    </div>
+                  
+                  </div>
+                  <div class="d-flex flex-column">
+                    <div class="d-flex">
+                    <i class="fa fa-exclamation-circle text-warning text-xs mx-1" aria-hidden="true"></i>
+                    <p class="text-xs text-warning">Upcoming: </p>
+                    <p class="text-xs mx-1"> Vendors who have Due Date within 7 days</p>
+
+                    </div>
+                  
+                  </div>
                 </div>
               </div>
             </div>
@@ -199,54 +219,34 @@ if ($conn->connect_error) {
 
 
 $sqlvendor = "
-  SELECT 
-    CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
-    v.username AS username, 
-    v.payment_due AS payment_dues, 
-    FORMAT(
-      SUM(
-        COALESCE(
-          CAST(REPLACE(a.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
-          CAST(REPLACE(b.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
-          CAST(REPLACE(c.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
-          CAST(REPLACE(d.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
-          CAST(REPLACE(e.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
-          CAST(REPLACE(f.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
-          CAST(REPLACE(g.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
-          CAST(REPLACE(h.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
-          CAST(REPLACE(i.monthly_rentals, ',', '') AS DECIMAL(10,2)), 
-          CAST(REPLACE(j.monthly_rentals, ',', '') AS DECIMAL(10,2))
-        )
-      ), 2
-    ) AS rent_due,
-    GROUP_CONCAT(
-      DISTINCT COALESCE(a.stall_no, b.stall_no, c.stall_no, d.stall_no, e.stall_no, 
-                       f.stall_no, g.stall_no, h.stall_no, i.stall_no, j.stall_no) 
-      SEPARATOR ', '
-    ) AS stall_nos,
-    v.vendor_id AS vendor_id
-  FROM vendors v
-  LEFT JOIN building_a a ON v.vendor_id = a.vendor_id
-  LEFT JOIN building_b b ON v.vendor_id = b.vendor_id
-  LEFT JOIN building_c c ON v.vendor_id = c.vendor_id
-  LEFT JOIN building_d d ON v.vendor_id = d.vendor_id
-  LEFT JOIN building_e e ON v.vendor_id = e.vendor_id
-  LEFT JOIN building_f f ON v.vendor_id = f.vendor_id
-  LEFT JOIN building_g g ON v.vendor_id = g.vendor_id
-  LEFT JOIN building_h h ON v.vendor_id = h.vendor_id
-  LEFT JOIN building_i i ON v.vendor_id = i.vendor_id
-  LEFT JOIN building_j j ON v.vendor_id = j.vendor_id
-  GROUP BY 
-    v.vendor_id, 
-    v.username, 
-    v.payment_due
+    SELECT 
+        CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+        v.username AS username, 
+        v.payment_due AS payment_dues, 
+        COALESCE(a.monthly_rentals, b.monthly_rentals, c.monthly_rentals, d.monthly_rentals, e.monthly_rentals, f.monthly_rentals, g.monthly_rentals, h.monthly_rentals, i.monthly_rentals, j.monthly_rentals) AS rent_due, 
+        v.vendor_id AS vendor_id, 
+        DATE_FORMAT(COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date), '%M %d, %Y') AS due_date, 
+        CASE 
+            WHEN COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) < NOW() THEN 'Overdue'
+            WHEN COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) >= NOW() AND COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) <= DATE_ADD(NOW(), INTERVAL 7 DAY) THEN 'Upcoming'
+            ELSE 'No Due'
+        END AS due_status
+    FROM vendors v 
+    LEFT JOIN building_a a ON v.vendor_id = a.vendor_id 
+    LEFT JOIN building_b b ON v.vendor_id = b.vendor_id 
+    LEFT JOIN building_c c ON v.vendor_id = c.vendor_id 
+    LEFT JOIN building_d d ON v.vendor_id = d.vendor_id 
+    LEFT JOIN building_e e ON v.vendor_id = e.vendor_id 
+    LEFT JOIN building_f f ON v.vendor_id = f.vendor_id 
+    LEFT JOIN building_g g ON v.vendor_id = g.vendor_id 
+    LEFT JOIN building_h h ON v.vendor_id = h.vendor_id 
+    LEFT JOIN building_i i ON v.vendor_id = i.vendor_id 
+    LEFT JOIN building_j j ON v.vendor_id = j.vendor_id 
+    WHERE 
+        COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) IS NOT NULL  -- Ensure due dates are not null
+    ORDER BY 
+        COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) ASC;  -- Sort by due date
 ";
-
-
-
-
-
-
 
 $resultA = $conn->query($sqlvendor);
 $tableRows = '';
@@ -256,6 +256,18 @@ if ($resultA === false) {
 
 if ($resultA->num_rows > 0) {
     while ($rowA = $resultA->fetch_assoc()) {
+        // Determine the class and icon based on the due_status
+        $dueStatusClass = 'text-xs font-weight-bold';
+        $dueStatusIcon = ''; // Default icon
+        
+        if ($rowA['due_status'] == 'Overdue') {
+            $dueStatusClass .= ' text-danger'; // Add danger class for overdue
+            $dueStatusIcon = '<i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>'; // Overdue icon
+        } elseif ($rowA['due_status'] == 'Upcoming') {
+            $dueStatusClass .= ' text-warning'; // Add warning class for upcoming
+            $dueStatusIcon = '<i class="fa fa-exclamation-circle text-warning" aria-hidden="true"></i>'; // Upcoming icon
+        }
+
         $tableRows .= '
             <tr>
                 <td>
@@ -274,7 +286,7 @@ if ($resultA->num_rows > 0) {
                     <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['rent_due']) . '</span>
                 </td>
                 <td class="align-middle text-center text-sm">
-                    <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['due_status']) . '</span>
+                    <span class="' . $dueStatusClass . '">' . $dueStatusIcon . ' ' . htmlspecialchars($rowA['due_status']) . '</span>
                 </td>
                 <td class="align-middle text-center text-sm">
                     <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['due_date']) . '</span>
@@ -288,6 +300,7 @@ if ($resultA->num_rows > 0) {
     $tableRows = '<tr><td colspan="6" class="text-center">No upcoming dues available</td></tr>';
 }
 ?>
+
 
 <div class="card-body px-0 pb-2">
     <div class="table-responsive">
