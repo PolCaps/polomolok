@@ -501,6 +501,10 @@ if ($resultA->num_rows > 0) {
             <input type="text" class="form-control" id="vendor-name" name="name" readonly>
           </div>
           <div class="mb-3">
+                        <label for="reminderMessage" class="form-label">Message</label>
+                        <textarea class="form-control" id="reminderMessage" name="reminderMessage" rows="4" required></textarea>
+                    </div>
+          <div class="mb-3">
             <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
             <input type="number" class="form-control" id="remaining-balance" name="remaining_balance" step="0.01" min="0">
           </div>
@@ -589,7 +593,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function openSendMessageModal(vendorName, vendorId) {
     document.getElementById('vendor-name').value = vendorName;
     document.getElementById('vendor-id').value = vendorId;
-
+   
     // Fetch monthly rentals based on vendorId
     fetchMonthlyRentals(vendorId);
 

@@ -2,6 +2,8 @@
 
 include('database_config.php');
 
+date_default_timezone_set('Asia/Manila');
+
 // Create a connection
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 

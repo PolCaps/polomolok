@@ -10,7 +10,7 @@ if ($conn->connect_error) {
     die(json_encode(['error' => "Connection failed: " . $conn->connect_error]));
 }
 
-$sql = "SELECT r.request_id, v.vendor_id, v.first_name AS fn, v.last_name AS ln, r.reason, r.request_date, r.approval_status
+$sql = "SELECT r.request_id, v.vendor_id, v.first_name AS fn, v.last_name AS ln, current_stall, r.reason, r.request_date, r.approval_status
         FROM relocation_req r
         JOIN vendors v ON v.vendor_id = r.vendor_id
         WHERE r.approval_status = 'Rejected'
