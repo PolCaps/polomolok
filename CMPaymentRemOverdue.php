@@ -2,11 +2,12 @@
 include('Sessions/Cashier.php');
 ?>
 
+
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-<meta charset="utf-8" />
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
@@ -23,11 +24,9 @@ include('Sessions/Cashier.php');
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
-  <link href="https://maxcdn.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" /> <!-- Bootstrap CSS --></body>
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
-
 <aside class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 " id="sidenav-main">
     <div class="sidenav-header">
       <i class="fas fa-times p-3 cursor-pointer text-secondary opacity-5 position-absolute end-0 top-0 d-none d-xl-none" aria-hidden="true" id="iconSidenav"></i>
@@ -42,7 +41,7 @@ include('Sessions/Cashier.php');
     <div class="collapse navbar-collapse  w-auto " id="sidenav-collapse-main">
       <ul class="navbar-nav">
         <li class="nav-item">
-          <a class="nav-link active" href="Cashier.php">
+          <a class="nav-link" href="Cashier.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="black" class="bi bi-shop" viewBox="0 0 16 16">
                 <path d="M2.97 1.35A1 1 0 0 1 3.73 1h8.54a1 1 0 0 1 .76.35l2.609 3.044A1.5 1.5 0 0 1 16 5.37v.255a2.375 2.375 0 0 1-4.25 1.458A2.37 2.37 0 0 1 9.875 8 2.37 2.37 0 0 1 8 7.083 2.37 2.37 0 0 1 6.125 8a2.37 2.37 0 0 1-1.875-.917A2.375 2.375 0 0 1 0 5.625V5.37a1.5 1.5 0 0 1 .361-.976zm1.78 4.275a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0 1.375 1.375 0 1 0 2.75 0V5.37a.5.5 0 0 0-.12-.325L12.27 2H3.73L1.12 5.045A.5.5 0 0 0 1 5.37v.255a1.375 1.375 0 0 0 2.75 0 .5.5 0 0 1 1 0M1.5 8.5A.5.5 0 0 1 2 9v6h1v-5a1 1 0 0 1 1-1h3a1 1 0 0 1 1 1v5h6V9a.5.5 0 0 1 1 0v6h.5a.5.5 0 0 1 0 1H.5a.5.5 0 0 1 0-1H1V9a.5.5 0 0 1 .5-.5M4 15h3v-5H4zm5-5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v3a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1zm3 0h-2v3h2z"/>
@@ -96,8 +95,9 @@ include('Sessions/Cashier.php');
           <span class="nav-link-text ms-1">Monthly Reports</span>
         </a>
         </li>
+
         <li class="nav-item">
-        <a class="nav-link collapsed" href="#"  data-bs-toggle="collapse" data-bs-target="#collapsePayRem">
+        <a class="nav-link collapsed active" href="#"  data-bs-toggle="collapse" data-bs-target="#collapsePayRem">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
                 <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
@@ -114,6 +114,7 @@ include('Sessions/Cashier.php');
     </div>
   </div>
 </li>
+        
       </ul>
     </div>
     <div class="sidenav-footer mx-3 mt-5">
@@ -134,9 +135,9 @@ include('Sessions/Cashier.php');
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb bg-transparent mb-0 pb-0 pt-1 px-0 me-sm-6 me-5">
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Cashier</a></li>
-            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Modules</li>
+            <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Dashboard</h6>
+          <h6 class="font-weight-bolder mb-0">Payment Reminder</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -152,11 +153,6 @@ include('Sessions/Cashier.php');
                 <span class="d-sm-inline d-none">Cashier</span>
               </a>
             </li>
-
-            <?php 
-            include('Notification/CashierNotif.php');
-            ?>
-
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -172,241 +168,277 @@ include('Sessions/Cashier.php');
     </nav>
     <!-- End Navbar -->
     <div class="container-fluid py-4">
-    <div class="row mt-4">
-          <div class="col-lg-5 mb-lg-4 mb-4">
-            <div class="card">
-              <div class="card-body">
-                <h5 class="card-title text-lg text-info mb-3 text-start mx-2">Staff Profile</h5>
-                <div class="row">
-                <div class="col-md-4">
-                  <?php
-                  // Check if the user has a profile picture set; if not, use a default image
-                  $profilePicture = !empty($user['picture_profile']) ? $user['picture_profile'] : 'image/profile.jpg';
-                  ?>
-                  <img src="<?php echo htmlspecialchars($profilePicture); ?>" class="img-fluid rounded-circle"
-                    alt="Admin Profile Picture" style="width: 100px; height: 100px; object-fit: cover;">
+      
+      <div class="row my-4">
+        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
+          <div class="card">
+            <div class="card-header pb-0">
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <button type="button" class="btn btn-sm btn-primary my-1">Remind All</button>
+                  <p class="text-sm mb-0 mt-2">
+                    <i class="fa fa-exclamation-circle text-danger" aria-hidden="true"></i>
+                    <span class="font-weight-bold ms-1">List of Vendors that are Overdued</span>
+                  </p>
                 </div>
-                  <div class="col-md-8 my-3">
-                  <h6 class="card-subtitle mb-2 text-muted">Name: <?php echo htmlspecialchars($user['first_name']) . ' ' . htmlspecialchars($user['middle_name']) . ' ' . htmlspecialchars($user['last_name']); ?></h6>
-                    <p class="card-text">Username: <?php echo htmlspecialchars($user['username']); ?></p>
-                    <p class="card-text">Role: <?php echo htmlspecialchars($user['user_type']); ?></p>
-                  </div>
-                </div>
-                <hr class="horizontal dark my-3">
-                <div class="d-flex my-4 mx-5">
-                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    Change Password
-                  </button>
-                  <button class="accordion-button btn-outline-info" type="button" data-bs-toggle="collapse"
-                  data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
-                  Change Profile Picture
-                </button>
-                </div>
-                <div class="accordion" id="profile-accordion">
-                  <div class="accordion-item">
-                    <div id="collapseOne" class="accordion-collapse collapse " aria-labelledby="headingOne" data-bs-parent="#profile-accordion">
-                      <div class="accordion-body">
-                        <form action="" method="POST">
-                          <div class="mb-3">
-                            <label for="current_password" class="form-label">Current Password:</label>
-                            <input type="password" id="current_password" name="current_password" class="form-control">
-                          </div>
-                          <div class="mb-3">
-                            <label for="new_password" class="form-label">New Password:</label>
-                            <input type="password" id="new_password" name="new_password" class="form-control">
-                          </div>
-                          <?php
-
-// Check if the session is already started
-if (session_status() === PHP_SESSION_NONE) {
-session_start();
-}
-
-// Include database configuration
-include('database_config.php');
-
-// Create a new MySQLi connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-die("Database connection failed: " . $conn->connect_error);
-}
-
-// Enable error reporting for debugging
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-
-// Initialize feedback message
-$feedback_message = "";
-// Check if the form is submitted
-if (isset($_POST['submit'])) {
-// Check if vendor_id is set in session
-if (!isset($_SESSION['id'])) {
-    echo "<script>alert('User not logged in.');</script>";
-    exit;
-}
-
-// Assuming vendor ID is stored in the session
-$user_id = $_SESSION['id'];
-
-// Get form inputs
-$current_password = $_POST['current_password'];
-$new_password = $_POST['new_password'];
-
-// Validate inputs
-if (empty($current_password) || empty($new_password)) {
-    echo "<script>alert('Please fill in both fields.');</script>";
-} else {
-    // Start a transaction
-    $conn->begin_transaction();
-
-    try {
-        // Retrieve the current password from the database
-        $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
-        $stmt->bind_param("i", $user_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        $user = $result->fetch_assoc();
-
-        if ($user && $current_password === $user['password']) {
-            // Update the password in the database
-            $update_stmt = $conn->prepare("UPDATE users SET password = ? WHERE id = ?");
-            $update_stmt->bind_param("si", $new_password, $user_id);
-            $update_stmt->execute();
-
-            if ($update_stmt->affected_rows > 0) {
-                // Commit the transaction if everything is successful
-                $conn->commit();
-                echo "<script>alert('Password changed successfully.');</script>";
-            } else {
-                // Rollback the transaction if update fails
-                $conn->rollback();
-                echo "<script>alert('Failed to change the password.');</script>";
-            }
-            
-            $update_stmt->close();
-        } else {
-            // Rollback the transaction if the current password is incorrect
-            $conn->rollback();
-            echo "<script>alert('Current password is incorrect.');</script>";
-        }
-
-        $stmt->close();
-    } catch (Exception $e) {
-        // Rollback the transaction in case of an exception
-        $conn->rollback();
-        echo "<script>alert('An error occurred: " . htmlspecialchars($e->getMessage()) . "');</script>";
-    }
-}
-
-// Close the connection
-// $conn->close();
-}
-?>
-                          <button type="submit" name = "submit"class="btn btn-primary">Change Password</button>
-                        </form>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="accordion-item">
-          <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo"
-            data-bs-parent="#profile-accordion">
-            <div class="accordion-body">
-              <form id="uploadForm" action="cashierPicUpload.php" method="post" enctype="multipart/form-data">
-                <div class="mb-3">
-                  <label for="profile-picture" class="form-label">Profile Picture</label>
-                  <input type="file" class="form-control" id="profile-picture" name="profile-picture" required>
-                </div>
-                <?php
-
-                // Get the user ID from the session
-                $user_id = isset($_SESSION['id']) ? $_SESSION['id'] : null;
-
-                // Check if user_id is available and set it in the hidden input
-                if ($user_id !== null) {
-                  echo '<input type="hidden" name="id" id="id" value="' . htmlspecialchars($user_id) . '">';
-                } else {
-                  echo '<p>Error: User ID is not set in the session.</p>';
-                }
-                ?>
-                <button type="submit" class="btn btn-primary">Update Profile Picture</button>
-              </form>
-            </div>
-          </div>
-        </div>
-
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-          $(document).ready(function () {
-            $('#uploadForm').on('submit', function (e) {
-              e.preventDefault(); // Prevent default form submission
-
-              var formData = new FormData(this); // Create FormData object with form data
-
-              $.ajax({
-                url: $(this).attr('action'), // URL to send the request to
-                type: 'POST', // Request method
-                data: formData, // Form data
-                contentType: false, // Prevent setting Content-Type header
-                processData: false, // Prevent jQuery from processing data
-                success: function (response) {
-                  alert(response); // Display response as an alert, regardless of success or error
-                }
-              });
-            });
-          });
-        </script>
+                
+                <div class="col-lg-6 col-5 my-auto text-end">
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-        </div>
-      </div>
-    </div>
 
-    <?php
-
-    // Check if the session is already started
-if (session_status() === PHP_SESSION_NONE) {
-session_start();
-}
-
-// Include database configuration
-include('database_config.php');
+            <?php
+include 'database_config.php'; // Include the database connection
 
 // Create a new MySQLi connection
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check the connection
+// Check connection
 if ($conn->connect_error) {
-die("Database connection failed: " . $conn->connect_error);
+    die("Connection failed: " . $conn->connect_error);
+}
+$sqlvendor = "
+    SELECT 
+        CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+        v.username AS username, 
+        v.payment_due AS payment_dues, 
+        COALESCE(a.monthly_rentals, b.monthly_rentals, c.monthly_rentals, d.monthly_rentals, e.monthly_rentals, f.monthly_rentals, g.monthly_rentals, h.monthly_rentals, i.monthly_rentals, j.monthly_rentals) AS rent_due, 
+        v.vendor_id AS vendor_id, 
+        DATE_FORMAT(COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date), '%M %d, %Y') AS due_date, 
+        'Overdue' AS due_status  -- Set due_status to Overdue for all selected records
+    FROM vendors v 
+    LEFT JOIN building_a a ON v.vendor_id = a.vendor_id 
+    LEFT JOIN building_b b ON v.vendor_id = b.vendor_id 
+    LEFT JOIN building_c c ON v.vendor_id = c.vendor_id 
+    LEFT JOIN building_d d ON v.vendor_id = d.vendor_id 
+    LEFT JOIN building_e e ON v.vendor_id = e.vendor_id 
+    LEFT JOIN building_f f ON v.vendor_id = f.vendor_id 
+    LEFT JOIN building_g g ON v.vendor_id = g.vendor_id 
+    LEFT JOIN building_h h ON v.vendor_id = h.vendor_id 
+    LEFT JOIN building_i i ON v.vendor_id = i.vendor_id 
+    LEFT JOIN building_j j ON v.vendor_id = j.vendor_id 
+    WHERE 
+        COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) < NOW()  -- Filter only overdue records
+        AND COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) IS NOT NULL  -- Ensure due dates are not null
+    ORDER BY 
+        COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) ASC;  -- Sort by due date
+";
+
+
+
+
+$resultA = $conn->query($sqlvendor);
+$tableRows = '';
+if ($resultA === false) {
+    die("Error executing query: " . $conn->error);
 }
 
-
-// Assuming vendor ID is stored in the session
-$user_id = $_SESSION['id'];
-
-// Fetch vendor information
-$sql = "SELECT * FROM users WHERE id = ?";
-$stmt = $conn->prepare($sql);
-if ($stmt === false) {
-    die("Prepare failed: " . $conn->error);
+if ($resultA->num_rows > 0) {
+    while ($rowA = $resultA->fetch_assoc()) {
+        $tableRows .= '
+            <tr>
+                <td>
+                    <div class="d-flex px-3 py-1">
+                        <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">' . htmlspecialchars($rowA['name']) . '</h6>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="avatar-group mt-1">
+                        <h6 class="mb-1 text-sm">' . htmlspecialchars($rowA['username']) . '</h6>
+                    </div>
+                </td>
+                <td class="align-middle text-center text-sm">
+                    <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['rent_due']) . '</span>
+                </td>
+                <td class="align-middle text-center text-sm">
+                    <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['due_status']) . '</span>
+                </td>
+                <td class="align-middle text-center text-sm">
+                    <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['due_date']) . '</span>
+                </td>
+                <td class="align-middle text-center text-sm">
+                    <button type="button" class="btn btn-sm btn-primary my-1" onclick="openSendMessageModal(\'' . htmlspecialchars($rowA['name']) . '\', ' . htmlspecialchars($rowA['vendor_id']) . ')"> Send Reminders </button>
+                </td>
+            </tr>';
+    }
+} else {
+    $tableRows = '<tr><td colspan="6" class="text-center">No upcoming dues available</td></tr>';
 }
-$stmt->bind_param("i", $user_id);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-// Check if vendor data is retrieved
-if (!$user) {
-    die("No User found with ID " . htmlspecialchars($user_id));
-}
-
 ?>
-        
+
+<div class="card-body px-0 pb-2">
+    <div class="table-responsive">
+        <table class="table align-items-center mb-0">
+        <thead>
+            <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Due Status</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Due Date</th> <!-- New column -->
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+            </tr>
+        </thead>
+            <tbody id="tbody">
+                <?= $tableRows ?>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+<!-- send message Modal -->
+<div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="sendMessageModalLabel">Send Reminders to Vendor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="sendMessageForm" method="POST" action="generateSOA.php">
+          <div class="mb-3">
+            <label for="vendor-name" class="col-form-label">Vendor Name:</label>
+            <input type="text" class="form-control" id="vendor-name" name="vendor-name" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="message" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message" name="message" rows="4"></textarea>
+        </div>
+          <div class="mb-3">
+            <label for="monthly-rentals" class="col-form-label">Monthly Rentals:</label>
+            <input type="text" class="form-control" id="monthly-rentals" name="monthly_rentals_total" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
+            <input type="number" class="form-control" id="remaining-balance" name="remaining-balance" step="0.01" min="0" required>
+          </div>
+         
+          <div class="mb-3">
+            <label for="miscellaneous-fees" class="col-form-label">Miscellaneous Fees (optional):</label>
+            <input type="number" class="form-control" id="miscellaneous-fees" name="miscellaneous-fees" step="0.01" min="0" >
+          </div>
+          <div class="mb-3">
+            <label for="other-fees" class="col-form-label">Other Fees (optional):</label>
+            <input type="number" class="form-control" id="other-fees" name="other-fees" step="0.01" min="0" >
+          </div>
+          <input type="hidden" id="vendor-id" name="vendor-id">
+          <button type="submit" id="submit" class="btn btn-primary">Generate Invoice</button>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Format the input as currency
+  function formatCurrencyInput(input) {
+    let value = parseFloat(input.value.replace(/,/g, ''));
+    if (!isNaN(value)) {
+      input.value = value.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits: 2 });
+    }
+  }
+
+  // Attach input event to format currency
+  document.querySelectorAll('.currency-input').forEach(input => {
+    input.addEventListener('input', function() {
+      formatCurrencyInput(this);
+    });
+
+    // Optional: Format when the input loses focus
+    input.addEventListener('blur', function() {
+      formatCurrencyInput(this);
+    });
+  });
+
+  // Function to open the modal and set vendor details
+  function openSendMessageModal(vendorName, vendorId) {
+    document.getElementById('vendor-name').value = vendorName;
+    document.getElementById('vendor-id').value = vendorId;
+
+    // Fetch monthly rentals based on vendorId
+    fetchMonthlyRentals(vendorId);
+
+    const sendMessageModal = new bootstrap.Modal(document.getElementById('sendMessageModal'));
+    sendMessageModal.show();
+  }
+
+  // Fetch monthly rentals from the server
+  function fetchMonthlyRentals(vendorId) {
+    fetch(`getMonthlyRentals.php?vendor_id=${vendorId}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('monthly-rentals').value = data.monthly_rentals;
+        } else {
+          alert('Error fetching monthly rentals: ' + data.message);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+  // Handle form submission
+  document.querySelector('#sendMessageForm').addEventListener('submit', function(event) {
+    // Prevent default form submission
+    event.preventDefault();
+
+    // Create a FormData object from the form
+    const formData = new FormData(this);
+
+    // Use Fetch API to submit the form
+    fetch('generateSOA.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Invoice generated successfully!');
+        window.open(data.file, '_blank');
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  });
+
+  window.openSendMessageModal = openSendMessageModal;
+});
+</script>
+<style>
+
+.alert-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  z-index: 1000;
+}
+
+.alert-popup-content {
+  text-align: center;
+}
+
+.alert-popup .btn {
+  margin: 10px;
+}
+
+</style>
+
+
+    </div>
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
@@ -415,8 +447,8 @@ if (!$user) {
     <div class="card shadow-lg ">
       <div class="card-header pb-0 pt-3 ">
         <div class="float-start">
-          <h5 class="card-text">Username: <span class="card-text text-info"><?php echo htmlspecialchars($user['username']); ?></span></h5>
-          <p class="card-text">Role: <span class="card-text text-info"><?php echo htmlspecialchars($user['user_type']); ?></span></p>
+        <h5 class="card-text">Username: <span class="card-text text-info"><?php echo htmlspecialchars($user['username']); ?></span></h5>
+        <p class="card-text">Role: <span class="card-text text-info"><?php echo htmlspecialchars($user['user_type']); ?></span></p>
         </div>
         <div class="float-end mt-4">
           <button class="btn btn-link text-dark p-0 fixed-plugin-close-button">
@@ -434,15 +466,16 @@ if (!$user) {
       <div class="form-check form-switch ps-0">
         <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
       </div>
-    </div>
+      <br>
+      <hr class="horizontal dark my-1">
+      <br>
+      <div class="text-small text-center text-info">Messages</div>
+      <br><br>
+      <div class="text-small text-center">No Message Yet!</div>
+      </div>
   </div>
-  </div>
-
-
-
-      
   <!--   Core JS Files   -->
- <script src="assets2/js/core/popper.min.js"></script>
+  <script src="assets2/js/core/popper.min.js"></script>
   <script src="assets2/js/core/bootstrap.min.js"></script>
   <script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/smooth-scrollbar.min.js"></script>
@@ -460,6 +493,11 @@ if (!$user) {
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 
 </html>

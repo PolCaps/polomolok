@@ -3,13 +3,13 @@ include('Sessions/Cashier.php');
 ?>
 
 
-
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="assets2/img/apple-icon.png">
   <link rel="icon" type="image/png" href="assets/imgbg/BGImage.png">
   <title>
     Cashier
@@ -24,7 +24,6 @@ include('Sessions/Cashier.php');
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
-
 </head>
 
 <body class="g-sidenav-show  bg-gray-100">
@@ -51,6 +50,7 @@ include('Sessions/Cashier.php');
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
+        
         <li class="nav-item">
   <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReceipt"
     aria-expanded="false" aria-controls="collapseReceipt">
@@ -85,7 +85,7 @@ include('Sessions/Cashier.php');
   </div>
 </li>
         <li class="nav-item">
-          <a class="nav-link active" href="CMReports.php">
+          <a class="nav-link" href="CMReports.php">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-file-earmark-richtext" viewBox="0 0 16 16">
               <path d="M14 4.5V14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5zm-3 0A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h8a1 1 0 0 0 1-1V4.5z"/>
@@ -95,8 +95,9 @@ include('Sessions/Cashier.php');
           <span class="nav-link-text ms-1">Monthly Reports</span>
         </a>
         </li>
+
         <li class="nav-item">
-        <a class="nav-link collapsed" href="#"  data-bs-toggle="collapse" data-bs-target="#collapsePayRem">
+        <a class="nav-link collapsed active" href="#"  data-bs-toggle="collapse" data-bs-target="#collapsePayRem">
             <div class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
               <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-check" viewBox="0 0 16 16">
                 <path d="M10.854 7.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 9.793l2.646-2.647a.5.5 0 0 1 .708 0"/>
@@ -113,6 +114,7 @@ include('Sessions/Cashier.php');
     </div>
   </div>
 </li>
+        
       </ul>
     </div>
     <div class="sidenav-footer mx-3 mt-5">
@@ -135,7 +137,7 @@ include('Sessions/Cashier.php');
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Cashier</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Reports</h6>
+          <h6 class="font-weight-bolder mb-0">Payment Reminder</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -163,264 +165,283 @@ include('Sessions/Cashier.php');
           </ul>
         </div>
       </div>
-        </nav>
-        <!-- End Navbar -->
+    </nav>
+    <!-- End Navbar -->
+    <div class="container-fluid py-4">
+      
+      <div class="row my-4">
+        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
+          <div class="card">
+            <div class="card-header pb-0">
+              <div class="row">
+                <div class="col-lg-6 col-7">
+                  <button type="button" class="btn btn-sm btn-primary my-1">Remind All</button>
+                  <p class="text-sm mb-0 mt-2">
+                    <i class="fa fa-exclamation-circle text-warning" aria-hidden="true"></i>
+                    <span class="font-weight-bold ms-1">List of Vendors with Upcoming Dues</span>
+                  </p>
+                </div>
+                
+                <div class="col-lg-6 col-5 my-auto text-end">
+                </div>
+              </div>
+            </div>
+
+            <?php
+      include 'database_config.php'; // Include the database connection
+
+      // Create a new MySQLi connection
+      $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+      // Check connection
+      if ($conn->connect_error) {
+          die("Connection failed: " . $conn->connect_error);
+      }
+      $sqlvendor = "
+    SELECT 
+        CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
+        v.username AS username, 
+        v.payment_due AS payment_dues, 
+        COALESCE(a.monthly_rentals, b.monthly_rentals, c.monthly_rentals, d.monthly_rentals, e.monthly_rentals, f.monthly_rentals, g.monthly_rentals, h.monthly_rentals, i.monthly_rentals, j.monthly_rentals) AS rent_due, 
+        v.vendor_id AS vendor_id, 
+        DATE_FORMAT(COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date), '%M %d, %Y') AS due_date, 
+        'Upcoming' AS due_status
+    FROM vendors v 
+    LEFT JOIN building_a a ON v.vendor_id = a.vendor_id 
+    LEFT JOIN building_b b ON v.vendor_id = b.vendor_id 
+    LEFT JOIN building_c c ON v.vendor_id = c.vendor_id 
+    LEFT JOIN building_d d ON v.vendor_id = d.vendor_id 
+    LEFT JOIN building_e e ON v.vendor_id = e.vendor_id 
+    LEFT JOIN building_f f ON v.vendor_id = f.vendor_id 
+    LEFT JOIN building_g g ON v.vendor_id = g.vendor_id 
+    LEFT JOIN building_h h ON v.vendor_id = h.vendor_id 
+    LEFT JOIN building_i i ON v.vendor_id = i.vendor_id 
+    LEFT JOIN building_j j ON v.vendor_id = j.vendor_id 
+    WHERE 
+        COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) >= NOW() 
+        AND COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) <= DATE_ADD(NOW(), INTERVAL 7 DAY)
+        AND COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) IS NOT NULL  -- Ensure due dates are not null
+    ORDER BY 
+        COALESCE(a.due_date, b.due_date, c.due_date, d.due_date, e.due_date, f.due_date, g.due_date, h.due_date, i.due_date, j.due_date) ASC;  -- Sort by due date
+";
 
 
-        <?php
-// Include database configuration
-include('database_config.php');
 
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
 
-// Query to get total payments from receipts for the current month
-$totalPaymentsQuery = "SELECT SUM(totalPay) AS totalPayments 
-                       FROM receipts 
-                       WHERE MONTH(issued_date) = MONTH(CURRENT_DATE()) 
-                       AND YEAR(issued_date) = YEAR(CURRENT_DATE())";
-$totalPaymentsResult = $conn->query($totalPaymentsQuery);
-if ($totalPaymentsResult) {
-    $totalPayments = $totalPaymentsResult->fetch_assoc();
-    $data['totalPayments'] = $totalPayments['totalPayments'];
-} else {
-    $data['totalPayments'] = null;
-}
+      $resultA = $conn->query($sqlvendor);
+      $tableRows = '';
+      if ($resultA === false) {
+          die("Error executing query: " . $conn->error);
+      }
 
-// Query to get inquiries for the current month
-$inquiriesQuery = "SELECT name, email_add AS email, subject, message, sent_date 
-                   FROM inquiry 
-                   WHERE MONTH(sent_date) = MONTH(CURRENT_DATE()) 
-                   AND YEAR(sent_date) = YEAR(CURRENT_DATE())";
-$inquiriesResult = $conn->query($inquiriesQuery);
-
-// Query to count rent applications for the current month
-$rentAppCountQuery = "SELECT COUNT(*) AS rentAppCount 
-                      FROM rentapp_payment 
-                      WHERE MONTH(payment_date) = MONTH(CURRENT_DATE()) 
-                      AND YEAR(payment_date) = YEAR(CURRENT_DATE())";
-$rentAppCountResult = $conn->query($rentAppCountQuery);
-if ($rentAppCountResult) {
-    $rentAppCount = $rentAppCountResult->fetch_assoc();
-    $data['rentAppCount'] = $rentAppCount['rentAppCount'];
-} else {
-    $data['rentAppCount'] = null;
-}
-
-// Query to count active vendors
-$activeVendorsQuery = "SELECT COUNT(*) AS activeVendorsCount 
-                       FROM vendors 
-                       WHERE Vendor_Status = 'ACTIVE'";
-$activeVendorsResult = $conn->query($activeVendorsQuery);
-if ($activeVendorsResult) {
-    $activeVendorsCount = $activeVendorsResult->fetch_assoc();
-    $data['activeVendorsCount'] = $activeVendorsCount['activeVendorsCount'];
-} else {
-    $data['activeVendorsCount'] = null;
-}
-
-// Close the connection
-$conn->close();
+      if ($resultA->num_rows > 0) {
+          while ($rowA = $resultA->fetch_assoc()) {
+              $tableRows .= '
+                  <tr>
+                      <td>
+                          <div class="d-flex px-3 py-1">
+                              <div class="d-flex flex-column justify-content-center">
+                                  <h6 class="mb-0 text-sm">' . htmlspecialchars($rowA['name']) . '</h6>
+                              </div>
+                          </div>
+                      </td>
+                      <td>
+                          <div class="avatar-group mt-1">
+                              <h6 class="mb-1 text-sm">' . htmlspecialchars($rowA['username']) . '</h6>
+                          </div>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                          <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['rent_due']) . '</span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                          <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['due_status']) . '</span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                          <span class="text-xs font-weight-bold">' . htmlspecialchars($rowA['due_date']) . '</span>
+                      </td>
+                      <td class="align-middle text-center text-sm">
+                          <button type="button" class="btn btn-sm btn-primary my-1" onclick="openSendMessageModal(\'' . htmlspecialchars($rowA['name']) . '\', ' . htmlspecialchars($rowA['vendor_id']) . ')"> Send Reminders </button>
+                      </td>
+                  </tr>';
+          }
+      } else {
+          $tableRows = '<tr><td colspan="6" class="text-center">No upcoming dues available</td></tr>';
+      }
 ?>
 
+<div class="card-body px-0 pb-2">
+    <div class="table-responsive">
+        <table class="table align-items-center mb-0">
+        <thead>
+            <tr>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Username</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Due</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Due Status</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Due Date</th> <!-- New column -->
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Action</th>
+            </tr>
+        </thead>
+            <tbody id="tbody">
+                <?= $tableRows ?>
+            </tbody>
+        </table>
+    </div>
+</div>
 
 
-<!-- End Navbar -->
-<div class="container-fluid py-4">
-      <div class="row">
 
-
-
-      <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-
-
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-8">
-                  <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Expected Total Payments from Vendors (This Month)</p>
-                    <h5 class="font-weight-bolder mb-0">
-                   <span id="totalPay"><?php echo htmlspecialchars(number_format($data['totalPayments'], 2, '.', ',')); ?></span>
-                    </h5>
-                  </div>
-                </div>
-                <div class="col-2 text-end">
-                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
-                  <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-8">
-                  <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Active Vendors this month</p>
-                    <h5 class="font-weight-bolder mb-0">
-                    <span id="activeVendorsCount"><?php echo htmlspecialchars($data['activeVendorsCount']); ?></span>
-                    </h5>
-                  </div>
-                </div>
-                <div class="col-4 text-end">
-                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
-                  <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-8">
-                  <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Rent Applications (This Month)</p>
-                    <h5 class="font-weight-bolder mb-0">
-                    <span id="rentAppCount"><?php echo htmlspecialchars($data['rentAppCount']); ?></span>
-                    </h5>
-                  </div>
-                </div>
-                <div class="col-4 text-end">
-                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
-                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-
-        
-        
-
-      </div><!-- row -->
-         <br>
-         <br>
-       <!-- Button to Open the Modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reportModal">
-  Generate Report
-</button>
-
-<!-- Modal Structure -->
-<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
+<!-- send message Modal -->
+<div class="modal fade" id="sendMessageModal" tabindex="-1" aria-labelledby="sendMessageModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="reportModalLabel">Generate Monthly Report</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span>&times;</span>
-        </button>
+        <h5 class="modal-title" id="sendMessageModalLabel">Send Reminders to Vendor</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <p>Do you want to generate and send the monthly report?</p>
+        <form id="sendMessageForm" method="POST" action="generateSOA.php">
+          <div class="mb-3">
+            <label for="vendor-name" class="col-form-label">Vendor Name:</label>
+            <input type="text" class="form-control" id="vendor-name" name="vendor-name" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="message" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message" name="message" rows="4"></textarea>
+        </div>
+          <div class="mb-3">
+            <label for="monthly-rentals" class="col-form-label">Monthly Rentals:</label>
+            <input type="text" class="form-control" id="monthly-rentals" name="monthly_rentals_total" readonly>
+          </div>
+          <div class="mb-3">
+            <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
+            <input type="number" class="form-control" id="remaining-balance" name="remaining-balance" step="0.01" min="0" required>
+          </div>
+         
+          <div class="mb-3">
+            <label for="miscellaneous-fees" class="col-form-label">Miscellaneous Fees (optional):</label>
+            <input type="number" class="form-control" id="miscellaneous-fees" name="miscellaneous-fees" step="0.01" min="0" >
+          </div>
+          <div class="mb-3">
+            <label for="other-fees" class="col-form-label">Other Fees (optional):</label>
+            <input type="number" class="form-control" id="other-fees" name="other-fees" step="0.01" min="0" >
+          </div>
+          <input type="hidden" id="vendor-id" name="vendor-id">
+          <button type="submit" id="submit" class="btn btn-primary">Generate Invoice</button>
+        </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="generateReportBtn">Generate Report</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
 
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Format the input as currency
+  function formatCurrencyInput(input) {
+    let value = parseFloat(input.value.replace(/,/g, ''));
+    if (!isNaN(value)) {
+      input.value = value.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits: 2 });
+    }
+  }
+
+  // Attach input event to format currency
+  document.querySelectorAll('.currency-input').forEach(input => {
+    input.addEventListener('input', function() {
+      formatCurrencyInput(this);
+    });
+
+    // Optional: Format when the input loses focus
+    input.addEventListener('blur', function() {
+      formatCurrencyInput(this);
+    });
+  });
+
+  // Function to open the modal and set vendor details
+  function openSendMessageModal(vendorName, vendorId) {
+    document.getElementById('vendor-name').value = vendorName;
+    document.getElementById('vendor-id').value = vendorId;
+
+    // Fetch monthly rentals based on vendorId
+    fetchMonthlyRentals(vendorId);
+
+    const sendMessageModal = new bootstrap.Modal(document.getElementById('sendMessageModal'));
+    sendMessageModal.show();
+  }
+
+  // Fetch monthly rentals from the server
+  function fetchMonthlyRentals(vendorId) {
+    fetch(`getMonthlyRentals.php?vendor_id=${vendorId}`)
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById('monthly-rentals').value = data.monthly_rentals;
+        } else {
+          alert('Error fetching monthly rentals: ' + data.message);
+        }
+      })
+      .catch(error => console.error('Error:', error));
+  }
+
+  // Handle form submission
+  document.querySelector('#sendMessageForm').addEventListener('submit', function(event) {
+    // Prevent default form submission
+    event.preventDefault();
+
+    // Create a FormData object from the form
+    const formData = new FormData(this);
+
+    // Use Fetch API to submit the form
+    fetch('generateSOA.php', {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        alert('Invoice generated successfully!');
+        window.open(data.file, '_blank');
+      } else {
+        alert('Error: ' + data.message);
+      }
+    })
+    .catch(error => console.error('Error:', error));
+  });
+
+  window.openSendMessageModal = openSendMessageModal;
+});
+</script>
+<style>
+
+.alert-popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  z-index: 1000;
+}
+
+.alert-popup-content {
+  text-align: center;
+}
+
+.alert-popup .btn {
+  margin: 10px;
+}
+
+</style>
 
 
     </div>
-
-<!-- DataTables and jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
-
-<script>
-$(document).ready(function() {
-  document.getElementById("generateReportBtn").addEventListener("click", function() {
-    // Check if html2canvas is defined
-    if (typeof html2canvas !== 'undefined') {
-      // Capture the content of the page
-      html2canvas(document.querySelector(".container-fluid")).then(canvas => {
-        const { jsPDF } = window.jspdf;
-        let pdf = new jsPDF("p", "pt", "a4");
-
-        const imgData = canvas.toDataURL("image/png");
-        const imgWidth = pdf.internal.pageSize.getWidth();
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
-
-        // Generate Base64 string of the PDF
-        const pdfBase64 = pdf.output('datauristring');
-
-        // Prepare form data to send to the server
-        const formData = new FormData();
-        formData.append('pdf', pdfBase64);
-
-        // Send the Base64 PDF via POST to the server
-        fetch('monthlyReports.php', {
-          method: 'POST',
-          body: formData
-        }).then(response => response.text())
-          .then(result => {
-            console.log('PDF sent to server:', result);
-            alert('Report generated and sent successfully!');
-          }).catch(error => {
-            alert('Error sending PDF: ' + error);
-          });
-
-        // Make the API request for generating PDF
-        fetch("https://us1.pdfgeneratorapi.com/api/v4/documents/generate", {
-          method: "POST",
-          headers: {
-            "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI2YjJjODljODU2ZjgzMThkN2ZiNjNiYTBiMzQ4MzYxMjBiNGZiNjU4MjM3NjM5MzM4Y2JlZTQxNTk1NjZmNWQ4Iiwic3ViIjoicmV5YW5qYW5zYW1vbnRhbmVzQGdtYWlsLmNvbSIsImV4cCI6MTcyNzc4NjI0NH0.kDpfxqhYs4wEv0zccATGvxLwariOZ4l8tTSDUeOuIl8",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            template: {
-              id: '1216508',
-              data: {}
-            },
-            format: 'pdf',
-            output: 'url',
-            name: 'MONTHLY REPORTS'
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log('API response:', data);
-        })
-        .catch(error => {
-          console.error('Error generating PDF via API:', error);
-        });
-
-      }).catch(error => {
-        alert('Error capturing the page: ' + error);
-      });
-    } else {
-      alert('html2canvas is not defined. Please check if the library is loaded correctly.');
-    }
-  });
-});
-</script>
-
-
-
-    </main>
+  </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
       <i class="fa fa-wechat py-2"> </i>
