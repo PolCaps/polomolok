@@ -544,16 +544,19 @@ if (!$user) {
                       .then(response => response.text())
                       .then(alertMsg => {
                         alert(alertMsg);
+                        window.location.href = 'AMvendor.php';
                         if (!alertMsg.includes('Error')) {
                           window.location.href = 'AMvendor.php';  // Reload the page after alert
                         }
                       })
                       .catch(error => {
                         alert('Error communicating with server: ' + error.message);
+                        window.location.href = 'AMvendor.php';
                       });
                   }
                 } else {
                   alert('Please select a vendor to delete.');
+                  window.location.href = 'AMvendor.php';
                 }
               });
 
