@@ -216,6 +216,8 @@ $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
+
+
 $sqlvendor = "
     SELECT 
         CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS name, 
@@ -334,15 +336,15 @@ if ($resultA->num_rows > 0) {
         <form id="sendMessageForm" method="POST" action="generateSOA.php">
           <div class="mb-3">
             <label for="vendor-name" class="col-form-label">Vendor Name:</label>
-            <input type="text" class="form-control" id="vendor-name" name="vendor-name" readonly>
+            <input type="text" class="form-control" id="vendor-name" name="name" readonly>
           </div>
           <div class="mb-3">
-            <label for="message" class="col-form-label">Message:</label>
-            <textarea class="form-control" id="message" name="message" rows="4"></textarea>
-        </div>
+            <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
+            <input type="number" class="form-control" id="remaining-balance" name="remaining_balance" step="0.01" min="0">
+          </div>
           <div class="mb-3">
             <label for="monthly-rentals" class="col-form-label">Monthly Rentals:</label>
-            <input type="text" class="form-control" id="monthly-rentals" name="monthly_rentals_total" readonly>
+            <input type="text" class="form-control" id="monthly-rentals" name="totalPay" readonly>
           </div>
           <div class="mb-3">
             <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
@@ -351,14 +353,43 @@ if ($resultA->num_rows > 0) {
          
           <div class="mb-3">
             <label for="miscellaneous-fees" class="col-form-label">Miscellaneous Fees (optional):</label>
-            <input type="number" class="form-control" id="miscellaneous-fees" name="miscellaneous-fees" step="0.01" min="0" >
+            <input type="number" class="form-control" id="miscellaneous-fees" name="miscellaneous_fees" step="0.01" min="0">
           </div>
           <div class="mb-3">
             <label for="other-fees" class="col-form-label">Other Fees (optional):</label>
-            <input type="number" class="form-control" id="other-fees" name="other-fees" step="0.01" min="0" >
+            <input type="number" class="form-control" id="other-fees" name="other_fees" step="0.01" min="0">
           </div>
+          <div class="mb-3">
+            <label for="monthBill" class="col-form-label">Bill for the Month:</label>
+            <input type="text" class="form-control" id="monthBill" name="monthBill">
+          </div>
+          <div class="mb-3">
+            <label for="building" class="col-form-label">Building Name/Number:</label>
+            <input type="text" class="form-control" id="building" name="building">
+          </div>
+          <div class="mb-3">
+            <label for="stallNumber" class="col-form-label">Stall Number:</label>
+            <input type="text" class="form-control" id="stallNumber" name="stallNumber">
+          </div>
+          <div class="mb-3">
+            <label for="dueDate" class="col-form-label">Due Date:</label>
+            <input type="date" class="form-control" id="dueDate" name="dueDate">
+          </div>
+          <div class="mb-3">
+            <label for="padlockingDate" class="col-form-label">Padlocking Date (optional):</label>
+            <input type="date" class="form-control" id="padlockingDate" name="padlockingDate">
+          </div>
+          <div class="mb-3">
+            <label for="numMonths" class="col-form-label">Number of Months:</label>
+            <input type="number" class="form-control" id="numMonths" name="numMonths" min="1">
+          </div>
+          <div class="mb-3">
+            <label for="penaltyFee" class="col-form-label">Penalty Fee (if any):</label>
+            <input type="number" class="form-control" id="penaltyFee" name="penaltyFee" step="0.01" min="0">
+          </div>
+          
           <input type="hidden" id="vendor-id" name="vendor-id">
-          <button type="submit" id="submit" class="btn btn-primary">Generate Invoice</button>
+          <button type="submit" id="submit" class="btn btn-primary">SEND SOA</button>
         </form>
       </div>
       <div class="modal-footer">
@@ -367,6 +398,7 @@ if ($resultA->num_rows > 0) {
     </div>
   </div>
 </div>
+
 
 
 <script>

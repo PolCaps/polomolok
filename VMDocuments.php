@@ -433,11 +433,38 @@ $stmtA->close();
             </thead>
             <tbody id="dataTableBody">
               <?= $tableRows ?>
-              <script>
-                // Wait until the DOM is fully loaded
-                document.addEventListener('DOMContentLoaded', function () {
-                  // Get all clickable elements
-                  const clickables = document.querySelectorAll('.clickable');
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+    </div>
+
+    <div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="documentModalLabel">Documents</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div id="errorMessage" class="text-danger mt-2" style="display: none;"></div>
+      </div>
+      <div class="modal-body">
+        <iframe id="documentViewer" src="" style="width: 100%; height: 500px;" frameborder="0"></iframe>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Wait until the DOM is fully loaded
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get all clickable elements
+    const clickables = document.querySelectorAll('.clickable');
 
                   // Add event listeners to all clickable elements
                   clickables.forEach(clickable => {

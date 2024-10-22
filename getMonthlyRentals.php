@@ -15,24 +15,48 @@ if (isset($_GET['vendor_id'])) {
         exit;
     }
 
-    // Initialize monthly rent to 0
-    $monthly_rent = 0;
+    // Prepare the SQL query to sum monthly rentals across all tables for the specified vendor_id
+    $sql = "
+        SELECT 
+            SUM(CAST(REPLACE(monthly_rentals, ',', '') AS DECIMAL(10,2))) AS total_monthly_rentals
+        FROM (
+            SELECT monthly_rentals FROM building_a WHERE vendor_id = ?
+            UNION ALL
+            SELECT monthly_rentals FROM building_b WHERE vendor_id = ?
+            UNION ALL
+            SELECT monthly_rentals FROM building_c WHERE vendor_id = ?
+            UNION ALL
+            SELECT monthly_rentals FROM building_d WHERE vendor_id = ?
+            UNION ALL
+            SELECT monthly_rentals FROM building_e WHERE vendor_id = ?
+            UNION ALL
+            SELECT monthly_rentals FROM building_f WHERE vendor_id = ?
+            UNION ALL
+            SELECT monthly_rentals FROM building_g WHERE vendor_id = ?
+            UNION ALL
+            SELECT monthly_rentals FROM building_h WHERE vendor_id = ?
+            UNION ALL
+            SELECT monthly_rentals FROM building_i WHERE vendor_id = ?
+            UNION ALL
+            SELECT monthly_rentals FROM building_j WHERE vendor_id = ?
+        ) AS combined
+    ";
 
-    // Fetch monthly rentals from various tables
-    $tables = ['building_a', 'building_b', 'building_c', 'building_d', 'building_e', 'building_f', 'building_g', 'building_h', 'building_i', 'building_j'];
+    // Prepare the statement
+    $stmt = $conn->prepare($sql);
+    
+    // Bind the vendorId for each UNION ALL statement
+    $stmt->bind_param("iiiiiiiiii", $vendorId, $vendorId, $vendorId, $vendorId, $vendorId, $vendorId, $vendorId, $vendorId, $vendorId, $vendorId);
+    
+    // Execute the query
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-    foreach ($tables as $table) {
-        $sql = "SELECT monthly_rentals FROM $table WHERE vendor_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $vendorId);
-        $stmt->execute();
-        $result = $stmt->get_result();
+    $monthly_rent = 0; // Default to 0
 
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $monthly_rent = $row['monthly_rentals'];
-            break; // Stop searching once we find the value
-        }
+    if ($result->num_rows > 0) {
+        $row = $result->fetch_assoc();
+        $monthly_rent = $row['total_monthly_rentals'];
     }
 
     // Close the statement and connection

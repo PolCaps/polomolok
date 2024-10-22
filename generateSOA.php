@@ -12,121 +12,81 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    // API Key and other constants
-    $apiKey = 'sk_2akVMMzyVTB5wlYV8Bjli2lWg1od59Ac';
-    $from = "MEEDO / POLOMOLOK PUBLIC MARKET";
-    $logo = "../image/picmeedo.jpg";
-    $date = date("Y-m-d"); // Current date
-    $remainingBalance = floatval(str_replace(',', '', $_POST['remaining-balance'])); // Convert to float
-    $miscellaneousFees = floatval(str_replace(',', '', $_POST['miscellaneous-fees'])) ?: 0; // Convert to float
-    $otherFees = floatval(str_replace(',', '', $_POST['other-fees'])) ?: 0; // Convert to float
-    $vendorId = $_POST['vendor-id']; // Use the vendor ID from the form
-    $message = $_POST['message']; // Use the vendor ID from the form
 
-    // Initialize monthly rent to 0
-    $monthly_rent = 0;
-    $username = ''; // Initialize username
+    // Check if the required POST data is set
+    if (
+        isset($_POST['monthBill']) &&
+        isset($_POST['building']) &&
+        isset($_POST['name']) &&
+        isset($_POST['stallNumber']) &&
+        isset($_POST['dueDate']) &&
+        isset($_POST['padlockingDate']) &&
+        isset($_POST['grandTotal']) &&
+        isset($_POST['totalPay']) &&
+        isset($_POST['numMonths']) &&
+        isset($_POST['penaltyFee'])
+    ) {
+        // Sanitize input data to avoid security risks
+        $monthBill = htmlspecialchars($_POST['monthBill']);
+        $buildingName = htmlspecialchars($_POST['building']);
+        $username = htmlspecialchars($_POST['name']);
+        $stallNumber = htmlspecialchars($_POST['stallNumber']);
+        $dueDate = htmlspecialchars($_POST['dueDate']);
+        $padlockingDate = htmlspecialchars($_POST['padlockingDate']);
+        $grandTotal = htmlspecialchars($_POST['grandTotal']);
+        $totalPay = htmlspecialchars($_POST['totalPay']);
+        $numMonths = htmlspecialchars($_POST['numMonths']);
+        $penaltyFee = htmlspecialchars($_POST['penaltyFee']);
 
-    // Fetch monthly rentals and username from various tables
-    $tables = ['building_a', 'building_b', 'building_c', 'building_d', 'building_e', 'building_f', 'building_g', 'building_h', 'building_i', 'building_j'];
+        // Prepare post data with additional fields for the PDF template
+        $postData = [
+            'template' => [
+                'id' => '1240474', // Template ID for your billing notice
+                'data' => [
+                    'monthBill' => $monthBill,          // Bill for the month of
+                    'building' => $buildingName,        // Building name or number
+                    'name' => $username,                // Name of the vendor/recipient
+                    'stallNumber' => $stallNumber,      // Stall number
+                    'due' => date('Y-m-d', strtotime($dueDate)),  // Due date formatted
+                    'lock' => $padlockingDate,          // Padlocking date if applicable
+                    'grandTotal' => number_format((float) $grandTotal, 2, '.', ''), // Grand total with 2 decimals
+                    'total' => number_format((float) $totalPay, 2, '.', ''),       // Total payment with 2 decimals
+                    'numberMonth' => $numMonths,        // Number of months
+                    'dueFee' => number_format((float) $penaltyFee, 2, '.', ''),    // Penalty fee with 2 decimals
+                ]
+            ],
+            'format' => 'pdf',         // Format the response as a PDF
+            'output' => 'url',         // Get the output URL from the response
+            'name' => 'NOTICE'         // Name of the generated document
+        ];
 
-    // First fetch the username and concatenate the name fields
-    $sqlVendor = "SELECT username, CONCAT(first_name, ' ', middle_name, ' ', last_name) AS name FROM vendors WHERE vendor_id = ?";
-    $stmtVendor = $conn->prepare($sqlVendor);
-    $stmtVendor->bind_param("i", $vendorId);
-    $stmtVendor->execute();
-    $resultVendor = $stmtVendor->get_result();
+        // Example of sending the post data via cURL (adjust as needed)
+        $url = "https://us1.pdfgeneratorapi.com/api/v4/documents/generate"; // Replace with your actual API URL
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
 
-    if ($resultVendor->num_rows > 0) {
-        $rowVendor = $resultVendor->fetch_assoc();
-        $username = $rowVendor['username'];
-        $name = $rowVendor['name'];
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Vendor not found']);
-        exit;
-    }
-
-    $stmtVendor->close();
-
-
-    // Fetch monthly rentals
-    foreach ($tables as $table) {
-        $sql = "SELECT monthly_rentals FROM $table WHERE vendor_id = ?";
-        $stmt = $conn->prepare($sql);
-        $stmt->bind_param("i", $vendorId);
-        $stmt->execute();
-        $result = $stmt->get_result();
-
-        if ($result->num_rows > 0) {
-            $row = $result->fetch_assoc();
-            $monthly_rent = floatval(str_replace(',', '', $row['monthly_rentals'])); // Convert to float
-            break; // Stop searching once we find the value
-        }
-    }
-
-    // Close the statement
-    $stmt->close();
-
-    // Sanitize the username for filename
-    $sanitizedUsername = preg_replace('/[^a-zA-Z0-9-_]/', '_', $username);
-
-    // Create the file path including the username and date
-    $filePath = 'invoice/invoice_' . $sanitizedUsername . '_' . $date . '.pdf';
-
-    // Prepare the data for the statement of accounts
-    $data = array(
-        "from" => $from,
-        "to" => $name, // Use the fetched username
-        "logo" => $logo,
-        "number" => 1,
-        "date" => $date,
-        "custom_fields[0][name]" => "Remaining Balance",
-        "custom_fields[0][value]" => $remainingBalance,
-        "items[0][name]" => "Monthly Rental",
-        "items[0][quantity]" => 1,
-        "items[0][unit_cost]" => $monthly_rent,
-        "items[1][name]" => "Balance",
-        "items[1][quantity]" => 1,
-        "items[1][unit_cost]" => $remainingBalance,
-        "items[2][name]" => "Miscellaneous Fee",
-        "items[2][quantity]" => 1,
-        "items[2][unit_cost]" => $miscellaneousFees,
-        "items[3][name]" => "Other Fee",
-        "items[3][quantity]" => 1,
-        "items[3][unit_cost]" => $otherFees,
-        "total" => $monthly_rent + $miscellaneousFees + $otherFees + $remainingBalance
-    );
-
-    // Initialize cURL session
-    $ch = curl_init();
-
-    curl_setopt($ch, CURLOPT_URL, "https://invoice-generator.com");
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-    curl_setopt($ch, CURLOPT_POST, 1);
-    curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        "Authorization: Bearer $apiKey"
-    ));
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
-
-    // Execute the cURL request
-    $response = curl_exec($ch);
-
-    // Check for cURL errors
-    if (curl_errno($ch)) {
-        echo json_encode(['success' => false, 'message' => 'cURL Error: ' . curl_error($ch)]);
+        // Execute cURL request and handle the response
+        $response = curl_exec($ch);
+        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
-        exit;
-    }
 
-    // Ensure directory exists
-    if (!is_dir('invoice')) {
-        if (!mkdir('invoice', 0777, true)) {
-            echo json_encode(['success' => false, 'message' => 'Failed to create PDF directory']);
-            curl_close($ch);
-            exit;
+        // Check if the response is successful (you may need to adjust based on your API's response format)
+        if ($httpCode == 200) {
+            $responseData = json_decode($response, true);
+            if (isset($responseData['url'])) {
+                // Redirect or display the generated PDF URL
+                header('Location: ' . $responseData['url']);
+                exit();
+            } else {
+                echo 'Error: Could not retrieve PDF URL from the response.';
+            }
+        } else {
+            echo 'Error: Failed to generate PDF. HTTP Status Code: ' . $httpCode;
         }
     }
-
     // Save the response to the /invoice folder
     if (file_put_contents($filePath, $response)) {
         // Check if the vendor ID already exists in the vendorSOA table

@@ -55,7 +55,7 @@ if (!$user) {
   <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  
+
   <style>
     .alert {
       position: fixed;
@@ -291,10 +291,10 @@ if (!$user) {
                 <span class="d-sm-inline d-none">Admin</span>
               </a>
             </li>
-            <?php 
+            <?php
             include('Notification/AdminNotif.php');
             ?>
-         
+
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -319,34 +319,34 @@ if (!$user) {
                   <div class="numbers">
                     <p class="text-sm mb-0 text-capitalize font-weight-bold">Total Vendors:</p>
                     <h5 class="font-weight-bolder mb-0">
-                    <?php
-  include('database_config.php');
+                      <?php
+                      include('database_config.php');
 
-  // Create a connection
-  $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+                      // Create a connection
+                      $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-  // Check the connection
-  if ($conn->connect_error) {
-      die("Connection failed: " . $conn->connect_error);
-  } 
+                      // Check the connection
+                      if ($conn->connect_error) {
+                        die("Connection failed: " . $conn->connect_error);
+                      }
 
-// SQL query to count the number of vendors
-$countQuery = "SELECT COUNT(*) as vendor_count FROM vendors";
-$countResult = $conn->query($countQuery);
+                      // SQL query to count the number of vendors
+                      $countQuery = "SELECT COUNT(*) as vendor_count FROM vendors";
+                      $countResult = $conn->query($countQuery);
 
-if ($countResult) {
-  $countRow = $countResult->fetch_assoc();
-  $vendorCount = "Total vendors: " . $countRow['vendor_count'] . "<br>";
-} else {
-  $vendorCount = "Error: " . $conn->error;
-}
+                      if ($countResult) {
+                        $countRow = $countResult->fetch_assoc();
+                        $vendorCount = "Total vendors: " . $countRow['vendor_count'] . "<br>";
+                      } else {
+                        $vendorCount = "Error: " . $conn->error;
+                      }
 
-// Echo the vendor count
-echo $vendorCount;
+                      // Echo the vendor count
+                      echo $vendorCount;
 
-// Close the connection
-$conn->close();
-  ?>
+                      // Close the connection
+                      $conn->close();
+                      ?>
 
                     </h5>
                   </div>
@@ -362,7 +362,7 @@ $conn->close();
         </div>
       </div>
       <div class="row mt-4">
-        
+
 
         <body>
           <style>
@@ -389,513 +389,609 @@ $conn->close();
               flex: 1;
             }
           </style>
-            
-
-   <!-- update , delete, add stalls button paras sa modals -->
-<div class="header-buttons mb-4">
-  <div class="d-flex justify-content-start">
-    <button type="button" class="btn btn-primary mx-1" id="updateBtn">UPDATE</button>
-    <button type="button" class="btn btn-primary mx-1" id="stallBtn">ADD STALLS</button>
-    <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal" id="deleteBtn">DELETE</button>
-  </div>
-</div>
-
-<!-- Delete Modal -->
-<div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="deleteModalLabel">Select Vendor to Delete</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <!-- Search bar for vendor username -->
-        <div class="input-group mb-3">
-          <span class="input-group-text"><i class="fas fa-search"></i></span>
-          <input type="text" class="form-control" id="searchVendor" placeholder="Search Vendor Username">
-        </div>
-
-        <!-- Dropdown to select vendor -->
-        <div class="mb-3">
-          <label for="vendorDropdown" class="form-label">Or select from the list:</label>
-          <select class="form-select" id="vendorDropdown">
-              <option selected>Select Vendor</option>
-          </select>
-      </div>
-
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
-      </div>
-    </div>
-  </div>
-</div>
 
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+          <!-- update , delete, add stalls button paras sa modals -->
+          <div class="header-buttons mb-4">
+            <div class="d-flex justify-content-start">
+              <button type="button" class="btn btn-primary mx-1" id="updateBtn">UPDATE</button>
+              <button type="button" class="btn btn-primary mx-1" id="stallBtn">ADD STALLS</button>
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal"
+                id="deleteBtn">DELETE</button>
+            </div>
+          </div>
+
+          <!-- Delete Modal -->
+          <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="deleteModalLabel">Select Vendor to Delete</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <!-- Search bar for vendor username -->
+                  <div class="input-group mb-3">
+                    <span class="input-group-text"><i class="fas fa-search"></i></span>
+                    <input type="text" class="form-control" id="searchVendor" placeholder="Search Vendor Username">
+                  </div>
+
+                  <!-- Dropdown to select vendor -->
+                  <div class="mb-3">
+                    <label for="vendorDropdown" class="form-label">Or select from the list:</label>
+                    <select class="form-select" id="vendorDropdown">
+                      <option selected>Select Vendor</option>
+                    </select>
+                  </div>
+
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Delete</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+
+          <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
           <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
           <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.min.js"></script>
 
 
-<!-- para sa adding stalls stalls -->
-<div class="modal fade" id="stallModal" tabindex="-1" aria-labelledby="stallModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="stallModalLabel">Stall Details</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form id="stallForm" action="stalls_vendor.php" method="POST" enctype="multipart/form-data">
+          <!-- para sa adding stalls stalls -->
+          <div class="modal fade" id="stallModal" tabindex="-1" aria-labelledby="stallModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title" id="stallModalLabel">Stall Details</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  <form id="stallForm" action="stalls_vendor.php" method="POST" enctype="multipart/form-data">
                     <div class="form-group mb-3">
-                        <label for="vendorselectcheck" class="form-label">select from the list:</label>
-                        <select class="form-select" id="vendorselectcheck" name="vendor_id" required>
-                            <option value="">Select Vendor</option>
-                            <!-- Populate vendor options here -->
-                        </select>
-                        <div class="invalid-feedback">Please select a vendor.</div>
+                      <label for="vendorselectcheck" class="form-label">select from the list:</label>
+                      <select class="form-select" id="vendorselectcheck" name="vendor_id" required>
+                        <option value="">Select Vendor</option>
+                        <!-- Populate vendor options here -->
+                      </select>
+                      <div class="invalid-feedback">Please select a vendor.</div>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="building_type">Buildings:</label>
-                        <select id="building_type" name="building_type" class="form-control" required data-building-type="">
-                            <option value="">Select Buildings</option>
-                            <option value="building_a">Building A</option>
-                            <option value="building_b">Building B</option>
-                            <option value="building_c">Building C</option>
-                            <option value="building_d">Building D</option>
-                            <option value="building_e">Building E</option>
-                            <option value="building_f">Building F</option>
-                            <option value="building_g">Building G</option>
-                            <option value="building_h">Building H</option>
-                            <option value="building_i">Building I</option>
-                            <option value="building_j">Building J</option>
-                        </select>
-                        <div class="invalid-feedback">Please select a building type.</div>
+                      <label for="building_type">Buildings:</label>
+                      <select id="building_type" name="building_type" class="form-control" required
+                        data-building-type="">
+                        <option value="">Select Buildings</option>
+                        <option value="building_a">Building A</option>
+                        <option value="building_b">Building B</option>
+                        <option value="building_c">Building C</option>
+                        <option value="building_d">Building D</option>
+                        <option value="building_e">Building E</option>
+                        <option value="building_f">Building F</option>
+                        <option value="building_g">Building G</option>
+                        <option value="building_h">Building H</option>
+                        <option value="building_i">Building I</option>
+                        <option value="building_j">Building J</option>
+                      </select>
+                      <div class="invalid-feedback">Please select a building type.</div>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="building_floor">Building Floor:</label>
-                        <select id="building_floor" name="building_floor" class="form-control" required>
-                            <option value="">Select Building Floor</option>
-                        </select>
-                        <div class="invalid-feedback">Please select a building floor.</div>
+                      <label for="building_floor">Building Floor:</label>
+                      <select id="building_floor" name="building_floor" class="form-control" required>
+                        <option value="">Select Building Floor</option>
+                      </select>
+                      <div class="invalid-feedback">Please select a building floor.</div>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="stall_no">Stall Number:</label>
-                        <select id="stall_no" name="stall_no" class="form-control" required>
-                            <option value="">Select Stall</option>
-                        </select>
-                        <div class="invalid-feedback">Please select a stall number.</div>
+                      <label for="stall_no">Stall Number:</label>
+                      <select id="stall_no" name="stall_no" class="form-control" required>
+                        <option value="">Select Stall</option>
+                      </select>
+                      <div class="invalid-feedback">Please select a stall number.</div>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="monthly_rentals">Monthly Rentals:</label>
-                        <input type="text" id="monthly_rentals" name="monthly_rentals" class="form-control" required>
+                      <label for="monthly_rentals">Monthly Rentals:</label>
+                      <input type="text" id="monthly_rentals" name="monthly_rentals" class="form-control" required>
                     </div>
                     <p>FILL IF THE VENDOR HAVE TWO OR MORE STALLS.</p>
-                </form>
+                  </form>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  <button type="button" class="btn btn-primary" id="stallModalBtn">Confirm</button>
+                </div>
+              </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary" id="stallModalBtn">Confirm</button>
-            </div>
-        </div>
-    </div>
-</div>
+          </div>
 
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    // kuhaon ang id paras delete action
-    document.getElementById('deleteModal').addEventListener('show.bs.modal', function () {
-        fetch('populateDeleteVendor.php?action=get_vendors')
-            .then(response => response.json())
-            .then(data => {
-                const vendorDropdown = document.getElementById('vendorDropdown');
-                vendorDropdown.innerHTML = '<option selected>Select Vendor</option>'; // Reset dropdown
-                if (data.vendors && data.vendors.length > 0) {
-                    data.vendors.forEach(function (vendor) {
+          <script>
+            document.addEventListener('DOMContentLoaded', function () {
+              // kuhaon ang id paras delete action
+              document.getElementById('deleteModal').addEventListener('show.bs.modal', function () {
+                fetch('populateDeleteVendor.php?action=get_vendors')
+                  .then(response => response.json())
+                  .then(data => {
+                    const vendorDropdown = document.getElementById('vendorDropdown');
+                    vendorDropdown.innerHTML = '<option selected>Select Vendor</option>'; // Reset dropdown
+                    if (data.vendors && data.vendors.length > 0) {
+                      data.vendors.forEach(function (vendor) {
                         const option = document.createElement('option');
                         option.value = vendor.vendor_id;
                         option.textContent = vendor.username;
                         vendorDropdown.appendChild(option);
-                    });
-                } else {
-                    alert(data.error || "No vendors found.");
-                }
-            });
-    });
-
-    // Confirm delete vendor action
-    document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
-        var selectedVendorID = document.getElementById('vendorDropdown').value;
-
-        if (selectedVendorID && selectedVendorID !== 'Select Vendor username') {
-            if (confirm('Are you sure you want to delete this vendor?')) {
-                fetch('deleteVendor.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: 'vendor_id=' + encodeURIComponent(selectedVendorID)
-                })
-                .then(response => response.text())
-                .then(alertMsg => {
-                    alert(alertMsg);
-                    if (!alertMsg.includes('Error')) {
-                        window.location.href = 'AMvendor.php';  // Reload the page after alert
+                      });
+                    } else {
+                      alert(data.error || "No vendors found.");
                     }
-                })
-                .catch(error => {
-                    alert('Error communicating with server: ' + error.message);
-                });
-            }
-        } else {
-            alert('Please select a vendor to delete.');
-        }
-    });
+                  });
+              });
 
-    // Populate the dropdown with vendor usernames and IDs when the stall modal opens
-    document.getElementById('stallModal').addEventListener('show.bs.modal', function () {
-        fetch('getVendorID.php?action=get_vendors')
-            .then(response => response.json())
-            .then(data => {
-                const vendorSelect = document.getElementById('vendorselectcheck');
-                vendorSelect.innerHTML = '<option value="">Select Vendor</option>'; // Reset dropdown
-                if (data.vendors && data.vendors.length > 0) {
-                    data.vendors.forEach(function (vendor) {
+              // Confirm delete vendor action
+              document.getElementById('confirmDeleteBtn').addEventListener('click', function () {
+                var selectedVendorID = document.getElementById('vendorDropdown').value;
+
+                if (selectedVendorID && selectedVendorID !== 'Select Vendor username') {
+                  if (confirm('Are you sure you want to delete this vendor?')) {
+                    fetch('deleteVendor.php', {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                      },
+                      body: 'vendor_id=' + encodeURIComponent(selectedVendorID)
+                    })
+                      .then(response => response.text())
+                      .then(alertMsg => {
+                        alert(alertMsg);
+                        if (!alertMsg.includes('Error')) {
+                          window.location.href = 'AMvendor.php';  // Reload the page after alert
+                        }
+                      })
+                      .catch(error => {
+                        alert('Error communicating with server: ' + error.message);
+                      });
+                  }
+                } else {
+                  alert('Please select a vendor to delete.');
+                }
+              });
+
+              // Populate the dropdown with vendor usernames and IDs when the stall modal opens
+              document.getElementById('stallModal').addEventListener('show.bs.modal', function () {
+                fetch('getVendorID.php?action=get_vendors')
+                  .then(response => response.json())
+                  .then(data => {
+                    const vendorSelect = document.getElementById('vendorselectcheck');
+                    vendorSelect.innerHTML = '<option value="">Select Vendor</option>'; // Reset dropdown
+                    if (data.vendors && data.vendors.length > 0) {
+                      data.vendors.forEach(function (vendor) {
                         const option = document.createElement('option');
                         option.value = vendor.vendor_id;
                         option.textContent = vendor.username;
                         vendorSelect.appendChild(option);
-                    });
-                } else {
-                    alert(data.error || "No vendors found.");
-                }
-            })
-            .catch(error => {
-                alert('Error fetching vendors: ' + error.message);
-            });
-    });
-
-    // Add stall to vendor
-    document.getElementById('stallModalBtn').addEventListener('click', function () {
-        var selectedVendor = document.getElementById('vendorselectcheck').value;
-
-        if (selectedVendor && selectedVendor !== '') {
-            if (confirm('Add this stall to vendor?')) {
-                var stallForm = document.getElementById('stallForm');
-                fetch(stallForm.action, {
-                    method: 'POST',
-                    body: new FormData(stallForm)
-                })
-                .then(response => response.text())
-                .then(alertMsg => {
-                    alert(alertMsg);
-                    if (!alertMsg.includes('Error')) {
-                        window.location.href = 'AMvendor.php';
+                      });
+                    } else {
+                      alert(data.error || "No vendors found.");
                     }
-                })
-                .catch(error => {
-                    alert('Error communicating with server: ' + error.message);
+                  })
+                  .catch(error => {
+                    alert('Error fetching vendors: ' + error.message);
+                  });
+              });
+
+              // Add stall to vendor
+              document.getElementById('stallModalBtn').addEventListener('click', function () {
+                var selectedVendor = document.getElementById('vendorselectcheck').value;
+
+                if (selectedVendor && selectedVendor !== '') {
+                  if (confirm('Add this stall to vendor?')) {
+                    var stallForm = document.getElementById('stallForm');
+                    fetch(stallForm.action, {
+                      method: 'POST',
+                      body: new FormData(stallForm)
+                    })
+                      .then(response => response.text())
+                      .then(alertMsg => {
+                        alert(alertMsg);
+                        if (!alertMsg.includes('Error')) {
+                          window.location.href = 'AMvendor.php';
+                        }
+                      })
+                      .catch(error => {
+                        alert('Error communicating with server: ' + error.message);
+                      });
+                  }
+                } else {
+                  alert('Please select a vendor.');
+                }
+              });
+
+              $('#stallModal').on('shown.bs.modal', function () {
+
+                // Check if a building is selected
+                function checkBuildingSelected() {
+                  var building = document.getElementById('building_type').value;
+                  if (!building) {
+                    alert('Please select a building first.');
+                    document.getElementById('building_type').focus();
+                    return false;
+                  }
+                  return true;
+                }
+
+                document.getElementById('building_type').addEventListener('change', function () {
+                  var building = this.value;
+                  var stallSelect = document.getElementById('stall_no');
+                  var floorSelect = document.getElementById('building_floor');
+                  var rent = document.getElementById('monthly_rentals');
+
+                  stallSelect.innerHTML = '<option value="">Select Stall</option>';
+                  floorSelect.innerHTML = '<option value="">Select Building Floor</option>';
+                  rent.value = '';
+
+                  if (building) {
+                    $.ajax({
+                      url: 'fetch_buildings.php',
+                      type: 'GET',
+                      data: { building: building },
+                      success: function (data) {
+                        var stalls = JSON.parse(data);
+                        var floors = new Set();
+
+                        if (stalls.length === 0) {
+                          stallSelect.innerHTML = '<option value="">No stalls available</option>';
+                          floorSelect.innerHTML = '<option value="">No floors available</option>';
+                        } else {
+                          stalls.forEach(function (stall) {
+                            if (stall.stall_status === 'Vacant' && !stall.vendor_id) {
+                              var option = document.createElement('option');
+                              option.value = stall.stall_no;
+                              option.text = stall.stall_no;
+                              stallSelect.appendChild(option);
+
+                              floors.add(stall.building_floor);
+                            }
+                          });
+
+                          floors.forEach(function (floor) {
+                            var option = document.createElement('option');
+                            option.value = floor;
+                            option.text = floor;
+                            floorSelect.appendChild(option);
+                          });
+                        }
+                      }
+                    });
+                  }
                 });
-            }
-        } else {
-            alert('Please select a vendor.');
-        }
-    });
 
-    $('#stallModal').on('shown.bs.modal', function () {
+                document.getElementById('building_floor').addEventListener('change', function () {
+                  var building = document.getElementById('building_type').value;
+                  var floor = this.value;
+                  var stallSelect = document.getElementById('stall_no');
+                  var rent = document.getElementById('monthly_rentals');
 
-      // Check if a building is selected
-    function checkBuildingSelected() {
-        var building = document.getElementById('building_type').value;
-        if (!building) {
-            alert('Please select a building first.');
-            document.getElementById('building_type').focus();
-            return false;
-        }
-        return true;
-    }
+                  stallSelect.innerHTML = '<option value="">Select Stall</option>';
+                  rent.value = '';
 
-    document.getElementById('building_type').addEventListener('change', function () {
-  var building = this.value;
-  var stallSelect = document.getElementById('stall_no');
-  var floorSelect = document.getElementById('building_floor');
-  var rent = document.getElementById('monthly_rentals');
+                  if (building && floor) {
+                    $.ajax({
+                      url: 'fetch_buildings.php',
+                      type: 'GET',
+                      data: { building: building },
+                      success: function (data) {
+                        var stalls = JSON.parse(data);
 
-  stallSelect.innerHTML = '<option value="">Select Stall</option>';
-  floorSelect.innerHTML = '<option value="">Select Building Floor</option>';
-  rent.value = '';
-
-  if (building) {
-    $.ajax({
-      url: 'fetch_buildings.php',
-      type: 'GET',
-      data: { building: building },
-      success: function (data) {
-        var stalls = JSON.parse(data);
-        var floors = new Set();
-
-        if (stalls.length === 0) {
-          stallSelect.innerHTML = '<option value="">No stalls available</option>';
-          floorSelect.innerHTML = '<option value="">No floors available</option>';
-        } else {
-          stalls.forEach(function (stall) {
-            if (stall.stall_status === 'Vacant' && !stall.vendor_id) {
-              var option = document.createElement('option');
-              option.value = stall.stall_no;
-              option.text = stall.stall_no;
-              stallSelect.appendChild(option);
-
-              floors.add(stall.building_floor);
-            }
-          });
-
-          floors.forEach(function (floor) {
-            var option = document.createElement('option');
-            option.value = floor;
-            option.text = floor;
-            floorSelect.appendChild(option);
-          });
-        }
-      }
-    });
-  }
-});
-
-document.getElementById('building_floor').addEventListener('change', function () {
-  var building = document.getElementById('building_type').value;
-  var floor = this.value;
-  var stallSelect = document.getElementById('stall_no');
-  var rent = document.getElementById('monthly_rentals');
-
-  stallSelect.innerHTML = '<option value="">Select Stall</option>';
-  rent.value = '';
-
-  if (building && floor) {
-    $.ajax({
-      url: 'fetch_buildings.php',
-      type: 'GET',
-      data: { building: building },
-      success: function (data) {
-        var stalls = JSON.parse(data);
-
-        if (stalls.length === 0) {
-          stallSelect.innerHTML = '<option value="">No stalls available</option>';
-        } else {
-          stalls.forEach(function (stall) {
-            if (stall.stall_status === 'Vacant' && !stall.vendor_id && stall.building_floor === floor) {
-              var option = document.createElement('option');
-              option.value = stall.stall_no;
-              option.text = stall.stall_no;
-              stallSelect.appendChild(option);
-            }
-          });
-        }
-      }
-    });
-  }
-});
+                        if (stalls.length === 0) {
+                          stallSelect.innerHTML = '<option value="">No stalls available</option>';
+                        } else {
+                          stalls.forEach(function (stall) {
+                            if (stall.stall_status === 'Vacant' && !stall.vendor_id && stall.building_floor === floor) {
+                              var option = document.createElement('option');
+                              option.value = stall.stall_no;
+                              option.text = stall.stall_no;
+                              stallSelect.appendChild(option);
+                            }
+                          });
+                        }
+                      }
+                    });
+                  }
+                });
 
 
-document.getElementById('stall_no').addEventListener('change', function () {
-  var stallNo = this.value;
-  var building = document.getElementById('building_type').value;
-  var rent = document.getElementById('monthly_rentals');
+                document.getElementById('stall_no').addEventListener('change', function () {
+                  var stallNo = this.value;
+                  var building = document.getElementById('building_type').value;
+                  var rent = document.getElementById('monthly_rentals');
 
-  if (stallNo && building) {
-    $.ajax({
-      url: 'fetch_buildings.php',
-      type: 'GET',
-      data: { building: building },
-      success: function (data) {
-        var stalls = JSON.parse(data);
-        var selectedStall = stalls.find(stall => stall.stall_no === stallNo);
+                  if (stallNo && building) {
+                    $.ajax({
+                      url: 'fetch_buildings.php',
+                      type: 'GET',
+                      data: { building: building },
+                      success: function (data) {
+                        var stalls = JSON.parse(data);
+                        var selectedStall = stalls.find(stall => stall.stall_no === stallNo);
 
-        if (selectedStall) {
-          rent.value = selectedStall.monthly_rentals;
-        } else {
-          rent.value = '';
-        }
-      }
-    });
-  } else {
-    rent.value = '';
-  }
-});
+                        if (selectedStall) {
+                          rent.value = selectedStall.monthly_rentals;
+                        } else {
+                          rent.value = '';
+                        }
+                      }
+                    });
+                  } else {
+                    rent.value = '';
+                  }
+                });
 
-document.getElementById('building_floor').addEventListener('click', function () {
-  if (!checkBuildingSelected()) {
-    this.blur(); 
-  }
-});
+                document.getElementById('building_floor').addEventListener('click', function () {
+                  if (!checkBuildingSelected()) {
+                    this.blur();
+                  }
+                });
 
-document.getElementById('stall_no').addEventListener('click', function () {
-  if (!checkBuildingSelected()) {
-    this.blur();
-  }
-});
+                document.getElementById('stall_no').addEventListener('click', function () {
+                  if (!checkBuildingSelected()) {
+                    this.blur();
+                  }
+                });
 
-document.getElementById('monthly_rentals').addEventListener('click', function () {
-  if (!checkBuildingSelected()) {
-    this.blur();
-  }
-});
-    });
+                document.getElementById('monthly_rentals').addEventListener('click', function () {
+                  if (!checkBuildingSelected()) {
+                    this.blur();
+                  }
+                });
+              });
 
-    
-    // Ensure that elements and event listeners only run if the relevant DOM elements exist
-    document.getElementById('stallModalBtn')?.addEventListener('click', function () {
-        if (checkBuildingSelected()) {
-            alert('Building and stall details confirmed.');
-        }
-    });
 
-    // Trigger the modal when the stallBtn is clicked
-    document.getElementById('stallBtn').addEventListener('click', function () {
-        // Show the modal directly when the stallBtn is clicked
-        var stallModal = new bootstrap.Modal(document.getElementById('stallModal'));
-        stallModal.show();
-    });
+              // Ensure that elements and event listeners only run if the relevant DOM elements exist
+              document.getElementById('stallModalBtn')?.addEventListener('click', function () {
+                if (checkBuildingSelected()) {
+                  alert('Building and stall details confirmed.');
+                }
+              });
 
-    // Confirm button inside the modal calls the checkBuildingSelected function
-    document.getElementById('stallModalBtn').addEventListener('click', function () {
-        if (checkBuildingSelected()) {
-            alert('Building and stall details confirmed.');
-            // Perform additional actions after confirmation if needed
-        }
-    });
-});
-</script>
+              // Trigger the modal when the stallBtn is clicked
+              document.getElementById('stallBtn').addEventListener('click', function () {
+                // Show the modal directly when the stallBtn is clicked
+                var stallModal = new bootstrap.Modal(document.getElementById('stallModal'));
+                stallModal.show();
+              });
+
+              // Confirm button inside the modal calls the checkBuildingSelected function
+              document.getElementById('stallModalBtn').addEventListener('click', function () {
+                if (checkBuildingSelected()) {
+                  alert('Building and stall details confirmed.');
+                  // Perform additional actions after confirmation if needed
+                }
+              });
+            });
+          </script>
 
 
 
-      <div class="row my-4">
-        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
-          <div class="card">
+          <div class="row my-4">
+            <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
+              <div class="card">
 
 
-            
-            <div class="card-header pb-0">
-              <div class="row">
-                <div class="col-lg-6 col-7">
-                  <h6>Vendors</h6>
-                  <p class="text-sm mb-0">
-                    <i class="fa fa-exclamation-circle text-warning" aria-hidden="true"></i>
-                    <span class="font-weight-bold ms-1">Click User to see full details!</span>
-                  </p>
-                </div>
-                <div class="col-lg-6 col-5 my-auto text-end">
-                  <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                    <div class="input-group">
-                      <span class="input-group-text text-body"><i class="fas fa-search" aria-hidden="true"></i></span>
-                      <input type="text" class="form-control px-1" id="searchInput" placeholder="Search for...">
 
-                      <script>
-                        document.getElementById('searchInput').addEventListener('keyup', function() {
-                            var filter = this.value.toLowerCase();
-                            var rows = document.querySelectorAll('#dataTableBody tr');
+                <div class="card-header pb-0">
+                  <div class="row">
+                    <div class="col-lg-6 col-7">
+                      <h6>Vendors</h6>
+                      <p class="text-sm mb-0">
+                        <i class="fa fa-exclamation-circle text-warning" aria-hidden="true"></i>
+                        <span class="font-weight-bold ms-1">Click User to see full details!</span>
+                      </p>
+                    </div>
+                    <div class="col-lg-6 col-5 my-auto text-end">
+                      <div class="ms-md-auto pe-md-3 d-flex align-items-center">
+                        <div class="input-group">
+                          <span class="input-group-text text-body"><i class="fas fa-search"
+                              aria-hidden="true"></i></span>
+                          <input type="text" class="form-control px-1" id="searchInput" placeholder="Search for...">
 
-                            rows.forEach(function(row) {
+                          <script>
+                            document.getElementById('searchInput').addEventListener('keyup', function () {
+                              var filter = this.value.toLowerCase();
+                              var rows = document.querySelectorAll('#dataTableBody tr');
+
+                              rows.forEach(function (row) {
                                 var text = row.textContent.toLowerCase();
                                 row.style.display = text.includes(filter) ? '' : 'none';
+                              });
                             });
-                        });
-                        </script>
+                          </script>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </div>
 
-            <div class="card-body px-0 pb-2">
-              <div class="table-responsive max-height-400 overflow-auto">
-                <table class="table align-items-center mb-0">
-                  <thead>
-                    <tr>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Bulding</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Stall
-                        #</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        Payment Due</th>
-                    </tr>
-                  </thead>
-                  <tbody id="dataTableBody">
-                    <?php
-                    include("database_config.php");
-
-                    // Create connection
-                    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-                    // Check connection
-                    if ($conn->connect_error) {
-                      die("Connection failed: " . $conn->connect_error);
-                    }
-
-                    // SQL query to get stall information and vendor usernames from all buildings
-                    $sql = "SELECT v.username AS username, a.monthly_rentals AS payment_due, a.stall_no AS stall_no, 'Building A' AS building FROM vendors v JOIN building_a a ON v.vendor_id = a.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, b.monthly_rentals AS payment_due, b.stall_no AS stall_no, 'Building B' AS building FROM vendors v JOIN building_b b ON v.vendor_id = b.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, c.monthly_rentals AS payment_due, c.stall_no AS stall_no, 'Building C' AS building FROM vendors v JOIN building_c c ON v.vendor_id = c.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, d.monthly_rentals AS payment_due, d.stall_no AS stall_no, 'Building D' AS building FROM vendors v JOIN building_d d ON v.vendor_id = d.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, e.monthly_rentals AS payment_due, e.stall_no AS stall_no, 'Building E' AS building FROM vendors v JOIN building_e e ON v.vendor_id = e.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, f.monthly_rentals AS payment_due, f.stall_no AS stall_no, 'Building F' AS building FROM vendors v JOIN building_f f ON v.vendor_id = f.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, g.monthly_rentals AS payment_due, g.stall_no AS stall_no, 'Building G' AS building FROM vendors v JOIN building_g g ON v.vendor_id = g.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, h.monthly_rentals AS payment_due, h.stall_no AS stall_no, 'Building H' AS building FROM vendors v JOIN building_h h ON v.vendor_id = h.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, i.monthly_rentals AS payment_due, i.stall_no AS stall_no, 'Building I' AS building FROM vendors v JOIN building_i i ON v.vendor_id = i.vendor_id
-                    UNION ALL
-                    SELECT v.username AS username, j.monthly_rentals AS payment_due, j.stall_no AS stall_no, 'Building J' AS building FROM vendors v JOIN building_j j ON v.vendor_id = j.vendor_id
-                    ORDER BY stall_no ASC
-                    ";
-
-                    $resultV = $conn->query($sql);
-
-                    if ($resultV === false) {
-                      die("Error executing query: " . $conn->error);
-                    }
-
-                    if ($resultV->num_rows > 0) {
-                      while ($rowV = $resultV->fetch_assoc()) {
-                        ?>
+                <div class="card-body px-0 pb-2">
+                  <div class="table-responsive max-height-400 overflow-auto">
+                    <table class="table align-items-center mb-0">
+                      <thead>
                         <tr>
-                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['username']); ?></td>
-                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['building']); ?></td>
-                          <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['stall_no']); ?>
-                          </td>
-                          <td class='text-center text-xs font-weight-bold'>
-                            <?php echo htmlspecialchars($rowV['payment_due']); ?>
-                          </td>
+                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                            Name</th>
+                          <th
+                            class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                            Bulding</th>
+                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                            Stall
+                            #</th>
+                          <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                            Payment Due</th>
                         </tr>
+                      </thead>
+                      <tbody id="dataTableBody">
                         <?php
-                      }
-                    } else {
-                      ?>
-                      <tr>
-                        <td colspan='5' class='text-center'>No results found.</td>
-                      </tr>
-                      <?php
-                    }
-                  //  $conn->close();
-                    ?>
-                  </tbody>
-                </table>
-              </div>
-            </div>
+                        include("database_config.php");
 
+                        // Create connection
+                        $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+                        // Check connection
+                        if ($conn->connect_error) {
+                          die("Connection failed: " . $conn->connect_error);
+                        }
+
+                        $sql = "
+                        SELECT 
+                            v.username AS username, 
+                            GROUP_CONCAT(a.stall_no ORDER BY a.stall_no ASC) AS stall_nos, 
+                            'Building A' AS building, 
+                            FORMAT(SUM(COALESCE(CAST(REPLACE(a.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS payment_due
+                        FROM vendors v
+                        INNER JOIN building_a a ON v.vendor_id = a.vendor_id
+                        GROUP BY v.vendor_id
+                        
+                        UNION ALL
+                        
+                        SELECT 
+                            v.username AS username, 
+                            GROUP_CONCAT(b.stall_no ORDER BY b.stall_no ASC) AS stall_nos, 
+                            'Building B' AS building, 
+                            FORMAT(SUM(COALESCE(CAST(REPLACE(b.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS payment_due 
+                        FROM vendors v
+                        INNER JOIN building_b b ON v.vendor_id = b.vendor_id
+                        GROUP BY v.vendor_id
+                        
+                        UNION ALL
+                        
+                        SELECT 
+                            v.username AS username, 
+                            GROUP_CONCAT(c.stall_no ORDER BY c.stall_no ASC) AS stall_nos, 
+                            'Building C' AS building, 
+                            FORMAT(SUM(COALESCE(CAST(REPLACE(c.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS payment_due 
+                        FROM vendors v
+                        INNER JOIN building_c c ON v.vendor_id = c.vendor_id
+                        GROUP BY v.vendor_id
+                        
+                        UNION ALL
+                        
+                        SELECT 
+                            v.username AS username, 
+                            GROUP_CONCAT(d.stall_no ORDER BY d.stall_no ASC) AS stall_nos, 
+                            'Building D' AS building, 
+                            FORMAT(SUM(COALESCE(CAST(REPLACE(d.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS payment_due 
+                        FROM vendors v
+                        INNER JOIN building_d d ON v.vendor_id = d.vendor_id
+                        GROUP BY v.vendor_id
+                        
+                        UNION ALL
+                        
+                        SELECT 
+                            v.username AS username, 
+                            GROUP_CONCAT(e.stall_no ORDER BY e.stall_no ASC) AS stall_nos, 
+                            'Building E' AS building, 
+                            FORMAT(SUM(COALESCE(CAST(REPLACE(e.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS payment_due
+                        FROM vendors v
+                        INNER JOIN building_e e ON v.vendor_id = e.vendor_id
+                        GROUP BY v.vendor_id
+                        
+                        UNION ALL
+                        
+                        SELECT 
+                            v.username AS username, 
+                            GROUP_CONCAT(f.stall_no ORDER BY f.stall_no ASC) AS stall_nos, 
+                            'Building F' AS building, 
+                            FORMAT(SUM(COALESCE(CAST(REPLACE(f.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS payment_due
+                        FROM vendors v
+                        INNER JOIN building_f f ON v.vendor_id = f.vendor_id
+                        GROUP BY v.vendor_id
+                        
+                        UNION ALL
+                        
+                        SELECT 
+                            v.username AS username, 
+                            GROUP_CONCAT(g.stall_no ORDER BY g.stall_no ASC) AS stall_nos, 
+                            'Building G' AS building, 
+                            FORMAT(SUM(COALESCE(CAST(REPLACE(g.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS payment_due
+                        FROM vendors v
+                        INNER JOIN building_g g ON v.vendor_id = g.vendor_id
+                        GROUP BY v.vendor_id
+                        
+                        UNION ALL
+                        
+                        SELECT 
+                            v.username AS username, 
+                            GROUP_CONCAT(h.stall_no ORDER BY h.stall_no ASC) AS stall_nos, 
+                            'Building H' AS building, 
+                            FORMAT(SUM(COALESCE(CAST(REPLACE(h.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS payment_due
+                        FROM vendors v
+                        INNER JOIN building_h h ON v.vendor_id = h.vendor_id
+                        GROUP BY v.vendor_id
+                        
+                        UNION ALL
+                        
+                        SELECT 
+                            v.username AS username, 
+                            GROUP_CONCAT(i.stall_no ORDER BY i.stall_no ASC) AS stall_nos, 
+                            'Building I' AS building, 
+                            FORMAT(SUM(COALESCE(CAST(REPLACE(i.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS payment_due 
+                        FROM vendors v
+                        INNER JOIN building_i i ON v.vendor_id = i.vendor_id
+                        GROUP BY v.vendor_id
+                        
+                        UNION ALL
+                        
+                        SELECT 
+                            v.username AS username, 
+                            GROUP_CONCAT(j.stall_no ORDER BY j.stall_no ASC) AS stall_nos, 
+                            'Building J' AS building, 
+                            FORMAT(SUM(COALESCE(CAST(REPLACE(j.monthly_rentals, ',', '') AS DECIMAL(10,2)), 0)), 2) AS payment_due
+                        FROM vendors v
+                        INNER JOIN building_j j ON v.vendor_id = j.vendor_id
+                        GROUP BY v.vendor_id
+                        
+                        ORDER BY stall_nos ASC
+                    ";
+                    
+
+                        $resultV = $conn->query($sql);
+
+                        if ($resultV === false) {
+                          die("Error executing query: " . $conn->error);
+                        }
+
+                        if ($resultV->num_rows > 0) {
+                          while ($rowV = $resultV->fetch_assoc()) {
+                            ?>
+                            <tr>
+                              <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['username']); ?></td>
+                              <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['building']); ?></td>
+                              <td class='text-center text-xs font-weight-bold'><?php echo htmlspecialchars($rowV['stall_nos']); // Display concatenated stalls ?></td>
+                              <td class='text-center text-xs font-weight-bold'>
+                                <?php echo htmlspecialchars($rowV['payment_due']); ?>
+                              </td>
+                            </tr>
+                            <?php
+                          }
+                        } else {
+                          ?>
+                          <tr>
+                            <td colspan='5' class='text-center'>No results found.</td>
+                          </tr>
+                          <?php
+                        }
+                        //  $conn->close();
+                        ?>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
           </div>
 
-        </div>
       </div>
-
-    </div>
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2" href="#">
@@ -927,8 +1023,8 @@ document.getElementById('monthly_rentals').addEventListener('click', function ()
     </div>
   </div>
   </div>
- <!--   Core JS Files   -->
- <script src="assets2/js/core/popper.min.js"></script>
+  <!--   Core JS Files   -->
+  <script src="assets2/js/core/popper.min.js"></script>
   <script src="assets2/js/core/bootstrap.min.js"></script>
   <script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
   <script src="assets2/js/plugins/smooth-scrollbar.min.js"></script>
@@ -947,7 +1043,7 @@ document.getElementById('monthly_rentals').addEventListener('click', function ()
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
 
-<!--     
+  <!--     
   <link rel="stylesheet" href="loading.css">
   <script src="loading.js" defer></script>
   <div class="loader"></div> -->
