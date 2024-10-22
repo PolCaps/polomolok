@@ -365,6 +365,10 @@ $conn->close();
       <div class="modal-body">
         <form id="createVendorForm" action="vendorAccountCreate.php" method="POST" enctype="multipart/form-data">
           <div class="mb-3">
+            <label for="username" class="form-label"><?php echo htmlspecialchars($vendor['username']) ?></label>
+            <input type="hidden" id="username" class="form-control" name="username" value="<?php echo htmlspecialchars($vendor['first_name']); ?>">
+          </div>
+          <div class="mb-3">
             <label for="first_name" class="form-label">First Name:</label>
             <input type="text" id="first_name" class="form-control" name="first_name" required>
           </div>
