@@ -25,10 +25,7 @@ include('Sessions/Cashier.php');
   <link href="assets2/css/nucleo-svg.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link id="pagestyle" href="assets2/css/soft-ui-dashboard.css?v=1.0.7" rel="stylesheet" />
-  <!-- Nepcha Analytics (nepcha.com) -->
-  <!-- Nepcha is a easy-to-use web analytics. No cookies and fully compliant with GDPR, CCPA and PECR. -->
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   
   <style>
     .alert {
@@ -84,36 +81,7 @@ include('Sessions/Cashier.php');
             <span class="nav-link-text ms-1">Dashboard</span>
           </a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseMaps"
-            aria-expanded="false" aria-controls="collapseMaps">
-            <div
-              class="icon icon-shape icon-sm shadow border-radius-md bg-white text-center me-2 d-flex align-items-center justify-content-center">
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                class="bi bi-pin-map-fill" viewBox="0 0 16 16">
-                <title>office</title>
-                <path fill-rule="evenodd"
-                  d="M3.1 11.2a.5.5 0 0 1 .4-.2H6a.5.5 0 0 1 0 1H3.75L1.5 15h13l-2.25-3H10a.5.5 0 0 1 0-1h2.5a.5.5 0 0 1 .4.2l3 4a.5.5 0 0 1-.4.8H.5a.5.5 0 0 1-.4-.8z" />
-                <path fill-rule="evenodd" d="M4 4a4 4 0 1 1 4.5 3.969V13.5a.5.5 0 0 1-1 0V7.97A4 4 0 0 1 4 3.999z" />
-              </svg>
-            </div>
-            <span class="nav-link-text ms-1">Maps</span>
-          </a>
-          <div class="collapse" id="collapseMaps">
-            <div class="right-aligned-links" style="text-align: right;">
-              <a class="nav-link" href="ABuildingA.php">Building A</a>
-              <a class="nav-link" href="ABuildingB.php">Building B</a>
-              <a class="nav-link" href="ABuildingC.php">Building C</a>
-              <a class="nav-link" href="ABuildingD.php">Building D</a>
-              <a class="nav-link" href="ABuildingE.php">Building E</a>
-              <a class="nav-link" href="ABuildingF.php">Building F</a>
-              <a class="nav-link" href="ABuildingG.php">Building G</a>
-              <a class="nav-link" href="ABuildingH.php">Building H</a>
-              <a class="nav-link" href="ABuildingI.php">Building I</a>
-              <a class="nav-link" href="ABuildingJ.php">Building J</a>
-            </div>
-          </div>
-        </li>
+        
         <li class="nav-item">
   <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#collapseReceipt"
     aria-expanded="false" aria-controls="collapseReceipt">

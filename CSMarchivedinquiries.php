@@ -111,6 +111,9 @@ include('Sessions/CustomerService.php');
                 <span class="d-sm-inline d-none">Customer Service</span>
               </a>
             </li>
+            <?php 
+            include('Notification/CustomerServiceNotif.php');
+            ?>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -207,8 +210,7 @@ if (isset($_GET['ids'])) {
 // Close the connection
 $conn->close();
 ?>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
 
 <div id="alertMessage" class="alert alert-dismissible fade show" role="alert" style="display: none;">
     <strong id="alertTitle"></strong> <span id="alertBody"></span>
@@ -241,7 +243,7 @@ $conn->close();
 </script>
 
 <div class="row my-4">
-    <div class="col-lg-10 col-md-6 mb-md-0 mb-4">
+    <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
         <div class="card">
             <div class="card-header pb-0">
                 <div class="row">
