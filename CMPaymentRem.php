@@ -496,7 +496,7 @@ if ($resultA->num_rows > 0) {
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="sendMessageForm" method="POST" action="generateSOA.php">
+        <form id="sendMessageForm">
           <div class="mb-3">
             <label for="vendor-name" class="col-form-label">Vendor Name:</label>
             <input type="text" class="form-control" id="vendor-name" name="name" readonly>
@@ -510,8 +510,8 @@ if ($resultA->num_rows > 0) {
             <input type="text" class="form-control" id="monthly-rentals" name="totalPay" readonly>
           </div>
           <div class="mb-3">
-            <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
-            <input type="number" class="form-control" id="remaining-balance" name="remaining-balance" step="0.01" min="0" placeholder="Optional">
+            <label for="remaining-balance" class="col-form-label">Other Fees:</label>
+            <input type="number" class="form-control" id="remaining-balance" name="remaining-balance" placeholder="Optional">
           </div>
           <div class="mb-3">
             <label for="monthBill" class="col-form-label">Bill for the Month:</label>
@@ -541,6 +541,12 @@ if ($resultA->num_rows > 0) {
             <label for="penaltyFee" class="col-form-label">Penalty Fee:</label>
             <input type="number" class="form-control" id="penaltyFee" name="penaltyFee" step="0.01" min="0" placeholder="Optional: overdue fees">
           </div>
+           <!-- Hidden input fields -->
+           <input type="hidden" id="file_path" name="file_path">
+          <input type="hidden" id="total_fees" name="total_fees">
+
+
+
           
           <input type="hidden" id="vendor-id" name="vendor-id">
           <button type="submit" id="submit" class="btn btn-primary" name="submit">SEND STATEMENT OF ACCOUNTS</button>
@@ -562,7 +568,7 @@ document.addEventListener('DOMContentLoaded', () => {
   function formatCurrencyInput(input) {
     let value = parseFloat(input.value.replace(/,/g, ''));
     if (!isNaN(value)) {
-      input.value = value.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits: 2 });
+      input.value = value.toLocaleString('en-PH', { style: 'decimal', minimumFractionDigits: 2 });
     }
   }
 
@@ -600,6 +606,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('building').value = data.buildings; 
         document.getElementById('stallNumber').value = data.stall_no;
 
+        // Handle PHP due date output
         const dueDateValue = "<?php echo isset($rowA['due_date']) ? $rowA['due_date'] : ''; ?>";
         if (dueDateValue) {
           document.getElementById('dueDate').value = dueDateValue;
@@ -611,125 +618,6 @@ document.addEventListener('DOMContentLoaded', () => {
       console.error('Error fetching monthly rentals:', error);
     }
   }
-
-  // Handle PDF generation on form submit
-  document.getElementById('sendMessageForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
-
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    try {
-
-
-      const loadImage = (url, callback) => {
-  fetch(url)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.blob();
-    })
-    .then(blob => {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        callback(e.target.result);
-      };
-      reader.readAsDataURL(blob); // Convert blob to Data URL
-    })
-    .catch(err => {
-      console.error("Error loading image:", err);
-    });
-};
-
-// Example usage in your PDF generation
-loadImage('assets/imgbg/BGImage.png', function(imgData) {
-  doc.addImage(imgData, 'JPEG', 10, 150, 50, 50); // Adjust position (10, 150) and size (50, 50) as needed
-});
-
-
-      // Title and centered text
-doc.setFontSize(10);
-doc.text("STATEMENT OF ACCOUNT", 100, 10);
-const centerText = (text, y) => {
-  const textWidth = doc.getTextWidth(text);
-  const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
-  doc.text(text, x, y);
-};
-
-// Add centered text
-const headings = [
-  "Republic of the Philippines",
-  "Province of South Cotabato",
-  "MUNICIPALITY OF POLOMOLOK",
-  "MUNICIPAL ECONOMIC ENTERPRISES & DEVELOPMENT OFFICE (Market Operation)"
-];
-headings.forEach((text, index) => centerText(text, 15 + (index * 10)));
-
-// Line separator
-doc.line(10, 50, doc.internal.pageSize.getWidth() - 10, 50); // Draws a horizontal line
-
-// Capture values from form fields
-const formFields = [
-  { id: 'vendor-name', label: 'Vendor Name', y: 55 },
-  { id: 'reminderMessage', label: 'Message', y: 60 },
-  { id: 'monthly-rentals', label: 'Monthly Rentals', y: 65 },
-  { id: 'remaining-balance', label: 'Remaining Balance', y: 70 },
-  { id: 'monthBill', label: 'Bill for the Month', y: 75 },
-  { id: 'building', label: 'Building Name/Number', y: 80 },
-  { id: 'stallNumber', label: 'Stall Number', y: 85 },
-  { id: 'dueDate', label: 'Due Date', y: 90 },
-  { id: 'padlockingDate', label: 'Padlocking Date', y: 95 },
-  { id: 'numMonths', label: 'Number of Months', y: 100 },
-  { id: 'penaltyFee', label: 'Penalty Fee', y: 105 },
-];
-
-formFields.forEach(field => {
-  const value = document.getElementById(field.id).value;
-  doc.text(`${field.label}: ${value}`, 10, field.y);
-});
-
-// Line separator before notes
-doc.line(10, 110, doc.internal.pageSize.getWidth() - 10, 110); // Another line separator
-
-// Note text
-doc.setFontSize(10);
-doc.setTextColor(255, 0, 0); // Set font color to red
-const noteTexts = [
-  "Note: Revocation/Cancellation of lease shall be implemented if not settled within 10 working days after receiving this notice.",
-  "Please report to the MARKET OFFICE to avoid Closure Order.",
-  "PLEASE BRING EXACT AMOUNT UPON PAYMENT",
-  "NO FIELD COLLECTOR"
-];
-
-let yPosition = 120;
-noteTexts.forEach((text) => {
-  const textWidth = doc.getTextWidth(text);
-  const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
-  doc.text(text, x, yPosition);
-  yPosition += 10;
-});
-
-// Set font color to black for the last note
-doc.setTextColor(0, 0, 0); // Black color
-const lastNote = "Please disregard this notice if payment has been made.";
-const lastNoteWidth = doc.getTextWidth(lastNote); // Get the width of the last note text
-const xLastNote = (doc.internal.pageSize.getWidth() - lastNoteWidth) / 2; // Center align the last note
-doc.text(lastNote, xLastNote, yPosition); // Draw the last note
-
-// Reset text color to default (black)
-doc.setTextColor(0, 0, 0);
-
-
-      // Save the PDF
-      const vendorName = document.getElementById('vendor-name').value;
-      doc.save(`${vendorName}SoA.pdf`);
-      alert("SUCCESS");
-    } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('There was an error generating the PDF. Please check the console for details: ' + error.message);
-    }
-  });
 
   // Set padlocking date based on due date
   document.getElementById('dueDate').addEventListener('change', setPadlockingDate);
@@ -749,9 +637,134 @@ doc.setTextColor(0, 0, 0);
       padlockingDateInput.value = ''; // Clear if due date is invalid
     }
   }
+
+  // Handle PDF generation on form submit
+  document.getElementById('sendMessageForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    const vendorName = document.getElementById('vendor-name').value;
+    const imgData = await loadImage('assets/imgbg/BGImage.png');
+    doc.addImage(imgData, 'JPEG', 10, 10, 30, 30);
+
+    // Title and centered text
+    doc.setFontSize(10);
+    doc.text("BILLING STATEMENT", 150, 10);
+    const centerText = (text, y) => {
+      const textWidth = doc.getTextWidth(text);
+      const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
+      doc.text(text, x, y);
+    };
+
+    // Add centered text
+    const headings = [
+      "Republic of the Philippines",
+      "Province of South Cotabato",
+      "MUNICIPALITY OF POLOMOLOK",
+      "MUNICIPAL ECONOMIC ENTERPRISES & DEVELOPMENT OFFICE (Market Operation)"
+    ];
+    headings.forEach((text, index) => centerText(text, 15 + (index * 10)));
+
+    // Line separator
+    doc.line(10, 50, doc.internal.pageSize.getWidth() - 10, 50); // Draws a horizontal line
+
+    // Capture values from form fields
+    const formFields = [
+      { id: 'vendor-name', label: 'Vendor Name', y: 55 },
+      { id: 'reminderMessage', label: 'Message', y: 60 },
+      { id: 'monthly-rentals', label: 'Monthly Rentals', y: 65 },
+      { id: 'remaining-balance', label: 'Other Fees', y: 70 },
+      { id: 'monthBill', label: 'Bill for the Month', y: 75 },
+      { id: 'building', label: 'Building Name/Number', y: 80 },
+      { id: 'stallNumber', label: 'Stall Number', y: 85 },
+      { id: 'dueDate', label: 'Due Date', y: 90 },
+      { id: 'padlockingDate', label: 'Padlocking Date', y: 95 },
+      { id: 'numMonths', label: 'Number of Months', y: 100 },
+      { id: 'penaltyFee', label: 'Penalty Fee', y: 105 },
+    ];
+
+    formFields.forEach(field => {
+      const value = document.getElementById(field.id).value;
+      doc.text(`${field.label}: ${value}`, 10, field.y);
+    });
+
+    const remainingBalance = parseFloat(document.getElementById('remaining-balance').value.replace(/,/g, '') || 0);
+    const monthlyRentals = parseFloat(document.getElementById('monthly-rentals').value.replace(/,/g, '') || 0);
+    const totalFees = remainingBalance + monthlyRentals;
+
+    // Display GRAND TOTAL if applicable
+    if (remainingBalance > 0 || monthlyRentals > 0) {
+      doc.setFontSize(10);
+      doc.text(`GRAND TOTAL: ${totalFees.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}`, 10, 110);
+    }
+    doc.line(10, 115, doc.internal.pageSize.getWidth() - 10, 115); 
+
+    const noteTexts = [
+    "Note: Revocation/Cancellation of lease shall be implemented if not settled within 10 working days after receiving this notice.",
+    "Please report to the MARKET OFFICE to avoid Closure Order.",
+    "PLEASE BRING EXACT AMOUNT UPON PAYMENT",
+    "NO FIELD COLLECTOR",
+    "Please disregard this notice if payment has been made."
+  ];
+  noteTexts.forEach((text, index) => centerText(text, 120 + (index * 10)));
+
+    //doc.save(`billing/${vendorName}SoA.pdf`);
+    // magamit pani sa validation puhon
+
+    const pdfBlob = new Blob([doc.output('blob')], { type: 'application/pdf' });
+
+
+// const filePath = `billing/${vendorName}SoA.pdf`;
+
+// if (filePath) {
+//     doc.save(filePath);
+// } else {
+//     // Create a default file path if vendorId is not present
+//     const defaultvendorName = 'default';
+//     const defaultFilePath = `billing/${defaultvendorName}SoA.pdf`;
+//     doc.save(defaultFilePath);
+// }
+
+    const formData = new FormData(this);
+     formData.append('pdfFile', pdfBlob, `billing/${vendorName}SoA.pdf`);
+    formData.append('total_fees', totalFees);
+
+    try {
+      // Send the form data to generateSOA.php
+      const response = await fetch('generateSOA.php', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert("PDF sent successfully!");
+        window.location.href = 'generateSOA.php';
+      } else {
+        alert('Error: ' + result.message);
+        window.location.href = 'generateSOA.php';
+      }
+    } catch (error) {
+      alert('Error sending data: ' + error.message);
+      window.location.href = 'generateSOA.php';
+    }
+  });
+
+  // Load image for PDF
+  const loadImage = async (url) => {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Network response was not ok");
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  };
 });
 </script>
-
 
 <style>
 

@@ -466,34 +466,60 @@ GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
-        <form id="sendMessageForm" method="POST" action="generateSOA.php">
+        <form id="sendMessageForm">
           <div class="mb-3">
             <label for="vendor-name" class="col-form-label">Vendor Name:</label>
-            <input type="text" class="form-control" id="vendor-name" name="vendor-name" readonly>
+            <input type="text" class="form-control" id="vendor-name" name="name" readonly>
           </div>
           <div class="mb-3">
-            <label for="message" class="col-form-label">Message:</label>
-            <textarea class="form-control" id="message" name="message" rows="4"></textarea>
-        </div>
+              <label for="reminderMessage" class="form-label">Message</label>
+              <textarea class="form-control" id="reminderMessage" name="reminderMessage" rows="4" required placeholder="Message"></textarea>
+          </div>
           <div class="mb-3">
             <label for="monthly-rentals" class="col-form-label">Monthly Rentals:</label>
-            <input type="text" class="form-control" id="monthly-rentals" name="monthly_rentals_total" readonly>
+            <input type="text" class="form-control" id="monthly-rentals" name="totalPay" readonly>
           </div>
           <div class="mb-3">
-            <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
-            <input type="number" class="form-control" id="remaining-balance" name="remaining-balance" step="0.01" min="0" required>
-          </div>
-         
-          <div class="mb-3">
-            <label for="miscellaneous-fees" class="col-form-label">Miscellaneous Fees (optional):</label>
-            <input type="number" class="form-control" id="miscellaneous-fees" name="miscellaneous-fees" step="0.01" min="0" >
+            <label for="remaining-balance" class="col-form-label">Other Fees:</label>
+            <input type="number" class="form-control" id="remaining-balance" name="remaining-balance" placeholder="Optional">
           </div>
           <div class="mb-3">
-            <label for="other-fees" class="col-form-label">Other Fees (optional):</label>
-            <input type="number" class="form-control" id="other-fees" name="other-fees" step="0.01" min="0" >
+            <label for="monthBill" class="col-form-label">Bill for the Month:</label>
+            <input type="text" class="form-control" id="monthBill" name="monthBill" placeholder="e.g: JANUARY - DECEMBER">
           </div>
+          <div class="mb-3">
+            <label for="building" class="col-form-label">Building Name/Number:</label>
+            <input type="text" class="form-control" id="building" name="building" placeholder="BUILDING A - BUILDING J">
+          </div>
+          <div class="mb-3">
+            <label for="stallNumber" class="col-form-label">Stall Number:</label>
+            <input type="text" class="form-control" id="stallNumber" name="stallNumber" placeholder="e.g: A-01 to J-01">
+          </div>
+          <div class="mb-3">
+            <label for="dueDate" class="col-form-label">Due Date:</label>
+            <input type="date" class="form-control" id="dueDate" name="dueDate" onchange="setPadlockingDate()" required>
+          </div>
+          <div class="mb-3">
+            <label for="padlockingDate" class="col-form-label">Padlocking Date:</label>
+            <input type="date" class="form-control" id="padlockingDate" name="padlockingDate">
+          </div>
+          <div class="mb-3">
+            <label for="numMonths" class="col-form-label">Number of Months:</label>
+            <input type="number" class="form-control" id="numMonths" name="numMonths" min="1">
+          </div>
+          <div class="mb-3">
+            <label for="penaltyFee" class="col-form-label">Penalty Fee:</label>
+            <input type="number" class="form-control" id="penaltyFee" name="penaltyFee" step="0.01" min="0" placeholder="Optional: overdue fees">
+          </div>
+           <!-- Hidden input fields -->
+           <input type="hidden" id="file_path" name="file_path">
+          <input type="hidden" id="total_fees" name="total_fees">
+
+
+
+          
           <input type="hidden" id="vendor-id" name="vendor-id">
-          <button type="submit" id="submit" class="btn btn-primary">Generate Invoice</button>
+          <button type="submit" id="submit" class="btn btn-primary" name="submit">SEND STATEMENT OF ACCOUNTS</button>
         </form>
       </div>
       <div class="modal-footer">
@@ -503,14 +529,16 @@ GROUP BY v.vendor_id, v.first_name, v.middle_name, v.last_name, v.username
   </div>
 </div>
 
+<!-- Include jsPDF library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <!-- Updated to a later version -->
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Format the input as currency
+  // Function to format the input as currency
   function formatCurrencyInput(input) {
     let value = parseFloat(input.value.replace(/,/g, ''));
     if (!isNaN(value)) {
-      input.value = value.toLocaleString('en-US', { style: 'decimal', minimumFractionDigits: 2 });
+      input.value = value.toLocaleString('en-PH', { style: 'decimal', minimumFractionDigits: 2 });
     }
   }
 
@@ -519,65 +547,192 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('input', function() {
       formatCurrencyInput(this);
     });
-
-    // Optional: Format when the input loses focus
     input.addEventListener('blur', function() {
       formatCurrencyInput(this);
     });
   });
 
   // Function to open the modal and set vendor details
-  function openSendMessageModal(vendorName, vendorId) {
+  window.openSendMessageModal = function(vendorName, vendorId) {
+    console.log("Vendor Name:", vendorName);
+    console.log("Vendor ID:", vendorId);
     document.getElementById('vendor-name').value = vendorName;
     document.getElementById('vendor-id').value = vendorId;
 
-    // Fetch monthly rentals based on vendorId
     fetchMonthlyRentals(vendorId);
 
     const sendMessageModal = new bootstrap.Modal(document.getElementById('sendMessageModal'));
     sendMessageModal.show();
-  }
+  };
 
-  // Fetch monthly rentals from the server
-  function fetchMonthlyRentals(vendorId) {
-    fetch(`getMonthlyRentals.php?vendor_id=${vendorId}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          document.getElementById('monthly-rentals').value = data.monthly_rentals;
-        } else {
-          alert('Error fetching monthly rentals: ' + data.message);
+  // Fetch monthly rentals based on vendorId
+  async function fetchMonthlyRentals(vendorId) {
+    try {
+      const response = await fetch(`getMonthlyRentals.php?vendor_id=${vendorId}`);
+      const data = await response.json();
+      if (data.success) {
+        document.getElementById('vendor-name').value = data.vendor_name;
+        document.getElementById('monthly-rentals').value = data.monthly_rentals;
+        document.getElementById('building').value = data.buildings; 
+        document.getElementById('stallNumber').value = data.stall_no;
+
+        // Handle PHP due date output
+        const dueDateValue = "<?php echo isset($rowA['due_date']) ? $rowA['due_date'] : ''; ?>";
+        if (dueDateValue) {
+          document.getElementById('dueDate').value = dueDateValue;
         }
-      })
-      .catch(error => console.error('Error:', error));
+      } else {
+        alert('Error fetching vendor details: ' + data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching monthly rentals:', error);
+    }
   }
 
-  // Handle form submission
-  document.querySelector('#sendMessageForm').addEventListener('submit', function(event) {
-    // Prevent default form submission
+  // Set padlocking date based on due date
+  document.getElementById('dueDate').addEventListener('change', setPadlockingDate);
+
+  function setPadlockingDate() {
+    const dueDateInput = document.getElementById('dueDate');
+    const padlockingDateInput = document.getElementById('padlockingDate');
+    
+    const dueDate = new Date(dueDateInput.value);
+    if (!isNaN(dueDate.getTime())) {
+      dueDate.setDate(dueDate.getDate() + 10);
+      const year = dueDate.getFullYear();
+      const month = String(dueDate.getMonth() + 1).padStart(2, '0');
+      const day = String(dueDate.getDate()).padStart(2, '0');
+      padlockingDateInput.value = `${year}-${month}-${day}`;
+    } else {
+      padlockingDateInput.value = ''; // Clear if due date is invalid
+    }
+  }
+
+  // Handle PDF generation on form submit
+  document.getElementById('sendMessageForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 
-    // Create a FormData object from the form
-    const formData = new FormData(this);
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-    // Use Fetch API to submit the form
-    fetch('generateSOA.php', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        alert('Invoice generated successfully!');
-        window.open(data.file, '_blank');
+    const vendorName = document.getElementById('vendor-name').value;
+    const imgData = await loadImage('assets/imgbg/BGImage.png');
+    doc.addImage(imgData, 'JPEG', 10, 10, 30, 30);
+
+    // Title and centered text
+    doc.setFontSize(10);
+    doc.text("BILLING STATEMENT", 150, 10);
+    const centerText = (text, y) => {
+      const textWidth = doc.getTextWidth(text);
+      const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
+      doc.text(text, x, y);
+    };
+
+    // Add centered text
+    const headings = [
+      "Republic of the Philippines",
+      "Province of South Cotabato",
+      "MUNICIPALITY OF POLOMOLOK",
+      "MUNICIPAL ECONOMIC ENTERPRISES & DEVELOPMENT OFFICE (Market Operation)"
+    ];
+    headings.forEach((text, index) => centerText(text, 15 + (index * 10)));
+
+    // Line separator
+    doc.line(10, 50, doc.internal.pageSize.getWidth() - 10, 50); // Draws a horizontal line
+
+    // Capture values from form fields
+    const formFields = [
+      { id: 'vendor-name', label: 'Vendor Name', y: 55 },
+      { id: 'reminderMessage', label: 'Message', y: 60 },
+      { id: 'monthly-rentals', label: 'Monthly Rentals', y: 65 },
+      { id: 'remaining-balance', label: 'Other Fees', y: 70 },
+      { id: 'monthBill', label: 'Bill for the Month', y: 75 },
+      { id: 'building', label: 'Building Name/Number', y: 80 },
+      { id: 'stallNumber', label: 'Stall Number', y: 85 },
+      { id: 'dueDate', label: 'Due Date', y: 90 },
+      { id: 'padlockingDate', label: 'Padlocking Date', y: 95 },
+      { id: 'numMonths', label: 'Number of Months', y: 100 },
+      { id: 'penaltyFee', label: 'Penalty Fee', y: 105 },
+    ];
+
+    formFields.forEach(field => {
+      const value = document.getElementById(field.id).value;
+      doc.text(`${field.label}: ${value}`, 10, field.y);
+    });
+
+    const remainingBalance = parseFloat(document.getElementById('remaining-balance').value.replace(/,/g, '') || 0);
+    const monthlyRentals = parseFloat(document.getElementById('monthly-rentals').value.replace(/,/g, '') || 0);
+    const totalFees = remainingBalance + monthlyRentals;
+
+    // Display GRAND TOTAL if applicable
+    if (remainingBalance > 0 || monthlyRentals > 0) {
+      doc.setFontSize(10);
+      doc.text(`GRAND TOTAL: ${totalFees.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}`, 10, 110);
+    }
+    doc.line(10, 115, doc.internal.pageSize.getWidth() - 10, 115); 
+
+    const noteTexts = [
+    "Note: Revocation/Cancellation of lease shall be implemented if not settled within 10 working days after receiving this notice.",
+    "Please report to the MARKET OFFICE to avoid Closure Order.",
+    "PLEASE BRING EXACT AMOUNT UPON PAYMENT",
+    "NO FIELD COLLECTOR",
+    "Please disregard this notice if payment has been made."
+  ];
+  noteTexts.forEach((text, index) => centerText(text, 120 + (index * 10)));
+
+    //doc.save(`billing/${vendorName}SoA.pdf`);
+    // magamit pani sa validation puhon
+
+    const pdfBlob = new Blob([doc.output('blob')], { type: 'application/pdf' });
+
+
+// const filePath = `billing/${vendorName}SoA.pdf`;
+
+// if (filePath) {
+//     doc.save(filePath);
+// } else {
+//     // Create a default file path if vendorId is not present
+//     const defaultvendorName = 'default';
+//     const defaultFilePath = `billing/${defaultvendorName}SoA.pdf`;
+//     doc.save(defaultFilePath);
+// }
+
+    const formData = new FormData(this);
+     formData.append('pdfFile', pdfBlob, `billing/${vendorName}SoA.pdf`);
+    formData.append('total_fees', totalFees);
+
+    try {
+      // Send the form data to generateSOA.php
+      const response = await fetch('generateSOA.php', {
+        method: 'POST',
+        body: formData,
+      });
+
+      const result = await response.json();
+      if (result.success) {
+        alert("PDF sent successfully!");
+        window.location.href = 'generateSOA.php';
       } else {
-        alert('Error: ' + data.message);
+        alert('Error: ' + result.message);
+        window.location.href = 'generateSOA.php';
       }
-    })
-    .catch(error => console.error('Error:', error));
+    } catch (error) {
+      alert('Error sending data: ' + error.message);
+      window.location.href = 'generateSOA.php';
+    }
   });
 
-  window.openSendMessageModal = openSendMessageModal;
+  // Load image for PDF
+  const loadImage = async (url) => {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Network response was not ok");
+    const blob = await response.blob();
+    return new Promise((resolve) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.readAsDataURL(blob);
+    });
+  };
 });
 </script>
 <style>

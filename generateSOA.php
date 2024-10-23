@@ -1,142 +1,107 @@
 <?php
- // Include database configuration
- include('database_config.php');
+header('Content-Type: application/json');
+ob_start(); // Start output buffering
 
- // Create a connection
- $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+// Include database configuration
+include('database_config.php');
 
- // Check the connection
- if ($conn->connect_error) {
-     echo json_encode(['success' => false, 'message' => 'Connection failed: ' . $conn->connect_error]);
-     exit;
- }
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
-   
-
-
-    // Check if the required POST data is set
-    if (
-        isset($_POST['monthBill']) &&
-        isset($_POST['building']) &&
-        isset($_POST['name']) &&
-        isset($_POST['stallNumber']) &&
-        isset($_POST['dueDate']) &&
-        isset($_POST['padlockingDate']) &&
-        isset($_POST['grandTotal']) &&
-        isset($_POST['totalPay']) &&
-        isset($_POST['numMonths']) &&
-        isset($_POST['penaltyFee'])
-    ) {
-
-        $monthBill = ($_POST['monthBill']);
-        $buildingName = ($_POST['building']);
-        $username = ($_POST['name']);
-        $stallNumber = ($_POST['stallNumber']);
-        $dueDate = ($_POST['dueDate']);
-        $padlockingDate = ($_POST['padlockingDate']);
-        $grandTotal = ($_POST['grandTotal']);
-        $totalPay = ($_POST['totalPay']);
-        $numMonths = ($_POST['numMonths']);
-        $penaltyFee = ($_POST['penaltyFee']);
-
-        // Prepare post data with additional fields for the PDF template
-        $postData = [
-            'template' => [
-                'id' => '1240474', // Template ID for your billing notice
-                'data' => [
-                    'monthBill' => $monthBill,          // Bill for the month of
-                    'building' => $buildingName,        // Building name or number
-                    'name' => $username,                // Name of the vendor/recipient
-                    'stallNumber' => $stallNumber,      // Stall number
-                    'due' => date('Y-m-d', strtotime($dueDate)),  // Due date formatted
-                    'lock' => $padlockingDate,          // Padlocking date if applicable
-                    'grandTotal' => number_format((float) $grandTotal, 2, '.', ''), // Grand total with 2 decimals
-                    'total' => number_format((float) $totalPay, 2, '.', ''),       // Total payment with 2 decimals
-                    'numberMonth' => $numMonths,        // Number of months
-                    'dueFee' => number_format((float) $penaltyFee, 2, '.', ''),    // Penalty fee with 2 decimals
-                ]
-            ],
-            'format' => 'pdf',         // Format the response as a PDF
-            'output' => 'url',         // Get the output URL from the response
-            'name' => 'NOTICE'         // Name of the generated document
-        ];
-
-        // Example of sending the post data via cURL (adjust as needed)
-        $url = "https://us1.pdfgeneratorapi.com/api/v4/documents/generate"; // Replace with your actual API URL
-        $ch = curl_init($url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($postData));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
-
-        // Execute cURL request and handle the response
-        $response = curl_exec($ch);
-        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        curl_close($ch);
-
-        // Check if the response is successful (you may need to adjust based on your API's response format)
-        if ($httpCode == 200) {
-            $responseData = json_decode($response, true);
-            if (isset($responseData['url'])) {
-                // Redirect or display the generated PDF URL
-                header('Location: ' . $responseData['url']);
-                exit();
-            } else {
-                echo 'Error: Could not retrieve PDF URL from the response.';
-            }
-        } else {
-            echo 'Error: Failed to generate PDF. HTTP Status Code: ' . $httpCode;
-        }
-    }
-    // Save the response to the /invoice folder
-    if (file_put_contents($filePath, $response)) {
-        // Check if the vendor ID already exists in the vendorSOA table
-        $sqlCheck = "SELECT id FROM vendorsoa WHERE vendor_id = ?";
-        $stmtCheck = $conn->prepare($sqlCheck);
-        $stmtCheck->bind_param("i", $vendorId);
-        $stmtCheck->execute();
-        $resultCheck = $stmtCheck->get_result();
-
-        if ($resultCheck->num_rows > 0) {
-            // Vendor ID exists, so update the record
-            $sqlUpdate = "INSERT vendorsoa SET username = ?, message = ?, remaining_balance = ?, monthly_rentals = ?, miscellaneous_fees = ?, other_fees = ?, total_amount = ?, date = ?, file_path = ? WHERE vendor_id = ?";
-            $stmtUpdate = $conn->prepare($sqlUpdate);
-            $totalAmount = $monthly_rent + $miscellaneousFees + $otherFees + $remainingBalance;
-            $stmtUpdate->bind_param("sssssssssi", $username, $message, $remainingBalance, $monthly_rent, $miscellaneousFees, $otherFees, $totalAmount, $date, $filePath, $vendorId);
-
-            if ($stmtUpdate->execute()) {
-                echo json_encode(['success' => true, 'message' => 'Statement of Account updated successfully!', 'file' => $filePath]);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Failed to update statement in database: ' . $stmtUpdate->error]);
-            }
-
-            $stmtUpdate->close();
-        } else {
-            // Vendor ID does not exist, so insert a new record
-            $sqlInsert = "INSERT INTO vendorsoa (vendor_id, username, message, remaining_balance, monthly_rentals, miscellaneous_fees, other_fees, total_amount, date, file_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $stmtInsert = $conn->prepare($sqlInsert);
-            $totalAmount = $monthly_rent + $miscellaneousFees + $otherFees + $remainingBalance;
-            $stmtInsert->bind_param("isssssssss", $vendorId, $username, $message, $remainingBalance, $monthly_rent, $miscellaneousFees, $otherFees, $totalAmount, $date, $filePath);
-
-            if ($stmtInsert->execute()) {
-                echo json_encode(['success' => true, 'message' => 'Statement of Account generated successfully!', 'file' => $filePath]);
-            } else {
-                echo json_encode(['success' => false, 'message' => 'Failed to insert statement into database: ' . $stmtInsert->error]);
-            }
-
-            $stmtInsert->close();
-        }
-
-        $stmtCheck->close();
-    } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to save the PDF']);
-    }
-
-    // Close cURL session
-    curl_close($ch);
-
-    // Close database connection
-    $conn->close();
+// Check the connection
+if ($conn->connect_error) {
+    echo json_encode(['success' => false, 'message' => 'Connection failed: ' . addslashes($conn->connect_error)]);
+    exit;
 }
+
+// Ensure the request method is POST
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
+    // Extract values from POST and check if they are set
+    $vendorId = $_POST['vendor-id'] ?? null;
+    $username = $_POST['name'] ?? null;
+    $message = $_POST['reminderMessage'] ?? null;
+    $otherFee = $_POST['remaining-balance'] ?? null;
+    $monthlyRent = $_POST['totalPay'] ?? null;
+    $monthBill = $_POST['monthBill'] ?? null;
+    $building = $_POST['building'] ?? null;
+    $stallNumber = $_POST['stallNumber'] ?? null;
+    $dueDate = $_POST['dueDate'] ?? null;
+    $totalFees = $_POST['total_fees'] ?? null;
+    $penaltyFee = $_POST['penaltyFee'] ?? null;
+
+    $pdfFile = $_FILES['pdfFile'] ?? null;
+
+    // Check if PDF file is uploaded
+    if ($pdfFile && $pdfFile['error'] === UPLOAD_ERR_OK) {
+        // Get the original file name and extension
+        $originalFileName = pathinfo($pdfFile['name'], PATHINFO_FILENAME);
+        $fileExtension = pathinfo($pdfFile['name'], PATHINFO_EXTENSION);
+        
+        // Set the initial file path
+        $filePath = "billing/{$pdfFile['name']}";
+    
+        // Check if the file already exists and modify the name if necessary
+        $counter = 1;
+        while (file_exists($filePath)) {
+            // Create a new file name with an incrementing counter
+            $newFileName = "{$originalFileName} ({$counter}).{$fileExtension}";
+            $filePath = "billing/{$newFileName}";
+            $counter++;
+        }
+    
+        // Move the uploaded file to the specified path
+        if (move_uploaded_file($pdfFile['tmp_name'], $filePath)) {
+            // Validate required fields
+            if (empty($vendorId) || empty($username) || empty($message) || empty($filePath)) {
+                echo json_encode(['success' => false, 'message' => 'Missing required fields.']);
+                exit;
+            }
+
+            // Check if the vendor ID exists
+            $sqlCheck = "SELECT id FROM vendorsoa WHERE vendor_id = ?";
+            $stmtCheck = $conn->prepare($sqlCheck);
+            $stmtCheck->bind_param("i", $vendorId);
+            $stmtCheck->execute();
+            $resultCheck = $stmtCheck->get_result();
+
+            if ($resultCheck->num_rows > 0) {
+                // Vendor ID exists, update the record
+                $sqlUpdate = "UPDATE vendorsoa SET username = ?, message = ?, monthly_rentals = ?, other_fees = ?, total_amount = ?, file_path = ? WHERE vendor_id = ?";
+                $stmtUpdate = $conn->prepare($sqlUpdate);
+                $stmtUpdate->bind_param("ssssssi", $username, $message, $monthlyRent, $otherFee, $totalFees, $filePath, $vendorId);
+
+                if ($stmtUpdate->execute()) {
+                    echo json_encode(['success' => true, 'message' => 'Statement of Account updated successfully!']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Failed to update statement in database: ' . addslashes($stmtUpdate->error)]);
+                }
+
+                $stmtUpdate->close();
+            } else {
+                // Vendor ID does not exist, insert a new record
+                $sqlInsert = "INSERT INTO vendorsoa (vendor_id, username, message, monthly_rentals, other_fees, total_amount, file_path) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                $stmtInsert = $conn->prepare($sqlInsert);
+                $stmtInsert->bind_param("issssss", $vendorId, $username , $message, $monthlyRent, $otherFee, $totalFees, $filePath);
+
+                if ($stmtInsert->execute()) {
+                    echo json_encode(['success' => true, 'message' => 'Statement of Account generated successfully!']);
+                } else {
+                    echo json_encode(['success' => false, 'message' => 'Failed to insert statement into database: ' . addslashes($stmtInsert->error)]);
+                }
+
+                $stmtInsert->close();
+            }
+        } else {
+            echo json_encode(['success' => false, 'message' => 'Error saving file']);
+        }
+    } else {
+        echo json_encode(['success' => false, 'message' => 'No PDF file uploaded or upload failed']);
+    }
+} else {
+    echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
+    exit;
+}
+
+ob_end_flush(); // Send the output buffer
 ?>
