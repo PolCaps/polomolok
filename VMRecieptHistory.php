@@ -635,6 +635,7 @@ ORDER BY
 
     </div>
   </main>
+  
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
       <i class="fa fa-cog py-2"> </i>
@@ -652,48 +653,22 @@ ORDER BY
         </div>
         <!-- End Toggle Button -->
       </div>
-      <hr class="horizontal dark my-1">
-      <div class="card-body pt-sm-3 pt-0">
-        <a class="btn bg-gradient-info w-85 text-white mx-4" href="#">Edit Profile</a>
-        <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
-        <hr class="horizontal dark my-1">
-        <div class="text-small">Fixed Navbar</div>
-        <div class="form-check form-switch ps-0">
-          <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
-        </div>
-        <br>
-        <hr class="horizontal dark my-1">
-        <br>
-        <div class="text-small text-center text-info">Messages</div>
-        <br><br>
-        <div class="text-small text-center">No Message Yet!</div>
-      </div>
+       <!-- Edit Profile Button -->
+  <div class="card-body pt-sm-3 pt-0">
+    <a class="btn bg-gradient-info w-85 text-white mx-4" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</a>
+    <a class="btn bg-gradient-info w-85 text-white mx-4" href="VMDocuments.php">Fill Documents</a>
+  
+    <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
+    <hr class="horizontal dark my-2">
+    <div class="text-small">Fixed Navbar</div>
+    <div class="form-check form-switch ps-0">
+      <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
     </div>
+  </div>
 
-    <div class="fixed-plugin">
-      <a class="fixed-plugin-button text-dark position-fixed px-3 py-2 mx-6" data-bs-toggle="offcanvas"
-        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-        <i class="fa fa-wechat py-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-          aria-controls="offcanvasRight"> </i>
-      </a>
-    </div>
-
-    <div class="offcanvas offcanvas-end max-width-300" tabindex="-1" id="offcanvasRight"
-      aria-labelledby="offcanvasRightLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title text-info" id="offcanvasRightLabel">Reminders/Messages</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
-      <div class="offcanvas-body">
-        <hr class="horizontal dark my-1">
+  </div>
 
-        <br>
-        <div class="text-small text-center text-info">Messages</div>
-        <br><br>
-        <div class="text-small text-center">No Message Yet!</div>
-      </div>
-
-    </div>
     <!--   Core JS Files   -->
     <script src="assets2/js/core/popper.min.js"></script>
     <script src="assets2/js/core/bootstrap.min.js"></script>
