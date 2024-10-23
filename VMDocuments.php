@@ -265,63 +265,84 @@ $conn->close();
                 </div>
               </div>
             </div>
-
             <?php
-      include('database_config.php');
+            include('database_config.php');
 
-      $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+            $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-      if ($conn->connect_error) {
-        die(json_encode(['success' => false, 'message' => "Connection failed: " . $conn->connect_error]));
-      }
+            if ($conn->connect_error) {
+                die(json_encode(['success' => false, 'message' => "Connection failed: " . $conn->connect_error]));
+            }
 
-    // Prepare the SQL query for fetching data
-$sqlA = "SELECT v.username, d.lease_agreements, d.business_permits, d.business_license, d.other_supporting 
-FROM vendors v
-JOIN documents d ON v.vendor_id = d.vendor_id
-WHERE v.vendor_id = ?";
+            // Prepare the SQL query for fetching data
+            $sqlA = "SELECT v.username, d.lease_agreements, d.business_permits, d.business_license, d.other_supporting 
+            FROM vendors v
+            JOIN documents d ON v.vendor_id = d.vendor_id
+            WHERE v.vendor_id = ?";
 
-// Prepare the statement
-$stmtA = $conn->prepare($sqlA);
+            // Prepare the statement
+            $stmtA = $conn->prepare($sqlA);
 
-if ($stmtA === false) {
-    die("Error preparing query: " . $conn->error);
-}
+            if ($stmtA === false) {
+                die("Error preparing query: " . $conn->error);
+            }
 
-// Bind the vendor ID parameter (assuming $vendor_id is defined)
-$stmtA->bind_param("i", $vendor_id);
+            // Bind the vendor ID parameter (assuming $vendor_id is defined)
+            $stmtA->bind_param("i", $vendor_id);
 
-// Execute the statement
-$stmtA->execute();
+            // Execute the statement
+            $stmtA->execute();
 
-// Get the result
-$resultA = $stmtA->get_result();
+            // Get the result
+            $resultA = $stmtA->get_result();
 
-$tableRows = '';
-if ($resultA === false) {
-    die("Error executing query: " . $stmtA->error);
-}
+            $tableRows = '';
+            if ($resultA === false) {
+                die("Error executing query: " . $stmtA->error);
+            }
 
-// Check if there are results
-if ($resultA->num_rows > 0) {
-    while ($rowA = $resultA->fetch_assoc()) {
-        $tableRows .= '
-        <tr>
-            <td class="align-middle text-center text-sm">' . htmlspecialchars($rowA['username']) . '</td>
-            <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['lease_agreements']) . '">View</span></td>
-            <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['business_license']) . '">View</span></td>
-            <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['business_permits']) . '">View</span></td>
-            <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['other_supporting']) . '">View</span></td>
-        </tr>';
-    }
-} else {
-    // Handle no results found
-    $tableRows = '<tr><td colspan="5">No Documents found</td></tr>';
-}
+            // Check if there are results
+            if ($resultA->num_rows > 0) {
+                while ($rowA = $resultA->fetch_assoc()) {
+                    $lease_agreements = htmlspecialchars($rowA['lease_agreements']);
+                    $business_license = htmlspecialchars($rowA['business_license']);
+                    $business_permits = htmlspecialchars($rowA['business_permits']);
+                    $other_supporting = htmlspecialchars($rowA['other_supporting']);
 
-// Close the prepared statement
-$stmtA->close();
-?>
+                    $tableRows .= '
+                    <tr>
+                        <td class="align-middle text-center text-sm">' . htmlspecialchars($rowA['username']) . '</td>
+                        <td class="text-center">' . 
+                            ($lease_agreements ? 
+                                '<span class="clickable text-sm text-info" data-doc="' . $lease_agreements . '">View</span>' : 
+                                '<span class="text-sm text-danger">Missing</span>') . 
+                        '</td>
+                        <td class="text-center">' . 
+                            ($business_license ? 
+                                '<span class="clickable text-sm text-info" data-doc="' . $business_license . '">View</span>' : 
+                                '<span class="text-sm text-danger">Missing</span>') . 
+                        '</td>
+                        <td class="text-center">' . 
+                            ($business_permits ? 
+                                '<span class="clickable text-sm text-info" data-doc="' . $business_permits . '">View</span>' : 
+                                '<span class="text-sm text-danger">Missing</span>') . 
+                        '</td>
+                        <td class="text-center">' . 
+                            ($other_supporting ? 
+                                '<span class="clickable text-sm text-info" data-doc="' . $other_supporting . '">View</span>' : 
+                                '<span class="text-sm text-danger">Missing</span>') . 
+                        '</td>
+                    </tr>';
+                }
+            } else {
+                // Handle no results found
+                $tableRows = '<tr><td colspan="5">No Documents found</td></tr>';
+            }
+
+            // Close the prepared statement
+            $stmtA->close();
+            ?>
+
 
       <div class="card-body px-0 pb-2">
         <div class="table-responsive">
