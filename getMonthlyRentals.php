@@ -15,56 +15,73 @@ if (isset($_GET['vendor_id'])) {
         exit;
     }
 
-    // Prepare the SQL query to sum monthly rentals across all tables for the specified vendor_id
+    // Prepare the SQL query to get the vendor name, total monthly rentals, building names, and stall numbers
     $sql = "
         SELECT 
-            SUM(CAST(REPLACE(monthly_rentals, ',', '') AS DECIMAL(10,2))) AS total_monthly_rentals
-        FROM (
-            SELECT monthly_rentals FROM building_a WHERE vendor_id = ?
+            CONCAT(v.first_name, ' ', v.middle_name, ' ', v.last_name) AS vendor_name, 
+            SUM(CAST(REPLACE(b.monthly_rentals, ',', '') AS DECIMAL(10,2))) AS total_monthly_rentals,
+            GROUP_CONCAT(DISTINCT b.building_name SEPARATOR ', ') AS buildings,
+            GROUP_CONCAT(DISTINCT b.stall_no SEPARATOR ', ') AS stall_no
+        FROM vendors v
+        LEFT JOIN (
+            SELECT 'Building A' AS building_name, vendor_id, monthly_rentals, stall_no FROM building_a
             UNION ALL
-            SELECT monthly_rentals FROM building_b WHERE vendor_id = ?
+            SELECT 'Building B' AS building_name, vendor_id, monthly_rentals, stall_no FROM building_b
             UNION ALL
-            SELECT monthly_rentals FROM building_c WHERE vendor_id = ?
+            SELECT 'Building C' AS building_name, vendor_id, monthly_rentals, stall_no FROM building_c
             UNION ALL
-            SELECT monthly_rentals FROM building_d WHERE vendor_id = ?
+            SELECT 'Building D' AS building_name, vendor_id, monthly_rentals, stall_no FROM building_d
             UNION ALL
-            SELECT monthly_rentals FROM building_e WHERE vendor_id = ?
+            SELECT 'Building E' AS building_name, vendor_id, monthly_rentals, stall_no FROM building_e
             UNION ALL
-            SELECT monthly_rentals FROM building_f WHERE vendor_id = ?
+            SELECT 'Building F' AS building_name, vendor_id, monthly_rentals, stall_no FROM building_f
             UNION ALL
-            SELECT monthly_rentals FROM building_g WHERE vendor_id = ?
+            SELECT 'Building G' AS building_name, vendor_id, monthly_rentals, stall_no FROM building_g
             UNION ALL
-            SELECT monthly_rentals FROM building_h WHERE vendor_id = ?
+            SELECT 'Building H' AS building_name, vendor_id, monthly_rentals, stall_no FROM building_h
             UNION ALL
-            SELECT monthly_rentals FROM building_i WHERE vendor_id = ?
+            SELECT 'Building I' AS building_name, vendor_id, monthly_rentals, stall_no FROM building_i
             UNION ALL
-            SELECT monthly_rentals FROM building_j WHERE vendor_id = ?
-        ) AS combined
+            SELECT 'Building J' AS building_name, vendor_id, monthly_rentals, stall_no FROM building_j
+        ) AS b ON v.vendor_id = b.vendor_id
+        WHERE v.vendor_id = ?
     ";
 
     // Prepare the statement
     $stmt = $conn->prepare($sql);
     
-    // Bind the vendorId for each UNION ALL statement
-    $stmt->bind_param("iiiiiiiiii", $vendorId, $vendorId, $vendorId, $vendorId, $vendorId, $vendorId, $vendorId, $vendorId, $vendorId, $vendorId);
+    // Bind the vendorId
+    $stmt->bind_param("i", $vendorId);
     
     // Execute the query
     $stmt->execute();
     $result = $stmt->get_result();
 
+    $vendor_name = '';
     $monthly_rent = 0; // Default to 0
+    $buildings = '';
+    $stall_no = '';
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
+        $vendor_name = $row['vendor_name'];
         $monthly_rent = $row['total_monthly_rentals'];
+        $buildings = $row['buildings'];
+        $stall_no = $row['stall_no'];
     }
 
     // Close the statement and connection
     $stmt->close();
     $conn->close();
 
-    // Return the monthly rentals as JSON
-    echo json_encode(['success' => true, 'monthly_rentals' => $monthly_rent]);
+    // Return the monthly rentals, vendor name, buildings, and stall numbers as JSON
+    echo json_encode([
+        'success' => true,
+        'vendor_name' => $vendor_name,
+        'monthly_rentals' => $monthly_rent,
+        'buildings' => $buildings,
+        'stall_no' => $stall_no
+    ]);
 } else {
     echo json_encode(['success' => false, 'message' => 'Vendor ID not specified']);
 }

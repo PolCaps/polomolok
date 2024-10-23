@@ -1,16 +1,18 @@
 <?php
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Include database configuration
-    include('database_config.php');
+ // Include database configuration
+ include('database_config.php');
 
-    // Create a connection
-    $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+ // Create a connection
+ $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-    // Check the connection
-    if ($conn->connect_error) {
-        echo json_encode(['success' => false, 'message' => 'Connection failed: ' . $conn->connect_error]);
-        exit;
-    }
+ // Check the connection
+ if ($conn->connect_error) {
+     echo json_encode(['success' => false, 'message' => 'Connection failed: ' . $conn->connect_error]);
+     exit;
+ }
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit'])) {
+   
 
 
     // Check if the required POST data is set

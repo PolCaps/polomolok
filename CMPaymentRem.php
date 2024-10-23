@@ -461,6 +461,7 @@ if ($resultA->num_rows > 0) {
 } else {
     $tableRows = '<tr><td colspan="6" class="text-center">No upcoming dues available</td></tr>';
 }
+
 ?>
 
 
@@ -502,27 +503,31 @@ if ($resultA->num_rows > 0) {
           </div>
           <div class="mb-3">
               <label for="reminderMessage" class="form-label">Message</label>
-              <textarea class="form-control" id="reminderMessage" name="reminderMessage" rows="4" required></textarea>
+              <textarea class="form-control" id="reminderMessage" name="reminderMessage" rows="4" required placeholder="Message"></textarea>
           </div>
           <div class="mb-3">
             <label for="monthly-rentals" class="col-form-label">Monthly Rentals:</label>
             <input type="text" class="form-control" id="monthly-rentals" name="totalPay" readonly>
           </div>
           <div class="mb-3">
+            <label for="remaining-balance" class="col-form-label">Remaining Balance:</label>
+            <input type="number" class="form-control" id="remaining-balance" name="remaining-balance" step="0.01" min="0" placeholder="Optional">
+          </div>
+          <div class="mb-3">
             <label for="monthBill" class="col-form-label">Bill for the Month:</label>
-            <input type="text" class="form-control" id="monthBill" name="monthBill">
+            <input type="text" class="form-control" id="monthBill" name="monthBill" placeholder="e.g: JANUARY - DECEMBER">
           </div>
           <div class="mb-3">
             <label for="building" class="col-form-label">Building Name/Number:</label>
-            <input type="text" class="form-control" id="building" name="building">
+            <input type="text" class="form-control" id="building" name="building" placeholder="BUILDING A - BUILDING J">
           </div>
           <div class="mb-3">
             <label for="stallNumber" class="col-form-label">Stall Number:</label>
-            <input type="text" class="form-control" id="stallNumber" name="stallNumber">
+            <input type="text" class="form-control" id="stallNumber" name="stallNumber" placeholder="e.g: A-01 to J-01">
           </div>
           <div class="mb-3">
             <label for="dueDate" class="col-form-label">Due Date:</label>
-            <input type="date" class="form-control" id="dueDate" name="dueDate">
+            <input type="date" class="form-control" id="dueDate" name="dueDate" onchange="setPadlockingDate()" required>
           </div>
           <div class="mb-3">
             <label for="padlockingDate" class="col-form-label">Padlocking Date:</label>
@@ -534,11 +539,11 @@ if ($resultA->num_rows > 0) {
           </div>
           <div class="mb-3">
             <label for="penaltyFee" class="col-form-label">Penalty Fee:</label>
-            <input type="number" class="form-control" id="penaltyFee" name="penaltyFee" step="0.01" min="0">
+            <input type="number" class="form-control" id="penaltyFee" name="penaltyFee" step="0.01" min="0" placeholder="Optional: overdue fees">
           </div>
           
           <input type="hidden" id="vendor-id" name="vendor-id">
-          <button type="submit" id="submit" class="btn btn-primary">SEND SOA</button>
+          <button type="submit" id="submit" class="btn btn-primary" name="submit">SEND STATEMENT OF ACCOUNTS</button>
         </form>
       </div>
       <div class="modal-footer">
@@ -548,11 +553,12 @@ if ($resultA->num_rows > 0) {
   </div>
 </div>
 
-
+<!-- Include jsPDF library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <!-- Updated to a later version -->
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Format the input as currency
+  // Function to format the input as currency
   function formatCurrencyInput(input) {
     let value = parseFloat(input.value.replace(/,/g, ''));
     if (!isNaN(value)) {
@@ -565,67 +571,188 @@ document.addEventListener('DOMContentLoaded', () => {
     input.addEventListener('input', function() {
       formatCurrencyInput(this);
     });
-
-    // Optional: Format when the input loses focus
     input.addEventListener('blur', function() {
       formatCurrencyInput(this);
     });
   });
 
   // Function to open the modal and set vendor details
-  function openSendMessageModal(vendorName, vendorId) {
+  window.openSendMessageModal = function(vendorName, vendorId) {
+    console.log("Vendor Name:", vendorName);
+    console.log("Vendor ID:", vendorId);
     document.getElementById('vendor-name').value = vendorName;
     document.getElementById('vendor-id').value = vendorId;
-   
-    // Fetch monthly rentals based on vendorId
+
     fetchMonthlyRentals(vendorId);
 
     const sendMessageModal = new bootstrap.Modal(document.getElementById('sendMessageModal'));
     sendMessageModal.show();
-  }
+  };
 
-  // Fetch monthly rentals from the server
-  function fetchMonthlyRentals(vendorId) {
-    fetch(`getMonthlyRentals.php?vendor_id=${vendorId}`)
-      .then(response => response.json())
-      .then(data => {
-        if (data.success) {
-          document.getElementById('monthly-rentals').value = data.monthly_rentals;
-        } else {
-          alert('Error fetching monthly rentals: ' + data.message);
+  // Fetch monthly rentals based on vendorId
+  async function fetchMonthlyRentals(vendorId) {
+    try {
+      const response = await fetch(`getMonthlyRentals.php?vendor_id=${vendorId}`);
+      const data = await response.json();
+      if (data.success) {
+        document.getElementById('vendor-name').value = data.vendor_name;
+        document.getElementById('monthly-rentals').value = data.monthly_rentals;
+        document.getElementById('building').value = data.buildings; 
+        document.getElementById('stallNumber').value = data.stall_no;
+
+        const dueDateValue = "<?php echo isset($rowA['due_date']) ? $rowA['due_date'] : ''; ?>";
+        if (dueDateValue) {
+          document.getElementById('dueDate').value = dueDateValue;
         }
-      })
-      .catch(error => console.error('Error:', error));
+      } else {
+        alert('Error fetching vendor details: ' + data.message);
+      }
+    } catch (error) {
+      console.error('Error fetching monthly rentals:', error);
+    }
   }
 
-  // Handle form submission
-  document.querySelector('#sendMessageForm').addEventListener('submit', function(event) {
-    // Prevent default form submission
+  // Handle PDF generation on form submit
+  document.getElementById('sendMessageForm').addEventListener('submit', async function(event) {
     event.preventDefault();
 
-    // Create a FormData object from the form
-    const formData = new FormData(this);
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
 
-    // Use Fetch API to submit the form
-    fetch('generateSOA.php', {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-      if (data.success) {
-        alert('Invoice generated successfully!');
-        window.open(data.file, '_blank');
-      } else {
-        alert('Error: ' + data.message);
+    try {
+
+
+      const loadImage = (url, callback) => {
+  fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
       }
+      return response.blob();
     })
-    .catch(error => console.error('Error:', error));
+    .then(blob => {
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        callback(e.target.result);
+      };
+      reader.readAsDataURL(blob); // Convert blob to Data URL
+    })
+    .catch(err => {
+      console.error("Error loading image:", err);
+    });
+};
+
+// Example usage in your PDF generation
+loadImage('assets/imgbg/BGImage.png', function(imgData) {
+  doc.addImage(imgData, 'JPEG', 10, 150, 50, 50); // Adjust position (10, 150) and size (50, 50) as needed
+});
+
+
+      // Title and centered text
+doc.setFontSize(10);
+doc.text("STATEMENT OF ACCOUNT", 100, 10);
+const centerText = (text, y) => {
+  const textWidth = doc.getTextWidth(text);
+  const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
+  doc.text(text, x, y);
+};
+
+// Add centered text
+const headings = [
+  "Republic of the Philippines",
+  "Province of South Cotabato",
+  "MUNICIPALITY OF POLOMOLOK",
+  "MUNICIPAL ECONOMIC ENTERPRISES & DEVELOPMENT OFFICE (Market Operation)"
+];
+headings.forEach((text, index) => centerText(text, 15 + (index * 10)));
+
+// Line separator
+doc.line(10, 50, doc.internal.pageSize.getWidth() - 10, 50); // Draws a horizontal line
+
+// Capture values from form fields
+const formFields = [
+  { id: 'vendor-name', label: 'Vendor Name', y: 55 },
+  { id: 'reminderMessage', label: 'Message', y: 60 },
+  { id: 'monthly-rentals', label: 'Monthly Rentals', y: 65 },
+  { id: 'remaining-balance', label: 'Remaining Balance', y: 70 },
+  { id: 'monthBill', label: 'Bill for the Month', y: 75 },
+  { id: 'building', label: 'Building Name/Number', y: 80 },
+  { id: 'stallNumber', label: 'Stall Number', y: 85 },
+  { id: 'dueDate', label: 'Due Date', y: 90 },
+  { id: 'padlockingDate', label: 'Padlocking Date', y: 95 },
+  { id: 'numMonths', label: 'Number of Months', y: 100 },
+  { id: 'penaltyFee', label: 'Penalty Fee', y: 105 },
+];
+
+formFields.forEach(field => {
+  const value = document.getElementById(field.id).value;
+  doc.text(`${field.label}: ${value}`, 10, field.y);
+});
+
+// Line separator before notes
+doc.line(10, 110, doc.internal.pageSize.getWidth() - 10, 110); // Another line separator
+
+// Note text
+doc.setFontSize(10);
+doc.setTextColor(255, 0, 0); // Set font color to red
+const noteTexts = [
+  "Note: Revocation/Cancellation of lease shall be implemented if not settled within 10 working days after receiving this notice.",
+  "Please report to the MARKET OFFICE to avoid Closure Order.",
+  "PLEASE BRING EXACT AMOUNT UPON PAYMENT",
+  "NO FIELD COLLECTOR"
+];
+
+let yPosition = 120;
+noteTexts.forEach((text) => {
+  const textWidth = doc.getTextWidth(text);
+  const x = (doc.internal.pageSize.getWidth() - textWidth) / 2;
+  doc.text(text, x, yPosition);
+  yPosition += 10;
+});
+
+// Set font color to black for the last note
+doc.setTextColor(0, 0, 0); // Black color
+const lastNote = "Please disregard this notice if payment has been made.";
+const lastNoteWidth = doc.getTextWidth(lastNote); // Get the width of the last note text
+const xLastNote = (doc.internal.pageSize.getWidth() - lastNoteWidth) / 2; // Center align the last note
+doc.text(lastNote, xLastNote, yPosition); // Draw the last note
+
+// Reset text color to default (black)
+doc.setTextColor(0, 0, 0);
+
+
+      // Save the PDF
+      const vendorName = document.getElementById('vendor-name').value;
+      doc.save(`${vendorName}SoA.pdf`);
+      alert("SUCCESS");
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('There was an error generating the PDF. Please check the console for details: ' + error.message);
+    }
   });
 
-  window.openSendMessageModal = openSendMessageModal;
+  // Set padlocking date based on due date
+  document.getElementById('dueDate').addEventListener('change', setPadlockingDate);
+
+  function setPadlockingDate() {
+    const dueDateInput = document.getElementById('dueDate');
+    const padlockingDateInput = document.getElementById('padlockingDate');
+    
+    const dueDate = new Date(dueDateInput.value);
+    if (!isNaN(dueDate.getTime())) {
+      dueDate.setDate(dueDate.getDate() + 10);
+      const year = dueDate.getFullYear();
+      const month = String(dueDate.getMonth() + 1).padStart(2, '0');
+      const day = String(dueDate.getDate()).padStart(2, '0');
+      padlockingDateInput.value = `${year}-${month}-${day}`;
+    } else {
+      padlockingDateInput.value = ''; // Clear if due date is invalid
+    }
+  }
 });
 </script>
+
+
 <style>
 
 .alert-popup {

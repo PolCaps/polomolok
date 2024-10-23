@@ -1,0 +1,828 @@
+{
+  "filename": "NOTICE.pdf",
+  "page_data": [
+    {
+      "page": 0,
+      "image_url": "https://images.nanonets.com/tr:rt-0/uploadedfiles/rawocr/aae5c597-98e2-47da-b578-cf96e74a2316-1.jpeg?ik-s=940d3e8061546cd6721920b0638e6141cafa6700&ik-t=1729685988",
+      "size": {
+        "width": 1200,
+        "height": 1500
+      },
+      "words": [
+        {
+          "text": "A",
+          "xmin": 73,
+          "ymin": 53,
+          "xmax": 301,
+          "ymax": 182
+        },
+        {
+          "text": "2012",
+          "xmin": 179,
+          "ymin": 105,
+          "xmax": 204,
+          "ymax": 113
+        },
+        {
+          "text": "D",
+          "xmin": 240,
+          "ymin": 154,
+          "xmax": 248,
+          "ymax": 161
+        },
+        {
+          "text": "POLOMOLOK,SOUTHCOTABATO",
+          "xmin": 111,
+          "ymin": 165,
+          "xmax": 268,
+          "ymax": 177
+        },
+        {
+          "text": "I",
+          "xmin": 288,
+          "ymin": 163,
+          "xmax": 300,
+          "ymax": 196
+        },
+        {
+          "text": "Republic",
+          "xmin": 441,
+          "ymin": 147,
+          "xmax": 558,
+          "ymax": 173
+        },
+        {
+          "text": "of",
+          "xmin": 567,
+          "ymin": 146,
+          "xmax": 595,
+          "ymax": 168
+        },
+        {
+          "text": "the",
+          "xmin": 603,
+          "ymin": 146,
+          "xmax": 647,
+          "ymax": 167
+        },
+        {
+          "text": "Philippines",
+          "xmin": 659,
+          "ymin": 146,
+          "xmax": 811,
+          "ymax": 175
+        },
+        {
+          "text": "E",
+          "xmin": 74,
+          "ymin": 182,
+          "xmax": 238,
+          "ymax": 289
+        },
+        {
+          "text": "O",
+          "xmin": 107,
+          "ymin": 179,
+          "xmax": 125,
+          "ymax": 193
+        },
+        {
+          "text": "=",
+          "xmin": 122,
+          "ymin": 181,
+          "xmax": 125,
+          "ymax": 188
+        },
+        {
+          "text": "A",
+          "xmin": 242,
+          "ymin": 178,
+          "xmax": 261,
+          "ymax": 197
+        },
+        {
+          "text": "1",
+          "xmin": 285,
+          "ymin": 192,
+          "xmax": 297,
+          "ymax": 211
+        },
+        {
+          "text": "Province",
+          "xmin": 436,
+          "ymin": 179,
+          "xmax": 553,
+          "ymax": 199
+        },
+        {
+          "text": "of",
+          "xmin": 563,
+          "ymin": 178,
+          "xmax": 592,
+          "ymax": 199
+        },
+        {
+          "text": "South",
+          "xmin": 600,
+          "ymin": 179,
+          "xmax": 677,
+          "ymax": 199
+        },
+        {
+          "text": "Cotabato",
+          "xmin": 689,
+          "ymin": 174,
+          "xmax": 815,
+          "ymax": 199
+        },
+        {
+          "text": "0",
+          "xmin": 196,
+          "ymin": 240,
+          "xmax": 220,
+          "ymax": 252
+        },
+        {
+          "text": "ATA",
+          "xmin": 226,
+          "ymin": 202,
+          "xmax": 301,
+          "ymax": 278
+        },
+        {
+          "text": "MUNICIPALITY",
+          "xmin": 408,
+          "ymin": 244,
+          "xmax": 607,
+          "ymax": 264
+        },
+        {
+          "text": "OF",
+          "xmin": 617,
+          "ymin": 244,
+          "xmax": 651,
+          "ymax": 264
+        },
+        {
+          "text": "POLOMOLOK",
+          "xmin": 663,
+          "ymin": 244,
+          "xmax": 844,
+          "ymax": 264
+        },
+        {
+          "text": "MUNICIPAL",
+          "xmin": 174,
+          "ymin": 309,
+          "xmax": 329,
+          "ymax": 329
+        },
+        {
+          "text": "ECONOMIC",
+          "xmin": 341,
+          "ymin": 309,
+          "xmax": 492,
+          "ymax": 329
+        },
+        {
+          "text": "ENTERPRISES",
+          "xmin": 503,
+          "ymin": 309,
+          "xmax": 680,
+          "ymax": 329
+        },
+        {
+          "text": "AND",
+          "xmin": 690,
+          "ymin": 309,
+          "xmax": 749,
+          "ymax": 328
+        },
+        {
+          "text": "DEVELOPMENT",
+          "xmin": 763,
+          "ymin": 309,
+          "xmax": 967,
+          "ymax": 329
+        },
+        {
+          "text": "OFFICE",
+          "xmin": 977,
+          "ymin": 309,
+          "xmax": 1069,
+          "ymax": 329
+        },
+        {
+          "text": "(",
+          "xmin": 489,
+          "ymin": 342,
+          "xmax": 495,
+          "ymax": 361
+        },
+        {
+          "text": "Market",
+          "xmin": 494,
+          "ymin": 339,
+          "xmax": 600,
+          "ymax": 361
+        },
+        {
+          "text": "Operation",
+          "xmin": 610,
+          "ymin": 341,
+          "xmax": 753,
+          "ymax": 367
+        },
+        {
+          "text": "1",
+          "xmin": 753,
+          "ymin": 342,
+          "xmax": 758,
+          "ymax": 361
+        },
+        {
+          "text": "DATE",
+          "xmin": 911,
+          "ymin": 421,
+          "xmax": 986,
+          "ymax": 442
+        },
+        {
+          "text": "BILLING",
+          "xmin": 449,
+          "ymin": 464,
+          "xmax": 594,
+          "ymax": 492
+        },
+        {
+          "text": "NOTICE",
+          "xmin": 609,
+          "ymin": 464,
+          "xmax": 743,
+          "ymax": 490
+        },
+        {
+          "text": "Bill",
+          "xmin": 83,
+          "ymin": 576,
+          "xmax": 123,
+          "ymax": 599
+        },
+        {
+          "text": "for",
+          "xmin": 134,
+          "ymin": 575,
+          "xmax": 175,
+          "ymax": 599
+        },
+        {
+          "text": "the",
+          "xmin": 184,
+          "ymin": 577,
+          "xmax": 229,
+          "ymax": 599
+        },
+        {
+          "text": "month",
+          "xmin": 241,
+          "ymin": 577,
+          "xmax": 333,
+          "ymax": 599
+        },
+        {
+          "text": "of",
+          "xmin": 346,
+          "ymin": 576,
+          "xmax": 374,
+          "ymax": 599
+        },
+        {
+          "text": ":",
+          "xmin": 383,
+          "ymin": 583,
+          "xmax": 387,
+          "ymax": 586
+        },
+        {
+          "text": "Location",
+          "xmin": 83,
+          "ymin": 614,
+          "xmax": 203,
+          "ymax": 635
+        },
+        {
+          "text": "=",
+          "xmin": 206,
+          "ymin": 618,
+          "xmax": 208,
+          "ymax": 622
+        },
+        {
+          "text": "Name",
+          "xmin": 83,
+          "ymin": 650,
+          "xmax": 166,
+          "ymax": 671
+        },
+        {
+          "text": "-",
+          "xmin": 171,
+          "ymin": 655,
+          "xmax": 172,
+          "ymax": 658
+        },
+        {
+          "text": "Stall",
+          "xmin": 82,
+          "ymin": 683,
+          "xmax": 140,
+          "ymax": 707
+        },
+        {
+          "text": "#",
+          "xmin": 152,
+          "ymin": 686,
+          "xmax": 165,
+          "ymax": 704
+        },
+        {
+          "text": "|",
+          "xmin": 173,
+          "ymin": 691,
+          "xmax": 175,
+          "ymax": 695
+        },
+        {
+          "text": "Due",
+          "xmin": 83,
+          "ymin": 721,
+          "xmax": 139,
+          "ymax": 743
+        },
+        {
+          "text": "Date",
+          "xmin": 151,
+          "ymin": 721,
+          "xmax": 216,
+          "ymax": 743
+        },
+        {
+          "text": "|",
+          "xmin": 219,
+          "ymin": 727,
+          "xmax": 220,
+          "ymax": 730
+        },
+        {
+          "text": "Padlocking",
+          "xmin": 83,
+          "ymin": 755,
+          "xmax": 237,
+          "ymax": 787
+        },
+        {
+          "text": "Date",
+          "xmin": 249,
+          "ymin": 757,
+          "xmax": 313,
+          "ymax": 779
+        },
+        {
+          "text": "=",
+          "xmin": 314,
+          "ymin": 762,
+          "xmax": 319,
+          "ymax": 770
+        },
+        {
+          "text": "Number",
+          "xmin": 83,
+          "ymin": 793,
+          "xmax": 201,
+          "ymax": 815
+        },
+        {
+          "text": "of",
+          "xmin": 211,
+          "ymin": 792,
+          "xmax": 239,
+          "ymax": 815
+        },
+        {
+          "text": "Months",
+          "xmin": 250,
+          "ymin": 793,
+          "xmax": 360,
+          "ymax": 815
+        },
+        {
+          "text": "|",
+          "xmin": 360,
+          "ymin": 799,
+          "xmax": 361,
+          "ymax": 802
+        },
+        {
+          "text": "Penalty",
+          "xmin": 83,
+          "ymin": 827,
+          "xmax": 187,
+          "ymax": 858
+        },
+        {
+          "text": "Fee",
+          "xmin": 199,
+          "ymin": 829,
+          "xmax": 246,
+          "ymax": 851
+        },
+        {
+          "text": "=",
+          "xmin": 249,
+          "ymin": 834,
+          "xmax": 251,
+          "ymax": 839
+        },
+        {
+          "text": "Total",
+          "xmin": 81,
+          "ymin": 864,
+          "xmax": 149,
+          "ymax": 887
+        },
+        {
+          "text": "|",
+          "xmin": 151,
+          "ymin": 866,
+          "xmax": 157,
+          "ymax": 883
+        },
+        {
+          "text": "GRAND",
+          "xmin": 82,
+          "ymin": 901,
+          "xmax": 185,
+          "ymax": 923
+        },
+        {
+          "text": "TOTAL",
+          "xmin": 197,
+          "ymin": 901,
+          "xmax": 293,
+          "ymax": 923
+        },
+        {
+          "text": "=",
+          "xmin": 293,
+          "ymin": 907,
+          "xmax": 295,
+          "ymax": 911
+        },
+        {
+          "text": "Note",
+          "xmin": 135,
+          "ymin": 1019,
+          "xmax": 195,
+          "ymax": 1037
+        },
+        {
+          "text": "=",
+          "xmin": 194,
+          "ymin": 1024,
+          "xmax": 197,
+          "ymax": 1033
+        },
+        {
+          "text": "Revocation/Cancellation",
+          "xmin": 210,
+          "ymin": 1018,
+          "xmax": 512,
+          "ymax": 1037
+        },
+        {
+          "text": "of",
+          "xmin": 520,
+          "ymin": 1018,
+          "xmax": 547,
+          "ymax": 1037
+        },
+        {
+          "text": "lease",
+          "xmin": 553,
+          "ymin": 1019,
+          "xmax": 615,
+          "ymax": 1037
+        },
+        {
+          "text": "shall",
+          "xmin": 623,
+          "ymin": 1018,
+          "xmax": 681,
+          "ymax": 1037
+        },
+        {
+          "text": "be",
+          "xmin": 690,
+          "ymin": 1018,
+          "xmax": 719,
+          "ymax": 1037
+        },
+        {
+          "text": "implemented",
+          "xmin": 727,
+          "ymin": 1019,
+          "xmax": 891,
+          "ymax": 1042
+        },
+        {
+          "text": "if",
+          "xmin": 901,
+          "ymin": 1018,
+          "xmax": 918,
+          "ymax": 1036
+        },
+        {
+          "text": "not",
+          "xmin": 925,
+          "ymin": 1021,
+          "xmax": 964,
+          "ymax": 1037
+        },
+        {
+          "text": "settled",
+          "xmin": 973,
+          "ymin": 1018,
+          "xmax": 1057,
+          "ymax": 1037
+        },
+        {
+          "text": "within",
+          "xmin": 286,
+          "ymin": 1048,
+          "xmax": 364,
+          "ymax": 1067
+        },
+        {
+          "text": "10",
+          "xmin": 375,
+          "ymin": 1048,
+          "xmax": 400,
+          "ymax": 1067
+        },
+        {
+          "text": "working",
+          "xmin": 408,
+          "ymin": 1047,
+          "xmax": 509,
+          "ymax": 1071
+        },
+        {
+          "text": "days",
+          "xmin": 516,
+          "ymin": 1047,
+          "xmax": 572,
+          "ymax": 1071
+        },
+        {
+          "text": "after",
+          "xmin": 580,
+          "ymin": 1047,
+          "xmax": 641,
+          "ymax": 1067
+        },
+        {
+          "text": "receiving",
+          "xmin": 650,
+          "ymin": 1043,
+          "xmax": 761,
+          "ymax": 1071
+        },
+        {
+          "text": "this",
+          "xmin": 770,
+          "ymin": 1047,
+          "xmax": 815,
+          "ymax": 1067
+        },
+        {
+          "text": "notice.",
+          "xmin": 824,
+          "ymin": 1048,
+          "xmax": 905,
+          "ymax": 1067
+        },
+        {
+          "text": "Please",
+          "xmin": 67,
+          "ymin": 1120,
+          "xmax": 169,
+          "ymax": 1140
+        },
+        {
+          "text": "report",
+          "xmin": 192,
+          "ymin": 1122,
+          "xmax": 294,
+          "ymax": 1144
+        },
+        {
+          "text": "to",
+          "xmin": 318,
+          "ymin": 1122,
+          "xmax": 348,
+          "ymax": 1140
+        },
+        {
+          "text": "the",
+          "xmin": 372,
+          "ymin": 1121,
+          "xmax": 420,
+          "ymax": 1140
+        },
+        {
+          "text": "MA",
+          "xmin": 442,
+          "ymin": 1120,
+          "xmax": 471,
+          "ymax": 1140
+        },
+        {
+          "text": "RKET",
+          "xmin": 478,
+          "ymin": 1120,
+          "xmax": 544,
+          "ymax": 1139
+        },
+        {
+          "text": "OFFICE",
+          "xmin": 568,
+          "ymin": 1120,
+          "xmax": 669,
+          "ymax": 1139
+        },
+        {
+          "text": "to",
+          "xmin": 694,
+          "ymin": 1122,
+          "xmax": 724,
+          "ymax": 1139
+        },
+        {
+          "text": "avoid",
+          "xmin": 746,
+          "ymin": 1119,
+          "xmax": 831,
+          "ymax": 1140
+        },
+        {
+          "text": "Closure",
+          "xmin": 854,
+          "ymin": 1120,
+          "xmax": 973,
+          "ymax": 1140
+        },
+        {
+          "text": "Order",
+          "xmin": 996,
+          "ymin": 1120,
+          "xmax": 1089,
+          "ymax": 1140
+        },
+        {
+          "text": "-",
+          "xmin": 1089,
+          "ymin": 1131,
+          "xmax": 1093,
+          "ymax": 1134
+        },
+        {
+          "text": "PLEASE",
+          "xmin": 255,
+          "ymin": 1148,
+          "xmax": 356,
+          "ymax": 1168
+        },
+        {
+          "text": "BRING",
+          "xmin": 380,
+          "ymin": 1149,
+          "xmax": 464,
+          "ymax": 1168
+        },
+        {
+          "text": "EXACT",
+          "xmin": 487,
+          "ymin": 1149,
+          "xmax": 572,
+          "ymax": 1168
+        },
+        {
+          "text": "AMOUNT",
+          "xmin": 594,
+          "ymin": 1149,
+          "xmax": 697,
+          "ymax": 1168
+        },
+        {
+          "text": "UPON",
+          "xmin": 720,
+          "ymin": 1149,
+          "xmax": 785,
+          "ymax": 1168
+        },
+        {
+          "text": "PA",
+          "xmin": 809,
+          "ymin": 1149,
+          "xmax": 839,
+          "ymax": 1168
+        },
+        {
+          "text": "YMENT",
+          "xmin": 845,
+          "ymin": 1149,
+          "xmax": 928,
+          "ymax": 1168
+        },
+        {
+          "text": "NO",
+          "xmin": 434,
+          "ymin": 1178,
+          "xmax": 464,
+          "ymax": 1198
+        },
+        {
+          "text": "FIELD",
+          "xmin": 487,
+          "ymin": 1178,
+          "xmax": 571,
+          "ymax": 1197
+        },
+        {
+          "text": "COLLECTOR",
+          "xmin": 594,
+          "ymin": 1178,
+          "xmax": 749,
+          "ymax": 1197
+        },
+        {
+          "text": "Please",
+          "xmin": 155,
+          "ymin": 1240,
+          "xmax": 258,
+          "ymax": 1269
+        },
+        {
+          "text": "disregard",
+          "xmin": 269,
+          "ymin": 1240,
+          "xmax": 425,
+          "ymax": 1276
+        },
+        {
+          "text": "this",
+          "xmin": 436,
+          "ymin": 1240,
+          "xmax": 492,
+          "ymax": 1267
+        },
+        {
+          "text": "notice",
+          "xmin": 505,
+          "ymin": 1241,
+          "xmax": 603,
+          "ymax": 1269
+        },
+        {
+          "text": "ifpayment",
+          "xmin": 614,
+          "ymin": 1239,
+          "xmax": 789,
+          "ymax": 1275
+        },
+        {
+          "text": "has",
+          "xmin": 800,
+          "ymin": 1240,
+          "xmax": 856,
+          "ymax": 1269
+        },
+        {
+          "text": "been",
+          "xmin": 869,
+          "ymin": 1239,
+          "xmax": 947,
+          "ymax": 1269
+        },
+        {
+          "text": "made.",
+          "xmin": 958,
+          "ymin": 1240,
+          "xmax": 1057,
+          "ymax": 1269
+        }
+      ],
+      "raw_text": "A 2012 D POLOMOLOK,SOUTHCOTABATO I Republic of the Philippines E O = A 1 Province of South Cotabato 0 ATA MUNICIPALITY OF POLOMOLOK MUNICIPAL ECONOMIC ENTERPRISES AND DEVELOPMENT OFFICE ( Market Operation 1 DATE BILLING NOTICE Bill for the month of : Location = Name - Stall # | Due Date | Padlocking Date = Number of Months | Penalty Fee = Total | GRAND TOTAL = Note = Revocation/Cancellation of lease shall be implemented if not settled within 10 working days after receiving this notice. Please report to the MA RKET OFFICE to avoid Closure Order - PLEASE BRING EXACT AMOUNT UPON PA YMENT NO FIELD COLLECTOR Please disregard this notice ifpayment has been made. "
+    }
+  ]
+}
