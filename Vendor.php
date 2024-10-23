@@ -396,18 +396,7 @@ $conn->close();
             <label for="email_add" class="form-label">Email Address:</label>
             <textarea id="email_add" name="email_add" class="form-control"></textarea>
           </div>
-          <div class="mb-3">
-            <label for="lease_agreements" class="form-label">Lease Agreements:</label>
-            <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
-          </div>
-          <div class="mb-3">
-            <label for="business_permits" class="form-label">Business Permits:</label>
-            <input type="file" id="business_permits" name="business_permits" class="form-control">
-          </div>
-          <div class="mb-3">
-            <label for="business_licenses" class="form-label">Business Licenses:</label>
-            <input type="file" id="business_licenses" name="business_licenses" class="form-control">
-          </div>
+          
           <div class="modal-footer">
             <button type="submit" name="submit" id="submit" class="btn btn-info">Create Account</button>
             <button type="button" class="btn btn-secondary" id="closeButton">Close</button>
@@ -458,18 +447,7 @@ $conn->close();
                         <label for="email_add" class="form-label">Email Address:</label>
                         <textarea id="email_add" name="email_add" class="form-control"><?php echo htmlspecialchars($vendor_data['email_add'] ?? ''); ?></textarea>
                     </div>
-                    <div class="mb-3">
-                        <label for="lease_agreements" class="form-label">Lease Agreements:</label>
-                        <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label for="business_permits" class="form-label">Business Permits:</label>
-                        <input type="file" id="business_permits" name="business_permits" class="form-control">
-                    </div>
-                    <div class="mb-3">
-                        <label for="business_licenses" class="form-label">Business Licenses:</label>
-                        <input type="file" id="business_licenses" name="business_licenses" class="form-control">
-                    </div>
+            
                     <div class="modal-footer">
                         <button type="submit" name="submit" id="submit" class="btn btn-info">Edit</button>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -812,6 +790,8 @@ if (isset($_POST['submit'])) {
       
     </div>
   </main>
+
+  
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
       <i class="fa fa-cog py-2"> </i>
@@ -832,49 +812,20 @@ if (isset($_POST['submit'])) {
        <!-- Edit Profile Button -->
   <div class="card-body pt-sm-3 pt-0">
     <a class="btn bg-gradient-info w-85 text-white mx-4" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</a>
-    <a class="btn bg-gradient-info w-85 text-white mx-4" href="#" data-bs-toggle="modal" data-bs-target="#fillApplicantModal">Fill Lease Agreement</a>
+    <a class="btn bg-gradient-info w-85 text-white mx-4" href="VMDocuments.php">Fill Documents</a>
   
     <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
-    <hr class="horizontal dark my-1">
+    <hr class="horizontal dark my-2">
     <div class="text-small">Fixed Navbar</div>
     <div class="form-check form-switch ps-0">
       <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
     </div>
   </div>
 
-    
-  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-
-      <br>
-      <hr class="horizontal dark my-1">
-      <br>
-      <div class="text-small text-center text-info">Messages</div>
-      <br><br>
-      <div class="text-small text-center">No Message Yet!</div>
       </div>
   </div>
 
-  <div class="fixed-plugin">
-    <a class="fixed-plugin-button text-dark position-fixed px-3 py-2 mx-6"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-      <i class="fa fa-wechat py-2"  data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight"> </i>
-    </a>
-  </div>
 
-  <div class="offcanvas offcanvas-end max-width-300" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title text-info" id="offcanvasRightLabel">Reminders/Messages</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body">
-    <hr class="horizontal dark my-1">
-    
-    <br>
-    <div class="text-small text-center text-info">Messages</div>
-    <br><br>
-    <div class="text-small text-center">No Message Yet!</div>
-    </div>
-    
-  </div>
 
   <!--   Core JS Files   -->
  

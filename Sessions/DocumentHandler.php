@@ -2,8 +2,7 @@
 // Start the session with the specific session name
 session_name('docuhandler_session');
 
-// Set session cookie parameters for 7 days (1 week)
-$lifetime = 7; // 7 days in seconds
+$lifetime = 60 * 60 * 24 * 7; // 7 days in seconds
 session_set_cookie_params($lifetime);
 session_start();
 

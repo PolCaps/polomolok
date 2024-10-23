@@ -1,144 +1,53 @@
-<?php 
+<?php
 include('Sessions/Vendor.php');
+
+// Include database configuration
+include('database_config.php');
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+  die("Connection failed: " . $conn->connect_error);
+}
+
+
+if (!isset($_SESSION['vendor_id'])) {
+  header("Location: index.php");
+  exit();
+}
+
+
+// Get the vendor ID from the session
+$vendor_id = $_SESSION['vendor_id'];
 
 // Include database configuration
 include('database_config.php');
 
 // Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-// Check for connection errors
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
-}
 
-// SQL query with placeholders (removed r.receipt AS receiptsImg)
-$sql = "
-  SELECT v.*, 
-         v.payment_due AS due_dates,
-         buildings.monthly_rentals, 
-         buildings.stall_no
-  FROM vendors v
-  JOIN (
-      SELECT vendor_id, monthly_rentals, stall_no FROM building_a
-      UNION ALL
-      SELECT vendor_id, monthly_rentals, stall_no FROM building_b
-      UNION ALL
-      SELECT vendor_id, monthly_rentals, stall_no FROM building_c
-      UNION ALL
-      SELECT vendor_id, monthly_rentals, stall_no FROM building_d
-      UNION ALL
-      SELECT vendor_id, monthly_rentals, stall_no FROM building_e
-      UNION ALL
-      SELECT vendor_id, monthly_rentals, stall_no FROM building_f
-      UNION ALL
-      SELECT vendor_id, monthly_rentals, stall_no FROM building_g
-      UNION ALL
-      SELECT vendor_id, monthly_rentals, stall_no FROM building_h
-      UNION ALL
-      SELECT vendor_id, monthly_rentals, stall_no FROM building_i
-      UNION ALL
-      SELECT vendor_id, monthly_rentals, stall_no FROM building_j
-  ) AS buildings ON v.vendor_id = buildings.vendor_id
-  WHERE v.vendor_id = ?
-";
-
-// Prepare the SQL statement
+// Fetch vendor information
+$sql = "SELECT * FROM vendors WHERE vendor_id = ?";
 $stmt = $conn->prepare($sql);
-
-// Check if preparation was successful
 if ($stmt === false) {
-  die("Error preparing query: " . $conn->error);
+  die("Prepare failed: " . $conn->error);
 }
-
-// Bind the vendor_id parameter to the SQL query
 $stmt->bind_param("i", $vendor_id);
-
-// Execute the statement
-if (!$stmt->execute()) {
-  die("Error executing query: " . $stmt->error);
-}
-
-// Get the result
+$stmt->execute();
 $result = $stmt->get_result();
+$vendor = $result->fetch_assoc();
 
-// Check if data is retrieved
-if ($result->num_rows > 0) {
-  $vendor = $result->fetch_assoc();
-} else {
-  // Output an alert message with a redirect to the Vendor.php page
-  echo "<script>
-    alert('No vendor found.');
-    window.location.href = 'Vendor.php';
-  </script>";
-  exit();
-}
-
-if (!isset($vendor['first_name']) || $vendor['first_name'] === "" || !isset($vendor['last_name']) || $vendor['last_name'] === "") {
-
-  echo "<script>
-   alert('No information in your account. You need to fill-up your account first!');
-
-
-  document.addEventListener('DOMContentLoaded', function() {
-      var accountModal = new bootstrap.Modal(document.getElementById('accountModal'));
-      accountModal.show();
-
-      var form = document.getElementById('createVendorForm');
-      var modalElement = document.getElementById('accountModal'); // Reference the entire modal element
-
-      // Handle clicks outside the modal window (including the backdrop)
-      document.addEventListener('click', function(event) {
-          if (!modalElement.contains(event.target) && !form.checkValidity()) {
-              event.preventDefault(); // Prevent closing the modal
-              alert('Please fill out all required fields before closing.');
-          }
-      });
-
-      // Handle close button click
-      var closeButton = document.getElementById('closeButton');
-      closeButton.addEventListener('click', function() {
-          if (form.checkValidity()) {
-              accountModal.hide(); // Close the modal if the form is valid
-          } else {
-              alert('Please fill out all required fields before closing.');
-          }
-      });
-
-      // Disable accordion interaction (optional, adjust selector if needed)
-      var accordions = document.querySelectorAll('.accordion-header, .accordion-toggle');
-      accordions.forEach(function(accordion) {
-          accordion.style.pointerEvents = 'none';
-          accordion.style.opacity = '0.5';
-      });
-
-      // Prevent back navigation
-      window.history.pushState(null, null, window.location.href);
-      window.onpopstate = function() {
-          window.history.pushState(null, null, window.location.href);
-      };
-  });
-  </script>";
-} else {
-  echo "<script>
-          console.log('Vendor data available'); // Or handle vendor data as needed
-        </script>";
+// Check if vendor data is retrieved
+if (!$vendor) {
+  die("No vendor found with ID " . htmlspecialchars($vendor_id));
 }
 
 
 
-$query = "SELECT started_date, payment_due FROM vendors WHERE vendor_id = ?";
-$stmt1 = $conn->prepare($query);
-$stmt1->bind_param('i', $vendor_id);
-$stmt1->execute();
-$stmt1->bind_result($started_date, $payment_due);
-$stmt1->fetch();
-$stmt1->close();
-
-// Close the statement and connection
-$stmt->close();
+// Close the connection
 $conn->close();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -496,7 +405,7 @@ $stmtA->close();
                       </div>
                       <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        <a href="Vendor.php" type="button" class="btn btn-secondary">Add now?</a>
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentsModal">Add now?</button>
                       </div>
                     </div>
                   </div>
@@ -510,8 +419,43 @@ $stmtA->close();
     </div>
     </div>
     </div>
+<!-- Modal -->
+<div class="modal fade" id="documentsModal" tabindex="-1" aria-labelledby="documentsModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="documentsModalLabel">Upload Documents</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="documentsForm" action="update_vendorDocu.php" method="POST" enctype="multipart/form-data">
+          <div class="mb-3">
+            <label for="lease_agreements" class="form-label">Lease Agreements:</label>
+            <input type="file" id="lease_agreements" name="lease_agreements" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="business_permits" class="form-label">Business Permits:</label>
+            <input type="file" id="business_permits" name="business_permits" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="business_licenses" class="form-label">Business Licenses:</label>
+            <input type="file" id="business_licenses" name="business_licenses" class="form-control">
+          </div>
+          <input type="hidden" id="vendor_id" name="vendor_id" value="<?php echo htmlspecialchars($vendor_id); ?>">
+          <input type="hidden" id="vendor_name" name="vendor_name"  
+          value="<?php echo htmlspecialchars($vendor['first_name'] . ' ' . $vendor['middle_name'] . ' ' . $vendor['last_name']); ?>" />
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary" form="documentsForm">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
 
   </main>
+ 
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
       <i class="fa fa-cog py-2"> </i>
@@ -529,48 +473,21 @@ $stmtA->close();
         </div>
         <!-- End Toggle Button -->
       </div>
-      <hr class="horizontal dark my-1">
-      <div class="card-body pt-sm-3 pt-0">
-        <a class="btn bg-gradient-info w-85 text-white mx-4" href="#">Edit Profile</a>
-        <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
-        <hr class="horizontal dark my-1">
-        <div class="text-small">Fixed Navbar</div>
-        <div class="form-check form-switch ps-0">
-          <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
-        </div>
-        <br>
-        <hr class="horizontal dark my-1">
-        <br>
-        <div class="text-small text-center text-info">Messages</div>
-        <br><br>
-        <div class="text-small text-center">No Message Yet!</div>
-      </div>
+       <!-- Edit Profile Button -->
+  <div class="card-body pt-sm-3 pt-0">
+    <a class="btn bg-gradient-info w-85 text-white mx-4" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</a>
+  
+    <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
+    <hr class="horizontal dark my-2">
+    <div class="text-small">Fixed Navbar</div>
+    <div class="form-check form-switch ps-0">
+      <input class="form-check-input mt-1 ms-auto" type="checkbox" id="navbarFixed" onclick="navbarFixed(this)">
     </div>
+  </div>
 
-    <div class="fixed-plugin">
-      <a class="fixed-plugin-button text-dark position-fixed px-3 py-2 mx-6" data-bs-toggle="offcanvas"
-        data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
-        <i class="fa fa-wechat py-2" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight"
-          aria-controls="offcanvasRight"> </i>
-      </a>
-    </div>
-
-    <div class="offcanvas offcanvas-end max-width-300" tabindex="-1" id="offcanvasRight"
-      aria-labelledby="offcanvasRightLabel">
-      <div class="offcanvas-header">
-        <h5 class="offcanvas-title text-info" id="offcanvasRightLabel">Reminders/Messages</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
-      <div class="offcanvas-body">
-        <hr class="horizontal dark my-1">
+  </div>
 
-        <br>
-        <div class="text-small text-center text-info">Messages</div>
-        <br><br>
-        <div class="text-small text-center">No Message Yet!</div>
-      </div>
-
-    </div>
     <!--   Core JS Files   -->
     <script src="assets2/js/core/popper.min.js"></script>
     <script src="assets2/js/core/bootstrap.min.js"></script>

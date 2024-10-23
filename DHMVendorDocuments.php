@@ -82,7 +82,7 @@ include('Sessions/DocumentHandler.php');
             <li class="breadcrumb-item text-sm"><a class="opacity-5 text-dark" href="javascript:;">Document Handler</a></li>
             <li class="breadcrumb-item text-sm text-dark active" aria-current="page">Module</li>
           </ol>
-          <h6 class="font-weight-bolder mb-0">Payment Reminder</h6>
+          <h6 class="font-weight-bolder mb-0">Vendor's Document</h6>
         </nav>
         <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4" id="navbar">
           <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -98,6 +98,11 @@ include('Sessions/DocumentHandler.php');
                 <span class="d-sm-inline d-none">Document Handler</span>
               </a>
             </li>
+
+            <?php 
+            include('Notification/DocuHandNotif.php');
+            ?>
+
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -120,11 +125,10 @@ include('Sessions/DocumentHandler.php');
             <div class="card-header pb-0">
               <div class="row">
                 <div class="col-lg-6 col-7">
-                  <h6>Vendors</h6>
-                  <p class="text-sm mb-0">
-                    <i class="fa fa-user-circle text-warning" aria-hidden="true"></i>
-                    <span class="font-weight-bold ms-1">List of Vendors</span> 
-                  </p>
+                  <div class="d-flex">
+                  <i class="fa fa-archive mt-1 mx-1" aria-hidden="true"></i>
+                  <h6 class="">Vendors</h6>
+                  </div>
                 </div>
                 <div class="col-lg-6 col-5 my-auto text-end">
                   <div class="ms-md-auto pe-md-3 d-flex align-items-center">
@@ -255,27 +259,50 @@ $conn->close();
     }
 
 
-    // Wait until the DOM is fully loaded
-document.addEventListener('DOMContentLoaded', function() {
-    // Get all clickable elements
-    const clickables = document.querySelectorAll('.clickable');
     
-    // Add event listeners to all clickable elements
-    clickables.forEach(clickable => {
-        clickable.addEventListener('click', function() {
-            const documentUrl = this.getAttribute('data-doc');
-            
-            // Assuming that documentUrl is a valid URL, open it in a new tab
-            if (documentUrl) {
-                window.open(documentUrl, '_blank');
-            } else {
-                alert('Error: No documents!');
-            }
-        });
-    });
-});
 
   </script>
+  <script>
+  // Wait until the DOM is fully loaded
+  document.addEventListener('DOMContentLoaded', function () {
+    // Get all clickable elements
+    const clickables = document.querySelectorAll('.clickable');
+
+                  // Add event listeners to all clickable elements
+                  clickables.forEach(clickable => {
+                    clickable.addEventListener('click', function () {
+                      const documentUrl = this.getAttribute('data-doc');
+
+                      // If documentUrl exists, open the document in a new tab
+                      if (documentUrl) {
+                        window.open(documentUrl, '_blank');
+                      } else {
+                        // Show Bootstrap modal if no document exists
+                        const noDocumentModal = new bootstrap.Modal(document.getElementById('noDocumentModal'));
+                        noDocumentModal.show();
+                      }
+                    });
+                  });
+                });
+              </script>
+              <!-- Modal for No Documents -->
+                <div class="modal fade" id="noDocumentModal" tabindex="-1" aria-labelledby="noDocumentModalLabel" aria-hidden="true">
+                  <div class="modal-dialog">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <h5 class="modal-title" id="noDocumentModalLabel">No Document Available</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                      </div>
+                      <div class="modal-body">
+                        Sorry, there are no documents available for this item.
+                      </div>
+                      <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+
+                      </div>
+                    </div>
+                  </div>
+                </div>
   <!-- Github buttons -->
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
