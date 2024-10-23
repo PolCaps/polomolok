@@ -2,6 +2,39 @@
 include('Sessions/CustomerService.php');
 ?>
 
+<?php
+// Connect to your database
+include('database_config.php');
+
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+if (isset($_GET['ids'])) {
+    $ids = $_GET['ids']; // Get the IDs from the query string
+    $idsArray = explode(',', $ids); // Convert to an array
+
+    // Prepare a statement to update the archived status
+    $idString = implode(',', array_map('intval', $idsArray)); // Convert to a string
+
+    // Perform the update query
+    $sql = "UPDATE inquiry SET archived = 1 WHERE inq_id IN ($idString)";
+
+    // Check if the query was successful
+    if (mysqli_query($conn, $sql)) {
+    } else {  
+    }
+} else {
+}
+
+// Close the database connection at the end
+mysqli_close($conn);
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -132,115 +165,13 @@ include('Sessions/CustomerService.php');
 
     <button class="btn btn-danger" id="deleteBtn">Delete Selected</button>
 
-    <?php
-include('database_config.php');
-
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$start_date = isset($_POST['start_date']) ? $_POST['start_date'] : '';
-$end_date = isset($_POST['end_date']) ? $_POST['end_date'] : '';
-
-$sql = "SELECT name, email_add, subject, message, sent_date FROM archived_inquiries";
-
-if ($start_date && $end_date) {
-    $sql .= " WHERE sent_date BETWEEN '$start_date' AND '$end_date'";
-}
-
-$result = $conn->query($sql);
-?>
-<?php
-// Include your database configuration file
-include('database_config.php');
-
-// Create a connection using mysqli
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-// Initialize a variable to hold alert messages
-$alertMessage = '';
-
-// Check if the 'ids' parameter is present in the URL
-if (isset($_GET['ids'])) {
-    // Get the comma-separated list of inquiry IDs
-    $ids = $_GET['ids'];
-
-    // Convert the string of IDs into an array
-    $inquiryIds = explode(',', $ids);
-
-    // Convert each ID to an integer (sanitize the input to prevent SQL injection)
-    $inquiryIds = array_map('intval', $inquiryIds);
-
-    // Convert the array back to a comma-separated string for the SQL query
-    $idString = implode(',', $inquiryIds);
-
-    // Step 1: Use INSERT IGNORE to avoid duplicates in the archived_inquiries table
-    $copyQuery = "INSERT IGNORE INTO archived_inquiries (inquiry_id, name, email_add, subject, message, sent_date)
-                  SELECT inq_id, name, email_add, subject, message, sent_date 
-                  FROM inquiry 
-                  WHERE inq_id IN ($idString)";
-
-    // Execute the copy query
-    if ($conn->query($copyQuery) === TRUE) {
-        // Step 2 (Optional): Delete the inquiries from the original table after copying
-        $deleteQuery = "DELETE FROM inquiry WHERE inq_id IN ($idString)";
-        
-        // Execute the delete query
-        if ($conn->query($deleteQuery) === TRUE) {
-            $toastMessage = "Inquiries archived successfully!";
-        } else {
-          $toastMessage = "Error deleting inquiries: " . $conn->error;
-        }
-    } else {
-      $toastMessage = "Error copying inquiries: " . $conn->error;
-    }
-} else {
-  $toastMessage = "";
-}
-
-// Close the connection
-$conn->close();
-?>
 
 
 <div id="alertMessage" class="alert alert-dismissible fade show" role="alert" style="display: none;">
     <strong id="alertTitle"></strong> <span id="alertBody"></span>
     <button type="button" class="btn-close" onclick="document.getElementById('alertMessage').style.display='none'"></button>
 </div>
-<div class="toast-container position-fixed top-0 end-0 p-3" id="toastNotif">
-        <?php if (!empty($toastMessage)): ?>
-            <div class="toast show" role="alert" aria-live="assertive" aria-atomic="true" data-bs-autohide="true" data-bs-delay="2000" id="toastNotif">
-                <div class="toast-header">
-                    <strong class="me-auto info">Notification</strong>
-                    <button type="button" class="btn-close bg-info" data-bs-dismiss="toast" aria-label="Close"></button>
-                </div>
-                <div class="toast-body">
-                    <?php echo $toastMessage; ?>
-                </div>
-            </div>
-        <?php endif; ?>
-    </div>
-    <script>
-    // Function to auto-dismiss the toast after 2 seconds
-    $(document).ready(function() {
-        const toastElement = $('#toastNotif');
-        if (toastElement.length) {
-            toastElement.toast('show'); // Show the toast immediately
-            setTimeout(function() {
-                toastElement.toast('hide');
-            }, 2000); // Auto-dismiss after 2 seconds
-        }
-    });
-</script>
+
 
 <div class="row my-4">
     <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
@@ -250,78 +181,7 @@ $conn->close();
                     <div class="col-lg-6 col-7">
                         <h6 class="text-info">Inquiries</h6>
                     </div>
-                    <div class="col-lg-6 col-5 my-auto text-end">
-                        <div class="dropdown float-lg-end pe-4 mx-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-week" viewBox="0 0 16 16" id="filterDate" data-bs-toggle="dropdown" aria-expanded="false">
-                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
-                                <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
-                            </svg>
-                            <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="filterDate">
-                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('today')">Today</a></li>
-                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('week')">This Week</a></li>
-                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('month')">This Month</a></li>
-                                <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#customDateModal">Custom Date</a></li>
-                            </ul>
-                            <div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="customDateModalLabel">Select Custom Date</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form id="customDateForm" method="POST">
-                                                <input type="text" id="customStartDate" name="start_date" class="form-control mb-2" placeholder="Start Date">
-                                                <input type="text" id="customEndDate" name="end_date" class="form-control" placeholder="End Date">
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary" onclick="submitCustomDateForm()">Apply</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    flatpickr('#customStartDate', {
-                                        dateFormat: 'Y-m-d'
-                                    });
-                                    flatpickr('#customEndDate', {
-                                        dateFormat: 'Y-m-d'
-                                    });
-                                });
-
-                                function filterByDate(period) {
-                                    const today = new Date();
-                                    let startDate, endDate;
-
-                                    switch(period) {
-                                        case 'today':
-                                            startDate = endDate = today.toISOString().split('T')[0];
-                                            break;
-                                        case 'week':
-                                            const firstDayOfWeek = today.getDate() - today.getDay();
-                                            startDate = new Date(today.setDate(firstDayOfWeek)).toISOString().split('T')[0];
-                                            endDate = new Date(today.setDate(firstDayOfWeek + 6)).toISOString().split('T')[0];
-                                            break;
-                                        case 'month':
-                                            startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
-                                            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
-                                            break;
-                                    }
-
-                                    document.getElementById('customStartDate').value = startDate;
-                                    document.getElementById('customEndDate').value = endDate;
-                                    document.getElementById('customDateForm').submit();
-                                }
-
-                                function submitCustomDateForm() {
-                                    document.getElementById('customDateForm').submit();
-                                }
-                            </script>
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
             <style>
@@ -346,91 +206,102 @@ $conn->close();
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email Address</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
                     <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
+                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
                 </tr>
             </thead>
             <tbody id="data-table"></tbody>
         </table>
     </div>
-
+    
     <script>
         // Fetch and populate the inquiries table
-      document.addEventListener('DOMContentLoaded', function () {
-          fetch('get_archivedinquiries.php')
-              .then(response => {
-                  if (!response.ok) {
-                      throw new Error('Network response was not ok');
-                  }
-                  return response.json();
-              })
-              .then(data => {
-                  const tableBody = document.getElementById("data-table");
-                  tableBody.innerHTML = ''; // Clear existing content
+        document.addEventListener('DOMContentLoaded', function () {
+    const tableBody = document.getElementById("data-table");
+    const loadingIndicator = document.createElement("tr");
+    loadingIndicator.innerHTML = '<td colspan="7" class="text-center">Loading...</td>'; // Adjust based on the number of columns
+    tableBody.innerHTML = ''; // Clear existing content
+    tableBody.appendChild(loadingIndicator); // Show loading
 
-                  if (data.error) {
-                      const row = document.createElement("tr");
-                      const cell = document.createElement("td");
-                      cell.colSpan = 7; // Adjust based on the number of columns
-                      cell.className = 'text-center text-xs font-weight-bold mb-0';
-                      cell.innerHTML = data.error; // Display error if present
-                      row.appendChild(cell);
-                      tableBody.appendChild(row);
-                      return; // Stop further execution
-                  }
+    fetch('get_archivedinquiries.php')
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
+        .then(data => {
+            tableBody.innerHTML = ''; // Clear loading indicator
 
-                  if (Array.isArray(data) && data.length > 0) {
-                      data.forEach(inquiry => {
-                          const row = document.createElement("tr");
+            if (data.error) {
+                const row = document.createElement("tr");
+                const cell = document.createElement("td");
+                cell.colSpan = 7; // Adjust based on the number of columns
+                cell.className = 'text-center text-xs font-weight-bold mb-0';
+                cell.innerHTML = data.error; // Display error if present
+                row.appendChild(cell);
+                tableBody.appendChild(row);
+                return; // Stop further execution
+            }
 
-                          // Checkbox for each row
-                          const checkboxCell = document.createElement("td");
-                          checkboxCell.className = "text-center";
-                          checkboxCell.innerHTML = `<input type="checkbox" class="inquiry-checkbox" value="${inquiry.inquiry_id}">`;
-                          row.appendChild(checkboxCell);
+            if (Array.isArray(data) && data.length > 0) {
+                data.forEach(inquiry => {
+                    const row = document.createElement("tr");
 
-                          const idCell = document.createElement("td");
-                          idCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.inquiry_id}</div>`;
-                          row.appendChild(idCell);
+                    // Checkbox for each row
+                    const checkboxCell = document.createElement("td");
+                    checkboxCell.className = "text-center";
+                    checkboxCell.innerHTML = `<input type="checkbox" class="inquiry-checkbox" value="${inquiry.inq_id}">`;
+                    row.appendChild(checkboxCell);
 
-                          const nameCell = document.createElement("td");
-                          nameCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.name}</div>`;
-                          row.appendChild(nameCell);
+                    const idCell = document.createElement("td");
+                    idCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.inq_id}</div>`;
+                    row.appendChild(idCell);
 
-                          const emailCell = document.createElement("td");
-                          emailCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.email_add}</div>`;
-                          row.appendChild(emailCell);
+                    const nameCell = document.createElement("td");
+                    nameCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.name}</div>`;
+                    row.appendChild(nameCell);
 
-                          const subjectCell = document.createElement("td");
-                          subjectCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.subject}</div>`;
-                          row.appendChild(subjectCell);
+                    const emailCell = document.createElement("td");
+                    emailCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.email_add}</div>`;
+                    row.appendChild(emailCell);
 
-                          const messageCell = document.createElement("td");
-                          messageCell.className = 'text-center text-xs font-weight-bold mb-0';
-                          messageCell.innerHTML = `${inquiry.message.substring(0, 50)}...`;
-                          row.appendChild(messageCell);
+                    const subjectCell = document.createElement("td");
+                    subjectCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.subject}</div>`;
+                    row.appendChild(subjectCell);
 
-                          const dateCell = document.createElement("td");
-                          dateCell.className = 'text-center text-xs font-weight-bold mb-0';
-                          dateCell.innerHTML = inquiry.sent_date;
-                          row.appendChild(dateCell);
+                    const messageCell = document.createElement("td");
+                    messageCell.className = 'text-center text-xs font-weight-bold mb-0';
+                    messageCell.innerHTML = `${inquiry.message.substring(0, 50)}...`;
+                    row.appendChild(messageCell);
 
-                          tableBody.appendChild(row);
-                      });
-                  } else {
-                      const row = document.createElement("tr");
-                      const cell = document.createElement("td");
-                      cell.colSpan = 7; // Adjust based on the number of columns
-                      cell.className = 'text-center text-xs font-weight-bold mb-0';
-                      cell.innerHTML = 'No inquiries found';
-                      row.appendChild(cell);
-                      tableBody.appendChild(row);
-                  }
-              })
-              .catch(error => {
-                  console.error('Error fetching data:', error);
-              });
-      });
+                    const statusCell = document.createElement("td");
+                    statusCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.status}</div>`;
+                    row.appendChild(statusCell);
 
+                    tableBody.appendChild(row);
+                });
+            } else {
+                const row = document.createElement("tr");
+                const cell = document.createElement("td");
+                cell.colSpan = 9; // Adjust based on the number of columns
+                cell.className = 'text-center text-xs font-weight-bold mb-0';
+                cell.innerHTML = 'No archived inquiries found';
+                row.appendChild(cell);
+                tableBody.appendChild(row);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+            tableBody.innerHTML = ''; // Clear previous content
+            const row = document.createElement("tr");
+            const cell = document.createElement("td");
+            cell.colSpan = 7; // Adjust based on the number of columns
+            cell.className = 'text-center text-xs font-weight-bold mb-0';
+            cell.innerHTML = 'Failed to fetch inquiries. Please try again later.'; // User-friendly error message
+            row.appendChild(cell);
+            tableBody.appendChild(row);
+        });
+});
       function toggleSelectAll(source) {
           const checkboxes = document.querySelectorAll('.inquiry-checkbox');
           checkboxes.forEach(checkbox => {
