@@ -9,24 +9,13 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-// Prepare SQL statement with placeholders
-$sql = "SELECT inquiry_id, name, email_add, subject, message, sent_date FROM archived_inquiries";
-$params = [];
-$types = '';
-
-if (!empty($_POST['start_date']) && !empty($_POST['end_date'])) {
-    $start_date = $_POST['start_date'];
-    $end_date = $_POST['end_date'];
-    $sql .= " WHERE sent_date BETWEEN ? AND ?";
-    $params = [$start_date, $end_date];
-    $types = 'ss'; // Types of parameters: 's' for string
-}
+// Prepare SQL statement to select all inquiries and order by sent_date ascending
+$sql = "SELECT inq_id, name, email_add, subject, message, status, sent_date FROM inquiry WHERE archived = 1 ORDER BY sent_date ASC";
 
 // Prepare the statement
 $stmt = $conn->prepare($sql);
-
-if ($params) {
-    $stmt->bind_param($types, $params);
+if (!$stmt) {
+    die("Statement preparation failed: " . $conn->error); // Error handling
 }
 
 // Execute the query
@@ -36,13 +25,18 @@ $data = [];
 
 if ($result->num_rows > 0) {
     while ($row = $result->fetch_assoc()) {
-        $data[] = $row;
+        // Format the sent_date to a more readable format
+        $dateTime = new DateTime($row['sent_date']);
+        $row['sent_date'] = $dateTime->format('F j, Y, g:i a'); // Example: October 23, 2024, 2:30 pm
+
+        $data[] = $row; // Collect data for each row
     }
 } else {
-    $data = ['message' => 'No records found'];
+    // Return an empty array instead of a message
+    $data = []; // This keeps the response format consistent
 }
 
-// Close the connection
+// Close the statement and connection
 $stmt->close();
 $conn->close();
 

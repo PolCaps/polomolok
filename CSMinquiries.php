@@ -131,140 +131,94 @@ include('Sessions/CustomerService.php');
     <div class="container-fluid py-4">
 
     <button class="btn btn-primary" id="archiveBtn">Archive Selected</button>
-
     <button class="btn btn-danger" id="deleteBtn">Delete Selected</button>
 
-    <?php
-include('database_config.php');
-
-// Create a connection
-$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-// Check the connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-$start_date = isset($_POST['start_date']) ? $_POST['start_date'] : '';
-$end_date = isset($_POST['end_date']) ? $_POST['end_date'] : '';
-
-$sql = "SELECT name, email_add, subject, message, sent_date FROM inquiry";
-
-if ($start_date && $end_date) {
-    $sql .= " WHERE sent_date BETWEEN '$start_date' AND '$end_date'";
-}
-
-$result = $conn->query($sql);
-?>
-
-<div class="row my-4">
-    <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
-        <div class="card">
-            <div class="card-header pb-0">
-                <div class="row">
-                    <div class="col-lg-6 col-7">
-                        <h6 class="text-info">Inquiries</h6>
-                    </div>
-                    <div class="col-lg-6 col-5 my-auto text-end">
-                        <div class="dropdown float-lg-end pe-4 mx-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar2-week" viewBox="0 0 16 16" id="filterDate" data-bs-toggle="dropdown" aria-expanded="false">
-                                <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M2 2a1 1 0 0 0-1 1v11a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V3a1 1 0 0 0-1-1z"/>
-                                <path d="M2.5 4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5H3a.5.5 0 0 1-.5-.5zM11 7.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm-5 3a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5zm3 0a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-1a.5.5 0 0 1-.5-.5z"/>
-                            </svg>
-                            <ul class="dropdown-menu px-2 py-3 ms-sm-n4 ms-n5" aria-labelledby="filterDate">
-                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('today')">Today</a></li>
-                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('week')">This Week</a></li>
-                                <li><a class="dropdown-item border-radius-md" href="javascript:;" onclick="filterByDate('month')">This Month</a></li>
-                                <li><a class="dropdown-item border-radius-md" href="javascript:;" data-bs-toggle="modal" data-bs-target="#customDateModal">Custom Date</a></li>
-                            </ul>
-                            <div class="modal fade" id="customDateModal" tabindex="-1" aria-labelledby="customDateModalLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-dialog-centered">
-                                    <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title" id="customDateModalLabel">Select Custom Date</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                        </div>
-                                        <div class="modal-body">
-                                            <form id="customDateForm" method="POST">
-                                                <input type="text" id="customStartDate" name="start_date" class="form-control mb-2" placeholder="Start Date">
-                                                <input type="text" id="customEndDate" name="end_date" class="form-control" placeholder="End Date">
-                                            </form>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                            <button type="button" class="btn btn-primary" onclick="submitCustomDateForm()">Apply</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <script>
-                                document.addEventListener('DOMContentLoaded', function() {
-                                    flatpickr('#customStartDate', {
-                                        dateFormat: 'Y-m-d'
-                                    });
-                                    flatpickr('#customEndDate', {
-                                        dateFormat: 'Y-m-d'
-                                    });
-                                });
-
-                                function filterByDate(period) {
-                                    const today = new Date();
-                                    let startDate, endDate;
-
-                                    switch(period) {
-                                        case 'today':
-                                            startDate = endDate = today.toISOString().split('T')[0];
-                                            break;
-                                        case 'week':
-                                            const firstDayOfWeek = today.getDate() - today.getDay();
-                                            startDate = new Date(today.setDate(firstDayOfWeek)).toISOString().split('T')[0];
-                                            endDate = new Date(today.setDate(firstDayOfWeek + 6)).toISOString().split('T')[0];
-                                            break;
-                                        case 'month':
-                                            startDate = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().split('T')[0];
-                                            endDate = new Date(today.getFullYear(), today.getMonth() + 1, 0).toISOString().split('T')[0];
-                                            break;
-                                    }
-
-                                    document.getElementById('customStartDate').value = startDate;
-                                    document.getElementById('customEndDate').value = endDate;
-                                    document.getElementById('customDateForm').submit();
-                                }
-
-                                function submitCustomDateForm() {
-                                    document.getElementById('customDateForm').submit();
-                                }
-                            </script>
+    <div class="row my-4">
+        <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
+            <div class="card">
+                <div class="card-header pb-0">
+                    <div class="row">
+                        <div class="col-lg-6 col-7">
+                            <h6 class="text-info">Inquiries</h6>
                         </div>
                     </div>
                 </div>
+                <style>
+                    .message {
+                        max-width: 200px; /* Set the maximum width for the message */
+                        overflow: hidden; /* Hide the overflowed content */
+                        text-overflow: ellipsis; /* Add the ellipsis for overflowed content */
+                        white-space: nowrap; /* Prevent text from wrapping to the next line */
+                    }
+                </style>
+                <div class="card-body px-0 pb-2">
+                    <div class="table-responsive">
+                        <table class="table align-items-center mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                        <input type="checkbox" id="select-all" onclick="toggleSelectAll(this)">
+                                        <span class="px-1 py-2">Select All</span>
+                                    </th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Inquiry ID</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email Address</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Status</th>
+                                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="data-table"></tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
-            <style>
-            .message {
-                max-width: 200px; /* Set the maximum width for the message */
-                overflow: hidden; /* Hide the overflowed content */
-                text-overflow: ellipsis; /* Add the ellipsis for overflowed content */
-                white-space: nowrap; /* Prevent text from wrapping to the next line */
-            }
-            </style>
-            <div class="card-body px-0 pb-2">
-    <div class="table-responsive">
-        <table class="table align-items-center mb-0">
-            <thead>
-                <tr>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        <input type="checkbox" id="select-all" onclick="toggleSelectAll(this)"><span class="px-1 py-2">Select All</span>
-                    </th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Inquiry ID</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Email Address</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Subject</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Message</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Sent Date</th>
-                </tr>
-            </thead>
-            <tbody id="data-table"></tbody>
-        </table>
+        </div>
+    </div>
+
+    <!-- Modal for Inquiry Details -->
+    <div class="modal fade" id="inquiryModal" tabindex="-1" aria-labelledby="inquiryModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="inquiryModalLabel">Inquiry Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                
+                <div class="modal-body">
+                <form id="replyForm">
+                    <div class="mb-3">
+                        <label for="modalInquiryId" class="form-label">Inquiry ID</label>
+                        <input type="text" class="form-control" id="modalInquiryId" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalName" class="form-label">Name</label>
+                        <input type="text" class="form-control" id="modalName" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalEmail" class="form-label">Email</label>
+                        <input type="email" class="form-control" id="modalEmail" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalSubject" class="form-label">Subject</label>
+                        <input type="text" class="form-control" id="modalSubject" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label for="modalMessage" class="form-label">Message</label>
+                        <textarea class="form-control" id="modalMessage" rows="4" readonly></textarea>
+                    </div>
+                    <hr>
+                   
+                        <div class="mb-3">
+                            <label for="replyInput" class="form-label">Reply</label>
+                            <textarea class="form-control" id="replyInput" rows="3" required></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Send Reply</button>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
@@ -279,7 +233,7 @@ $result = $conn->query($sql);
                     if (Array.isArray(data) && data.length > 0) {
                         data.forEach(inquiry => {
                             const row = document.createElement("tr");
-
+                            
                             // Checkbox for each row
                             const checkboxCell = document.createElement("td");
                             checkboxCell.className = "text-center";
@@ -307,17 +261,35 @@ $result = $conn->query($sql);
                             messageCell.innerHTML = `${inquiry.message.substring(0, 50)}...`;
                             row.appendChild(messageCell);
 
+                            const statusCell = document.createElement("td");
+                            statusCell.innerHTML = `<div class="text-center text-xs font-weight-bold mb-0">${inquiry.status}</div>`;
+                            row.appendChild(statusCell);
+
                             const dateCell = document.createElement("td");
                             dateCell.className = 'text-center text-xs font-weight-bold mb-0';
                             dateCell.innerHTML = inquiry.sent_date;
                             row.appendChild(dateCell);
+
+                            row.addEventListener('click', function() {
+                                document.getElementById("modalInquiryId").value = inquiry.inq_id;
+                                document.getElementById("modalName").value = inquiry.name;
+                                document.getElementById("modalEmail").value = inquiry.email_add;
+                                document.getElementById("modalSubject").value = inquiry.subject;
+                                document.getElementById("modalMessage").value = inquiry.message;
+
+                                const prefillReply = `Hello ${inquiry.name}! Thank you for reaching out to us. To reply to your question: [Specific].`;
+                                document.getElementById("replyInput").value = prefillReply;
+
+                                const modal = new bootstrap.Modal(document.getElementById('inquiryModal'));
+                                modal.show();
+                            });
 
                             tableBody.appendChild(row);
                         });
                     } else {
                         const row = document.createElement("tr");
                         const cell = document.createElement("td");
-                        cell.colSpan = 7;
+                        cell.colSpan = 9;
                         cell.className = 'text-center text-xs font-weight-bold mb-0';
                         cell.innerHTML = 'No inquiries found';
                         row.appendChild(cell);
@@ -334,6 +306,7 @@ $result = $conn->query($sql);
             });
         }
 
+        // Event listener for the "Archive Selected" button
         document.getElementById("archiveBtn").addEventListener("click", function () {
             const selectedIds = [];
             document.querySelectorAll('input.inquiry-checkbox:checked').forEach(checkbox => {
@@ -341,88 +314,134 @@ $result = $conn->query($sql);
             });
 
             if (selectedIds.length > 0) {
-                // Convert the selected IDs to a comma-separated string
                 const idString = selectedIds.join(',');
-                // Redirect to archive inquiries page with IDs as a query string
                 window.location.href = `CSMarchivedinquiries.php?ids=${idString}`;
             } else {
                 alert("Please select at least one inquiry to archive.");
             }
         });
 
+        // Event listener for the "Delete Selected" button
         document.getElementById("deleteBtn").addEventListener("click", function () {
-          const selectedIds = [];
-          document.querySelectorAll('input.inquiry-checkbox:checked').forEach(checkbox => {
-              selectedIds.push(checkbox.value);
-          });
+            const selectedIds = [];
+            document.querySelectorAll('input.inquiry-checkbox:checked').forEach(checkbox => {
+                selectedIds.push(checkbox.value);
+            });
 
-          if (selectedIds.length > 0) {
-              if (confirm("Are you sure you want to delete the selected inquiries? This action cannot be undone.")) {
-                  // Send delete request using fetch
-                  fetch('delete_inquiries.php', {
-                      method: 'POST',
-                      headers: {
-                          'Content-Type': 'application/json',
-                      },
-                      body: JSON.stringify({ ids: selectedIds })
-                  })
-                  .then(response => {
-                      if (!response.ok) {
-                          throw new Error('Network response was not ok');
-                      }
-                      return response.json();
-                  })
-                  .then(data => {
-                      if (data.success) {
-                          alert("Inquiries deleted successfully!");
-                          // Reload the table to reflect changes
-                          location.reload();
-                      } else {
-                          alert("Error deleting inquiries: " + data.message);
-                      }
-                  })
-                  .catch(error => {
-                      console.error('Error:', error);
-                      alert("An error occurred while deleting inquiries.");
-                  });
+            if (selectedIds.length > 0) {
+                const confirmDelete = confirm("Are you sure you want to delete these inquiries?");
+                if (confirmDelete) {
+                    fetch('delete_inquiries.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({ ids: selectedIds })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload(); // Reload to update the table
+                        } else {
+                            alert("Failed to delete inquiries. Please try again.");
+                        }
+                    })
+                    .catch(error => console.error('Error deleting inquiries:', error));
+                }
+            } else {
+                alert("Please select at least one inquiry to delete.");
+            }
+        });
+
+     // Handle reply form submission
+      document.getElementById("replyForm").addEventListener("submit", function(event) {
+          event.preventDefault(); // Prevent the default form submission behavior
+          const inquiryId = document.getElementById("modalInquiryId").value; // Get inquiry ID here
+          const emailAdd = document.getElementById("modalEmail").value; 
+          const subject = document.getElementById("modalSubject").value; 
+          const replyMessage = document.getElementById("replyInput").value;
+
+          fetch('phpMailer/send_reply.php', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ id: inquiryId, email: emailAdd, emailsubject: subject, message: replyMessage })
+          })
+          .then(response => response.json())
+          .then(data => {
+              if (data.success) {
+                  showToastModal("Success", "Reply sent successfully.");
+                  setTimeout(() => {
+                      window.location.reload();
+                  }, 3000);
+              } else {
+                  showToastModal("Error", "Failed to send reply: " + (data.message || 'Please try again.'));
               }
-          } else {
-            alert("Please select at least one inquiry to delete.");
-          }
+          })
+          .catch(error => {
+              showToastModal("Error", "An error occurred while sending the reply.");
+              console.error('Error sending reply:', error);
+          });
       });
+
+
+
+// Function to show the modal acting like a toast
+function showToastModal(title, message) {
+    const toastModalElement = document.getElementById('toastModal');
+    const toastModalTitle = document.getElementById('toastModalTitle');
+    const toastModalBody = document.getElementById('toastModalBody');
+
+    // Set the title and message for the toast-like modal
+    toastModalTitle.textContent = title;
+    toastModalBody.textContent = message;
+
+    // Show the modal
+    const toastModal = new bootstrap.Modal(toastModalElement, {
+        backdrop: false // Remove backdrop
+    });
+    toastModal.show();
+
+    // Automatically hide the modal after 3 seconds
+    setTimeout(function() {
+        toastModal.hide();
+    }, 3000); // 3 seconds
+}
+
     </script>
-</div>
+    <style>
+    .modal-dialog-bottom-end {
+    position: fixed;
+    bottom: 1rem;
+    right: 2rem;
+    margin: 0;
+    max-width: 300px;
+    max-height: 150px; 
+    z-index: 1055;
+}
+
+.modal-content {
+    padding: 10px; /* Add some padding to the modal content */
+    border-radius: 5px; /* Optional: round the corners */
+}
+    </style>
+<!-- Modal acting like a toast -->
+<div class="modal fade" id="toastModal" tabindex="-1" aria-labelledby="toastModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm modal-dialog-bottom-end">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h6 class="modal-title" id="toastModalTitle">Notification</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="toastModalBody">
+                <span>This is body</span>
+            </div>
         </div>
     </div>
-  </div>
-    </div>
-      
+</div>
+</div>
 
-    </div>
-    <div class="modal fade" id="messageModal" tabindex="-1" aria-labelledby="messageModalLabel" aria-hidden="true">
-              <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
-                      <div class="modal-header">
-                          <h5 class="modal-title" id="messageModalLabel">Message Details</h5>
-                          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                      </div>
-                      <div class="modal-body">
-                          <p id="messageContent"></p>
-                      </div>
-                  </div>
-              </div>
-          </div>
-        <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const messageModal = document.getElementById('messageModal');
-            messageModal.addEventListener('show.bs.modal', (event) => {
-                const button = event.relatedTarget; // Button that triggered the modal
-                const message = button.getAttribute('data-message'); // Extract info from data-* attributes
-                const modalBody = messageModal.querySelector('.modal-body #messageContent');
-                modalBody.textContent = message; // Update the modal's content.
-            });
-        });
-    </script>
   </main>
   <div class="fixed-plugin">
     <a class="fixed-plugin-button text-dark position-fixed px-3 py-2">
@@ -458,6 +477,7 @@ $result = $conn->query($sql);
       <div class="text-small text-center">No Message Yet!</div>
       </div>
   </div>
+  
   <!--   Core JS Files   -->
   <script src="assets2/js/core/popper.min.js"></script>
   <script src="assets2/js/core/bootstrap.min.js"></script>
@@ -477,10 +497,7 @@ $result = $conn->query($sql);
   <script async defer src="https://buttons.github.io/buttons.js"></script>
   <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
   <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
 
 </body>
 
