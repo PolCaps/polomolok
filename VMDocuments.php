@@ -236,6 +236,9 @@ $conn->close();
                 <span class="d-sm-inline d-none">Vendor</span>
               </a>
             </li>
+            <?php 
+            include('Notification/VendorNotif.php');
+            ?>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -249,9 +252,11 @@ $conn->close();
         </div>
       </div>
     </nav>
+    
     <!-- End Navbar -->
     <div class="container-fluid py-4">
       <div class="row my-4">
+        
         <div class="col-lg-11 col-md-6 mb-md-0 mb-4">
           <div class="card">
             <div class="card-header pb-0">
@@ -260,11 +265,15 @@ $conn->close();
                   <h6 class="mx-1 my-2 text-info">My Documents</h6>
                 </div>
                 <div class="col-lg-6 col-5 my-auto text-end">
-                  <div class="ms-md-auto pe-md-3 d-flex align-items-center">
-                  </div>
+               
+                  <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#documentsModal">
+                    Upload New
+                  </button>
+                  
                 </div>
               </div>
             </div>
+            
             <?php
             include('database_config.php');
 
@@ -274,26 +283,21 @@ $conn->close();
                 die(json_encode(['success' => false, 'message' => "Connection failed: " . $conn->connect_error]));
             }
 
-            // Prepare the SQL query for fetching data
             $sqlA = "SELECT v.username, d.lease_agreements, d.business_permits, d.business_license, d.other_supporting 
             FROM vendors v
             JOIN documents d ON v.vendor_id = d.vendor_id
             WHERE v.vendor_id = ?";
 
-            // Prepare the statement
             $stmtA = $conn->prepare($sqlA);
 
             if ($stmtA === false) {
                 die("Error preparing query: " . $conn->error);
             }
 
-            // Bind the vendor ID parameter (assuming $vendor_id is defined)
             $stmtA->bind_param("i", $vendor_id);
 
-            // Execute the statement
             $stmtA->execute();
 
-            // Get the result
             $resultA = $stmtA->get_result();
 
             $tableRows = '';
@@ -312,26 +316,10 @@ $conn->close();
                     $tableRows .= '
                     <tr>
                         <td class="align-middle text-center text-sm">' . htmlspecialchars($rowA['username']) . '</td>
-                        <td class="text-center">' . 
-                            ($lease_agreements ? 
-                                '<span class="clickable text-sm text-info" data-doc="' . $lease_agreements . '">View</span>' : 
-                                '<span class="text-sm text-danger">Missing</span>') . 
-                        '</td>
-                        <td class="text-center">' . 
-                            ($business_license ? 
-                                '<span class="clickable text-sm text-info" data-doc="' . $business_license . '">View</span>' : 
-                                '<span class="text-sm text-danger">Missing</span>') . 
-                        '</td>
-                        <td class="text-center">' . 
-                            ($business_permits ? 
-                                '<span class="clickable text-sm text-info" data-doc="' . $business_permits . '">View</span>' : 
-                                '<span class="text-sm text-danger">Missing</span>') . 
-                        '</td>
-                        <td class="text-center">' . 
-                            ($other_supporting ? 
-                                '<span class="clickable text-sm text-info" data-doc="' . $other_supporting . '">View</span>' : 
-                                '<span class="text-sm text-danger">Missing</span>') . 
-                        '</td>
+                        <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['lease_agreements']) . '">View</span></td>
+                        <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['business_license']) . '">View</span></td>
+                        <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['business_permits']) . '">View</span></td>
+                        <td class="text-center"><span class="clickable" data-doc="' . htmlspecialchars($rowA['other_supporting']) . '">View</span></td>
                     </tr>';
                 }
             } else {
@@ -367,10 +355,33 @@ $conn->close();
           </table>
         </div>
       </div>
+      
     </div>
     </div>
     </div>
     </div>
+    
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    document.getElementById('dataTableBody').addEventListener('click', function (event) {
+        if (event.target.classList.contains('clickable')) {
+            const documentUrl = event.target.getAttribute('data-doc');
+
+            // Open the document in the iframe inside the modal
+            if (documentUrl) {
+                const documentModal = new bootstrap.Modal(document.getElementById('documentModal'));
+                document.getElementById('documentViewer').src = documentUrl;
+                documentModal.show();
+            } else {
+                // Show 'No Document Available' modal
+                const noDocumentModal = new bootstrap.Modal(document.getElementById('noDocumentModal'));
+                noDocumentModal.show();
+            }
+        }
+    });
+});
+              </script>
 
     <div class="modal fade" id="documentModal" tabindex="-1" aria-labelledby="documentModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-lg">
@@ -389,31 +400,6 @@ $conn->close();
     </div>
   </div>
 </div>
-
-<script>
-  // Wait until the DOM is fully loaded
-  document.addEventListener('DOMContentLoaded', function () {
-    // Get all clickable elements
-    const clickables = document.querySelectorAll('.clickable');
-
-                  // Add event listeners to all clickable elements
-                  clickables.forEach(clickable => {
-                    clickable.addEventListener('click', function () {
-                      const documentUrl = this.getAttribute('data-doc');
-
-                      // If documentUrl exists, open the document in a new tab
-                      if (documentUrl) {
-                        window.open(documentUrl, '_blank');
-                      } else {
-                        // Show Bootstrap modal if no document exists
-                        const noDocumentModal = new bootstrap.Modal(document.getElementById('noDocumentModal'));
-                        noDocumentModal.show();
-                      }
-                    });
-                  });
-                });
-              </script>
-              <!-- Modal for No Documents -->
                 <div class="modal fade" id="noDocumentModal" tabindex="-1" aria-labelledby="noDocumentModalLabel" aria-hidden="true">
                   <div class="modal-dialog">
                     <div class="modal-content">
@@ -432,15 +418,6 @@ $conn->close();
                   </div>
                 </div>
 
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-    </div>
-    </div>
-    </div>
-<!-- Modal -->
 <div class="modal fade" id="documentsModal" tabindex="-1" aria-labelledby="documentsModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -492,9 +469,7 @@ $conn->close();
             <i class="fa fa-close"></i>
           </button>
         </div>
-        <!-- End Toggle Button -->
       </div>
-       <!-- Edit Profile Button -->
   <div class="card-body pt-sm-3 pt-0">
     <a class="btn bg-gradient-info w-85 text-white mx-4" href="#" data-bs-toggle="modal" data-bs-target="#editProfileModal">Edit Profile</a>
   
@@ -515,24 +490,8 @@ $conn->close();
     <script src="assets2/js/plugins/perfect-scrollbar.min.js"></script>
     <script src="assets2/js/plugins/smooth-scrollbar.min.js"></script>
     <script src="assets2/js/plugins/chartjs.min.js"></script>
-    <script>
-      var win = navigator.platform.indexOf('Win') > -1;
-      if (win && document.querySelector('#sidenav-scrollbar')) {
-        var options = {
-          damping: '0.5'
-        }
-        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
-      }
-    </script>
-    <!-- Github buttons -->
     <script async defer src="https://buttons.github.io/buttons.js"></script>
-    <!-- Control Center for Soft Dashboard: parallax effects, scripts for the example pages etc -->
     <script src="assets2/js/soft-ui-dashboard.min.js?v=1.0.7"></script>
-
-
-    <!-- <link rel="stylesheet" href="loading.css">
-  <script src="loading.js" defer></script>
-  <div class="loader"></div> -->
 </body>
 
 </html>

@@ -21,6 +21,7 @@ $sql = "
         ra.first_name, 
         ra.middle_name, 
         ra.last_name, 
+        ra.email, 
         rp.payment_status, 
         rp.proof_of_payment, 
         rp.OR_no, 

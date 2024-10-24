@@ -337,6 +337,9 @@ $conn->close();
                 <span class="d-sm-inline d-none">Vendor</span>
               </a>
             </li>
+            <?php 
+            include('Notification/VendorNotif.php');
+            ?>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -653,18 +656,15 @@ if (isset($_POST['submit'])) {
         exit;
     }
 
-    // Assuming vendor ID is stored in the session
     $vendor_id = $_SESSION['vendor_id'];
 
-    // Get form inputs
     $current_password = $_POST['current_password'];
     $new_password = $_POST['new_password'];
 
-    // Validate inputs
     if (empty($current_password) || empty($new_password)) {
         echo "<script>alert('Please fill in both fields.');</script>";
     } else {
-        // Start a transaction
+   
         $conn->begin_transaction();
 
         try {

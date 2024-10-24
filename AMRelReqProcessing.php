@@ -370,6 +370,7 @@ $conn->close();
                 white-space: nowrap; /* Prevent text from wrapping to the next line */
             }
             </style>
+
             <div class="card-body px-3 pb-2">
     <div class="table-responsive">
         <table class="table align-items-center mb-0">
@@ -467,43 +468,29 @@ $conn->close();
                     <label for="messageContent" class="form-label text-muted">Message</label>
                     <textarea class="form-control" id="messageContent" rows="4" readonly></textarea>
                 </div>
-<!-- Relocation Status Dropdown -->
-<div class="form-group mb-4">
-    <label for="relocationStatus" class="form-label text-muted">Relocation Status</label>
-    <select class="form-select" id="relocationStatus" onchange="triggerRelocationStatusChange()">
-        <option value="Pending">Pending</option>
-        <option value="Accepted">Accepted</option>
-        <option value="Rejected">Rejected</option>
-    </select>
-</div>
-
-
-                
-
-                <?php
-
-// Check if this is an AJAX request to fetch vacant stalls
+        <!-- Relocation Status Dropdown -->
+        <div class="form-group mb-4">
+            <label for="relocationStatus" class="form-label text-muted">Relocation Status</label>
+            <select class="form-select" id="relocationStatus" onchange="triggerRelocationStatusChange()">
+                <option value="Pending">Pending</option>
+                <option value="Accepted">Accepted</option>
+                <option value="Rejected">Rejected</option>
+            </select>
+        </div>
+ <?php
 if (isset($_GET['building'])) {
-    // Database connection
     include('database_config.php');
-
-    // Create a connection
     $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
     if ($mysqli->connect_error) {
         die('Connection error: ' . $mysqli->connect_error);
     }
 
-    // Get the building parameter from the AJAX request
     $building = $_GET['building'];
-
-    // Define a whitelist of allowed buildings to prevent SQL injection
     $allowedBuildings = ['building_a', 'building_b', 'building_c', 'building_d', 'building_e', 
                          'building_f', 'building_g', 'building_h', 'building_i', 'building_j'];
 
-    // Check if the building is in the allowed list
     if (in_array($building, $allowedBuildings)) {
-        // Prepare and execute the query to fetch vacant stalls from the specific building table
         $stmt = $mysqli->prepare("SELECT stall_no FROM $building WHERE stall_status = 'Vacant'");
         if ($stmt) {
             $stmt->execute();
@@ -514,73 +501,69 @@ if (isset($_GET['building'])) {
                 $vacantStalls[] = $row['stall_no'];
             }
 
-            // Return the data as JSON and exit the script
             echo json_encode($vacantStalls);
         } else {
             echo json_encode(['error' => 'Failed to prepare the SQL statement.']);
         }
     } else {
-        // If the building is not in the allowed list, return an error message
         echo json_encode(['error' => 'Invalid building specified.']);
     }
 
     exit;
 }
 ?>
-
-                <div class="accordion mb-4" id="relocationAccordion" style="display: none;">
-                    <div class="accordion-item">
-                        
-                        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#relocationAccordion">
-                            <div class="accordion-body">
-                                <!-- Relocation Form -->
-                                <form id="relocationForm" action="approve_relocation.php" method="POST">
-                                  <div class="row g-3">
-                                      <div class="col-md-6">
-                                          <div class="form-group">
-                                              <label for="buildingSelect" class="form-label">Building:</label>
-                                              <select class="form-select" id="buildingSelect" required>
-                                                <option value="">Building</option>
-                                                <option value="building_a">Building A</option>
-                                                <option value="building_b">Building B</option>
-                                                <option value="building_c">Building C</option>
-                                                <option value="building_d">Building D</option>
-                                                <option value="building_e">Building E</option>
-                                                <option value="building_f">Building F</option>
-                                                <option value="building_g">Building G</option>
-                                                <option value="building_h">Building H</option>
-                                                <option value="building_i">Building I</option>
-                                                <option value="building_j">Building J</option>
-                                            </select>
-                                          </div>
-                                      </div>
-                                      <input type="hidden" id="modalVendorIDInput" name="vendor_id">
-                                      <input type="hidden" id="modalrequestIDInput" name="request_id">
-                                      <div class="col-md-6">
-                                          <div class="form-group">
-                                              <label for="stallSelect" class="form-label">Relocate to:</label>
-                                              <select class="form-select" id="stallSelect" name="stallSelect" required>
-                                                  <option value="">Select Stall</option>
-                                              </select>
-                                          </div>
-                                      </div>
-                                      <div class="col-md-6">
-                                          <div class="form-group">
-                                              <label for="relocationDate" class="form-label">Relocation Date</label>
-                                              <input type="date" class="form-control" id="relocationDate" name="relocation_date" required>
-                                          </div>
-                                      </div>
-                                      <div class="form-group mb-4">
-                                          <label for="maintenanceDescription" class="form-label text-muted">Maintenance Description</label>
-                                          <textarea class="form-control" id="maintenanceDescription" name="maintenanceDescription"  rows="4" required></textarea>
-                                      </div>
-                                  </div>
-                                  </div>
-                                  <div class="text-end mt-3">
-                                      <button type="submit" class="btn btn-info">Relocate Vendor</button>
-                                  </div>
-                              </form>
-<script>
+<div class="accordion mb-4" id="relocationAccordion">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#relocationAccordion">
+            <div class="accordion-body">
+                <form id="relocationForm" action="approve_relocation.php" method="POST">
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="buildingSelect" class="form-label">Building:</label>
+                                <select class="form-select" id="buildingSelect" required>
+                                    <option value="">Building</option>
+                                    <option value="building_a">Building A</option>
+                                    <option value="building_b">Building B</option>
+                                    <option value="building_c">Building C</option>
+                                    <option value="building_d">Building D</option>
+                                    <option value="building_e">Building E</option>
+                                    <option value="building_f">Building F</option>
+                                    <option value="building_g">Building G</option>
+                                    <option value="building_h">Building H</option>
+                                    <option value="building_i">Building I</option>
+                                    <option value="building_j">Building J</option>
+                                </select>
+                            </div>
+                        </div>
+                        <input type="hidden" id="modalVendorIDInput" name="vendor_id">
+                        <input type="hidden" id="modalrequestIDInput" name="request_id">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="stallSelect" class="form-label">Relocate to:</label>
+                                <select class="form-select" id="stallSelect" name="stallSelect" required>
+                                    <option value="">Select Stall</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="relocationDate" class="form-label">Relocation Date</label>
+                                <input type="date" class="form-control" id="relocationDate" name="relocation_date" required>
+                            </div>
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="maintenanceDescription" class="form-label text-muted">Maintenance Description</label>
+                            <textarea class="form-control" id="maintenanceDescription" name="maintenanceDescription" rows="4" required></textarea>
+                        </div>
+                    </div>
+                    <div class="text-end mt-3">
+                        <button type="submit" class="btn btn-info">Relocate Vendor</button>
+                    </div>
+                </form>
+                <script>
 document.addEventListener('DOMContentLoaded', function () {
     // Listen for changes in the Building dropdown
     const buildingSelect = document.getElementById('buildingSelect');
@@ -630,13 +613,42 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-                            </div>
-                        </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#relocationAccordion">
+            <div class="accordion-body">
+                <!-- Relocation Form for Rejecting -->
+                <form id="rejectionForm" action="reject_relocation.php" method="POST">
+                <input type="hidden" id="modalVendorIDInput2" name="vendor_id2">
+                <input type="hidden" id="modalcurrentStall2" name="currentstall">
+                <input type="hidden" id="modalrequestIDInput2" name="request_id2">
+                    <div class="form-group mb-4">
+                        <label for="rejectionReason" class="form-label text-muted">Relocation Rejection Reason:</label>
+                        <textarea class="form-control" id="rejectionReason" name="rejectReason" rows="4" required></textarea>
                     </div>
+                    <div class="text-end mt-3">
+                        <button type="submit" class="btn btn-info">Reject Vendor</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+               
+                    
                 </div>
             </div> 
         </div>
     </div>
+</div>
+</div>
+</div>
 </div>
 
 
@@ -664,22 +676,18 @@ document.addEventListener('DOMContentLoaded', function () {
                         const messageModal = new bootstrap.Modal(document.getElementById('messageModal'));
 
                         // Populate modal with the full details from the clicked row
-                        document.getElementById('modalVendorID').textContent = item.vendor_id; // For display
-                        document.getElementById('modalVendorIDInput').value = item.vendor_id; // Set hidden input value
-                        document.getElementById('modalrequestIDInput').value = item.request_id; // Set hidden input value
+                        document.getElementById('modalVendorID').textContent = item.vendor_id;
+                        document.getElementById('modalVendorIDInput').value = item.vendor_id;
+                        document.getElementById('modalVendorIDInput2').value = item.vendor_id;
+                        document.getElementById('modalrequestIDInput').value = item.request_id; 
+                        document.getElementById('modalrequestIDInput2').value = item.request_id;
                         document.getElementById('modalcurrentStall').textContent = item.current_stall;
+                        document.getElementById('modalcurrentStall2').textContent = item.current_stall;
                         document.getElementById('modalName').textContent = item.fn + ' ' + item.ln;
                         document.getElementById('messageContent').value = item.reason;
                         document.getElementById('modalRequestDate').textContent = item.request_date;
                         document.getElementById('relocationStatus').value = item.approval_status;
-
-                        // Toggle accordion visibility based on relocation status
-                        const relocationAccordion = document.getElementById('relocationAccordion');
-                        if (item.approval_status === 'Accepted') {
-                            relocationAccordion.style.display = 'block';
-                        } else {
-                            relocationAccordion.style.display = 'none';
-                        }
+                        
 
                         // Show the modal
                         messageModal.show();
@@ -695,79 +703,38 @@ document.addEventListener('DOMContentLoaded', function () {
         .catch(error => console.error('Error fetching data:', error));
 });
 
-// Escape HTML function
-function escapeHtml(text) {
-    const map = {
-        '&': '&amp;',
-        '<': '&lt;',
-        '>': '&gt;',
-        '"': '&quot;',
-        "'": '&#039;'
-    };
-    return text.replace(/[&<>"']/g, function (m) { return map[m]; });
-}
-
-// Relocation Status Change Logic
-document.getElementById('relocationStatus').addEventListener('change', function () {
+// Add this script to handle the modal show event
+document.addEventListener('DOMContentLoaded', function () {
+    // Assuming you have a way to get the initial status (e.g., from a data attribute)
+    const relocationStatus = document.getElementById('relocationStatus');
     const relocationAccordion = document.getElementById('relocationAccordion');
-    const selectedStatus = this.value;
 
-    if (selectedStatus === 'Accepted') {
-        relocationAccordion.style.display = 'block';
-    } else {
-        relocationAccordion.style.display = 'none';
+    // Function to update accordion visibility based on status
+    function updateAccordionVisibility() {
+        const status = relocationStatus.value;
+
+        if (status === 'Accepted') {
+            document.getElementById('collapseOne').classList.add('show');
+            document.getElementById('collapseTwo').classList.remove('show');
+        } else if (status === 'Rejected') {
+            document.getElementById('collapseTwo').classList.add('show');
+            document.getElementById('collapseOne').classList.remove('show');
+        } else {
+            document.getElementById('collapseOne').classList.remove('show');
+            document.getElementById('collapseTwo').classList.remove('show');
+        }
     }
 
-    // Call the triggerRelocationStatusChange function if the selected status is "Rejected"
-    if (selectedStatus === 'Rejected') {
-        triggerRelocationStatusChange();
-    }
+    // Listen for the modal show event
+    const messageModal = document.getElementById('messageModal');
+    messageModal.addEventListener('show.bs.modal', function () {
+        // Set the initial state of the relocationStatus dropdown
+        updateAccordionVisibility();
+    });
+
+    // Listen for changes in the relocation status dropdown
+    relocationStatus.addEventListener('change', updateAccordionVisibility);
 });
-
-function triggerRelocationStatusChange() {
-    // Get the selected value from the dropdown
-    const status = document.getElementById('relocationStatus').value;
-
-    // Only proceed if the status is "Rejected"
-    if (status === 'Rejected') {
-        // Create an AJAX request
-        const xhr = new XMLHttpRequest();
-        xhr.open('POST', 'updateRelStatus.php', true);
-        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-
-        // Send the data
-        xhr.onreadystatechange = function() {
-            if (xhr.readyState === 4) {
-                console.log(`Response status: ${xhr.status}`);
-                console.log(`Response text: ${xhr.responseText}`);
-
-                if (xhr.status === 200) {
-                    // Response received from PHP
-                    const response = xhr.responseText.trim();
-                    if (response === 'success') {
-                      window.location.reload();
-                        alert('Relocation status updated successfully!');
-                    } else {
-                        alert('Error sending status: ' + response);
-                    }
-                } else {
-                    alert('Error: Failed to reach the server.');
-                }
-            }
-        };
-
-        const reqId = document.getElementById('modalrequestIDInput').value; // Get the actual relocation ID
-
-        // Debugging: Log the data being sent
-        console.log(`Sending ID: ${reqId}, Status: ${status}`);
-
-        // Sending the relocation ID and the new status
-        xhr.send(`relocationId=${reqId}&status=${status}`);
-    }
-}
-
-
-
 </script>
 
   </main>

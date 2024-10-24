@@ -397,6 +397,7 @@ $conn->close();
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Name</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Current Stall</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Reason</th>
+                <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Rejection Reason</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Date Requested</th>
                 <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Status</th>
                 </tr>
@@ -427,6 +428,7 @@ $conn->close();
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.fn + ' ' + item.ln)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.current_stall)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.reason)}'>${escapeHtml(item.reason.substring(0, 50))}...</td>
+                        <td class='text-center text-xs font-weight-bold mb-0 message' data-bs-toggle='modal' data-bs-target='#messageModal' data-message='${escapeHtml(item.reject_reason)}'>${escapeHtml(item.reject_reason.substring(0, 50))}...</td>
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.request_date)}</td>
                         <td class='text-center text-xs font-weight-bold mb-0'>${escapeHtml(item.approval_status)}</td>
                     `;
@@ -441,7 +443,6 @@ $conn->close();
                             });
                           });
 
-                       // Add event listener to status dropdowns
                        document.querySelectorAll('.relocation-status').forEach(dropdown => {
     dropdown.addEventListener('change', function () {
         // Create an AJAX request

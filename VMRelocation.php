@@ -244,6 +244,9 @@ $conn->close();
                 <span class="d-sm-inline d-none">Vendor</span>
               </a>
             </li>
+            <?php 
+            include('Notification/VendorNotif.php');
+            ?>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -290,19 +293,18 @@ $conn->close();
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                        Vendor ID
-                      </th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        Reason
+                        Message
                       </th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
                         Current Stall
                       </th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        Relocation Stall</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         Relocation Status</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Rejected Reason</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Relocation Stall</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         Relocation Date</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
@@ -323,7 +325,7 @@ $conn->close();
 
                    
 
-                    $sql = "SELECT current_stall, relocated_stall, reason, approval_status, request_date, relocation_date, archive FROM relocation_req WHERE vendor_id = ? AND archive = 0";
+                    $sql = "SELECT current_stall, relocated_stall, reason, approval_status, reject_reason, request_date, relocation_date, archive FROM relocation_req WHERE vendor_id = ? AND archive = 0";
                     $stmt = $conn->prepare($sql);
                     $stmt->bind_param("i", $vendor_id);
                     $stmt->execute();
@@ -332,27 +334,29 @@ $conn->close();
                     // Display data
                     if ($result->num_rows > 0) { // Check if there are any rows
                       while ($row = $result->fetch_assoc()) {
-                          echo "<tr>";
-                          echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($vendor_id) . "</td>"; // Vendor ID
-                          
-                          $message = trim($row['reason']);
-                          $trimmedMessage = strlen($message) > 20 ? substr($message, 0, 20) . '...' : $message;
-                          echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($trimmedMessage) . "</td>";
-                          echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($row['current_stall']) . "</td>";
-                          
-                          $relocated_stall = !empty($row['relocated_stall']) ? htmlspecialchars($row['relocated_stall']) : "Relocation Pending";
-                          echo "<td class='text-xs font-weight-bold text-center'>" . $relocated_stall . "</td>";
-                  
-                          // Display approval status (relocation status)
-                          $approval_status = !empty($row['approval_status']) ? htmlspecialchars($row['approval_status']) : "N/A";
-                          echo "<td class='text-xs font-weight-bold text-center'>" . $approval_status . "</td>";
-
-                          $relocation_date = !empty($row['relocation_date']) ? htmlspecialchars($row['relocation_date']) : "Relocation Pending";
-                          echo "<td class='text-xs font-weight-bold text-center'>" . $relocation_date . "</td>";
-                  
-                          echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($row['request_date']) . "</td>";
-                          echo "</tr>";
-                      }
+                        echo "<tr onclick='openModal(".json_encode($row).")' style='cursor: pointer;'>"; // Add cursor pointer for better UX
+                        $message = trim($row['reason']);
+                        $trimmedMessage = strlen($message) > 20 ? substr($message, 0, 20) . '...' : $message;
+                        echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($trimmedMessage) . "</td>";
+                        
+                        echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($row['current_stall']) . "</td>";
+                        
+                        $approval_status = !empty($row['approval_status']) ? htmlspecialchars($row['approval_status']) : "N/A";
+                        echo "<td class='text-xs font-weight-bold text-center'>" . $approval_status . "</td>";
+                    
+                        $reject_reason = trim($row['reject_reason']);
+                        $trimmedReason = !empty($reject_reason) ? (strlen($reject_reason) > 20 ? substr($reject_reason, 0, 20) . '...' : $reject_reason) : "N/A";
+                        echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($trimmedReason) . "</td>";
+                    
+                        $relocated_stall = !empty($row['relocated_stall']) ? htmlspecialchars($row['relocated_stall']) : "N/A";
+                        echo "<td class='text-xs font-weight-bold text-center'>" . $relocated_stall . "</td>";
+                    
+                        $relocation_date = !empty($row['relocation_date']) ? htmlspecialchars($row['relocation_date']) : "N/A ";
+                        echo "<td class='text-xs font-weight-bold text-center'>" . $relocation_date . "</td>";
+                    
+                        echo "<td class='text-xs font-weight-bold text-center'>" . htmlspecialchars($row['request_date']) . "</td>";
+                        echo "</tr>";
+                    }
                   } else {
                       // If no results were found, output a message in the table
                       echo "<tr>";
@@ -372,36 +376,65 @@ $conn->close();
 
 
           </div>
-          <script>
-            document.addEventListener('DOMContentLoaded', function () {
-              var messagePreviewElements = document.querySelectorAll('.message-preview');
+          <div class="modal fade" id="detailsModal" tabindex="-1" aria-labelledby="detailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="detailsModalLabel">Request Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
 
-              messagePreviewElements.forEach(function (element) {
-                element.addEventListener('click', function () {
-                  var fullMessage = element.getAttribute('data-message');
-                  document.getElementById('modalMessage').textContent = fullMessage;
-                });
-              });
-            });
-          </script>
-          <!-- Modal for Enlarged Message -->
-          <div class="modal fade" id="messageModalEnlarge" tabindex="-1" aria-labelledby="messageModalEnlargeLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-              <div class="modal-content">
-                <div class="modal-header">
-                  <h5 class="modal-title" id="messageModalEnlargeLabel">Message Details</h5>
-                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                  <p id="modalMessage"></p>
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-              </div>
-            </div>
-          </div>
+      <div class="modal-body">
+        <div class="mb-3">
+          <label for="modalMessage" class="form-label">My Message:</label>
+          <textarea type="text" class="form-control" id="modalMessage" rows="5"readonly> </textarea>
+        </div>
+        <div class="mb-3">
+          <label for="modalCurrentStall" class="form-label">Current Stall:</label>
+          <input type="text" class="form-control" id="modalCurrentStall" readonly>
+        </div>
+        <div class="mb-3">
+          <label for="modalRelocatedStall" class="form-label">Relocated to this Stall:</label>
+          <input type="text" class="form-control" id="modalRelocatedStall" readonly>
+        </div>
+        <div class="mb-3">
+          <label for="modalRejectReason" class="form-label">Rejected Reason:</label>
+          <textarea type="text" class="form-control" id="modalRejectReason" rows="5"readonly> </textarea>
+        </div>
+        <div class="mb-3">
+          <label for="modalRelocationStatus" class="form-label">Relocation Status:</label>
+          <input type="text" class="form-control" id="modalRelocationStatus" readonly>
+        </div>
+        <div class="mb-3">
+          <label for="modalRelocationDate" class="form-label">Relocation Date:</label>
+          <input type="text" class="form-control" id="modalRelocationDate" readonly>
+        </div>
+        <div class="mb-3">
+          <label for="modalRequestDate" class="form-label">Relocation Request Submit:</label>
+          <input type="text" class="form-control" id="modalRequestDate" readonly>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+function openModal(rowData) {
+    document.getElementById('modalMessage').value = rowData.reason || 'N/A';
+    document.getElementById('modalCurrentStall').value = rowData.current_stall || 'N/A';
+    document.getElementById('modalRelocatedStall').value = rowData.relocated_stall || 'N/A';
+    document.getElementById('modalRejectReason').value = rowData.reject_reason || 'N/A';
+    document.getElementById('modalRelocationStatus').value = rowData.approval_status || 'N/A';
+    document.getElementById('modalRelocationDate').value = rowData.relocation_date || 'N/A';
+    document.getElementById('modalRequestDate').value = rowData.request_date || 'N/A';
+
+    // Open the modal
+    const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+    modal.show();
+}
+</script>
           <?php
           include('database_config.php');
 
@@ -417,26 +450,26 @@ $conn->close();
           
           // Prepare the SQL query to fetch all stalls for the vendor across all buildings
           $sql = "
-    SELECT 'Building A' AS building, stall_no FROM building_a WHERE vendor_id = ?
-    UNION ALL
-    SELECT 'Building B' AS building, stall_no FROM building_b WHERE vendor_id = ?
-    UNION ALL
-    SELECT 'Building C' AS building, stall_no FROM building_c WHERE vendor_id = ?
-    UNION ALL
-    SELECT 'Building D' AS building, stall_no FROM building_d WHERE vendor_id = ?
-    UNION ALL
-    SELECT 'Building E' AS building, stall_no FROM building_e WHERE vendor_id = ?
-    UNION ALL
-    SELECT 'Building F' AS building, stall_no FROM building_f WHERE vendor_id = ?
-    UNION ALL
-    SELECT 'Building G' AS building, stall_no FROM building_g WHERE vendor_id = ?
-    UNION ALL
-    SELECT 'Building H' AS building, stall_no FROM building_h WHERE vendor_id = ?
-    UNION ALL
-    SELECT 'Building I' AS building, stall_no FROM building_i WHERE vendor_id = ?
-    UNION ALL
-    SELECT 'Building J' AS building, stall_no FROM building_j WHERE vendor_id = ?;
-";
+              SELECT 'Building A' AS building, stall_no FROM building_a WHERE vendor_id = ?
+              UNION ALL
+              SELECT 'Building B' AS building, stall_no FROM building_b WHERE vendor_id = ?
+              UNION ALL
+              SELECT 'Building C' AS building, stall_no FROM building_c WHERE vendor_id = ?
+              UNION ALL
+              SELECT 'Building D' AS building, stall_no FROM building_d WHERE vendor_id = ?
+              UNION ALL
+              SELECT 'Building E' AS building, stall_no FROM building_e WHERE vendor_id = ?
+              UNION ALL
+              SELECT 'Building F' AS building, stall_no FROM building_f WHERE vendor_id = ?
+              UNION ALL
+              SELECT 'Building G' AS building, stall_no FROM building_g WHERE vendor_id = ?
+              UNION ALL
+              SELECT 'Building H' AS building, stall_no FROM building_h WHERE vendor_id = ?
+              UNION ALL
+              SELECT 'Building I' AS building, stall_no FROM building_i WHERE vendor_id = ?
+              UNION ALL
+              SELECT 'Building J' AS building, stall_no FROM building_j WHERE vendor_id = ?;
+          ";
 
           // Prepare the statement
           $stmt = $conn->prepare($sql);

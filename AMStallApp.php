@@ -432,31 +432,51 @@ $conn->close();
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                           </div>
                           <div class="modal-body">
-                            <form id="updateForm" action="rent_updateStatus.php" method="POST">
-                              <div class="mb-3 text-start">
-                                <label for="applicantId" class="form-label">Applicant ID:</label>
-                                <input type="text" id="applicantId" name="applicant_id" class="form-control" readonly>
-                              </div>
-                              <div class="mb-3 text-start">
-                                <label for="fullName" class="form-label">Full Name:</label>
-                                <input type="text" id="fullName" class="form-control" readonly>
-                              </div>
-                              <div class="mb-3 text-start">
-                                <label for="status" class="form-label">Status:</label>
-                                <select id="status" name="status" class="form-control">
-                                  <option value="PROCESSING">Processing</option>
-                                  <option value="APPROVED">Approved</option>
-                                  <option value="DECLINED">Declined</option>
-                                </select>
-                              </div>
-                              <button type="submit" class="btn btn-primary">Save changes</button>
-                            </form>
+                          <form id="updateForm" action="phpMailer/rent_updateStatus.php" method="POST">
+  <div class="mb-3 text-start">
+    <label for="applicantId" class="form-label">Applicant ID:</label>
+    <input type="text" id="applicantId" name="applicant_id" class="form-control" readonly>
+  </div>
+  
+  <div class="mb-3 text-start">
+    <label for="fullName" class="form-label">Full Name:</label>
+    <input type="text" id="fullName" class="form-control" readonly>
+    <input id="submitdate" type="text" class="form-control" name="submitdate" hidden>
+    <input id="emailadd" type="text" class="form-control" name="email" hidden>
+  </div>
+  
+  <div class="mb-3 text-start">
+    <label for="status" class="form-label">Status:</label>
+    <select id="status" name="status" class="form-control" onchange="handleStatusChange()">
+      <option value="PROCESSING">Processing</option>
+      <option value="APPROVED">Approved</option>
+      <option value="DECLINED">Declined</option>
+    </select>
+  </div>
+  
+  <div class="accordion mt-3" id="emailAccordion">
+    <div class="accordion-item">
+      <h2 class="accordion-header" id="headingOne">
+      </h2>
+      <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#emailAccordion">
+        <div class="accordion-body">
+          <div class="mb-3 text-start">
+            <label for="emailMessage" class="form-label">Email Message:</label>
+            <textarea id="emailMessage" name="email_message" class="form-control" rows="6"></textarea>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary mt-3">Save changes</button>
+</form>
                           </div>
                         </div>
                       </div>
                     </div>
                     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
                     </script>
                     <script>
                       document.addEventListener('DOMContentLoaded', function () {
@@ -642,19 +662,74 @@ $conn->close();
       })
       .catch(error => console.error('Error fetching data:', error));
 
-    function showModal(item) {
-      // Populate the modal with data
-      document.getElementById('applicantId').value = item.applicant_id;
-      document.getElementById('fullName').value = `${item.first_name} ${item.middle_name} ${item.last_name}`;
-      document.getElementById('status').value = item.status;
+      function showModal(item) {
+    document.getElementById('applicantId').value = item.applicant_id;
+    document.getElementById('fullName').value = `${item.first_name} ${item.middle_name} ${item.last_name}`;
+    document.getElementById('submitdate').value = item.applied_date;
+    document.getElementById('emailadd').value = item.email;
+    document.getElementById('status').value = item.status;
 
-      // Show the modal
-      const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
-      modal.show();
-    }
+    const modal = new bootstrap.Modal(document.getElementById('detailsModal'));
+    modal.show();
+  }
   });
 </script>
 
+<script>
+
+function handleStatusChange() {
+    const status = document.getElementById('status').value;
+    const emailMessage = document.getElementById('emailMessage');
+    const fullName = document.getElementById('fullName').value;
+    const applicantId = document.getElementById('applicantId').value;
+    const submitDateInput = document.getElementById('submitdate').value;
+
+    // Convert submit date to a more readable format
+    const submitDate = new Date(submitDateInput);
+    const formattedSubmitDate = submitDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long', // 'short' for abbreviated month
+        day: 'numeric',
+    });
+
+    // Messages based on status
+    if (status === 'APPROVED') {
+        emailMessage.value = `Dear ${fullName},\n\n` +
+            `Congratulations!\n\n` +
+            `We are pleased to inform you that your rent application (ID: ${applicantId}), submitted on ${formattedSubmitDate}, has been APPROVED.\n\n` +
+            `Please proceed with payment.\n\n` +
+            `Best regards,\n` +
+            `Polomolok Public Market`;
+        toggleAccordion(true); // Show accordion
+    } else if (status === 'DECLINED') {
+        emailMessage.value = `Dear ${fullName},\n\n` +
+            `We regret to inform you that your rent application (ID: ${applicantId}), submitted on ${formattedSubmitDate}, has been DECLINED.\n\n` +
+            `Due to [Reason].\n\n` +
+            `If you have any questions, feel free to contact us.\n\n` +
+            `Best regards,\n` +
+            `Polomolok Public Market`;
+        toggleAccordion(true); // Show accordion
+    } else {
+        toggleAccordion(false); // Hide accordion
+    }
+}
+
+// Toggles the accordion visibility
+function toggleAccordion(show) {
+    const accordion = document.getElementById('collapseOne');
+    const accordionButton = accordion.previousElementSibling.firstElementChild;
+
+    if (show) {
+        accordion.classList.add('show'); // Expand accordion
+        accordionButton.classList.remove('collapsed');
+        accordionButton.setAttribute('aria-expanded', 'true');
+    } else {
+        accordion.classList.remove('show'); // Collapse accordion
+        accordionButton.classList.add('collapsed');
+        accordionButton.setAttribute('aria-expanded', 'false');
+    }
+}
+</script>
 
           </div>
         </div>

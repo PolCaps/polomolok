@@ -203,6 +203,9 @@ include('Sessions/Cashier.php');
                 <span class="d-sm-inline d-none">Cashier</span>
               </a>
             </li>
+            <?php 
+            include('Notification/CashierNotif.php');
+            ?>
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -220,7 +223,7 @@ include('Sessions/Cashier.php');
     <div class="container-fluid py-4">
 
       <div class="container-fluid py-4">
-        <div class="row mt-4">
+
           <!-- Modal for viewing and updating payment details -->
           <div class="modal fade" id="paymentDetailsModal" tabindex="-1" aria-labelledby="paymentDetailsLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -264,14 +267,14 @@ include('Sessions/Cashier.php');
             <input type="text" class="form-control" id="modalORNumber">
           </div>
 
-          <!-- Payment Date -->
           <div class="mb-3">
             <label for="modalPaymentDate" class="form-label">Payment Date</label>
-            <input type="date" class="form-control" id="modalPaymentDate">
+            <input type="datetime-local" id="modalPaymentDate" name="modalPaymentDate" class="form-control" required>
           </div>
 
+          <input type="hidden" id="email">
           <!-- Save Button -->
-          <button type="button" class="btn btn-primary" id="saveChangesBtn">Save Changes</button>
+          <button type="button" class="btn btn-primary" id="saveChangesBtn">Save and Notify</button>
         </form>
       </div>
     </div>
@@ -316,6 +319,7 @@ include('Sessions/Cashier.php');
                     <tr>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applicant ID</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Full Name</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email Address</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Payment Status</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Proof Of Payment</th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Official Reciept No.</th>
@@ -356,6 +360,11 @@ include('Sessions/Cashier.php');
                             </td>
                             <td class="text-center">
                                 <div class="avatar-group mt-1">
+                                    <h6 class="text-xs text-center">${item.email || 'N/A'}</h6>
+                                </div>
+                            </td>
+                            <td class="text-center">
+                                <div class="avatar-group mt-1">
                                     <h6 class="text-xs text-center">${item.payment_status || 'N/A'}</h6>
                                 </div>
                             </td>
@@ -382,8 +391,8 @@ include('Sessions/Cashier.php');
                     // No applicants found, add a message row
                     const row = document.createElement('tr');
                     row.innerHTML = `
-                        <td colspan="6" class="text-center">
-                            <h6 class="text-xs text-center">No rent applicants available.</h6>
+                        <td colspan="9" class="text-center">
+                            <h6 class="text-xs text-center">No Approved Rent Applicants Available.</h6>
                         </td>
                     `;
                     tableBody.appendChild(row);
@@ -407,12 +416,14 @@ include('Sessions/Cashier.php');
             // Extract data from the row
             const applicantId = cells[0].textContent.trim();
             const fullName = cells[1].textContent.trim(); // Assuming full name is in cell[1]
-            const paymentStatus = cells[2].textContent.trim(); // Assuming payment status is in cell[2]
+            const email = cells[2].textContent.trim(); // Assuming full name is in cell[1]
+            const paymentStatus = cells[3].textContent.trim(); // Assuming payment status is in cell[2]
 
             // Populate modal fields
             document.getElementById('modalApplicantId').value = applicantId;
             document.getElementById('modalFirstName').value = fullName;
             document.getElementById('modalPaymentStatus').value = paymentStatus;
+            document.getElementById('email').value = email;
 
             // Show the modal
             new bootstrap.Modal(document.getElementById('paymentDetailsModal')).show();
@@ -423,6 +434,7 @@ include('Sessions/Cashier.php');
     document.getElementById('saveChangesBtn').addEventListener('click', function () {
         const applicantId = document.getElementById('modalApplicantId').value.trim();
         const applicantName = document.getElementById('modalFirstName').value.trim();
+        const email = document.getElementById('email').value;
         const paymentStatus = document.getElementById('modalPaymentStatus').value;
         const proofOfPayment = document.getElementById('modalProofOfPayment').files[0]; // File input
         const ORNumber = document.getElementById('modalORNumber').value.trim();
@@ -438,6 +450,7 @@ include('Sessions/Cashier.php');
         const formData = new FormData();
         formData.append('applicant_id', applicantId);
         formData.append('applicant_name', applicantName);
+        formData.append('email', email);
         formData.append('payment_status', paymentStatus);
         if (proofOfPayment) {
             formData.append('proof_of_payment', proofOfPayment);
@@ -446,7 +459,7 @@ include('Sessions/Cashier.php');
         formData.append('payment_date', paymentDate);
 
         // Send the AJAX request
-        fetch('verify_payment.php', {
+        fetch('phpMailer/verify_payment.php', {
             method: 'POST',
             body: formData // FormData handles multipart/form-data automatically
         })
@@ -470,7 +483,7 @@ include('Sessions/Cashier.php');
         </div>
       </div>
 </div>
-</div>
+
 </div>
 
 
@@ -494,7 +507,7 @@ include('Sessions/Cashier.php');
       </div>
       <hr class="horizontal dark my-1">
       <div class="card-body pt-sm-3 pt-0">
-        <a class="btn bg-gradient-info w-85 text-white mx-4" href="..Admin">Edit Profile</a>
+        <a class="btn bg-gradient-info w-85 text-white mx-4" href="">Edit Profile</a>
         <a class="btn btn-outline-info w-85 mx-4" href="index.php">Logout</a>
         <hr class="horizontal dark my-1">
         <div class="text-small">Fixed Navbar</div>

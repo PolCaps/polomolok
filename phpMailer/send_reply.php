@@ -27,7 +27,7 @@ if (isset($data['id']) && isset($data['email']) && isset($data['message'])) {
         $mail->SMTPSecure = 'ssl';
         $mail->Port = 465;
 
-        $mail->setFrom('polomolokpublicmarket@gmail.com', 'Polomolok South Cotabato');
+        $mail->setFrom('polomolokpublicmarket@gmail.com', 'Polomolok Public Market');
         $mail->addAddress($emailAddress); 
 
         $mail->isHTML(true);

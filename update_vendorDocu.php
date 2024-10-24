@@ -67,16 +67,45 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Update or insert document data
     if ($count > 0) {
-        $sql_documents_update = "UPDATE documents SET lease_agreements=?, business_permits=?, business_license=? WHERE vendor_id=?";
-        $stmt_documents_update = $conn->prepare($sql_documents_update);
-        if (!$stmt_documents_update) {
-            throw new Exception('Error preparing update statement: ' . $conn->error);
+        $updateFields = [];
+        $params = [];
+        $types = '';
+
+        if ($leaseAgreementsDest !== null) {
+            $updateFields[] = "lease_agreements=?";
+            $params[] = $leaseAgreementsDest;
+            $types .= 's';
         }
-        $stmt_documents_update->bind_param("sssi", $leaseAgreementsDest, $businessPermitsDest, $businessLicensesDest, $vendor_id);
-        if (!$stmt_documents_update->execute()) {
-            echo "Update Error: " . $stmt_documents_update->error;
+        if ($businessPermitsDest !== null) {
+            $updateFields[] = "business_permits=?";
+            $params[] = $businessPermitsDest;
+            $types .= 's';
         }
-        $stmt_documents_update->close();
+        if ($businessLicensesDest !== null) {
+            $updateFields[] = "business_license=?";
+            $params[] = $businessLicensesDest;
+            $types .= 's';
+        }
+
+        if (count($updateFields) > 0) {
+            $sql_documents_update = "UPDATE documents SET " . implode(', ', $updateFields) . " WHERE vendor_id=?";
+            $stmt_documents_update = $conn->prepare($sql_documents_update);
+            if (!$stmt_documents_update) {
+                throw new Exception('Error preparing update statement: ' . $conn->error);
+            }
+
+            // Add vendor_id to parameters
+            $params[] = $vendor_id;
+            $types .= 'i'; // Add type for vendor_id
+
+            // Bind parameters dynamically
+            $stmt_documents_update->bind_param($types, ...$params);
+
+            if (!$stmt_documents_update->execute()) {
+                echo "Update Error: " . $stmt_documents_update->error;
+            }
+            $stmt_documents_update->close();
+        }
     } else {
         $sql_documents_insert = "INSERT INTO documents (vendor_id, lease_agreements, business_permits, business_license) VALUES (?, ?, ?, ?)";
         $stmt_documents_insert = $conn->prepare($sql_documents_insert);

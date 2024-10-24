@@ -1,38 +1,54 @@
 <?php
-// Database connection
+
 include('database_config.php');
 
-// Create a connection
 $mysqli = new mysqli($db_host, $db_user, $db_password, $db_name);
 
 if ($mysqli->connect_error) {
     die("<script>
-            alert('Connection error: " . $mysqli->connect_error . "');
+            alert('Connection error: " . $mysqli->connect_error . "'');
             window.location.href = 'AMRelReqProcessing.php';
         </script>");
 }
 
-// Check if the form is submitted
+date_default_timezone_set('Asia/Manila');
+
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Check if the vendor_id is set in the POST request
+
     if (isset($_POST['request_id'])) {
         $request_id = $_POST['request_id']; 
+        $vendor_id = $_POST['vendor_id'];
 
-        // Retrieve inputs safely
+  
         $relocatedStall = $_POST['stallSelect'] ?? null;
         $relocationDate = $_POST['relocation_date'] ?? null;
         $maintenanceDescription = $_POST['maintenanceDescription'] ?? null;
         $approvedDate = date('Y-m-d H:i:s');
         $approvalStatus = "Approved";
 
-        // Check if all necessary fields are available before executing the query
+ 
         if ($relocatedStall && $relocationDate && $maintenanceDescription) {
-            // Prepare the SQL statement to update the relocation_req table
+
             $stmt = $mysqli->prepare("UPDATE relocation_req SET relocated_stall = ?, relocation_date = ?, maintenance_description = ?, approval_status = ?, approval_date = ? WHERE request_id = ?");
             $stmt->bind_param("sssssi", $relocatedStall, $relocationDate, $maintenanceDescription, $approvalStatus, $approvedDate, $request_id);
 
-            // Execute the statement
+       
             if ($stmt->execute()) {
+
+                $notification_type = 'Relocation Request Status';
+                $notification_message = "Congrats! Your relocation request for Stall $relocatedStall has been approved.";
+                $time_stamp = date('Y-m-d H:i:s');
+                $is_read = 0; 
+
+
+                $stmt_notify = $mysqli->prepare("INSERT INTO notifications (vendor_id, notification_type, message, time_stamp, is_read) VALUES (?, ?, ?, ?, ?)");
+
+                if ($stmt_notify) {
+                    $stmt_notify->bind_param("isssi", $vendor_id, $notification_type, $notification_message, $time_stamp, $is_read);
+                    $stmt_notify->execute();
+                    $stmt_notify->close();
+                }
+
                 // Success message
                 echo "<script>
                         alert('Updated successfully.');
@@ -55,9 +71,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 </script>";
         }
     } else {
-        // Handle the case where vendor_id is not set
+        // Handle the case where request_id is not set
         echo "<script>
-                alert('Vendor ID is not set.');
+                alert('Request ID is not set.');
                 window.location.href = 'AMRelReqProcessing.php';
             </script>";
     }

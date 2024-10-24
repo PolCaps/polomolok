@@ -355,38 +355,35 @@ $conn->close();
                     die("Query failed: " . mysqli_error($conn));
                 }
 
-                // Fetch the results as an associative array and populate the table body
                 while ($row = mysqli_fetch_assoc($result)) {
-                    echo "<tr>
-                            
-                            <td class='text-center'>
-                                <div class='avatar-group mt-1'>
-                                    <h6 class='text-xs text-center'>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</h6>
-                                </div>
-                            </td>
-                            <td class='text-center'>
-                                <div class='avatar-group mt-1'>
-                                    <h6 class='text-xs text-center'>{$row['commodities']}</h6>
-                                </div>
-                            </td>
-                            <td class='text-center'>
-                                <div class='avatar-group mt-1'>
-                                    <h6 class='text-xs text-center'>{$row['contact_no']}</h6>
-                                </div>
-                            </td>
-                            <td class='text-center'>
-                                <div class='avatar-group mt-1'>
-                                    <h6 class='text-xs text-center'>{$row['email']}</h6>
-                                </div>
-                            </td>
-                            <td class='text-center'>
-                                <div class='avatar-group mt-1'>
-                                    <h6 class='text-xs text-center'>{$row['payment_status']}</h6>
-                                </div>
-                            </td>
+                  echo "<tr onclick='openNotificationModal(\"{$row['email']}\", \"{$row['first_name']} {$row['last_name']}\", \"{$row['commodities']}\")' style='cursor: pointer;'>
+                          <td class='text-center'>
+                              <div class='avatar-group mt-1'>
+                                  <h6 class='text-xs text-center'>{$row['first_name']} {$row['middle_name']} {$row['last_name']}</h6>
+                              </div>
+                          </td>
+                          <td class='text-center'>
+                              <div class='avatar-group mt-1'>
+                                  <h6 class='text-xs text-center'>{$row['commodities']}</h6>
+                              </div>
+                          </td>
+                          <td class='text-center'>
+                              <div class='avatar-group mt-1'>
+                                  <h6 class='text-xs text-center'>{$row['contact_no']}</h6>
+                              </div>
+                          </td>
+                          <td class='text-center'>
+                              <div class='avatar-group mt-1'>
+                                  <h6 class='text-xs text-center'>{$row['email']}</h6>
+                              </div>
+                          </td>
+                          <td class='text-center'>
+                              <div class='avatar-group mt-1'>
+                                  <h6 class='text-xs text-center'>{$row['payment_status']}</h6>
+                              </div>
+                          </td>
                         </tr>";
-                }
-
+              }
                 // Close the connection
                 mysqli_close($conn);
                 ?>
@@ -395,6 +392,62 @@ $conn->close();
     </div>
 </div>
 
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Notify Applicant</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <textarea id="notificationMessage" class="form-control" rows="8"></textarea>
+                <input type="hidden" id="applicantEmail" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" id="sendNotification">Notify Rent Applicant</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openNotificationModal(email, applicantName, commodities) {
+        const message = `Dear ${applicantName},\n\nYou are now ready for the draw lots for the following commodities: ${commodities}.\nPlease be present.`;
+        document.getElementById('notificationMessage').value = message; // Prefill the message
+        document.getElementById('applicantEmail').value = email; // Store the email
+
+        // Show the modal
+        const modal = new bootstrap.Modal(document.getElementById('notificationModal'));
+        modal.show();
+    }
+
+    document.getElementById('sendNotification').addEventListener('click', function () {
+    const email = document.getElementById('applicantEmail').value;
+    const message = document.getElementById('notificationMessage').value;
+
+    // Send the email via AJAX
+    fetch('phpMailer/send_ReadyDrawnotification.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email: email, message: message })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Notification sent successfully!');
+        } else {
+            alert('Failed to send notification: ' + data.message);
+        }
+        // Close the modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('notificationModal'));
+        modal.hide();
+    })
+    .catch(error => console.error('Error:', error));
+});
+</script>
 
     </div>
     </div>

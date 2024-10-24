@@ -1,6 +1,12 @@
 <?php
 header('Content-Type: application/json');
 include('database_config.php');
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+
+require 'src/Exception.php';
+require 'src/PHPMailer.php';
+require 'src/SMTP.php';
 
 // Create a new MySQL connection
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
@@ -13,6 +19,7 @@ if ($conn->connect_error) {
 // Fetch form data
 $applicant_id = $_POST['applicant_id'] ?? null;
 $applicant_name = $_POST['applicant_name'] ?? null;
+$email = $_POST['email'] ?? null;
 $payment_status = $_POST['payment_status'] ?? null;
 $OR_no = $_POST['OR_no'] ?? null;
 $payment_date = $_POST['payment_date'] ?? null;
@@ -26,7 +33,7 @@ if (!$applicant_id || !$payment_status) {
 // Handle file upload if proof_of_payment is provided
 $proof_of_payment_path = null;
 if ($proof_of_payment) {
-    $target_dir = "payment_proofs/rent_application/";
+    $target_dir = "../payment_proofs/rent_application/";
     $file_name = basename($proof_of_payment['name']);
     $target_file = $target_dir . uniqid() . '_' . $file_name;
     
@@ -69,7 +76,44 @@ if ($stmt->execute()) {
         $stmt_admin->close();
     }
 
-    echo json_encode(['success' => true, 'message' => 'Payment details updated successfully.']);
+    // Send email notification using PHPMailer
+    $mail = new PHPMailer(true);
+    try {
+        // Server settings
+        $mail->isSMTP();
+        $mail->Host = 'smtp.gmail.com'; 
+        $mail->SMTPAuth = true;
+        $mail->Username = 'polomolokpublicmarket@gmail.com'; 
+        $mail->Password = 'tsgxftoeulzixxyv'; // Use environment variables for security
+        $mail->SMTPSecure = 'ssl';
+        $mail->Port = 465;
+
+        // Recipients
+        $mail->setFrom('polomolokpublicmarket@gmail.com', 'Polomolok Public Market');
+        $mail->addAddress($email); // Add recipient
+
+
+        $payment_date = $_POST['payment_date'] ?? null;
+
+        if ($payment_date) {
+            $dateTime = new DateTime($payment_date, new DateTimeZone('Asia/Manila'));
+            $formatted_date = $dateTime->format('F j, Y, g:i A');
+        } else {
+            $formatted_date = 'N/A';
+        }
+        
+        // Content
+        $mail->isHTML(true);
+        $mail->Subject = 'Congratulations!';
+        $mail->Body    = "Dear $applicant_name,<br><br>Your Payment for your Rent Application has been Acknowledged.<br>OR Number: $OR_no<br>Payment Date: $formatted_date<br><br>You are now Ready for Drawlots. Please wait for further instructions.<br><br>Best Regards,<br>Polomolok Public Market";
+
+        // Send the email
+        $mail->send();
+        echo json_encode(['success' => true, 'message' => 'Payment details updated successfully. A notification email has been sent.']);
+    } catch (Exception $e) {
+        echo json_encode(['success' => true, 'message' => 'Payment details updated successfully. However, failed to send email notification: ' . $mail->ErrorInfo]);
+    }
+
 } else {
     echo json_encode(['success' => false, 'message' => "Execute failed: " . $stmt->error]);
 }
