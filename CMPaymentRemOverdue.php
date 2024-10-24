@@ -492,8 +492,23 @@ if ($resultA->num_rows > 0) {
           </div>
           <div class="mb-3">
             <label for="monthBill" class="col-form-label">Bill for the Month:</label>
-            <input type="text" class="form-control" id="monthBill" name="monthBill" placeholder="e.g: JANUARY - DECEMBER">
-          </div>
+            <select class="form-control" id="monthBill" name="monthBill">
+                <option value="" disabled selected>Select a month</option>
+                <option value="JANUARY">JANUARY</option>
+                <option value="FEBRUARY">FEBRUARY</option>
+                <option value="MARCH">MARCH</option>
+                <option value="APRIL">APRIL</option>
+                <option value="MAY">MAY</option>
+                <option value="JUNE">JUNE</option>
+                <option value="JULY">JULY</option>
+                <option value="AUGUST">AUGUST</option>
+                <option value="SEPTEMBER">SEPTEMBER</option>
+                <option value="OCTOBER">OCTOBER</option>
+                <option value="NOVEMBER">NOVEMBER</option>
+                <option value="DECEMBER">DECEMBER</option>
+            </select>
+        </div>
+
           <div class="mb-3">
             <label for="building" class="col-form-label">Building Name/Number:</label>
             <input type="text" class="form-control" id="building" name="building" placeholder="BUILDING A - BUILDING J">
@@ -512,8 +527,8 @@ if ($resultA->num_rows > 0) {
           </div>
           <div class="mb-3">
             <label for="numMonths" class="col-form-label">Number of Months:</label>
-            <input type="number" class="form-control" id="numMonths" name="numMonths" min="1">
-          </div>
+            <input type="number" class="form-control" id="numMonths" name="numMonths" min="1" value="1">
+        </div>
           <div class="mb-3">
             <label for="penaltyFee" class="col-form-label">Penalty Fee:</label>
             <input type="number" class="form-control" id="penaltyFee" name="penaltyFee" step="0.01" min="0" placeholder="Optional: overdue fees">
@@ -521,9 +536,6 @@ if ($resultA->num_rows > 0) {
            <!-- Hidden input fields -->
            <input type="hidden" id="file_path" name="file_path">
           <input type="hidden" id="total_fees" name="total_fees">
-
-
-
           
           <input type="hidden" id="vendor-id" name="vendor-id">
           <button type="submit" id="submit" class="btn btn-primary" name="submit">SEND STATEMENT OF ACCOUNTS</button>
@@ -536,10 +548,27 @@ if ($resultA->num_rows > 0) {
   </div>
 </div>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+function updateNumMonths() {
+    const monthSelect = document.getElementById('monthBill');
+    const numMonthsInput = document.getElementById('numMonths');
+    
+    if (monthSelect.value) {
+        numMonthsInput.value = monthSelect.value;
+    } else {
+        numMonthsInput.value = 1;
+    }
+}
+</script>
+
+<!-- Include jsPDF library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
+
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
+  // Function to format the input as currency
   function formatCurrencyInput(input) {
     let value = parseFloat(input.value.replace(/,/g, ''));
     if (!isNaN(value)) {
@@ -643,8 +672,9 @@ document.addEventListener('DOMContentLoaded', () => {
     headings.forEach((text, index) => centerText(text, 15 + (index * 10)));
 
     // Line separator
-    doc.line(10, 50, doc.internal.pageSize.getWidth() - 10, 50);
+    doc.line(10, 50, doc.internal.pageSize.getWidth() - 10, 50); // Draws a horizontal line
 
+    // Capture values from form fields
     const formFields = [
       { id: 'vendor-name', label: 'Vendor Name', y: 55 },
       { id: 'reminderMessage', label: 'Message', y: 60 },
@@ -668,9 +698,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const monthlyRentals = parseFloat(document.getElementById('monthly-rentals').value.replace(/,/g, '') || 0);
     const totalFees = remainingBalance + monthlyRentals;
 
+    // Display GRAND TOTAL if applicable
     if (remainingBalance > 0 || monthlyRentals > 0) {
       doc.setFontSize(10);
-      doc.text(`GRAND TOTAL: ${totalFees.toLocaleString('en-US', { style: 'currency', currency: '$' })}`, 10, 110);
+      doc.text(`GRAND TOTAL: ${totalFees.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}`, 10, 110);
     }
     doc.line(10, 115, doc.internal.pageSize.getWidth() - 10, 115); 
 
@@ -689,17 +720,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const pdfBlob = new Blob([doc.output('blob')], { type: 'application/pdf' });
 
 
-// const filePath = `billing/${vendorName}SoA.pdf`;
-
-// if (filePath) {
-//     doc.save(filePath);
-// } else {
-//     // Create a default file path if vendorId is not present
-//     const defaultvendorName = 'default';
-//     const defaultFilePath = `billing/${defaultvendorName}SoA.pdf`;
-//     doc.save(defaultFilePath);
-// }
-
     const formData = new FormData(this);
      formData.append('pdfFile', pdfBlob, `billing/${vendorName}SoA.pdf`);
     formData.append('total_fees', totalFees);
@@ -713,15 +733,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const result = await response.json();
       if (result.success) {
-        alert("PDF sent successfully!");
-        window.location.href = 'generateSOA.php';
+        alert("Sent successfully!");
+        window.location.href = 'CMPaymentRem.php';
       } else {
         alert('Error: ' + result.message);
-        window.location.href = 'generateSOA.php';
+       
       }
     } catch (error) {
       alert('Error sending data: ' + error.message);
-      window.location.href = 'generateSOA.php';
+     
     }
   });
 
