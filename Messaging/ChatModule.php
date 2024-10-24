@@ -95,6 +95,7 @@
                     <p class="text-xs text-muted">Date Time</p>
                 </div>
             </div>
+          
             <div class="message received">
                 <p class="text-sm mb-1">Hello! How are you too?</p>
                 <div class="d-flex">

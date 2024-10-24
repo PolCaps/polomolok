@@ -151,11 +151,9 @@ include('Sessions/Cashier.php');
                 <span class="d-sm-inline d-none">Cashier</span>
               </a>
             </li>
-
             <?php 
             include('Notification/CashierNotif.php');
             ?>
-    
             <li class="nav-item d-xl-none ps-3 d-flex align-items-center">
               <a href="javascript:;" class="nav-link text-body p-0" id="iconNavbarSidenav">
                 <div class="sidenav-toggler-inner">
@@ -169,11 +167,11 @@ include('Sessions/Cashier.php');
         </div>
       </div>
         </nav>
+        <!-- End Navbar -->
+
 
         <?php
 include('database_config.php');
-
-      include('database_config.php');
 
 // Create a connection
 $conn = new mysqli($db_host, $db_user, $db_password, $db_name);

@@ -118,7 +118,7 @@ try {
         "items[0][name]" => "Monthly Rental",
         "items[0][quantity]" => 1,
         "items[0][unit_cost]" => $total_monthly_rentals ?? 0,
-        "total" => $totalVenPay
+        "total" => $totalVenPay - $total_monthly_rentals
     );
     
     

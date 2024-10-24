@@ -100,7 +100,9 @@ $conn->close();
                         case 'Relocation Request Status':
                             window.location.href = 'VMRelocation.php';
                             break;
-                        
+                        case 'Statement of Account Update':
+                            window.location.href = 'VMReminders.php';
+                            break;
                         default:
                             console.log('No action defined for this notification type:', notificationType); // More details
                     }

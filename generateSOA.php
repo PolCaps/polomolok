@@ -13,7 +13,7 @@ if ($conn->connect_error) {
     echo json_encode(['success' => false, 'message' => 'Connection failed: ' . addslashes($conn->connect_error)]);
     exit;
 }
-
+date_default_timezone_set('Asia/Manila');
 // Ensure the request method is POST
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
@@ -23,12 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $message = $_POST['reminderMessage'] ?? null;
     $otherFee = $_POST['remaining-balance'] ?? null;
     $monthlyRent = $_POST['totalPay'] ?? null;
-    $monthBill = $_POST['monthBill'] ?? null;
-    $building = $_POST['building'] ?? null;
-    $stallNumber = $_POST['stallNumber'] ?? null;
-    $dueDate = $_POST['dueDate'] ?? null;
     $totalFees = $_POST['total_fees'] ?? null;
-    $penaltyFee = $_POST['penaltyFee'] ?? null;
 
     $pdfFile = $_FILES['pdfFile'] ?? null;
 
@@ -40,7 +35,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         
         // Set the initial file path
         $filePath = "billing/{$pdfFile['name']}";
-    
+
         // Check if the file already exists and modify the name if necessary
         $counter = 1;
         while (file_exists($filePath)) {
@@ -65,6 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmtCheck->execute();
             $resultCheck = $stmtCheck->get_result();
 
+            // Prepare notification details
+            $notification_type = 'Statement of Account Update';
+            $notification_message = "You have a new Statement of Account";
+            $time_stamp = date('Y-m-d H:i:s'); // Current timestamp
+            $is_read = 0; // Unread notification
+
             if ($resultCheck->num_rows > 0) {
                 // Vendor ID exists, update the record
                 $sqlUpdate = "UPDATE vendorsoa SET username = ?, message = ?, monthly_rentals = ?, other_fees = ?, total_amount = ?, file_path = ? WHERE vendor_id = ?";
@@ -72,6 +73,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmtUpdate->bind_param("ssssssi", $username, $message, $monthlyRent, $otherFee, $totalFees, $filePath, $vendorId);
 
                 if ($stmtUpdate->execute()) {
+                    // Insert notification for the vendor
+                    insertNotification($conn, $vendorId, $notification_type, $notification_message, $time_stamp, $is_read);
+
                     echo json_encode(['success' => true, 'message' => 'Statement of Account updated successfully!']);
                 } else {
                     echo json_encode(['success' => false, 'message' => 'Failed to update statement in database: ' . addslashes($stmtUpdate->error)]);
@@ -82,9 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Vendor ID does not exist, insert a new record
                 $sqlInsert = "INSERT INTO vendorsoa (vendor_id, username, message, monthly_rentals, other_fees, total_amount, file_path) VALUES (?, ?, ?, ?, ?, ?, ?)";
                 $stmtInsert = $conn->prepare($sqlInsert);
-                $stmtInsert->bind_param("issssss", $vendorId, $username , $message, $monthlyRent, $otherFee, $totalFees, $filePath);
+                $stmtInsert->bind_param("issssss", $vendorId, $username, $message, $monthlyRent, $otherFee, $totalFees, $filePath);
 
                 if ($stmtInsert->execute()) {
+                    // Insert notification for the vendor
+                    insertNotification($conn, $vendorId, $notification_type, $notification_message, $time_stamp, $is_read);
+
                     echo json_encode(['success' => true, 'message' => 'Statement of Account generated successfully!']);
                 } else {
                     echo json_encode(['success' => false, 'message' => 'Failed to insert statement into database: ' . addslashes($stmtInsert->error)]);
@@ -101,6 +108,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 } else {
     echo json_encode(['success' => false, 'message' => 'Invalid request method.']);
     exit;
+}
+
+// Function to insert notifications
+function insertNotification($conn, $vendorId, $notification_type, $notification_message, $time_stamp, $is_read) {
+    $stmt = $conn->prepare("INSERT INTO notifications (vendor_id, notification_type, message, time_stamp, is_read) VALUES (?, ?, ?, ?, ?)");
+    if ($stmt) {
+        $stmt->bind_param("ssssi", $vendorId, $notification_type, $notification_message, $time_stamp, $is_read);
+        $stmt->execute();
+        $stmt->close();
+    }
 }
 
 ob_end_flush(); // Send the output buffer

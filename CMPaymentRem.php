@@ -565,7 +565,7 @@ if ($resultA->num_rows > 0) {
           <input type="hidden" id="total_fees" name="total_fees">
           
           <input type="hidden" id="vendor-id" name="vendor-id">
-          <button type="submit" id="submit" class="btn btn-primary" name="submit">SEND STATEMENT OF ACCOUNTS</button>
+          <button type="submit" id="submit" class="btn btn-primary" name="submit">Send Statement of Account</button>
         </form>
       </div>
       <div class="modal-footer">

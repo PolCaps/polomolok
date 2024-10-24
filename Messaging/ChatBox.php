@@ -111,6 +111,7 @@
                     <i class="bi bi-x-circle text-white"></i>
                 </a>
             </div>
+            
         </div>
         <div class="chatbox-body" id="chatboxBody">
             <div class="message">
