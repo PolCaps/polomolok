@@ -171,254 +171,394 @@ include('Sessions/Cashier.php');
         </nav>
 
         <?php
+include('database_config.php');
 
       include('database_config.php');
 
-      // Create a connection
-      $conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
 
-      // Check the connection
-      if ($conn->connect_error) {
-          die("Connection failed: " . $conn->connect_error);
-      }
+// Check the connection
+if ($conn->connect_error) {
+    echo "<script>alert('Connection failed: " . addslashes($conn->connect_error) . "');</script>";
+    exit;
+}
 
-      $totalPaymentsQuery = "SELECT SUM(totalPay) AS totalPayments 
-                            FROM receipts 
-                            WHERE MONTH(issued_date) = MONTH(CURRENT_DATE()) 
-                            AND YEAR(issued_date) = YEAR(CURRENT_DATE())";
-      $totalPaymentsResult = $conn->query($totalPaymentsQuery);
-      if ($totalPaymentsResult) {
-          $totalPayments = $totalPaymentsResult->fetch_assoc();
-          $data['totalPayments'] = $totalPayments['totalPayments'];
-      } else {
-          $data['totalPayments'] = null;
-      }
+// Initialize variables with default values
+$totalPayments = 0;
+$inquiryCount = 0;
+$rentAppCount = 0;
+$activeVendorsCount = 0;
 
-      // Query to get inquiries for the current month
-      $inquiriesQuery = "SELECT name, email_add AS email, subject, message, sent_date 
-                        FROM inquiry 
-                        WHERE MONTH(sent_date) = MONTH(CURRENT_DATE()) 
-                        AND YEAR(sent_date) = YEAR(CURRENT_DATE())";
-      $inquiriesResult = $conn->query($inquiriesQuery);
+// Get total payments
+$queryPayments = "SELECT SUM(totalPay) AS totalPayments FROM receipts WHERE MONTH(issued_date) = MONTH(CURRENT_DATE) AND YEAR(issued_date) = YEAR(CURRENT_DATE)";
+$resultPayments = $conn->query($queryPayments);
+if ($resultPayments) {
+    $totalPayments = $resultPayments->fetch_assoc()['totalPayments'] ?? 0;
+} else {
+    echo "<script>alert('Error fetching total payments: " . addslashes($conn->error) . "');</script>";
+}
 
-      // Query to count rent applications for the current month
-      $rentAppCountQuery = "SELECT COUNT(*) AS rentAppCount 
-                            FROM rentapp_payment 
-                            WHERE MONTH(payment_date) = MONTH(CURRENT_DATE()) 
-                            AND YEAR(payment_date) = YEAR(CURRENT_DATE())";
-      $rentAppCountResult = $conn->query($rentAppCountQuery);
-      if ($rentAppCountResult) {
-          $rentAppCount = $rentAppCountResult->fetch_assoc();
-          $data['rentAppCount'] = $rentAppCount['rentAppCount'];
-      } else {
-          $data['rentAppCount'] = null;
-      }
+// Get inquiries count
+$queryInquiries = "SELECT COUNT(*) AS inquiry_count FROM inquiry WHERE MONTH(sent_date) = MONTH(CURRENT_DATE) AND YEAR(sent_date) = YEAR(CURRENT_DATE)";
+$resultInquiries = $conn->query($queryInquiries);
+if ($resultInquiries) {
+    $inquiryCount = $resultInquiries->fetch_assoc()['inquiry_count'] ?? 0;
+} else {
+    echo "<script>alert('Error fetching inquiries: " . addslashes($conn->error) . "');</script>";
+}
 
-      // Query to count active vendors
-      $activeVendorsQuery = "SELECT COUNT(*) AS activeVendorsCount 
-                            FROM vendors 
-                            WHERE Vendor_Status = 'ACTIVE'";
-      $activeVendorsResult = $conn->query($activeVendorsQuery);
-      if ($activeVendorsResult) {
-          $activeVendorsCount = $activeVendorsResult->fetch_assoc();
-          $data['activeVendorsCount'] = $activeVendorsCount['activeVendorsCount'];
-      } else {
-          $data['activeVendorsCount'] = null;
-      }
+// Get rent applications count
+$queryRentApps = "SELECT COUNT(*) AS rent_app_count FROM rent_application WHERE MONTH(applied_date) = MONTH(CURRENT_DATE) AND YEAR(applied_date) = YEAR(CURRENT_DATE)";
+$resultRentApps = $conn->query($queryRentApps);
+if ($resultRentApps) {
+    $rentAppCount = $resultRentApps->fetch_assoc()['rent_app_count'] ?? 0;
+} else {
+    echo "<script>alert('Error fetching rent applications: " . addslashes($conn->error) . "');</script>";
+}
 
-      // Close the connection
-      $conn->close();
-      ?>
+// Get active vendors count
+$queryActiveVendors = "SELECT COUNT(*) AS active_vendors_count FROM vendors WHERE Vendor_Status = 'ACTIVE'";
+$resultActiveVendors = $conn->query($queryActiveVendors);
+if ($resultActiveVendors) {
+    $activeVendorsCount = $resultActiveVendors->fetch_assoc()['active_vendors_count'] ?? 0;
+} else {
+    echo "<script>alert('Error fetching active vendors: " . addslashes($conn->error) . "');</script>";
+}
 
+// Get relocation request details (no vendor_id filtering)
+$queryRelocationReq = "
+    SELECT reason, relocation_date, approval_date, maintenance_description 
+    FROM relocation_req";
+$resultRelocation = $conn->query($queryRelocationReq);
 
+$relocationRequests = [];
+if ($resultRelocation) {
+    while ($row = $resultRelocation->fetch_assoc()) {
+        $relocationRequests[] = $row;
+    }
+} else {
+    echo "<script>alert('Error fetching relocation requests: " . addslashes($conn->error) . "');</script>";
+}
 
-<!-- End Navbar -->
-<div class="container-fluid py-4">
-      <div class="row">
+// Get rent application details (no vendor_id filtering)
+$queryRentAppDetails = "
+    SELECT first_name, middle_name, last_name, commodities, applied_date 
+    FROM rent_application";
+$resultRentApp = $conn->query($queryRentAppDetails);
 
+$rentApplications = [];
+if ($resultRentApp) {
+    while ($row = $resultRentApp->fetch_assoc()) {
+        $rentApplications[] = $row;
+    }
+} else {
+    echo "<script>alert('Error fetching rent applications: " . addslashes($conn->error) . "');</script>";
+}
 
-
-      <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
-
-
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-8">
-                  <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Expected Total Payments from Vendors (This Month)</p>
-                    <h5 class="font-weight-bolder mb-0">
-                   <span id="totalPay"><?php echo htmlspecialchars(number_format($data['totalPayments'], 2, '.', ',')); ?></span>
-                    </h5>
-                  </div>
-                </div>
-                <div class="col-2 text-end">
-                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
-                  <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+// Close the database connection
+$conn->close();
+?>
 
 
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-8">
-                  <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Active Vendors this month</p>
-                    <h5 class="font-weight-bolder mb-0">
-                    <span id="activeVendorsCount"><?php echo htmlspecialchars($data['activeVendorsCount']); ?></span>
-                    </h5>
-                  </div>
-                </div>
-                <div class="col-4 text-end">
-                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
-                  <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
-          <div class="card">
-            <div class="card-body p-3">
-              <div class="row">
-                <div class="col-8">
-                  <div class="numbers">
-                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Rent Applications (This Month)</p>
-                    <h5 class="font-weight-bolder mb-0">
-                    <span id="rentAppCount"><?php echo htmlspecialchars($data['rentAppCount']); ?></span>
-                    </h5>
-                  </div>
-                </div>
-                <div class="col-4 text-end">
-                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
-                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
 
+<div class="card-body px-0 pb-2">
+    <div class="table-responsive">
+        <h2 class="text-center">Monthly Report Summary</h2>
+        <form id="pdfForm" method="POST" enctype="multipart/form-data" action="MonthlyReports.php">
+            <input type="hidden" name="pdf" id="pdfBase64Input">
+            <button type="button" class="btn btn-primary" id="generateReportBtn">Generate Report</button>
+        </form>
+        <table id="reportTable" class="table align-items-center mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Description</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0 text-sm">Total Payments</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex px-3 py-1">
+                            <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-sm"><?php echo number_format($totalPayments, 2); ?></h6>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0 text-sm">Total Inquiries</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex px-3 py-1">
+                            <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-sm"><?php echo $inquiryCount; ?></h6>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0 text-sm">Total Rent Applications</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex px-3 py-1">
+                            <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-sm"><?php echo $rentAppCount; ?></h6>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0 text-sm">Active Vendors</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="d-flex px-3 py-1">
+                            <div class="d-flex flex-column justify-content-center">
+                                <h6 class="mb-0 text-sm"><?php echo $activeVendorsCount; ?></h6>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
-        
-        
+        <h2 class="text-center mt-4">Relocation Requests</h2>
+        <table id="relocationTable" class="table align-items-center mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Reason</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Relocation Date</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Approval Date</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Maintenance Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($relocationRequests as $request): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($request['reason']); ?></td>
+                    <td><?php echo htmlspecialchars($request['relocation_date']); ?></td>
+                    <td><?php echo htmlspecialchars($request['approval_date']); ?></td>
+                    <td><?php echo htmlspecialchars($request['maintenance_description']); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
 
-      </div><!-- row -->
-         <br>
-         <br>
-       <!-- Button to Open the Modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#reportModal">
-  Generate Report
-</button>
-
-<!-- Modal Structure -->
-<div class="modal fade" id="reportModal" tabindex="-1" aria-labelledby="reportModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="reportModalLabel">Generate Monthly Report</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span>&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p>Do you want to generate and send the monthly report?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button type="button" class="btn btn-primary" id="generateReportBtn">Generate Report</button>
-      </div>
+        <h2 class="text-center mt-4">Rent Applications</h2>
+        <table id="rentAppTable" class="table align-items-center mb-0">
+            <thead class="thead-light">
+                <tr>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">First Name</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Middle Name</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Last Name</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Commodities</th>
+                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Applied Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php foreach ($rentApplications as $application): ?>
+                <tr>
+                    <td><?php echo htmlspecialchars($application['first_name']); ?></td>
+                    <td><?php echo htmlspecialchars($application['middle_name']); ?></td>
+                    <td><?php echo htmlspecialchars($application['last_name']); ?></td>
+                    <td><?php echo htmlspecialchars($application['commodities']); ?></td>
+                    <td><?php echo htmlspecialchars($application['applied_date']); ?></td>
+                </tr>
+                <?php endforeach; ?>
+            </tbody>
+        </table>
     </div>
-  </div>
 </div>
-
-
-
-
-    </div>
-
-<!-- DataTables and jQuery -->
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css" />
 
 <script>
 $(document).ready(function() {
-  document.getElementById("generateReportBtn").addEventListener("click", function() {
-    // Check if html2canvas is defined
-    if (typeof html2canvas !== 'undefined') {
-      // Capture the content of the page
-      html2canvas(document.querySelector(".container-fluid")).then(canvas => {
+    // Initialize DataTables
+    $('#reportTable').DataTable();
+    $('#relocationTable').DataTable();
+    $('#rentAppTable').DataTable();
+});
+</script>
+
+
+
+<!-- jQuery library -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<!-- jsPDF library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script>
+$(document).ready(function() {
+    document.getElementById("generateReportBtn").addEventListener("click", async function() {
+        console.log("Generate Report Button Clicked");
+
+        // Create a new instance of jsPDF
         const { jsPDF } = window.jspdf;
         let pdf = new jsPDF("p", "pt", "a4");
 
-        const imgData = canvas.toDataURL("image/png");
-        const imgWidth = pdf.internal.pageSize.getWidth();
-        const imgHeight = (canvas.height * imgWidth) / canvas.width;
+        // Get the current date and extract the month
+        const date = new Date();
+        const options = { month: 'long' }; // Options for month formatting
+        const currentMonth = date.toLocaleDateString('en-US', options);
 
-        pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight);
+        // Set up the title
+        pdf.setFontSize(12);
+        pdf.text(`MONTHLY REPORT FOR THIS MONTH OF ${currentMonth.toUpperCase()}`, 40, 40);
+        console.log("Title added to PDF");
 
-        // Generate Base64 string of the PDF
-        const pdfBase64 = pdf.output('datauristring');
+        // Additional header details
+        pdf.setFontSize(10);
+        pdf.text("POLOMOLOK PUBLIC MARKET REPORTS", 40, 60);
+        console.log("Header details added to PDF");
 
-        // Prepare form data to send to the server
-        const formData = new FormData();
-        formData.append('pdf', pdfBase64);
-
-        // Send the Base64 PDF via POST to the server
-        fetch('monthlyReports.php', {
-          method: 'POST',
-          body: formData
-        }).then(response => response.text())
-          .then(result => {
-            console.log('PDF sent to server:', result);
-            alert('Report generated and sent successfully!');
-          }).catch(error => {
-            alert('Error sending PDF: ' + error);
-          });
-
-        // Make the API request for generating PDF
-        fetch("https://us1.pdfgeneratorapi.com/api/v4/documents/generate", {
-          method: "POST",
-          headers: {
-            "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiI2YjJjODljODU2ZjgzMThkN2ZiNjNiYTBiMzQ4MzYxMjBiNGZiNjU4MjM3NjM5MzM4Y2JlZTQxNTk1NjZmNWQ4Iiwic3ViIjoicmV5YW5qYW5zYW1vbnRhbmVzQGdtYWlsLmNvbSIsImV4cCI6MTcyNzc4NjI0NH0.kDpfxqhYs4wEv0zccATGvxLwariOZ4l8tTSDUeOuIl8",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            template: {
-              id: '1216508',
-              data: {}
-            },
-            format: 'pdf',
-            output: 'url',
-            name: 'MONTHLY REPORTS'
-          })
-        })
-        .then(response => response.json())
-        .then(data => {
-          console.log('API response:', data);
-        })
-        .catch(error => {
-          console.error('Error generating PDF via API:', error);
+        const headings = [
+            "Republic of the Philippines",
+            "Province of South Cotabato",
+            "MUNICIPALITY OF POLOMOLOK",
+            "MUNICIPAL ECONOMIC ENTERPRISES & DEVELOPMENT OFFICE (Market Operation)"
+        ];
+        headings.forEach((text, index) => {
+            const yPosition = 80 + (index * 12);
+            const textWidth = pdf.getTextWidth(text);
+            const x = (pdf.internal.pageSize.getWidth() - textWidth) / 2;
+            pdf.text(text, x, yPosition);
+            console.log(`Heading added: ${text}`);
         });
 
-      }).catch(error => {
-        alert('Error capturing the page: ' + error);
-      });
-    } else {
-      alert('html2canvas is not defined. Please check if the library is loaded correctly.');
-    }
-  });
+        // Line separator
+        pdf.line(40, 130, pdf.internal.pageSize.getWidth() - 40, 130);
+        console.log("Line separator added");
+
+        // Function to draw a table manually
+        function drawTable(startY, title, headers, data) {
+            let pdfYPosition = startY;
+            pdf.setFontSize(10);
+            pdf.text(title, 20, pdfYPosition);
+            pdfYPosition += 20;
+
+            // Draw headers
+            const headerWidths = [120, 100, 100, 150];
+            headers.forEach((header, index) => {
+                pdf.text(header, 40 + headerWidths.slice(0, index).reduce((a, b) => a + b, 0), pdfYPosition);
+            });
+            pdfYPosition += 20;
+
+            // Draw separator line
+            pdf.line(40, pdfYPosition, pdf.internal.pageSize.getWidth() - 40, pdfYPosition);
+            pdfYPosition += 10;
+
+            // Draw data rows
+            data.forEach(row => {
+                row.forEach((cell, index) => {
+                    pdf.text(cell, 30 + headerWidths.slice(0, index).reduce((a, b) => a + b, 0), pdfYPosition);
+                });
+                pdfYPosition += 15;
+            });
+
+            return pdfYPosition + 15;
+        }
+
+        // Extract and add report table data
+        const reportTable = document.getElementById("reportTable");
+        if (!reportTable) {
+            console.error("Table with ID 'reportTable' not found.");
+            alert("Error: Report table not found.");
+            return;
+        }
+
+        let reportData = Array.from(reportTable.rows).slice(1).map(row => {
+            const cells = row.cells;
+            return [cells[0].innerText.trim(), cells[1].innerText.trim()];
+        });
+
+        let pdfYPosition = drawTable(140, "Report Data", ["Column 1", "Column 2"], reportData);
+
+        // Extract and add relocation requests table data
+        const relocationTable = document.getElementById("relocationTable");
+        if (!relocationTable) {
+            console.error("Table with ID 'relocationTable' not found.");
+            alert("Error: Relocation table not found.");
+            return;
+        }
+
+        let relocationData = Array.from(relocationTable.rows).slice(1).map(row => {
+            const cells = row.cells;
+            return [
+                cells[0].innerText.trim(),
+                cells[1].innerText.trim(),
+                cells[2].innerText.trim(),
+                cells[3].innerText.trim()
+            ];
+        });
+
+        pdfYPosition = drawTable(pdfYPosition, "Relocation Requests", ["Reason", "Relocation Date", "Approval Date", "Maintenance Description"], relocationData);
+
+        // Extract and add rent applications table data
+        const rentAppTable = document.getElementById("rentAppTable");
+        if (!rentAppTable) {
+            console.error("Table with ID 'rentAppTable' not found.");
+            alert("Error: Rent Applications table not found.");
+            return;
+        }
+
+        let rentAppData = Array.from(rentAppTable.rows).slice(1).map(row => {
+            const cells = row.cells;
+            return [
+                cells[0].innerText.trim(),
+                cells[1].innerText.trim(),
+                cells[2].innerText.trim(),
+                cells[3].innerText.trim(),
+                cells[4].innerText.trim()
+            ];
+        });
+
+        pdfYPosition = drawTable(pdfYPosition, "Rent Applications", ["First Name", "Middle Name", "Last Name", "commodities", "Date"], rentAppData);
+
+        console.log("PDF saved as Monthly_Report.pdf");
+        pdf.save(`Monthly_Reports${currentMonth.toUpperCase()}.pdf`);
+
+        // Generate PDF as Base64
+        const pdfBase64 = pdf.output('datauristring').split(',')[1]; // Remove the data header
+
+        // Insert the Base64 string into the hidden input
+        document.getElementById("pdfBase64Input").value = pdfBase64;
+
+        // Submit the form
+        document.getElementById("pdfForm").submit();
+
+
+        
+    });
 });
 </script>
+
+
+
+
+
+
 
 
 

@@ -105,7 +105,7 @@ try {
 
     $data = array(
         "from" => $from,
-        "to" => $name, // Vendor's username
+        "to" => $name,
         "logo" => $logo,
         "number" => 1,
         "date" => $date,
@@ -121,23 +121,6 @@ try {
         "total" => $totalVenPay
     );
     
-    // $data = array(
-    //     "from" => $from,
-    //     "to" => $name, // Vendor's username
-    //     "logo" => $logo,
-    //     "number" => 1,
-    //     "date" => $date,
-    //     "custom_fields[0][name]" => "TOTAL PAYMENTS",
-    //     "custom_fields[0][value]" => '₱' . number_format($totalVenPay, 2), // Adds '₱' symbol for Philippine Peso
-    //     "custom_fields[1][name]" => "OFFICIAL RECEIPT",
-    //     "custom_fields[1][value]" => $receiptNumber,
-    //     "custom_fields[2][name]" => "BUILDINGS",
-    //     "custom_fields[2][value]" => $buildings,
-    //     "items[0][name]" => "Monthly Rental",
-    //     "items[0][quantity]" => 1,
-    //     "items[0][unit_cost]" => '₱' . number_format($total_monthly_rentals ?? 0, 2), // Adds '₱' symbol for Philippine Peso
-    //     "total" => '₱' . number_format($totalVenPay, 2) // Adds '₱' symbol for Philippine Peso
-    // );
     
 } catch (Exception $e) {
     // Handle the error by alerting and redirecting

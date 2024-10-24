@@ -361,7 +361,7 @@ $conn->close();
                 <div class="row g-0">
                     <div class="col-md-12">
                         <div class="card-body">
-                            <h5 class="card-title">ANNOUNCEMENTS</h5>
+                            <h5 class="card-title">STALL NOTICE</h5>
 
                             <?php
 include 'database_config.php';
@@ -404,7 +404,7 @@ if ($result->num_rows > 0) {
 
                             <!-- Button to trigger Add Announcement Modal -->
 <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addAnnouncementModal">
-    Add Announcement
+    Add notice
 </button>
 
 <!-- Edit Announcement Modal -->
@@ -431,9 +431,22 @@ if ($result->num_rows > 0) {
                         <input type="file" class="form-control" id="editImage" name="image">
                     </div>
                     <div class="form-group">
-                        <label for="editBuilding">Building:</label>
-                        <input type="text" class="form-control" id="editBuilding" name="building" placeholder="Building">
-                    </div>
+                        <label for="editBuilding">Buildings:</label>
+                        <select id="editBuilding" name="building" class="form-control">
+                      <option value="">Select Buildings</option>
+                                      <option value="Building A">Building A</option>
+                                      <option value="Building B">Building B</option>
+                                      <option value="Building C">Building C</option>
+                                      <option value="Building D">Building D</option>
+                                      <option value="Building E">Building E</option>
+                                      <option value="Building F">Building F</option>
+                                      <option value="Building G">Building G</option>
+                                      <option value="Building H">Building H</option>
+                                      <option value="Building I">Building I</option>
+                                      <option value="Building J">Building J</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select a building type.</div>
+                                  </div>
                     <div class="form-group">
                         <label for="editStall">Stall Number:</label>
                         <input type="text" class="form-control" id="editStall" name="stall" placeholder="Stall Number">
@@ -453,7 +466,7 @@ if ($result->num_rows > 0) {
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addAnnouncementModalLabel">Add Announcement</h5>
+                <h5 class="modal-title" id="addAnnouncementModalLabel">Notice of Vacancy</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
@@ -471,9 +484,22 @@ if ($result->num_rows > 0) {
                         <input type="file" class="form-control" id="addImage" name="image">
                     </div>
                     <div class="form-group">
-                        <label for="addBuilding">Building:</label>
-                        <input type="text" class="form-control" id="addBuilding" name="building" placeholder="Building">
-                    </div>
+                        <label for="addBuilding">Buildings:</label>
+                        <select id="addBuilding" name="building" class="form-control">
+                      <option value="">Select Buildings</option>
+                                      <option value="Building A">Building A</option>
+                                      <option value="Building B">Building B</option>
+                                      <option value="Building C">Building C</option>
+                                      <option value="Building D">Building D</option>
+                                      <option value="Building E">Building E</option>
+                                      <option value="Building F">Building F</option>
+                                      <option value="Building G">Building G</option>
+                                      <option value="Building H">Building H</option>
+                                      <option value="Building I">Building I</option>
+                                      <option value="Building J">Building J</option>
+                                    </select>
+                                    <div class="invalid-feedback">Please select a building type.</div>
+                                  </div>
                     <div class="form-group">
                         <label for="addStall">Stall Number:</label>
                         <input type="text" class="form-control" id="addStall" name="stall" placeholder="Stall Number">
