@@ -671,7 +671,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const monthlyRentals = parseFloat(document.getElementById('monthly-rentals').value.replace(/,/g, '') || 0);
     const totalFees = remainingBalance + monthlyRentals;
 
-    // Display GRAND TOTAL if applicable
     if (remainingBalance > 0 || monthlyRentals > 0) {
       doc.setFontSize(10);
       doc.text(`GRAND TOTAL: ${totalFees.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}`, 10, 110);
