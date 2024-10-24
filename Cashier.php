@@ -171,6 +171,147 @@ include('Sessions/Cashier.php');
       </div>
     </nav>
     <!-- End Navbar -->
+
+    <?php
+// Include database configuration
+include('database_config.php');
+
+// Create a connection
+$conn = new mysqli($db_host, $db_user, $db_password, $db_name);
+
+// Check the connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Query to get total payments from receipts for the current month
+$totalPaymentsQuery = "SELECT SUM(totalPay) AS totalPayments 
+                       FROM receipts 
+                       WHERE MONTH(issued_date) = MONTH(CURRENT_DATE()) 
+                       AND YEAR(issued_date) = YEAR(CURRENT_DATE())";
+$totalPaymentsResult = $conn->query($totalPaymentsQuery);
+if ($totalPaymentsResult) {
+    $totalPayments = $totalPaymentsResult->fetch_assoc();
+    $data['totalPayments'] = $totalPayments['totalPayments'];
+} else {
+    $data['totalPayments'] = null;
+}
+
+// Query to get inquiries for the current month
+$inquiriesQuery = "SELECT name, email_add AS email, subject, message, sent_date 
+                   FROM inquiry 
+                   WHERE MONTH(sent_date) = MONTH(CURRENT_DATE()) 
+                   AND YEAR(sent_date) = YEAR(CURRENT_DATE())";
+$inquiriesResult = $conn->query($inquiriesQuery);
+
+// Query to count rent applications for the current month
+$rentAppCountQuery = "SELECT COUNT(*) AS rentAppCount 
+                      FROM rentapp_payment 
+                      WHERE MONTH(payment_date) = MONTH(CURRENT_DATE()) 
+                      AND YEAR(payment_date) = YEAR(CURRENT_DATE())";
+$rentAppCountResult = $conn->query($rentAppCountQuery);
+if ($rentAppCountResult) {
+    $rentAppCount = $rentAppCountResult->fetch_assoc();
+    $data['rentAppCount'] = $rentAppCount['rentAppCount'];
+} else {
+    $data['rentAppCount'] = null;
+}
+
+// Query to count active vendors
+$activeVendorsQuery = "SELECT COUNT(*) AS activeVendorsCount 
+                       FROM vendors 
+                       WHERE Vendor_Status = 'ACTIVE'";
+$activeVendorsResult = $conn->query($activeVendorsQuery);
+if ($activeVendorsResult) {
+    $activeVendorsCount = $activeVendorsResult->fetch_assoc();
+    $data['activeVendorsCount'] = $activeVendorsCount['activeVendorsCount'];
+} else {
+    $data['activeVendorsCount'] = null;
+}
+
+// Close the connection
+$conn->close();
+?>
+
+
+
+<!-- End Navbar -->
+<div class="container-fluid py-4">
+      <div class="row">
+
+
+
+      <div class="col-xl-4 col-sm-6 mb-xl-0 mb-4">
+
+
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Expected Total Payments from Vendors (This Month)</p>
+                    <h5 class="font-weight-bolder mb-0">
+                   <span id="totalPay"><?php echo htmlspecialchars(number_format($data['totalPayments'], 2, '.', ',')); ?></span>
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-2 text-end">
+                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
+                  <i class="ni ni-money-coins text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Active Vendors this month</p>
+                    <h5 class="font-weight-bolder mb-0">
+                    <span id="activeVendorsCount"><?php echo htmlspecialchars($data['activeVendorsCount']); ?></span>
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
+                  <i class="ni ni-world text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="col-xl-3 col-sm-6 mb-xl-0 mb-4">
+          <div class="card">
+            <div class="card-body p-3">
+              <div class="row">
+                <div class="col-8">
+                  <div class="numbers">
+                    <p class="text-sm mb-0 text-capitalize font-weight-bold">Rent Applications (This Month)</p>
+                    <h5 class="font-weight-bolder mb-0">
+                    <span id="rentAppCount"><?php echo htmlspecialchars($data['rentAppCount']); ?></span>
+                    </h5>
+                  </div>
+                </div>
+                <div class="col-4 text-end">
+                  <div class="icon icon-shape bg-info shadow text-center border-radius-md">
+                    <i class="ni ni-paper-diploma text-lg opacity-10" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      
     <div class="container-fluid py-4">
     <div class="row mt-4">
           <div class="col-lg-5 mb-lg-4 mb-4">

@@ -536,12 +536,10 @@ if ($resultA->num_rows > 0) {
   </div>
 </div>
 
-<!-- Include jsPDF library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <!-- Updated to a later version -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
-  // Function to format the input as currency
   function formatCurrencyInput(input) {
     let value = parseFloat(input.value.replace(/,/g, ''));
     if (!isNaN(value)) {
@@ -645,9 +643,8 @@ document.addEventListener('DOMContentLoaded', () => {
     headings.forEach((text, index) => centerText(text, 15 + (index * 10)));
 
     // Line separator
-    doc.line(10, 50, doc.internal.pageSize.getWidth() - 10, 50); // Draws a horizontal line
+    doc.line(10, 50, doc.internal.pageSize.getWidth() - 10, 50);
 
-    // Capture values from form fields
     const formFields = [
       { id: 'vendor-name', label: 'Vendor Name', y: 55 },
       { id: 'reminderMessage', label: 'Message', y: 60 },
@@ -673,7 +670,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (remainingBalance > 0 || monthlyRentals > 0) {
       doc.setFontSize(10);
-      doc.text(`GRAND TOTAL: ${totalFees.toLocaleString('en-PH', { style: 'currency', currency: 'PHP' })}`, 10, 110);
+      doc.text(`GRAND TOTAL: ${totalFees.toLocaleString('en-US', { style: 'currency', currency: '$' })}`, 10, 110);
     }
     doc.line(10, 115, doc.internal.pageSize.getWidth() - 10, 115); 
 
