@@ -34,7 +34,6 @@ $conn->close();
 
 @media (max-width: 576px) {
     #notification-count {
-        /* Adjust badge position for smaller screens if necessary */
         top: 0; 
         right: 0; 
     }

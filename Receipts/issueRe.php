@@ -113,12 +113,11 @@ try {
         "custom_fields[0][value]" => $totalVenPay,
         "custom_fields[1][name]" => "OFFICIAL RECEIPT",
         "custom_fields[1][value]" => $receiptNumber,
-        "custom_fields[2][name]" => "BUILDINGS",
-        "custom_fields[2][value]" => $buildings,
+       
         "items[0][name]" => "Monthly Rental",
         "items[0][quantity]" => 1,
         "items[0][unit_cost]" => $total_monthly_rentals ?? 0,
-        "total" => $totalVenPay - $total_monthly_rentals
+        "total" => $totalVenPay
     );
     
     
