@@ -237,11 +237,7 @@ include('Sessions/Cashier.php');
           </div>
 
 
-          <input type="hidden" id="vendor_id_input" name="vendor_id" value=""> <!-- Hidden input to store vendor ID -->
-          <!-- <div class="mb-3">
-            <label for="receiptFile" class="form-label">Attach Receipt File or Photo</label>
-            <input type="file" id="receiptFile" name="receiptFile" class="form-control" required>
-          </div> -->
+          <input type="hidden" id="vendor_id_input" name="vendor_id" value="">
           <div class="mb-3">
             <label for="totalPayment" class="form-label">Total Payments</label>
             <textarea id="totalPayment" name="totalPayment" class="form-control" required></textarea>
